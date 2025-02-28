@@ -1,0 +1,17 @@
+
+
+
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/social_authentication?createDatabaseIfNotExist=true
+    username: root
+    password: root
+    driverClassName: com.mysql.jdbc.mj.Driver
+
+
+  authentication:
+    accessToken:
+      expiresMinute: 500000000
+    refreshToken:
+      expiresMinute: 500000000
