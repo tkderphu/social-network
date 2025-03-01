@@ -7,4 +7,5 @@ public interface EventConstant {
      * routing: rou
      */
     String USER_CREATED = "user_created_%s";
+    String FORGOT_PASSWORD = "forgot_password_%s";
 }

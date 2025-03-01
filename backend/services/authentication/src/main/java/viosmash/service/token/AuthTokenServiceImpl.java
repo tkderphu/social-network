@@ -1,16 +1,17 @@
 package viosmash.service.token;
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import viosmash.dal.dataobject.auth.User;
 import viosmash.dal.dataobject.token.AuthAccessToken;
 import viosmash.dal.dataobject.token.AuthRefreshToken;
+import viosmash.dal.redis.AuthRedisRepository;
 import viosmash.dal.repository.token.AuthAccessTokenRepository;
 import viosmash.dal.repository.token.AuthRefreshTokenRepository;
 import viosmash.utils.date.DateUtils;
 
-import java.util.Date;
 import java.util.UUID;
 
 import static viosmash.constant.ErrorCodeConstant.REFRESH_TOKEN_INVALID;
@@ -25,6 +26,7 @@ public class AuthTokenServiceImpl implements AuthTokenService{
     @Value("${spring.authentication.refreshToken.expires}")
     private Integer refreshTokenExpires;
 
+    private final AuthRedisRepository authRedisRepository;
     private final AuthRefreshTokenRepository authRefreshTokenRepository;
     private final AuthAccessTokenRepository authAccessTokenRepository;
 
@@ -40,16 +42,28 @@ public class AuthTokenServiceImpl implements AuthTokenService{
                 .setRefreshToken(refreshToken.getRefreshToken())
                 .setUserId(user.getId()).setExpires(accessExpires());
 
+        this.authAccessTokenRepository.save(authAccessToken);
+        this.authRefreshTokenRepository.save(refreshToken);
 
-
-        return null;
+        this.authRedisRepository.setToken(authAccessToken);
+        return authAccessToken;
     }
 
 
 
     @Override
     public AuthAccessToken getAccessToken(String accessToken) {
-        return null;
+        AuthAccessToken authAccessToken = authRedisRepository.getToken(accessToken);
+        if(authAccessToken == null) {
+            authAccessToken = this.authAccessTokenRepository
+                    .findByAccessToken(accessToken)
+                    .orElse(null);
+            if(authAccessToken == null || DateUtils.before(authAccessToken.getExpires())) {
+                throw exception(401, "Access token is invalid");
+            }
+            this.authRedisRepository.setToken(authAccessToken);
+        }
+        return authAccessToken;
     }
 
     @Override
@@ -57,7 +71,6 @@ public class AuthTokenServiceImpl implements AuthTokenService{
         AuthRefreshToken authRefreshToken = authRefreshTokenRepository
                 .findByRefreshToken(refreshToken)
                 .orElseThrow(() -> exception(REFRESH_TOKEN_INVALID));
-
         /**
          * currentDate < expires
          */
@@ -67,6 +80,7 @@ public class AuthTokenServiceImpl implements AuthTokenService{
                     .setRefreshToken(authRefreshToken.getRefreshToken())
                     .setUserId(authRefreshToken.getUserId())
                     .setExpires(accessExpires());
+            authRedisRepository.setToken(authAccessToken);
             this.authAccessTokenRepository.save(authAccessToken);
             return authAccessToken;
         } else {
@@ -75,8 +89,15 @@ public class AuthTokenServiceImpl implements AuthTokenService{
     }
 
     @Override
-    public AuthAccessToken removeAccessToken(String accessToken) {
-        return null;
+    @Transactional
+    public void removeAccessToken(String accessToken, String refreshToken) {
+        this.authAccessTokenRepository.deleteAllByRefreshToken(refreshToken);
+        this.authRedisRepository.removeToken(accessToken);
+    }
+
+    @Override
+    public void removeRefreshToken(String refreshToken) {
+        this.authRefreshTokenRepository.deleteByRefreshToken(refreshToken);
     }
 
 

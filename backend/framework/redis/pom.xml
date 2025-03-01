@@ -3,21 +3,21 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.viosmash</groupId>
-        <artifactId>framework</artifactId>
+        <artifactId>social-network</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>common</artifactId>
+    <artifactId>redis</artifactId>
     <packaging>war</packaging>
-    <name>common Maven Webapp</name>
+    <name>redis Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <dependencies>
         <dependency>
-            <groupId>org.jeasy</groupId>
-            <artifactId>easy-random-core</artifactId>
-            <version>4.0.0</version>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
         </dependency>
     </dependencies>
     <build>
-        <finalName>common</finalName>
+        <finalName>redis</finalName>
     </build>
 </project>

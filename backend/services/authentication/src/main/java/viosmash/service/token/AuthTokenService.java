@@ -11,5 +11,7 @@ public interface AuthTokenService {
 
     AuthAccessToken refreshAccessToken(String refreshToken);
 
-    AuthAccessToken removeAccessToken(String accessToken);
+    void removeAccessToken(String accessToken, String refreshToken);
+
+    void removeRefreshToken(String refreshToken);
 }

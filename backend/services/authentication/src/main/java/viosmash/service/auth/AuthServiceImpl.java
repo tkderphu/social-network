@@ -3,22 +3,25 @@ package viosmash.service.auth;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
 import viosmash.EventConstant;
-import viosmash.controller.auth.vo.AuthLoginReqVO;
-import viosmash.controller.auth.vo.AuthLoginRespVO;
-import viosmash.controller.auth.vo.AuthRegisterReqVO;
+import viosmash.controller.auth.vo.*;
 import viosmash.converter.AuthConverter;
 import viosmash.dal.dataobject.auth.User;
 import viosmash.dal.dataobject.token.AuthAccessToken;
+import viosmash.dal.redis.AuthRedisRepository;
 import viosmash.dal.repository.auth.UserRepository;
 import viosmash.event.auth.UserCreated;
+import viosmash.event.notify.forgotpassword.ForgotPasswordEvent;
 import viosmash.service.token.AuthTokenService;
 import viosmash.utils.json.JsonUtils;
 import viosmash.utils.object.BeanUtil;
 import viosmash.utils.string.StringUtils;
+
+import java.util.UUID;
 
 import static viosmash.exception.utils.ServiceUtils.exception;
 
@@ -30,6 +33,11 @@ public class AuthServiceImpl implements AuthService{
     private final PasswordEncoder passwordEncoder;
     private final RabbitTemplate rabbitTemplate;
     private final AuthTokenService authTokenService;
+    private final AuthRedisRepository authRedisRepository;
+
+    @Value("${spring.authentication.forgotPassword.code}")
+    private Integer forgotPasswordExpires;
+
     @Override
     public AuthLoginRespVO login(@Valid AuthLoginReqVO loginReqVO) {
         User user = userRepository.findByEmail(StringUtils.lower(loginReqVO.getEmail()))
@@ -42,9 +50,11 @@ public class AuthServiceImpl implements AuthService{
         return AuthConverter.INSTANCE.convert(authAccessToken);
     }
 
-    @Override
-    public void logout(String accessToken) {
 
+    @Override
+    public void logout(String accessToken, String refreshToken) {
+        this.authTokenService.removeAccessToken(accessToken, refreshToken);
+        this.authTokenService.removeRefreshToken(refreshToken);
     }
 
     @Override
@@ -74,5 +84,49 @@ public class AuthServiceImpl implements AuthService{
                 JsonUtils.toStringJson(userCreated)
         );
 
+    }
+
+    @Override
+    public void forgotPassword(String email) {
+        User user = this.userRepository.findByEmail(email)
+                .orElseThrow(() -> exception(404, "Your email not found"));
+        String code = UUID.randomUUID().toString();
+        ForgotPasswordEvent event = new ForgotPasswordEvent(
+                user.getEmail(),
+                code
+        );
+
+        authRedisRepository.setForgetCode(event, forgotPasswordExpires);
+
+        rabbitTemplate.convertAndSend(
+                String.format(EventConstant.FORGOT_PASSWORD, "dir"),
+                String.format(EventConstant.FORGOT_PASSWORD, "rou"),
+                JsonUtils.toStringJson(event)
+        );
+    }
+
+    @Override
+    public ForgotPasswordEvent forgotPasswordVerifyCode(String code) {
+        ForgotPasswordEvent event = this.authRedisRepository.getForgotPasswordEvent(code);
+        if(event == null) {
+            throw  exception(404, "Your code forgot password not found");
+        }
+        return event;
+    }
+
+    @Override
+    public void changePassword(AuthChangePasswordReqVO changePasswordReqVO) {
+
+    }
+
+    @Override
+    public void initPassword(AuthInitPasswordReqVO initPasswordReqVO) {
+        ForgotPasswordEvent forgotPasswordEvent = forgotPasswordVerifyCode(initPasswordReqVO.getCode());
+        User user = this.userRepository.findByEmail(forgotPasswordEvent.getEmail())
+                .orElse(null);
+        if(user != null) {
+            user.setPassword(passwordEncoder.encode(initPasswordReqVO.getNewPassword()));
+            this.userRepository.save(user);
+        }
     }
 }

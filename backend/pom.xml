@@ -19,6 +19,7 @@
     <module>dependencies</module>
     <module>framework/mq</module>
     <module>framework/security</module>
+    <module>framework/redis</module>
   </modules>
   <properties>
     <java.version>17</java.version>

@@ -15,3 +15,5 @@ spring:
       expiresMinute: 500000000
     refreshToken:
       expiresMinute: 500000000
+    forgetPassword:
+      code: 5 #5 minutes

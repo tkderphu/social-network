@@ -30,9 +30,10 @@
         <module name="config-server" />
         <module name="discovery-services" />
         <module name="security" />
-        <module name="common" />
         <module name="mq" />
+        <module name="common" />
         <module name="gateway" />
+        <module name="redis" />
         <module name="dependencies" />
         <module name="authentication" />
       </profile>
@@ -48,6 +49,7 @@
       <module name="framework" options="-parameters" />
       <module name="gateway" options="-parameters" />
       <module name="mq" options="-parameters" />
+      <module name="redis" options="-parameters" />
       <module name="security" options="-parameters" />
       <module name="social-network" options="-parameters" />
     </option>
