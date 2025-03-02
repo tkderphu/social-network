@@ -115,8 +115,13 @@ public class AuthServiceImpl implements AuthService{
     }
 
     @Override
-    public void changePassword(AuthChangePasswordReqVO changePasswordReqVO) {
-
+    public void changePassword(Long userId, AuthChangePasswordReqVO changePasswordReqVO) {
+        User user = this.userRepository.findById(userId).get();
+        if(!passwordEncoder.matches(user.getPassword(), changePasswordReqVO.getOldPassword())) {
+            throw exception(404, "Your old password not match");
+        }
+        user.setPassword(passwordEncoder.encode(changePasswordReqVO.getNewPassword()));
+        this.userRepository.save(user);
     }
 
     @Override

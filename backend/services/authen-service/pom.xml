@@ -7,24 +7,17 @@
         <version>1.0-SNAPSHOT</version>
         <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>security</artifactId>
-    <packaging>war</packaging>
-    <name>security Maven Webapp</name>
+    <artifactId>authen-service</artifactId>
+    <packaging>pom</packaging>
+    <name>authen-service Maven Webapp</name>
     <url>http://maven.apache.org</url>
+    <modules>
+        <module>api</module>
+    </modules>
     <dependencies>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-security</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.viosmash</groupId>
-            <artifactId>authen-api</artifactId>
-            <version>1.0-SNAPSHOT</version>
-        </dependency>
     </dependencies>
     <build>
-        <finalName>security</finalName>
+        <finalName>authen-service</finalName>
     </build>
 </project>

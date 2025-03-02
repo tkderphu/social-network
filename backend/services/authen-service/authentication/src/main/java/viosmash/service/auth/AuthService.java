@@ -9,7 +9,19 @@ public interface AuthService {
     AuthLoginRespVO refreshToken(String refreshToken);
     void register(AuthRegisterReqVO registerReqVO);
     void forgotPassword(String email);
+
+    /**
+     * verify code of (forgot password)
+     * @param code
+     * @return
+     */
     ForgotPasswordEvent forgotPasswordVerifyCode(String code);
-    void changePassword(AuthChangePasswordReqVO changePasswordReqVO);
+
+    /**
+     * change password
+     * @param userId
+     * @param changePasswordReqVO
+     */
+    void changePassword(Long userId, AuthChangePasswordReqVO changePasswordReqVO);
     void initPassword(AuthInitPasswordReqVO initPasswordReqVO);
 }
