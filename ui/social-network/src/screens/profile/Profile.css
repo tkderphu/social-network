@@ -1,0 +1,11 @@
+.container-fluid {
+    width: 1500px;
+    max-width: 100%;
+}
+
+
+.right-section {
+  flex: 1;
+  overflow: auto;
+  max-height: 175vh; /* Prevents overflow */
+}
