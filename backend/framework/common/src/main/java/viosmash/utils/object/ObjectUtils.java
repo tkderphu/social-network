@@ -11,4 +11,7 @@ public class ObjectUtils {
         Constructor<T> constructor= clazz.getConstructor();
         return constructor.newInstance();
     }
+    public static boolean isNull(Object o) {
+        return o == null;
+    }
 }
