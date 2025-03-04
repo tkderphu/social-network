@@ -1,7 +1,12 @@
 
 
+import Modal from "../../components/Modal"
+import { useState } from 'react'
 import "./Profile.css"
+import Friends from "./Friends"
+import Photo from "./Photo"
 function ProfileScreen() {
+    const [navigateContent, setNavigateContent] = useState<"#posts_nav" | "#friends" | "#photos">("#posts_nav")
     return (
         <div className="container-fluid" style={{ minWidth: "1000px" }} >
             <div className="cover-photo">
@@ -22,20 +27,23 @@ function ProfileScreen() {
                 </div>
                 <div>
                     <button className="btn btn-primary m-3">Add to story</button>
-                    <button className="btn btn-secondary">Edit profile</button>
+                    <button className="btn btn-secondary" data-toggle="modal" data-target=".edit-profile">Edit profile</button>
+                    <Modal id="edit-profile" />
                 </div>
             </div>
             <ul className="nav nav-tabs mt-3">
-                <li className="nav-item"><a className="nav-link active" data-bs-toggle="tab" href="#posts">Posts</a></li>
-                <li className="nav-item"><a className="nav-link" data-bs-toggle="tab" href="#about">About</a></li>
-                <li className="nav-item"><a className="nav-link" data-bs-toggle="tab" href="#friends">Friends</a></li>
-                <li className="nav-item"><a className="nav-link" data-bs-toggle="tab" href="#photos">Photos</a></li>
-                <li className="nav-item"><a className="nav-link" data-bs-toggle="tab" href="#videos">Videos</a></li>
-                <li className="nav-item"><a className="nav-link" data-bs-toggle="tab" href="#checkins">Check-ins</a></li>
+                <li className="nav-item"><a className={"nav-link " + (navigateContent === '#posts_nav' ? 'active' : '')}
+                    onClick={() => { setNavigateContent("#posts_nav") }}
+                    data-bs-toggle="tab" href="#posts_nav">Posts</a></li>
+                {/* <li className="nav-item"><a className={"nav-link " + (navigateContent === '#post' ? 'active' : '')} data-bs-toggle="tab" href="#about">About</a></li> */}
+                <li className="nav-item"><a onClick={() => { setNavigateContent("#friends") }} className={"nav-link " + (navigateContent === '#friends' ? 'active' : '')} data-bs-toggle="tab" href="#friends">Friends</a></li>
+                <li className="nav-item"><a onClick={() => { setNavigateContent("#photos") }} className={"nav-link " + (navigateContent === '#photos' ? 'active' : '')} data-bs-toggle="tab" href="#photos">Photos</a></li>
+                {/* <li className="nav-item"><a className={"nav-link " + (navigateContent === '#post' ? 'active' : '')} data-bs-toggle="tab" href="#videos">Videos</a></li> */}
+                {/* <li className="nav-item"><a className={"nav-link " + (navigateContent === '#post' ? 'active' : '')} data-bs-toggle="tab" href="#checkins">Check-ins</a></li> */}
             </ul>
             <div className="tab-content mt-3">
-                <div className="tab-pane fade show active" id="posts">
-                    <div className="row d-flex flex-wrap">
+                <div className="tab-pane fade show active" id={`${navigateContent}`}>
+                    {navigateContent === '#posts_nav' && (<div className="row d-flex flex-wrap">
                         <div className="col-5 left-section">
                             <div className="card mb-3">
                                 <h5>Intro</h5>
@@ -169,72 +177,28 @@ function ProfileScreen() {
                         </div>
                         <div className="col-7 ">
                             <div className="input-group mb-3">
-                                <input type="text" className="form-control" placeholder="What's on your mind?" />
-                                <button className="btn btn-primary">Post</button>
+                                <textarea placeholder="What your mind today?" cols={100} className="mb-2" rows={2}></textarea>
+                                <button className="btn btn-primary w-100">Post</button>
                             </div>
                             <div className="right-section">
-                            <div className="card mb-3">
-                                <div className="card-body">
-                                    <h5 className="card-title">Phu Nguyen</h5>
-                                    <p className="card-text">March 1 at 7:32 PM</p>
-                                    <p className="card-text">This is a sample post.</p>
+                                <div className="card mb-3">
+                                    <div className="card-body">
+                                        <h5 className="card-title">Phu Nguyen</h5>
+                                        <p className="card-text">March 1 at 7:32 PM</p>
+                                        <p className="card-text">This is a sample post.</p>
+                                    </div>
                                 </div>
-                            </div>
-                            <div className="card mb-3">
-                                <div className="card-body">
-                                    <h5 className="card-title">Phu Nguyen</h5>
-                                    <p className="card-text">March 1 at 7:32 PM</p>
-                                    <p className="card-text">This is a sample post.</p>
-                                </div>
-                            </div>
-                            <div className="card mb-3">
-                                <div className="card-body">
-                                    <h5 className="card-title">Phu Nguyen</h5>
-                                    <p className="card-text">March 1 at 7:32 PM</p>
-                                    <p className="card-text">This is a sample post.</p>
-                                </div>
-                            </div>
-                            <div className="card mb-3">
-                                <div className="card-body">
-                                    <h5 className="card-title">Phu Nguyen</h5>
-                                    <p className="card-text">March 1 at 7:32 PM</p>
-                                    <p className="card-text">This is a sample post.</p>
-                                </div>
-                            </div>
-                            <div className="card mb-3">
-                                <div className="card-body">
-                                    <h5 className="card-title">Phu Nguyen</h5>
-                                    <p className="card-text">March 1 at 7:32 PM</p>
-                                    <p className="card-text">This is a sample post.</p>
-                                </div>
-                            </div>
-                            <div className="card mb-3">
-                                <div className="card-body">
-                                    <h5 className="card-title">Phu Nguyen</h5>
-                                    <p className="card-text">March 1 at 7:32 PM</p>
-                                    <p className="card-text">This is a sample post.</p>
-                                </div>
-                            </div>
-                            <div className="card mb-3">
-                                <div className="card-body">
-                                    <h5 className="card-title">Phu Nguyen</h5>
-                                    <p className="card-text">March 1 at 7:32 PM</p>
-                                    <p className="card-text">This is a sample post.</p>
-                                </div>
-                            </div>
-                            <div className="card mb-3">
-                                <div className="card-body">
-                                    <h5 className="card-title">Phu Nguyen</h5>
-                                    <p className="card-text">March 1 at 7:32 PM</p>
-                                    <p className="card-text">This is a sample post.</p>
-                                </div>
-                            </div>
+
                             </div>
 
                         </div>
-                    </div>
-
-
+                    </div>)}
+                    {navigateContent === '#friends' && (
+                        <Friends/>
+                    )}
+                    {navigateContent === '#photos' && (
+                        <Photo/>
+                    )}
                 </div>
             </div>
         </div>
