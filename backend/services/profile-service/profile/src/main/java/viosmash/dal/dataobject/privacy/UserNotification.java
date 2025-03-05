@@ -14,5 +14,7 @@ public class UserNotification {
     private Long id;
     @Enumerated(EnumType.STRING)
     private NotificationEnum notificationEnum;
+
+    @Column(unique = true)
     private Long userId;
 }

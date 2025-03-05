@@ -14,5 +14,7 @@ public class UserMessage {
     private Long id;
     @Enumerated(EnumType.STRING)
     private MessageEnum messageEnum;
+
+    @Column(unique = true)
     private Long userId;
 }

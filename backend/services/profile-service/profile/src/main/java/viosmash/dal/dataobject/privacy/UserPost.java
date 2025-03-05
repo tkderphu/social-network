@@ -14,5 +14,7 @@ public class UserPost {
     private Long id;
     @Enumerated(EnumType.STRING)
     private PostEnum postEnum;
+
+    @Column(unique = true)
     private Long userId;
 }

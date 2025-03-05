@@ -4,7 +4,7 @@ package viosmash.controller.privacy;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class NotificationPrivacyController {
+public class PrivacyController {
 
 
     public void updatePrivacy() {

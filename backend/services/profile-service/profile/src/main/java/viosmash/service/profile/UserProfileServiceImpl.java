@@ -30,14 +30,14 @@ public class UserProfileServiceImpl implements UserProfileService{
     /**
      * privacy
      */
-    private UserMessageRepository userMessageRepository;
-    private UserNotificationRepository userNotificationRepository;
-    private UserPostRepository userPostRepository;
+    private final UserMessageRepository userMessageRepository;
+    private final UserNotificationRepository userNotificationRepository;
+    private final UserPostRepository userPostRepository;
 
-    private UserAddressRepository userAddressRepository;
-    private UserEducationRepository userEducationRepository;
-    private UserPersonalImageRepository userPersonalImageRepository;
-    private UserProfileRepository userProfileRepository;
+    private final UserAddressRepository userAddressRepository;
+    private final UserEducationRepository userEducationRepository;
+    private final UserPersonalImageRepository userPersonalImageRepository;
+    private final UserProfileRepository userProfileRepository;
 
     @RabbitListener
     @Override
@@ -87,12 +87,6 @@ public class UserProfileServiceImpl implements UserProfileService{
         this.userProfileRepository.save(userProfile);
     }
 
-
-    @Override
-    @RabbitListener
-    public void uploadPersonalImage() {
-
-    }
 
     @Override
     public UserProfile getProfileById(Long userId) {

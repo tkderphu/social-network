@@ -11,8 +11,26 @@ function ProfileScreen() {
         <div className="container-fluid" style={{ minWidth: "1000px" }} >
             <div className="cover-photo">
                 <div>
-                    <a href="javascript:(0)"><img src="https://freefrontend.com/assets/img/bootstrap-profiles/bootstrap-4-individual-user-profile-on-a-social-network.png"
-                        alt="Profile Picture" height={"400px"} width={"100%"} /></a>
+                    <a href="#photo-cover" data-toggle="modal" data-target=".photo-cover-modal" ><img src="https://freefrontend.com/assets/img/bootstrap-profiles/bootstrap-4-individual-user-profile-on-a-social-network.png"
+                        alt="Profile Picture" height={"400px"} width={"100%"}
+
+                    /></a>
+                    <Modal id="photo-cover-modal" title="Cover photo" html={
+                        <>
+                            <div className="row">
+                                <div className="col-8">
+                                    <img src="https://freefrontend.com/assets/img/bootstrap-profiles/bootstrap-4-individual-user-profile-on-a-social-network.png"
+                                        alt="Profile Picture" height={"100%"} width={"100%"} />
+                                </div>
+                                <div className="col-4">
+                                    <div className="input-group">
+                                        <button style={{ border: "none" }} className="input-group-text"><span >Write comment</span></button>
+                                        <textarea className="form-control" aria-label="With textarea"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </>
+                    } />
                     {/* <button>Add cover photo</button> */}
                 </div>
             </div>
@@ -26,9 +44,181 @@ function ProfileScreen() {
                     </div>
                 </div>
                 <div>
-                    <button className="btn btn-primary m-3">Add to story</button>
-                    <button className="btn btn-secondary" data-toggle="modal" data-target=".edit-profile">Edit profile</button>
-                    <Modal id="edit-profile" />
+                    <button style={{border:'none', backgroundColor: "white"}} className='m-3'>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-chat-fill" viewBox="0 0 16 16">
+  <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9 9 0 0 0 8 15"/>
+</svg></button>
+                    <button className="btn btn-primary ">Add to story</button>
+                    <button className="btn btn-secondary m-3" data-toggle="modal" data-target=".edit-profile">Edit profile</button>
+                    <button className="btn btn-primary" data-toggle="modal" data-target=".settings-privacy">Settings</button>
+                    <Modal id="edit-profile"
+                        title="Edit profile"
+                        html={<>
+                            <div className="mb-3">
+                                <div className="card">
+                                    <div className="card-header">
+                                        Personal Image
+                                    </div>
+                                    <div className="card-body">
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card-footer"><button className="btn btn-primary w-50">Edit</button></div>
+                            </div>
+                            <div className="mb-3">
+                                <div className="card">
+                                    <div className="card-header">
+                                        Cover photos
+                                    </div>
+                                    <div className="card-body">
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card-footer"><button className="btn btn-primary w-50">Edit</button></div>
+                            </div>
+                            <div className="mb-3">
+                                <div className="card">
+                                    <div className="card-header">
+                                        Info
+                                    </div>
+                                    <div className="card-body">
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card-footer"><button className="btn btn-primary w-50">Edit</button></div>
+                            </div>
+                            <div className="mb-3">
+                                <div className="card">
+                                    <div className="card-header">
+                                        Education
+                                    </div>
+                                    <div className="card-body">
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card-footer"><button className="btn btn-primary w-50">Edit</button></div>
+                            </div>
+                            <div className="mb-3">
+                                <div className="card">
+                                    <div className="card-header">
+                                        Address
+                                    </div>
+                                    <div className="card-body">
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                        <div className="form-floating mb-3 w-100">
+                                            <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="card-footer"><button className="btn btn-primary w-50">Edit</button></div>
+                            </div>
+                        </>}
+                    />
+                    <Modal id="settings-privacy"
+                        title="Settings privacy"
+                        html={<>
+                            <div className="mb-3">
+                                <div className="card">
+                                    <div className="card-header">
+                                        Notifications privacy
+                                    </div>
+                                    <div className="card-body">
+                                        <select className="form-select form-select-lg w-100" aria-label=".form-select-lg example">
+                                            <option value="1" selected>Anyone can send notifications to you</option>
+                                            <option value="2">Only your friends can send notification to you</option>
+
+                                        </select>
+                                    </div>
+                                    <div className="card-footer"><button className="btn btn-primary w-50">Update</button></div>
+
+                                </div>
+                            </div>
+                            <div className="mb-3">
+                                <div className="card">
+                                    <div className="card-header">
+                                        Posts privacy
+                                    </div>
+                                    <div className="card-body">
+                                        <select className="form-select form-select-lg w-100" aria-label=".form-select-lg example">
+                                            <option value="1" selected>Any can see your posts</option>
+                                            <option value="2">Only friends can see your posts</option>
+                                            <option value="3">Only you can see your posts</option>
+                                        </select>
+                                    </div>
+                                    <div className="card-footer"><button className="btn btn-primary w-50">Update</button></div>
+
+                                </div>
+                            </div>
+                            <div className="mb-3">
+                                <div className="card">
+                                    <div className="card-header">
+                                        Messages privacy
+                                    </div>
+                                    <div className="card-body">
+                                        <select className="form-select form-select-lg w-100" aria-label=".form-select-lg example">
+                                            <option value="1" selected>Any can send messages to you</option>
+                                            <option value="2">Only friends can send messages to you</option>
+
+                                        </select>
+                                    </div>
+                                    <div className="card-footer"><button className="btn btn-primary w-50">Update</button></div>
+
+                                </div>
+                            </div>
+                        </>}
+                    />
                 </div>
             </div>
             <ul className="nav nav-tabs mt-3">
@@ -177,8 +367,31 @@ function ProfileScreen() {
                         </div>
                         <div className="col-7 ">
                             <div className="input-group mb-3">
-                                <textarea placeholder="What your mind today?" cols={100} className="mb-2" rows={2}></textarea>
-                                <button className="btn btn-primary w-100">Post</button>
+                                <div className="input-group">
+                                    <button style={{ border: "none" }} className="input-group-text"><span >Write comment</span></button>
+                                    <div data-toggle="modal" data-target=".your-bulletin" className="form-control rounded" style={{
+                                        cursor: "pointer"
+                                    }} aria-label="With textarea"><span>What's on your mind?</span></div>
+
+                                    <Modal id="your-bulletin" title="Create post" html={
+                                        <>
+                                            <div className="input-group mb-3">
+                                                <textarea className="form-control" aria-label="With textarea" placeholder="Write your content"
+                                                    rows={9}
+                                                ></textarea>
+                                            </div>
+                                            {/* <div className="input-group">
+                                                <span className="input-group-text">With textarea</span>
+                                                <textarea className="form-control" aria-label="With textarea"></textarea>
+                                            </div> */}
+                                            <div className="mb-3 input-group">
+                                                <label htmlFor="formFile" className="form-label input-group-text"  style={{cursor: "pointer"}}>Add your photos</label>
+                                                <input className="form-control" type="file" id="formFile" />
+                                            </div>
+                                            <button className="btn btn-primary w-50">Submit</button>
+                                        </>
+                                    } />
+                                </div>
                             </div>
                             <div className="right-section">
                                 <div className="card mb-3">
@@ -194,10 +407,10 @@ function ProfileScreen() {
                         </div>
                     </div>)}
                     {navigateContent === '#friends' && (
-                        <Friends/>
+                        <Friends />
                     )}
                     {navigateContent === '#photos' && (
-                        <Photo/>
+                        <Photo />
                     )}
                 </div>
             </div>

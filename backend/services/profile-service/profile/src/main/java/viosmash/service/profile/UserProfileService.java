@@ -7,8 +7,5 @@ public interface UserProfileService {
     void saveProfile(String jsonUserCreatedEvent);
     void updateProfile(Long userId, UserProfileUpdateReqVO userProfileUpdateReqVO);
 
-
-    void uploadPersonalImage();
-
     UserProfile getProfileById(Long userId);
 }
