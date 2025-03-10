@@ -23,11 +23,13 @@
     <module>services/profile-service</module>
     <module>services/profile-service/profile-api</module>
     <module>services/profile-service/profile</module>
+    <module>services/friendship-service</module>
   </modules>
   <properties>
     <java.version>17</java.version>
     <mapstruct.version>1.3.1.Final</mapstruct.version>
     <lombok.version>1.18.12</lombok.version>
+    <spring-cloud.version>2024.0.0</spring-cloud.version>
   </properties>
 
   <version>1.0-SNAPSHOT</version>
@@ -52,6 +54,17 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.springframework.cloud</groupId>
+        <artifactId>spring-cloud-dependencies</artifactId>
+        <version>${spring-cloud.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
   <build>
     <finalName>social-network</finalName>
     <plugins>

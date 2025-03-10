@@ -1,18 +1,19 @@
 import api from "../axios/interceptor"
+import { AuthInitPasswordReqVO, AuthLoginReqVO, AuthRegisterReqVO } from "../model/authModel"
 
 
 class AuthenService {
-    login(email: string, password: string) {
-        return api.post('/auth/login', {email, password})
+    login(authLoginReq: AuthLoginReqVO) {
+        return api.post('/auth/login', authLoginReq)
     }
-    register(email: string, password: string, firstName: string, lastName: string, dateOfBirth: string, sex: string) {
-        return api.post('/auth/register', {email, password, firstName, lastName, dateOfBirth, sex})
+    register(authRegisterReq: AuthRegisterReqVO) {
+        return api.post('/auth/register', authRegisterReq)
     }
     forgotPassword(email: string) {
         return api.post(`/auth/forgot-password?email=${email}`)
     }
-    initPassword(code: string, newPassword: string) {
-        return api.post('/auth/init-password', {code, newPassword})
+    initPassword(authInitPasswordReq: AuthInitPasswordReqVO) {
+        return api.post('/auth/init-password', authInitPasswordReq)
     }
 
 }

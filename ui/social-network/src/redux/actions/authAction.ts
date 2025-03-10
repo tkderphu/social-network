@@ -1,14 +1,15 @@
-import { CommonResult } from "../common"
+import { CommonResult } from "../../common"
 import { ACCOUNT_CREATE_BEGIN, ACCOUNT_CREATE_FAIL, ACCOUNT_CREATE_SUCCESS, ACCOUNT_FORGOT_PASSWORD_BEGIN, ACCOUNT_FORGOT_PASSWORD_FAIL, ACCOUNT_FORGOT_PASSWORD_SUCCESS, ACCOUNT_INIT_PASSWORD_BEGIN, ACCOUNT_INIT_PASSWORD_FAIL, ACCOUNT_INIT_PASSWORD_SUCCESS, ACCOUNT_LOGIN_BEGIN, ACCOUNT_LOGIN_FAIL, ACCOUNT_LOGIN_SUCCESS, REDIRECT } from "../constants/authenConstant"
-import authenService from "../services/authenService"
+import authenService from "../../services/authenService"
+import { AuthInitPasswordReqVO, AuthLoginReqVO, AuthRegisterReqVO } from "../../model/authModel"
 
 
-export const login = ({email, password}: any) => {
+export const login = (authLoginReq: AuthLoginReqVO) => {
     return (dispatch: any) => {
         dispatch({
             type: ACCOUNT_LOGIN_BEGIN
         })
-        authenService.login(email, password).then(response => {
+        authenService.login(authLoginReq).then(response => {
             const data: CommonResult<any> = response.data
             if(data.code == 200) {
                 dispatch({
@@ -39,12 +40,12 @@ export const login = ({email, password}: any) => {
     }
 }
 
-export const register = ({email, password, firstName, lastName, dateOfBirth, sex}: any) => {
+export const register = (authRegisterReq: AuthRegisterReqVO) => {
     return (dispatch: any) => {
         dispatch({
             type: ACCOUNT_CREATE_BEGIN
         })
-        authenService.register(email, password, firstName, lastName, dateOfBirth, sex).then(response => {
+        authenService.register(authRegisterReq).then(response => {
             const data: CommonResult<any> = response.data;
             if(data.code === 200) {
                 dispatch({
@@ -75,12 +76,12 @@ export const register = ({email, password, firstName, lastName, dateOfBirth, sex
     }
 }
 
-export const initPassword = ({code, newPassword}: any) => {
+export const initPassword = (authInitPassword: AuthInitPasswordReqVO) => {
     return (dispatch: any) => {
         dispatch({
             type: ACCOUNT_INIT_PASSWORD_BEGIN
         })
-        authenService.initPassword(code, newPassword).then(response => {
+        authenService.initPassword(authInitPassword).then(response => {
             const data: CommonResult<any>  = response.data
             if(data.code === 200) {
                 dispatch({

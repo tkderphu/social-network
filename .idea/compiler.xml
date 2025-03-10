@@ -29,6 +29,7 @@
         </processorPath>
         <module name="discovery-services" />
         <module name="mq" />
+        <module name="rpc" />
         <module name="profile" />
         <module name="profile-service" />
         <module name="redis" />
@@ -36,7 +37,9 @@
         <module name="config-server" />
         <module name="security" />
         <module name="profile-api" />
+        <module name="friendship-api" />
         <module name="common" />
+        <module name="friendship-biz" />
         <module name="api" />
         <module name="gateway" />
         <module name="authentication" />
@@ -53,12 +56,16 @@
       <module name="dependencies" options="-parameters" />
       <module name="discovery-services" options="-parameters" />
       <module name="framework" options="-parameters" />
+      <module name="friendship-api" options="-parameters" />
+      <module name="friendship-biz" options="-parameters" />
+      <module name="friendship-service" options="-parameters" />
       <module name="gateway" options="-parameters" />
       <module name="mq" options="-parameters" />
       <module name="profile" options="-parameters" />
       <module name="profile-api" options="-parameters" />
       <module name="profile-service" options="-parameters" />
       <module name="redis" options="-parameters" />
+      <module name="rpc" options="-parameters" />
       <module name="security" options="-parameters" />
       <module name="social-network" options="-parameters" />
     </option>

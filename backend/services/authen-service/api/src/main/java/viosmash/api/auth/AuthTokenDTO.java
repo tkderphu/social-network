@@ -1,4 +1,4 @@
-package viosmash.api;
+package viosmash.api.auth;
 
 import lombok.Data;
 

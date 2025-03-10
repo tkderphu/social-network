@@ -3,10 +3,11 @@ package viosmash.service.profile;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
+import viosmash.controller.profile.vo.UserProfileRespVO;
 import viosmash.controller.profile.vo.UserProfileUpdateReqVO;
+import viosmash.converter.ProfileConverter;
 import viosmash.dal.dataobject.privacy.*;
-import viosmash.dal.dataobject.profile.SexEnum;
-import viosmash.dal.dataobject.profile.UserProfile;
+import viosmash.dal.dataobject.profile.*;
 import viosmash.dal.repository.privacy.UserMessageRepository;
 import viosmash.dal.repository.privacy.UserNotificationRepository;
 import viosmash.dal.repository.privacy.UserPostRepository;
@@ -15,11 +16,13 @@ import viosmash.dal.repository.profile.UserEducationRepository;
 import viosmash.dal.repository.profile.UserPersonalImageRepository;
 import viosmash.dal.repository.profile.UserProfileRepository;
 import viosmash.event.auth.UserCreated;
+import viosmash.pojo.KeyValue;
 import viosmash.utils.json.JsonUtils;
 import viosmash.utils.object.ObjectUtils;
 import viosmash.utils.string.StringUtils;
 
 import java.util.Date;
+import java.util.List;
 
 import static viosmash.exception.utils.ServiceUtils.exception;
 
@@ -66,7 +69,7 @@ public class UserProfileServiceImpl implements UserProfileService{
 
     @Override
     public void updateProfile(Long userId, UserProfileUpdateReqVO userProfileUpdateReqVO) {
-        UserProfile userProfile = getProfileById(userId);
+        UserProfile userProfile = getById(userId);
         if(StringUtils.isEmpty(userProfileUpdateReqVO.getFirstName())) {
             userProfile.setFirstName(userProfileUpdateReqVO.getFirstName());
         }
@@ -82,14 +85,49 @@ public class UserProfileServiceImpl implements UserProfileService{
         if(!ObjectUtils.isNull(userProfileUpdateReqVO.getSexEnum())) {
             userProfile.setSexEnum(userProfileUpdateReqVO.getSexEnum());
         }
-
-
+        if(userProfileUpdateReqVO.getAddress() != null) {
+            KeyValue<AddressEnum, KeyValue<Long, String>> address = userProfileUpdateReqVO.getAddress();
+            UserAddress userAddress = userAddressRepository
+                    .findByUserIdAndAddressEnum(userId, address.getKey())
+                    .orElse(null);
+            if(userAddress == null) {
+                userAddress = new UserAddress().setAddressEnum(address.getKey())
+                        .setUserId(userId).setPageId(address.getValue().getKey())
+                        .setPageName(address.getValue().getValue());
+            } else {
+                userAddress.setPageId(address.getValue().getKey())
+                        .setPageName(address.getValue().getValue());
+            }
+            this.userAddressRepository.save(userAddress);
+        }
+        if(userProfileUpdateReqVO.getEducation() != null) {
+            KeyValue<EducationEnum, KeyValue<Long, String>> education = userProfileUpdateReqVO.getEducation();
+            UserEducation userEducation = userEducationRepository
+                    .findByUserIdAndEducationEnum(userId, education.getKey())
+                    .orElse(null);
+            if(userEducation == null) {
+                userEducation = new UserEducation().setEducationEnum(education.getKey())
+                        .setUserId(userId).setPageId(education.getValue().getKey())
+                        .setPageName(education.getValue().getValue());
+            } else {
+                userEducation.setPageId(education.getValue().getKey())
+                        .setPageName(education.getValue().getValue());
+            }
+            this.userEducationRepository.save(userEducation);
+        }
         this.userProfileRepository.save(userProfile);
     }
 
 
     @Override
-    public UserProfile getProfileById(Long userId) {
+    public UserProfileRespVO getProfileById(Long userId) {
+        UserProfile userProfile = getById(userId);
+        List<UserAddress> addresses = userAddressRepository.findAllByUserId(userId);
+        List<UserEducation> educations = userEducationRepository.findAllByUserId(userId);
+        return ProfileConverter.INSTANCE.convert(userProfile, educations, addresses);
+    }
+
+    private UserProfile getById(Long userId) {
         return this.userProfileRepository.findById(userId)
                 .orElseThrow(() -> exception(404, "Not found user"));
     }

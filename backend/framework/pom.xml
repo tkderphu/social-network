@@ -12,6 +12,7 @@
     <url>http://maven.apache.org</url>
     <modules>
         <module>common</module>
+        <module>rpc</module>
     </modules>
     <dependencies>
         <dependency>

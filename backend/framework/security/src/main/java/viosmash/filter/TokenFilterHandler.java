@@ -7,8 +7,8 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import viosmash.api.AuthTokenDTO;
-import viosmash.api.TokenApi;
+import viosmash.api.auth.AuthTokenDTO;
+import viosmash.api.auth.TokenApi;
 import viosmash.utils.SecurityContextUtils;
 
 import java.io.IOException;

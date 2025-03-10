@@ -1,0 +1,33 @@
+export const UPDATE_INFO_BEGIN = ""
+export const UPDATE_INFO_SUCCESS = ""
+export const UPDATE_INFO_FAIL = ""
+
+export const UPLOAD_COVER_PHOTO_BEGIN = ""
+export const UPLOAD_COVER_PHOTO_SUCCESS = ""
+export const UPLOAD_COVER_PHOTO_FAIL = ""
+
+export const UPLOAD_PERSONAL_IMAGE_BEGIN = ""
+export const UPLOAD_PERSONAL_IMAGE_SUCCESS = ""
+export const UPLOAD_PERSONAL_IMAGE_FAIL = ""
+
+export const UPDATE_EDUCATION_BEGIN = ""
+export const UPDATE_EDUCATION_SUCCESS = ""
+export const UPDATE_EDUCATION_FAIL = ""
+
+
+export const UPDATE_ADDRESS_BEGIN = ""
+export const UPDATE_ADDRESS_SUCCESS = ""
+export const UPDATE_ADDRESS_FAIL = ""
+
+export const UPDATE_MESSAGE_PRIVACY_BEGIN = ""
+export const UPDATE_MESSAGE_PRIVACY_SUCCESS = ""
+export const UPDATE_MESSAGE_PRIVACY_FAIL = ""
+
+export const UPDATE_POST_PRIVACY_BEGIN = ""
+export const UPDATE_POST_PRIVACY_SUCCESS = ""
+export const UPDATE_POST_PRIVACY_FAIL = ""
+
+export const UPDATE_NOTIFCATION_PRIVACY_BEGIN = ""
+export const UPDATE_NOTIFCATION_PRIVACY_SUCCESS = ""
+export const UPDATE_NOTIFCATION_PRIVACY_FAIL = ""
+
