@@ -1,6 +1,11 @@
 package viosmash.service;
 
+import viosmash.nodes.Friend;
+import viosmash.nodes.User;
+import viosmash.nodes.UserMakesFriendRequest;
+
 import java.util.List;
+import java.util.Set;
 
 public interface FriendshipService {
     /**
@@ -8,7 +13,7 @@ public interface FriendshipService {
      * @param userId: id cua user
      * @return danh sach id cua user
      */
-    List<Long> getListFriends(Long userId);
+    Set<Friend> getListFriends(Long userId);
 
     /**
      * Lay danh sach ban be chung giua 2 nguoi dung
@@ -16,7 +21,7 @@ public interface FriendshipService {
      * @param userTwoId: id cua id
      * @return danh sach id cua user chung
      */
-    List<Long> getListMutualFriends(Long userOneId, Long userTwoId);
+    List<User> getListMutualFriends(Long userOneId, Long userTwoId);
 
     /**
      * Xoa ban be. User voi id = {userId} huy ket ban voi user co id = {targetUserId}
@@ -44,14 +49,14 @@ public interface FriendshipService {
      * @param userId: id cua user
      * @return danh sach id cua user, nguoi ma {userId} gui yeu cau ket ban
      */
-    List<Long> getListUserFriendRequests(Long userId);
+    Set<UserMakesFriendRequest> getListUserFriendRequests(Long userId);
 
     /**
      * Lay danh sach yeu cau ket ban toi {userId}
      * @param userId: id cua user
      * @return danh sach id cua user, nguoi ma gui yeu cau ket ban toi {userId}
      */
-    List<Long> getListUserFriendRequestsByReceiver(Long userId);
+    List<UserMakesFriendRequest> getListUserFriendRequestsByReceiver(Long userId);
 
     /**
      * Lay danh sach goi y cho {userId} dua tren

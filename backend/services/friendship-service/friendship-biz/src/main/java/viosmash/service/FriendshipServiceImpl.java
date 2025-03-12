@@ -1,11 +1,20 @@
 package viosmash.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.stereotype.Service;
+import viosmash.nodes.Friend;
+import viosmash.nodes.User;
+import viosmash.nodes.UserMakesFriendRequest;
 import viosmash.repository.UserRepository;
 
 import java.util.List;
+import java.util.Set;
 
+import static viosmash.exception.utils.ServiceUtils.exception;
+
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class FriendshipServiceImpl implements FriendshipService{
@@ -13,42 +22,66 @@ public class FriendshipServiceImpl implements FriendshipService{
     private final UserRepository userRepository;
 
     @Override
-    public List<Long> getListFriends(Long userId) {
-        return List.of();
+    public Set<Friend> getListFriends(Long userId) {
+        return getUserById(userId).getFriends();
     }
 
     @Override
-    public List<Long> getListMutualFriends(Long userOneId, Long userTwoId) {
-        return List.of();
+    public List<User> getListMutualFriends(Long userOneId, Long userTwoId) {
+        return userRepository.findAllMutualFriendsByTwoUser(userOneId, userTwoId);
     }
 
     @Override
     public boolean removeFriend(Long userId, Long targetUserId) {
-        return false;
+        userRepository.removeFriendship(userId, targetUserId);
+        return true;
     }
 
     @Override
     public boolean addNewUserMakeFriendRequest(Long userId, Long targetUserId) {
-        return false;
+
+        User user = getUserById(userId);
+        User targetUser = getUserById(targetUserId);
+
+        user.makesNewFriendRequest(targetUser);
+
+        this.userRepository.save(user);
+        this.userRepository.save(targetUser);
+
+        return true;
+    }
+
+    private User getUserById(Long userId) {
+        return this.userRepository.findById(userId)
+                .orElseThrow(() -> exception(404, "user not found"));
     }
 
     @Override
     public boolean acceptUserFriendRequest(Long userId, Long targetUserId) {
-        return false;
+        User user = getUserById(userId);
+        User targetUser = getUserById(targetUserId);
+
+
+        user.acceptFriendRequest(targetUser);
+
+        this.userRepository.save(user);
+        this.userRepository.save(targetUser);
+
+        return true;
     }
 
     @Override
-    public List<Long> getListUserFriendRequests(Long userId) {
-        return List.of();
+    public Set<UserMakesFriendRequest> getListUserFriendRequests(Long userId) {
+        return getUserById(userId).getUserMakesFriendRequests();
     }
 
     @Override
-    public List<Long> getListUserFriendRequestsByReceiver(Long userId) {
-        return List.of();
+    public List<UserMakesFriendRequest> getListUserFriendRequestsByReceiver(Long userId) {
+        return this.userRepository.findAllReceivedFriendRequests(userId);
     }
 
     @Override
     public List<Long> getListSuggestionUser(Long userId) {
-        return List.of();
+        return userRepository.suggestionFriendsToUser(userId);
     }
 }

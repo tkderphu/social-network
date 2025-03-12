@@ -16,7 +16,7 @@ import static viosmash.nodes.RelationshipConstant.*;
 @Data
 public class User {
     @Id
-    private Long userId;
+    private Long id;
 
     @Relationship(value = FRIEND, direction = Relationship.Direction.OUTGOING)
     private Set<Friend> friends = new HashSet<>();
@@ -24,14 +24,10 @@ public class User {
     @Relationship(value = MAKE_FRIEND_REQUEST, direction = Relationship.Direction.OUTGOING)
     private Set<UserMakesFriendRequest> userMakesFriendRequests = new HashSet<>();
 
-    @Relationship(value = RECEIVED_FRIEND_REQUEST, direction = Relationship.Direction.OUTGOING)
-    private Set<UserReceivedFriendRequest> userReceivedFriendRequests = new HashSet<>();
 
 
     public boolean makesNewFriendRequest(User user) {
         boolean isOk = this.userMakesFriendRequests.add(new UserMakesFriendRequest(LocalDateTime.now(), user));
-        isOk = isOk && user.userReceivedFriendRequests.add(new UserReceivedFriendRequest(LocalDateTime.now(), user));
-
         return isOk;
     }
 
@@ -39,7 +35,6 @@ public class User {
         boolean isOk = this.friends.add(new Friend(LocalDateTime.now(), user));
         isOk = isOk && user.friends.add(new Friend(LocalDateTime.now(), this));
 
-        isOk = isOk && this.userReceivedFriendRequests.remove(new UserReceivedFriendRequest(null, user));
         isOk = isOk && user.userMakesFriendRequests.remove(new UserMakesFriendRequest(null, this));
 
         return isOk;
@@ -50,11 +45,11 @@ public class User {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return Objects.equals(userId, user.userId);
+        return Objects.equals(id, user.id);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(userId);
+        return Objects.hashCode(id);
     }
 }
