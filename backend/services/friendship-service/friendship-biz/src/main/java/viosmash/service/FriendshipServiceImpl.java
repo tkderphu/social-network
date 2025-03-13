@@ -22,13 +22,16 @@ public class FriendshipServiceImpl implements FriendshipService{
     private final UserRepository userRepository;
 
     @Override
-    public Set<Friend> getListFriends(Long userId) {
-        return getUserById(userId).getFriends();
+    public List<Long> getListFriends(Long userId) {
+        return getUserById(userId).getFriends().stream()
+                .map(friend -> friend.getUser().getId())
+                .toList();
     }
 
     @Override
-    public List<User> getListMutualFriends(Long userOneId, Long userTwoId) {
-        return userRepository.findAllMutualFriendsByTwoUser(userOneId, userTwoId);
+    public List<Long> getListMutualFriends(Long userOneId, Long userTwoId) {
+        return userRepository.findAllMutualFriendsByTwoUser(userOneId, userTwoId)
+                .stream().map(User::getId).toList();
     }
 
     @Override

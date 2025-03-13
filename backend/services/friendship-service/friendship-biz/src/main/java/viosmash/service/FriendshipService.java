@@ -13,7 +13,7 @@ public interface FriendshipService {
      * @param userId: id cua user
      * @return danh sach id cua user
      */
-    Set<Friend> getListFriends(Long userId);
+    List<Long> getListFriends(Long userId);
 
     /**
      * Lay danh sach ban be chung giua 2 nguoi dung
@@ -21,7 +21,7 @@ public interface FriendshipService {
      * @param userTwoId: id cua id
      * @return danh sach id cua user chung
      */
-    List<User> getListMutualFriends(Long userOneId, Long userTwoId);
+    List<Long> getListMutualFriends(Long userOneId, Long userTwoId);
 
     /**
      * Xoa ban be. User voi id = {userId} huy ket ban voi user co id = {targetUserId}

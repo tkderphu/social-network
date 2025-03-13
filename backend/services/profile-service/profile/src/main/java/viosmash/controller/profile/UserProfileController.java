@@ -13,11 +13,12 @@ import viosmash.service.profile.UserProfileService;
 @RequestMapping("/api/profiles")
 public class UserProfileController {
     private final UserProfileService userProfileService;
-
+    private final
 
     @GetMapping
     public CommonResult<UserProfileRespVO> getProfile() {
         Long userId = 1L;
+
         return CommonResult.success(userProfileService.getProfileById(userId));
     }
 

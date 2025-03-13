@@ -36,8 +36,8 @@
         <module name="dependencies" />
         <module name="config-server" />
         <module name="security" />
-        <module name="profile-api" />
         <module name="friendship-api" />
+        <module name="profile-api" />
         <module name="common" />
         <module name="friendship-biz" />
         <module name="api" />

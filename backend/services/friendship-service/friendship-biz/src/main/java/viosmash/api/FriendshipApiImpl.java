@@ -1,10 +1,7 @@
 package viosmash.api;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import viosmash.service.FriendshipService;
 
 import java.util.List;
@@ -14,17 +11,18 @@ import java.util.List;
 public class FriendshipApiImpl implements FriendshipApi{
 
     private final FriendshipService friendshipService;
-
+    private final ProfileApi profileApi;
     @Override
     @GetMapping("/mutual-friends/{userOne}/{userTwo}")
     public List<Long> getListCommonFriends(@PathVariable("userOne") Long userOne,
                                            @PathVariable("userTwo") Long userTwo) {
-        return friendshipService.getListMutualFriends(userOne, userTwo);
+        return null;
     }
 
     @Override
-    public List<Long> getListFriends(Long userId, Long limit) {
-        return friendshipService.getListFriends(limit)
-                .stream().limit(limit).toList();
+    @GetMapping("/friends/{userId}")
+    public List<Long> getListFriends(@PathVariable("userId") Long userId,
+                                           @RequestParam("limit") Long limit) {
+       return null;
     }
 }
