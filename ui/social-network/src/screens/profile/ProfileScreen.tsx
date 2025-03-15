@@ -234,7 +234,7 @@ function ProfileScreen() {
             <div className="tab-content mt-3">
                 <div className="tab-pane fade show active" id={`${navigateContent}`}>
                     {navigateContent === '#posts_nav' && (<div className="row d-flex flex-wrap">
-                        <div className="col-5 left-section">
+                        <div className="col-5 left-section sticky-sidebar">
                             <div className="card mb-3">
                                 <h5>Intro</h5>
                                 <p>Studied at Học viện Công nghệ Bưu chính Viễn thông - PTIT</p>
@@ -403,7 +403,67 @@ function ProfileScreen() {
                                 </div>
 
                             </div>
+                            
+                            <div className="right-section">
+                                <div className="card mb-3">
+                                    <div className="card-body">
+                                        <h5 className="card-title">Phu Nguyen</h5>
+                                        <p className="card-text">March 1 at 7:32 PM</p>
+                                        <p className="card-text">This is a sample post.</p>
+                                    </div>
+                                </div>
 
+                            </div>
+                            <div className="right-section">
+                                <div className="card mb-3">
+                                    <div className="card-body">
+                                        <h5 className="card-title">Phu Nguyen</h5>
+                                        <p className="card-text">March 1 at 7:32 PM</p>
+                                        <p className="card-text">This is a sample post.</p>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div className="right-section">
+                                <div className="card mb-3">
+                                    <div className="card-body">
+                                        <h5 className="card-title">Phu Nguyen</h5>
+                                        <p className="card-text">March 1 at 7:32 PM</p>
+                                        <p className="card-text">This is a sample post.</p>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div className="right-section">
+                                <div className="card mb-3">
+                                    <div className="card-body">
+                                        <h5 className="card-title">Phu Nguyen</h5>
+                                        <p className="card-text">March 1 at 7:32 PM</p>
+                                        <p className="card-text">This is a sample post.</p>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div className="right-section">
+                                <div className="card mb-3">
+                                    <div className="card-body">
+                                        <h5 className="card-title">Phu Nguyen</h5>
+                                        <p className="card-text">March 1 at 7:32 PM</p>
+                                        <p className="card-text">This is a sample post.</p>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div className="right-section">
+                                <div className="card mb-3">
+                                    <div className="card-body">
+                                        <h5 className="card-title">Phu Nguyen</h5>
+                                        <p className="card-text">March 1 at 7:32 PM</p>
+                                        <p className="card-text">This is a sample post.</p>
+                                    </div>
+                                </div>
+
+                            </div>
                         </div>
                     </div>)}
                     {navigateContent === '#friends' && (
