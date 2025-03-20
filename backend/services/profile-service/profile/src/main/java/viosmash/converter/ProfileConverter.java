@@ -6,8 +6,8 @@ import viosmash.controller.profile.vo.UserProfileRespVO;
 import viosmash.dal.dataobject.profile.UserAddress;
 import viosmash.dal.dataobject.profile.UserEducation;
 import viosmash.dal.dataobject.profile.UserProfile;
-import viosmash.utils.collection.CollUtils;
-import viosmash.utils.object.BeanUtil;
+import viosmash.collection.CollUtils;
+import viosmash.object.BeanUtil;
 
 import java.util.List;
 

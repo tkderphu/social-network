@@ -6,9 +6,9 @@ import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import viosmash.dal.dataobject.token.AuthAccessToken;
 import viosmash.event.notify.forgotpassword.ForgotPasswordEvent;
-import viosmash.utils.collection.CollUtils;
-import viosmash.utils.date.DateUtils;
-import viosmash.utils.json.JsonUtils;
+import viosmash.collection.CollUtils;
+import viosmash.date.DateUtils;
+import viosmash.json.JsonUtils;
 
 import java.time.temporal.ChronoUnit;
 import java.util.Collection;

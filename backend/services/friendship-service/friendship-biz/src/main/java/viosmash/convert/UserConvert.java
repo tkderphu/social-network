@@ -6,8 +6,8 @@ import viosmash.api.UserDTO;
 import viosmash.controller.vo.UserMakeFriendRequestRespVO;
 import viosmash.controller.vo.UserRespVO;
 import viosmash.nodes.UserMakesFriendRequest;
-import viosmash.utils.collection.CollUtils;
-import viosmash.utils.object.BeanUtil;
+import viosmash.collection.CollUtils;
+import viosmash.object.BeanUtil;
 
 import java.util.Collection;
 import java.util.List;

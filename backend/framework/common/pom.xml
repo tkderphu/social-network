@@ -16,6 +16,11 @@
             <artifactId>easy-random-core</artifactId>
             <version>4.0.0</version>
         </dependency>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
     <build>
         <finalName>common</finalName>

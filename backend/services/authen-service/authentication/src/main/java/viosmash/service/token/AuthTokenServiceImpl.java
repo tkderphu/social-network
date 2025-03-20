@@ -10,7 +10,7 @@ import viosmash.dal.dataobject.token.AuthRefreshToken;
 import viosmash.dal.redis.AuthRedisRepository;
 import viosmash.dal.repository.token.AuthAccessTokenRepository;
 import viosmash.dal.repository.token.AuthRefreshTokenRepository;
-import viosmash.utils.date.DateUtils;
+import viosmash.date.DateUtils;
 
 import java.util.UUID;
 

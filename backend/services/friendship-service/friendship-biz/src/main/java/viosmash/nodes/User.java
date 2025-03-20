@@ -18,6 +18,7 @@ public class User {
     @Id
     private Long id;
 
+
     @Relationship(value = FRIEND, direction = Relationship.Direction.OUTGOING)
     private Set<Friend> friends = new HashSet<>();
 

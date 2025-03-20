@@ -17,9 +17,9 @@ import viosmash.dal.repository.auth.UserRepository;
 import viosmash.event.auth.UserCreated;
 import viosmash.event.notify.forgotpassword.ForgotPasswordEvent;
 import viosmash.service.token.AuthTokenService;
-import viosmash.utils.json.JsonUtils;
-import viosmash.utils.object.BeanUtil;
-import viosmash.utils.string.StringUtils;
+import viosmash.json.JsonUtils;
+import viosmash.object.BeanUtil;
+import viosmash.string.StringUtils;
 
 import java.util.UUID;
 

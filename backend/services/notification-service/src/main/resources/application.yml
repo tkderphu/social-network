@@ -1,0 +1,8 @@
+
+
+
+viosmash:
+  websocket:
+    endpoint: /ws/notification
+    appPrefix: /app/notification
+    destinationPrefix: /topic/notification

@@ -5,26 +5,25 @@
         <groupId>com.viosmash</groupId>
         <artifactId>social-network</artifactId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>framework</artifactId>
-    <packaging>pom</packaging>
-    <name>framework Maven Webapp</name>
+    <artifactId>notification-service</artifactId>
+    <packaging>war</packaging>
+    <name>notification-service Maven Webapp</name>
     <url>http://maven.apache.org</url>
-    <modules>
-        <module>common</module>
-        <module>rpc</module>
-        <module>websocket</module>
-    </modules>
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
+            <groupId>com.viosmash</groupId>
+            <artifactId>websocket</artifactId>
+            <version>1.0-SNAPSHOT</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.viosmash</groupId>
+            <artifactId>mq</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
     </dependencies>
     <build>
-        <finalName>framework</finalName>
+        <finalName>notification-service</finalName>
     </build>
 </project>

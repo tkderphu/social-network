@@ -6,7 +6,7 @@ import viosmash.controller.privacy.vo.PrivacyRespVO;
 import viosmash.dal.dataobject.privacy.UserMessage;
 import viosmash.dal.dataobject.privacy.UserNotification;
 import viosmash.dal.dataobject.privacy.UserPost;
-import viosmash.utils.object.BeanUtil;
+import viosmash.object.BeanUtil;
 
 @Mapper
 public interface PrivacyConverter {

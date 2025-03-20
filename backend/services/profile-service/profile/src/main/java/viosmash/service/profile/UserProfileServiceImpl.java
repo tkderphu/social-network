@@ -17,9 +17,9 @@ import viosmash.dal.repository.profile.UserPersonalImageRepository;
 import viosmash.dal.repository.profile.UserProfileRepository;
 import viosmash.event.auth.UserCreated;
 import viosmash.pojo.KeyValue;
-import viosmash.utils.json.JsonUtils;
-import viosmash.utils.object.ObjectUtils;
-import viosmash.utils.string.StringUtils;
+import viosmash.json.JsonUtils;
+import viosmash.object.ObjectUtils;
+import viosmash.string.StringUtils;
 
 import java.util.Date;
 import java.util.List;
