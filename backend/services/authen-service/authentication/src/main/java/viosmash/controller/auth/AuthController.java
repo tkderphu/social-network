@@ -36,9 +36,9 @@ public class AuthController {
 
     @GetMapping("/refreshToken")
     @PermitAll
-    public CommonResult<AuthLoginRespVO> refreshToken(@RequestParam("refreshToken") String refreshToken) {
-        AuthLoginRespVO resp = authService.refreshToken(refreshToken);
-        return success(resp);
+    public CommonResult<?> refreshToken(@RequestParam("refreshToken") String refreshToken) {
+//        AuthLoginRespVO resp = authService.refreshToken(refreshToken);
+        return success("Dsdsd");
     }
 
 }

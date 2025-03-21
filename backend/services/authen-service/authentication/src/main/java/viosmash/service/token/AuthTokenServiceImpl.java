@@ -21,9 +21,9 @@ import static viosmash.exception.utils.ServiceUtils.exception;
 @RequiredArgsConstructor
 public class AuthTokenServiceImpl implements AuthTokenService{
 
-    @Value("${spring.authentication.accessToken.expires}")
+    @Value("${spring.authentication.accessToken.expiresMinute}")
     private Integer accessTokenExpires;
-    @Value("${spring.authentication.refreshToken.expires}")
+    @Value("${spring.authentication.refreshToken.expiresMinute}")
     private Integer refreshTokenExpires;
 
     private final AuthRedisRepository authRedisRepository;

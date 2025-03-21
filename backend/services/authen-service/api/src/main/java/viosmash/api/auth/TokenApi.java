@@ -13,6 +13,7 @@ public interface TokenApi {
 
     String PREFIX = ApiConstant.PREFIX + "/token";
 
+    String URL_CHECK = "http://" + ApiConstant.NAME + PREFIX + "/check";
 
     @PutMapping(PREFIX + "/refresh")
     CommonResult<AuthTokenDTO> refreshAccessToken(@RequestParam("refreshToken") String refreshToken);

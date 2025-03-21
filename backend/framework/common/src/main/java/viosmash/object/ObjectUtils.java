@@ -6,10 +6,13 @@ import java.lang.reflect.Constructor;
 
 public class ObjectUtils {
 
-    @SneakyThrows
     public static <T> T getObject(Class<T> clazz) {
-        Constructor<T> constructor= clazz.getConstructor();
-        return constructor.newInstance();
+        try {
+            Constructor<T> constructor= clazz.getConstructor();
+            return constructor.newInstance();
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
     public static boolean isNull(Object o) {
         return o == null;

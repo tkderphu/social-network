@@ -14,9 +14,9 @@ import java.nio.charset.StandardCharsets;
 @Slf4j
 public class LoginUserRequestInterceptor implements RequestInterceptor {
     @Override
-    @SneakyThrows
     public void apply(RequestTemplate requestTemplate) {
         LoginUser loginUser = SecurityUtils.getLoginUserMember();
+
         if(loginUser == null) {
             return;
         }
@@ -26,7 +26,7 @@ public class LoginUserRequestInterceptor implements RequestInterceptor {
             requestTemplate.header(SecurityUtils.LOGIN_USER, userEncoder);
         } catch (Exception ex) {
             log.error("[apply][Store LoginUser({}) to Header before send occur error({})]", loginUser, ex);
-            throw ex;
+            throw new RuntimeException(ex);
         }
     }
 }

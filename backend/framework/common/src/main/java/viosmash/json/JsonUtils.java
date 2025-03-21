@@ -1,6 +1,7 @@
 package viosmash.json;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -18,13 +19,21 @@ public class JsonUtils {
         objectMapper.registerModules(new JavaTimeModule());
     }
 
-    @SneakyThrows
+
     public static String toStringJson(Object object) {
-        return objectMapper.writeValueAsString(object);
+        try {
+            return objectMapper.writeValueAsString(object);
+        } catch (RuntimeException | JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    @SneakyThrows
+
     public static <T> T toObject(String jsonString, Class<T> clazz) {
-        return objectMapper.readValue(jsonString, clazz);
+        try {
+            return objectMapper.readValue(jsonString, clazz);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }

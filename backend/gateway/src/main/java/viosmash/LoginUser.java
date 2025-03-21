@@ -1,10 +1,12 @@
-package viosmash.api.auth;
+package viosmash;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import lombok.ToString;
 
 @Data
-public class AuthTokenDTO {
+@ToString
+public class LoginUser {
     private String accessToken;
     private String refreshToken;
     private Long expires;

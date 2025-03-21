@@ -1,6 +1,6 @@
 package viosmash.enums;
 
 public interface ApiConstant {
-    String PREFIX = "/api/auth";
-    String NAME = "auth-server";
+    String NAME = "auth-service";
+    String PREFIX = RpcConstant.PREFIX  + "/auth";
 }

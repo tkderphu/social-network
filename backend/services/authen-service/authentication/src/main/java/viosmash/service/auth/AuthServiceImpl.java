@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.annotation.Validated;
@@ -30,12 +31,12 @@ import static viosmash.exception.utils.ServiceUtils.exception;
 @Validated
 public class AuthServiceImpl implements AuthService{
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
     private final RabbitTemplate rabbitTemplate;
     private final AuthTokenService authTokenService;
     private final AuthRedisRepository authRedisRepository;
 
-    @Value("${spring.authentication.forgotPassword.code}")
+    @Value("${spring.authentication.forgotPassword.codeExpiredMinutes}")
     private Integer forgotPasswordExpires;
 
     @Override
