@@ -6,8 +6,8 @@ export interface AuthLoginRespVO {
 
 }
 export interface AuthRegisterReqVO {
-    email: string, password: string, firstName: string, 
-    lastName: string, dateOfBirth: any, sex: "MALE" | "FEMALE", phoneNumber: string
+    email?: string, password?: string, firstName?: string, 
+    lastName?: string, dateOfBirth?: any, sex?: "MALE" | "FEMALE"
 }
 export interface AuthInitPasswordReqVO {
 

@@ -10,3 +10,11 @@ export interface PageResult<T> {
     limit: number
     data: Array<T>
 }
+
+export const setState = (event: any, fn: any) => {
+    const {name, value} = event.target
+    fn((prev: any) => ({
+        ...prev,
+        [name]: value
+    }))
+}

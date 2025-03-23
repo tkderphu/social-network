@@ -22,7 +22,7 @@ function Header(props: { container: any, fn: any }) {
                         <a className="nav-link" href="/friends">Friends</a>
                     </li>
                     <li className="nav-item">
-                        <a className="nav-link">Group</a>
+                        <a className="nav-link" href='/groups'>Groups</a>
                     </li>
                 </ul>
                 <ul className="navbar-nav d-flex align-items-center flex-wrap">

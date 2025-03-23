@@ -1,5 +1,5 @@
 import {combineReducers} from 'redux'
-import { loginReducer } from './authReducer'
+import { forgotPasswordReducer, loginReducer, registerReducer } from './authReducer'
 import { updateAddressReducer, updateEducationReducer, updateInfoReducer, uploadPersonalImageReducer } from './profileReducer'
 const rootReducer = combineReducers({
     uploadPersonalImage: uploadPersonalImageReducer,
@@ -7,6 +7,8 @@ const rootReducer = combineReducers({
     updateAddress: updateAddressReducer,
     updateEducation: updateEducationReducer,
     //auth
-    login: loginReducer
+    login: loginReducer,
+    register: registerReducer,
+    forgotPassword: forgotPasswordReducer
 })
 export default rootReducer

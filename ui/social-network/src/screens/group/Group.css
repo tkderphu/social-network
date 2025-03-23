@@ -8,3 +8,10 @@
 .short-cut-group:hover {
     background-color: rgb(170, 175, 179);
 }
+.create-group {
+    background-color: rgb(149, 149, 228);
+    border: none;
+}
+.create-group:hover {
+    opacity: 0.8;
+}

@@ -4,7 +4,7 @@ import authenService from "../../services/authenService"
 import { AuthInitPasswordReqVO, AuthLoginReqVO, AuthRegisterReqVO } from "../../model/authModel"
 
 
-export const login = (authLoginReq: AuthLoginReqVO) => {
+export const loginAction = (authLoginReq: AuthLoginReqVO) => {
     return (dispatch: any) => {
         dispatch({
             type: ACCOUNT_LOGIN_BEGIN
@@ -40,7 +40,7 @@ export const login = (authLoginReq: AuthLoginReqVO) => {
     }
 }
 
-export const register = (authRegisterReq: AuthRegisterReqVO) => {
+export const registerAction = (authRegisterReq: AuthRegisterReqVO) => {
     return (dispatch: any) => {
         dispatch({
             type: ACCOUNT_CREATE_BEGIN
@@ -76,7 +76,7 @@ export const register = (authRegisterReq: AuthRegisterReqVO) => {
     }
 }
 
-export const initPassword = (authInitPassword: AuthInitPasswordReqVO) => {
+export const initPasswordAction = (authInitPassword: AuthInitPasswordReqVO) => {
     return (dispatch: any) => {
         dispatch({
             type: ACCOUNT_INIT_PASSWORD_BEGIN
@@ -112,7 +112,7 @@ export const initPassword = (authInitPassword: AuthInitPasswordReqVO) => {
     }
 }
 
-export const forgotPassword = (email: string) => {
+export const forgotPasswordAction = (email: string) => {
     return (dispatch: any) => {
         dispatch({
             type: ACCOUNT_FORGOT_PASSWORD_BEGIN
