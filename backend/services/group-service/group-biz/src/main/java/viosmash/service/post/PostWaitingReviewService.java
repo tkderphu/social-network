@@ -1,0 +1,11 @@
+package viosmash.service.post;
+
+import java.util.List;
+
+public interface PostWaitingReviewService {
+    Boolean pushPostToWaitingBucket(Long groupId, Long postId);
+    List<Long> getListPostByUser(Long userId);
+    List<Long> getListPostByGroup(Long groupId);
+
+    Boolean deletePost(Long postId);
+}
