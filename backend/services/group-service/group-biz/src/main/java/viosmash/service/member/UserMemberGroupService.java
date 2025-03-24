@@ -11,11 +11,12 @@ public interface UserMemberGroupService {
     List<UserMemberGroup> getListReviewer(Long groupId);
     int countMember(Long groupId);
 
-    List<UserMemberGroup> getListMember(Long groupId);
+    List<Long> getListMember(Long groupId);
+    List<Long> getListGroup(Long memberId);
 
     Boolean kickMember(Long groupId, Long userMemberId);
 
-    Boolean leaveGroup(Long userMemberId);
+    Boolean leaveGroup(Long groupId, Long userMemberId);
 
     Boolean updatePermissionToUser(Long groupId,
                                    Long memberId,

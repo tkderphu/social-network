@@ -1,8 +1,10 @@
 package viosmash.service.group;
 
 import viosmash.controller.vo.GroupCreateReqVO;
-import viosmash.enums.GroupRole;
+import viosmash.dal.dataobject.Group;
 import viosmash.enums.GroupType;
+
+import java.util.List;
 
 public interface GroupService {
 
@@ -16,7 +18,8 @@ public interface GroupService {
 
     Boolean deleteGroup(Long groupId);
 
-    Long createGroup(String name, GroupType groupType);
+    Long createGroup(GroupCreateReqVO reqVO);
     Long updateGroup(String name, GroupType groupType);
 
+    List<Group> getListGroup();
 }

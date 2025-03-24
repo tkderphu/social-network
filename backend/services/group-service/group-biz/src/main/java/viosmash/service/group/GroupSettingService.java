@@ -3,10 +3,12 @@ package viosmash.service.group;
 import viosmash.dal.dataobject.GroupSetting;
 
 public interface GroupSettingService {
-    Boolean updateEnableAutoAcceptMember(Long postId, Boolean isTrueOrFalse);
-    Boolean updateEnableAutoReviewPost(Long postId, Boolean isTrueOrFalse);
+
+    Boolean updateSetting(Long groupId,
+                          Boolean enableAutoAcceptMember,
+                          Boolean enableAutoReviewPost);
 
     GroupSetting getGroupSetting(Long groupId);
 
-
+    GroupSetting createGroupSetting(Long groupId);
 }
