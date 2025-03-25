@@ -1,0 +1,13 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MYSQL;DATABASE_TO_UPPER=false;NON_KEYWORDS=value;
+    driver-class-name: org.h2.Driver
+
+
+  authentication:
+    accessToken:
+      expiresMinute: 1
+    refreshToken:
+      expiresMinute: 1
+    forgotPassword:
+      codeExpiredMinutes: 1

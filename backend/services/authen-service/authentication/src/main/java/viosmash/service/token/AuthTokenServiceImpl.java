@@ -1,9 +1,9 @@
 package viosmash.service.token;
 
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import viosmash.dal.dataobject.auth.User;
 import viosmash.dal.dataobject.token.AuthAccessToken;
 import viosmash.dal.dataobject.token.AuthRefreshToken;
@@ -12,6 +12,8 @@ import viosmash.dal.repository.token.AuthAccessTokenRepository;
 import viosmash.dal.repository.token.AuthRefreshTokenRepository;
 import viosmash.date.DateUtils;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import static viosmash.constant.ErrorCodeConstant.REFRESH_TOKEN_INVALID;
@@ -89,7 +91,6 @@ public class AuthTokenServiceImpl implements AuthTokenService{
     }
 
     @Override
-    @Transactional
     public void removeAccessToken(String accessToken, String refreshToken) {
         this.authAccessTokenRepository.deleteAllByRefreshToken(refreshToken);
         this.authRedisRepository.removeToken(accessToken);
@@ -102,10 +103,10 @@ public class AuthTokenServiceImpl implements AuthTokenService{
 
 
     private Long refreshExpires() {
-        return DateUtils.getCurrentMilliseconds() + refreshTokenExpires;
+        return DateUtils.getCurrentMilliseconds() + Duration.of(refreshTokenExpires, ChronoUnit.MINUTES).toMillis();
     }
     private Long accessExpires() {
-        return DateUtils.getCurrentMilliseconds() + accessTokenExpires;
+        return DateUtils.getCurrentMilliseconds() + Duration.of(accessTokenExpires, ChronoUnit.MINUTES).toMillis();
     }
 
 }

@@ -1,5 +1,6 @@
 package viosmash.dal.repository.token;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import viosmash.dal.dataobject.token.AuthAccessToken;

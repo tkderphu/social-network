@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 import viosmash.EventConstant;
 import viosmash.controller.auth.vo.*;
@@ -28,10 +29,9 @@ import static viosmash.exception.utils.ServiceUtils.exception;
 
 @RequiredArgsConstructor
 @Service
-@Validated
 public class AuthServiceImpl implements AuthService{
     private final UserRepository userRepository;
-    private final PasswordEncoder passwordEncoder=new BCryptPasswordEncoder();
+    private final PasswordEncoder passwordEncoder;
     private final RabbitTemplate rabbitTemplate;
     private final AuthTokenService authTokenService;
     private final AuthRedisRepository authRedisRepository;
@@ -53,6 +53,7 @@ public class AuthServiceImpl implements AuthService{
 
 
     @Override
+    @Transactional
     public void logout(String accessToken, String refreshToken) {
         this.authTokenService.removeAccessToken(accessToken, refreshToken);
         this.authTokenService.removeRefreshToken(refreshToken);
@@ -66,12 +67,12 @@ public class AuthServiceImpl implements AuthService{
 
     @Override
     public void register(@Valid AuthRegisterReqVO registerReqVO) {
-        boolean isExistsUser = this.userRepository.findByEmail(registerReqVO.getEmail())
+        boolean isExistsUser = this.userRepository.findByEmail(registerReqVO.getEmail().toLowerCase())
                 .isPresent();
         if(isExistsUser) {
             throw exception(400, "User exists");
         }
-        User user = new User().setEmail(registerReqVO.getEmail())
+        User user = new User().setEmail(registerReqVO.getEmail().toLowerCase())
                 .setPassword(passwordEncoder.encode(registerReqVO.getPassword()));
 
         this.userRepository.save(user);
@@ -79,11 +80,11 @@ public class AuthServiceImpl implements AuthService{
         UserCreated userCreated = BeanUtil.copy(registerReqVO, UserCreated.class);
         assert userCreated != null;
 
-        rabbitTemplate.convertAndSend(
-                String.format(EventConstant.USER_CREATED, "dir"),
-                String.format(EventConstant.USER_CREATED, "rou"),
-                JsonUtils.toStringJson(userCreated)
-        );
+//        rabbitTemplate.convertAndSend(
+//                String.format(EventConstant.USER_CREATED, "dir"),
+//                String.format(EventConstant.USER_CREATED, "rou"),
+//                JsonUtils.toStringJson(userCreated)
+//        );
 
     }
 

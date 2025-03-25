@@ -4,11 +4,12 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
+import viosmash.constant.ApiConstant;
 
 import java.util.Collection;
 import java.util.List;
 
-@FeignClient
+@FeignClient(name = ApiConstant.NAME)
 public interface ProfileApi {
 
     @GetMapping("/get-all-by-collection-id")

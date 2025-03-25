@@ -1,5 +1,6 @@
 package viosmash.controller.auth.vo;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 
 import java.util.Date;
@@ -9,7 +10,9 @@ public class AuthRegisterReqVO {
     /**
      * User authentication
      */
+    @NotEmpty
     private String email;
+    @NotEmpty
     private String password;
 
 

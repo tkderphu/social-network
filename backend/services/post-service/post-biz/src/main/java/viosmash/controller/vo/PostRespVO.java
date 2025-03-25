@@ -2,6 +2,7 @@ package viosmash.controller.vo;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import viosmash.api.GroupDTO;
 import viosmash.api.UserDTO;
 import viosmash.enums.PostType;
 
@@ -15,7 +16,7 @@ public class PostRespVO {
     private UserDTO user;
     private PostRespVO sharePost;
     private PostType postType;
-    //group =>
+    private GroupDTO group;
     private List<String> imageUrls;
     private List<String> fileUrls;
     private Integer numberOfShare;

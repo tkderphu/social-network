@@ -1,7 +1,9 @@
 package viosmash.api;
 
+import lombok.Data;
 import viosmash.enums.GroupType;
 
+@Data
 public class GroupDTO {
     private Long id;
     private String name;

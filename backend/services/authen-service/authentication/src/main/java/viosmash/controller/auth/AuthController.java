@@ -16,7 +16,6 @@ import static viosmash.pojo.CommonResult.success;
 
 @RestController
 @RequestMapping("/api/auth")
-@Validated
 @RequiredArgsConstructor
 public class AuthController {
 
@@ -36,9 +35,9 @@ public class AuthController {
 
     @GetMapping("/refreshToken")
     @PermitAll
-    public CommonResult<?> refreshToken(@RequestParam("refreshToken") String refreshToken) {
-//        AuthLoginRespVO resp = authService.refreshToken(refreshToken);
-        return success("Dsdsd");
+    public CommonResult<AuthLoginRespVO> refreshToken(@RequestParam("refreshToken") String refreshToken) {
+        AuthLoginRespVO resp = authService.refreshToken(refreshToken);
+        return success(resp);
     }
 
 }
