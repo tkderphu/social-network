@@ -73,18 +73,19 @@ public class AuthServiceImpl implements AuthService{
             throw exception(400, "User exists");
         }
         User user = new User().setEmail(registerReqVO.getEmail().toLowerCase())
-                .setPassword(passwordEncoder.encode(registerReqVO.getPassword()));
+                .setPassword(passwordEncoder.encode(registerReqVO.getPassword()))
+                .setIsLocked(false).setIsOnline(true);
 
         this.userRepository.save(user);
 
         UserCreated userCreated = BeanUtil.copy(registerReqVO, UserCreated.class);
         assert userCreated != null;
 
-//        rabbitTemplate.convertAndSend(
-//                String.format(EventConstant.USER_CREATED, "dir"),
-//                String.format(EventConstant.USER_CREATED, "rou"),
-//                JsonUtils.toStringJson(userCreated)
-//        );
+        rabbitTemplate.convertAndSend(
+                EventConstant.USER_CREATED + EventConstant.DIRECT_SUFFIX,
+                EventConstant.USER_CREATED + EventConstant.ROU_SUFFIX,
+                JsonUtils.toStringJson(userCreated)
+        );
 
     }
 

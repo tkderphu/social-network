@@ -5,8 +5,8 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public enum SexEnum {
-    MALE("Nam"),
-    FEMALE("Nu");
+    MALE("MALE"),
+    FEMALE("FEMALE");
 
     @Getter
     private final String value;

@@ -3,6 +3,7 @@ package viosmash.converter;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 import viosmash.controller.profile.vo.UserProfileRespVO;
+import viosmash.controller.profile.vo.UserProfileSimpleRespVO;
 import viosmash.dal.dataobject.profile.UserAddress;
 import viosmash.dal.dataobject.profile.UserEducation;
 import viosmash.dal.dataobject.profile.UserProfile;
@@ -28,4 +29,10 @@ public interface ProfileConverter {
 
         return userProfileRespVO;
     }
+//    default UserProfileSimpleRespVO convert(UserProfile userProfile) {
+//        UserProfileSimpleRespVO s = new UserProfileSimpleRespVO();
+//        s.setFirstName(userProfile.getFirstName());
+//        s.setLastName(userProfile.getLastName());
+//        s.setImageUrl(userProfile.ge);
+//    }
 }

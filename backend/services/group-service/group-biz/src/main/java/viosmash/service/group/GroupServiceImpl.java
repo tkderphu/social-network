@@ -12,20 +12,18 @@ import viosmash.enums.GroupType;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static viosmash.exception.utils.ServiceUtils.exception;
+
 @Service
 @RequiredArgsConstructor
 public class GroupServiceImpl implements GroupService{
     private final GroupRepository groupRepository;
-    @Override
-    @GroupPermission
-    public Boolean acceptMemberJoinGroup(Long groupId, Long memberId) {
-        return null;
-    }
+
 
     @Override
-    @GroupPermission
-    public Boolean acceptPost(Long groupId, Long postId) {
-        return null;
+    public Group getGroup(Long id) {
+        return this.groupRepository.findById(id)
+                .orElseThrow(() -> exception(404, "group not found"));
     }
 
     @Override
@@ -46,8 +44,16 @@ public class GroupServiceImpl implements GroupService{
 
     @Override
     @GroupPermission(specificRole = GroupRole.OWNER)
-    public Long updateGroup(String name, GroupType groupType) {
-        return 0L;
+    public Long updateGroup(Long groupId, String name, GroupType groupType) {
+        Group group = getGroup(groupId);
+        if(name != null && !name.isEmpty()) {
+            group.setName(name);
+        }
+        if(groupType != null) {
+            group.setGroupType(groupType);
+        }
+        this.groupRepository.save(group);
+        return group.getId();
     }
 
     @Override

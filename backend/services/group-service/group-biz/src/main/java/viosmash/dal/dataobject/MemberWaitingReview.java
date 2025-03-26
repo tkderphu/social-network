@@ -3,20 +3,20 @@ package viosmash.dal.dataobject;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import viosmash.enums.GroupRole;
+
+import java.time.LocalDateTime;
 
 @Data
+@Table(name = "tbl_member_waiting_review")
 @Entity
 @Accessors(chain = true)
-@Table(name = "tbl_user_member_group")
-public class UserMemberGroup {
+public class MemberWaitingReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long memberId;
+    private Long userId;
     private Long groupId;
 
-    @Enumerated(EnumType.STRING)
-    private GroupRole groupRole;
+    private LocalDateTime requestDate;
 }

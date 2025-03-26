@@ -1,9 +1,6 @@
 package viosmash.dal.dataobject.profile;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
@@ -12,6 +9,8 @@ import lombok.experimental.Accessors;
 @Data
 @Accessors(chain = true)
 public class UserEducation {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Enumerated(EnumType.STRING)

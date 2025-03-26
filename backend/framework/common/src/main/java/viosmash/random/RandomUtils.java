@@ -23,6 +23,13 @@ public class RandomUtils {
         return t;
     }
     public static <T>List<T> randomList(Class<T> clazz) {
-        return null;
+        return easyRandom.objects(clazz, 6).toList();
+    }
+    public static <T> List<T> randomList(Class<T> clazz, Consumer<T> consumer) {
+        var list = randomList(clazz);
+        list.stream().forEach(r -> {
+            consumer.accept(r);
+        });
+        return list;
     }
 }

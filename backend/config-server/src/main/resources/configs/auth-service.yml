@@ -16,6 +16,16 @@ spring:
   redis:
     port: 6379
     host: localhost
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    virtual-host: /
+    listener:
+      simple:
+        concurrency: 3
+        max-concurrency: 10
   authentication:
     accessToken:
       expiresMinute: 500000000
@@ -23,7 +33,4 @@ spring:
       expiresMinute: 500000000
     forgotPassword:
       codeExpiredMinutes: 5
-
-
-
 

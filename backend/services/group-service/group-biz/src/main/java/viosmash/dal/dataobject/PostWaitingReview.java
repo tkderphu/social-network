@@ -1,17 +1,20 @@
 package viosmash.dal.dataobject;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Data
 @Entity
 @Accessors(chain = true)
-@Table(name = "post_waiting_review")
+@Table(name = "tbl_post_waiting_review")
 public class PostWaitingReview {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
     private Long postId;
     private Long groupId;
+
+
 }

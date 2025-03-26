@@ -1,8 +1,10 @@
 package viosmash.service.profile;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Service;
+import viosmash.EventConstant;
 import viosmash.controller.profile.vo.UserProfileRespVO;
 import viosmash.controller.profile.vo.UserProfileUpdateReqVO;
 import viosmash.converter.ProfileConverter;
@@ -27,6 +29,7 @@ import java.util.List;
 import static viosmash.exception.utils.ServiceUtils.exception;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class UserProfileServiceImpl implements UserProfileService{
 
@@ -42,9 +45,11 @@ public class UserProfileServiceImpl implements UserProfileService{
     private final UserPersonalImageRepository userPersonalImageRepository;
     private final UserProfileRepository userProfileRepository;
 
-    @RabbitListener
+
+    @RabbitListener(queues = EventConstant.USER_CREATED + EventConstant.QUEUE_SUFFIX)
     @Override
     public void saveProfile(String jsonUserCreatedEvent) {
+        log.info("[saveProfile] receive event[createdUserEvent]({})", jsonUserCreatedEvent);
         UserCreated event = JsonUtils.toObject(jsonUserCreatedEvent, UserCreated.class);
         UserProfile userProfile = new UserProfile().setUserId(event.getUserId())
                 .setCreatedDate(new Date()).setDateOfBirth(event.getDob())

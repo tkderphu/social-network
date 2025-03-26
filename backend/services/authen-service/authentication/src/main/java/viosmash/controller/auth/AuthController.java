@@ -8,6 +8,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import viosmash.controller.auth.vo.AuthLoginReqVO;
 import viosmash.controller.auth.vo.AuthLoginRespVO;
+import viosmash.controller.auth.vo.AuthRegisterReqVO;
 import viosmash.converter.AuthConverter;
 import viosmash.pojo.CommonResult;
 import viosmash.service.auth.AuthService;
@@ -17,6 +18,7 @@ import static viosmash.pojo.CommonResult.success;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
+@CrossOrigin("*")
 public class AuthController {
 
     private final AuthService authService;
@@ -26,6 +28,14 @@ public class AuthController {
     public CommonResult<AuthLoginRespVO> login(@Valid @RequestBody AuthLoginReqVO loginReqVO) {
         AuthLoginRespVO authLoginRespVO = authService.login(loginReqVO);
         return success(authLoginRespVO);
+    }
+
+
+    @PostMapping("/register")
+    @PermitAll
+    public CommonResult<Boolean> register(@Valid @RequestBody AuthRegisterReqVO req) {
+        authService.register(req);
+        return success(true);
     }
 
     @PostMapping("/logout")

@@ -30,7 +30,7 @@ public class UserProfileRespVO {
     }
     @Data
     public static class AddressResp {
-        private AddressEnum educationEnum;
+        private AddressEnum addressEnum;
         private Long pageId;
         private String pageName;
     }

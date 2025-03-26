@@ -8,7 +8,7 @@ import viosmash.enums.GroupType;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "groups")
+@Table(name = "tbl_groups")
 @Data
 @Accessors(chain = true)
 public class Group {

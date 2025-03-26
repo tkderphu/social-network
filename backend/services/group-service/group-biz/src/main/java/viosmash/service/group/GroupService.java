@@ -9,17 +9,14 @@ import java.util.List;
 public interface GroupService {
 
 
-    Boolean acceptMemberJoinGroup(Long groupId,
-                                  Long memberId);
 
-    Boolean acceptPost(Long groupId,
-                       Long postId);
 
+    Group getGroup(Long id);
 
     Boolean deleteGroup(Long groupId);
 
     Long createGroup(GroupCreateReqVO reqVO);
-    Long updateGroup(String name, GroupType groupType);
+    Long updateGroup(Long groupId, String name, GroupType groupType);
 
     List<Group> getListGroup();
 }

@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 
 @Entity
-@Table(name = "group_settings")
+@Table(name = "tbl_group_settings")
 @Data
 @Accessors(chain = true)
 public class GroupSetting {

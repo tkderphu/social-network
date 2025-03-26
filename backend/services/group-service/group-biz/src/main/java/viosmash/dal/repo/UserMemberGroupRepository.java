@@ -16,7 +16,7 @@ public interface UserMemberGroupRepository extends JpaRepository<UserMemberGroup
 
     UserMemberGroup findByGroupIdAndMemberId(Long groupId, Long memberId);
 
-    void deleteByGroupIdAndUserMemberId(Long groupId, Long userMemberId);
+    void deleteByGroupIdAndMemberId(Long groupId, Long userMemberId);
 
     @Query("SELECT u.memberId FROM UserMemberGroup u WHERE u.groupId = :groupId")
     List<Long> getAllMember(Long groupId);

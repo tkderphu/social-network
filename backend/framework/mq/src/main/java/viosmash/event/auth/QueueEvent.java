@@ -8,24 +8,29 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import viosmash.EventConstant;
 
+import static viosmash.EventConstant.*;
+import static viosmash.EventConstant.QUEUE_SUFFIX;
+
 @Configuration
 public class QueueEvent {
 
     @Bean
     public Queue userCreatedQueue() {
-        return new Queue(String.format(EventConstant.USER_CREATED, "que"));
+        return new Queue(
+                USER_CREATED + QUEUE_SUFFIX
+        );
     }
     
     @Bean
     public DirectExchange userCreatedQueueDE() {
-        return new DirectExchange(String.format(EventConstant.USER_CREATED, "dir"));
+        return new DirectExchange(USER_CREATED + DIRECT_SUFFIX);
     }
     @Bean
     public Binding bindingUserCreatedQueue(Queue userCreatedQueue, DirectExchange userCreatedQueueDE) {
         return BindingBuilder
                 .bind(userCreatedQueue)
                 .to(userCreatedQueueDE)
-                .with(String.format(EventConstant.USER_CREATED, "rou"));
+                .with(USER_CREATED + ROU_SUFFIX);
     }
 
 }

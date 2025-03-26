@@ -3,6 +3,7 @@ package viosmash.service.post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import viosmash.aop.GroupPermission;
+import viosmash.dal.dataobject.PostWaitingReview;
 
 import java.util.List;
 
@@ -22,6 +23,16 @@ public class PostWaitingReviewServiceImpl implements PostWaitingReviewService{
     @Override
     @GroupPermission
     public List<Long> getListPostByGroup(Long groupId) {
+        return List.of();
+    }
+
+    @Override
+    public Boolean acceptPost(Long groupId, Long postId) {
+        return null;
+    }
+
+    @Override
+    public List<PostWaitingReview> getListRequestPublishAtGroup(Long groupId) {
         return List.of();
     }
 
