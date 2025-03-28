@@ -1,5 +1,6 @@
 package viosmash.service;
 
+import viosmash.controller.vo.GroupReactionTypeResp;
 import viosmash.controller.vo.ReactionCreateReq;
 import viosmash.controller.vo.ReactionUpdateReq;
 import viosmash.dal.dataobject.Reaction;
@@ -17,7 +18,7 @@ public interface ReactionService {
     List<Reaction> getTop3Reaction(EntityType entityType, Long entityId);
     int countReaction(EntityType entityType, Long entityId);
 
-    Object[] countReactionAndGroupByReactionType(Long entityType, Long entityId);
+    List<GroupReactionTypeResp> countReactionAndGroupByReactionType(EntityType entityType, Long entityId);
 
     List<Reaction> getListReaction(EntityType entityType,
                                    Long entityId,

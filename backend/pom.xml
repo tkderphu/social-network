@@ -30,6 +30,7 @@
     <module>services/group-service/group-biz</module>
     <module>services/group-service/group-api</module>
     <module>services/reaction-service</module>
+    <module>services/upload-service</module>
   </modules>
   <properties>
     <java.version>17</java.version>

@@ -22,6 +22,10 @@ import static viosmash.pojo.CommonResult.success;
 public class AuthController {
 
     private final AuthService authService;
+    @GetMapping("/test")
+    public String test() {
+        return "ok";
+    }
 
     @PostMapping("/login")
     @PermitAll

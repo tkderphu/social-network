@@ -1,9 +1,8 @@
-package viosmash.controller.vo;
+package viosmash.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import viosmash.enums.ReactionType;
 
 @AllArgsConstructor
 @NoArgsConstructor

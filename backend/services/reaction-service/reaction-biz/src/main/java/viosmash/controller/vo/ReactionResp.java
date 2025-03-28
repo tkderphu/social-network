@@ -3,7 +3,7 @@ package viosmash.controller.vo;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import viosmash.api.UserDTO;
-import viosmash.enums.ReactionType;
+import viosmash.enums.Emoji;
 
 @Data
 @Accessors(chain = true)

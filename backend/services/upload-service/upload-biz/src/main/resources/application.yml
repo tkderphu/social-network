@@ -1,0 +1,4 @@
+
+
+cloudinary:
+  url: cloudinary://<API_KEY>:<API_SECRET>@<CLOUD_NAME>

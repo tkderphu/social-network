@@ -1,6 +1,7 @@
 package viosmash.controller.vo;
 
 import lombok.Data;
+import viosmash.enums.Emoji;
 import viosmash.enums.ReactionType;
 
 @Data

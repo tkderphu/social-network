@@ -1,4 +1,4 @@
-package viosmash.filter;
+package viosmash.filter.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
