@@ -3,6 +3,8 @@ package viosmash.pojo;
 import lombok.Data;
 import viosmash.exception.ErrorCode;
 
+import java.util.function.Function;
+
 @Data
 public class CommonResult <T>{
 
@@ -18,6 +20,9 @@ public class CommonResult <T>{
 
     public static <T> CommonResult<T> success(String message, Integer code, T data) {
         return new CommonResult<>(message, code, data);
+    }
+    public static <T, U> CommonResult<T> success(U data, Function<U, T> func) {
+        return success(func.apply(data));
     }
     public static <T> CommonResult<T> success(String message, T data) {
         return success(message, 200, data);

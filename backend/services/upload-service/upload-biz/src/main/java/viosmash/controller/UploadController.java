@@ -21,6 +21,11 @@ public class UploadController {
     private final CloudinaryService cloudinaryService;
 
     @PostMapping(consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Mono<String> upload(@RequestPart("file") Mono<FilePart> filePartMono) {
+        return filePartMono.flatMap(cloudinaryService::upload);
+    }
+
+    @PostMapping(value = "/multiples", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public Mono<List<String>> uploads(@RequestPart("files")Flux<FilePart> filePartFlux) {
         return cloudinaryService.uploads(filePartFlux);
     }

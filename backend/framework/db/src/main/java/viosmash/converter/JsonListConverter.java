@@ -1,4 +1,4 @@
-package viosmash.config;
+package viosmash.converter;
 
 import jakarta.persistence.AttributeConverter;
 import jakarta.persistence.Converter;
