@@ -2,7 +2,6 @@ package viosmash.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 import viosmash.api.ProfileApi;
 import viosmash.controller.vo.ConversationCreateReq;

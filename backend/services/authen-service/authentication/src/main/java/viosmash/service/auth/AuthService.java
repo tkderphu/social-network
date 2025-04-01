@@ -1,7 +1,7 @@
 package viosmash.service.auth;
 
 import viosmash.controller.auth.vo.*;
-import viosmash.event.notify.forgotpassword.ForgotPasswordEvent;
+import viosmash.event.forgotpassword.ForgotPasswordEvent;
 
 public interface AuthService {
     AuthLoginRespVO login(AuthLoginReqVO loginReqVO);

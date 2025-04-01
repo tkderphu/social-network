@@ -3,22 +3,22 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.viosmash</groupId>
-        <artifactId>social-network</artifactId>
+        <artifactId>notification-service</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>notification-service</artifactId>
-    <packaging>pom</packaging>
-    <name>notification-service Maven Webapp</name>
+    <artifactId>notification-api</artifactId>
+    <packaging>war</packaging>
+    <name>notification-api Maven Webapp</name>
     <url>http://maven.apache.org</url>
-    <modules>
-        <module>notification-biz</module>
-        <module>notification-api</module>
-    </modules>
     <dependencies>
-
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>3.8.1</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
     <build>
-        <finalName>notification-service</finalName>
+        <finalName>notification-api</finalName>
     </build>
 </project>

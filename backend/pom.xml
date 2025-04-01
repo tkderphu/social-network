@@ -19,19 +19,20 @@
     <module>framework/mq</module>
     <module>framework/security</module>
     <module>framework/redis</module>
-      <module>services/authen-service</module>
+    <module>services/authen-service</module>
     <module>services/profile-service</module>
     <module>services/profile-service/profile-api</module>
     <module>services/profile-service/profile</module>
     <module>services/friendship-service</module>
-      <module>services/notification-service</module>
+    <module>services/notification-service</module>
     <module>services/post-service</module>
-      <module>services/group-service</module>
-    <module>services/group-service/group-biz</module>
-    <module>services/group-service/group-api</module>
+    <module>services/group-service</module>
     <module>services/reaction-service</module>
     <module>services/upload-service</module>
     <module>services/chat-service</module>
+    <module>services/comment-service</module>
+    <module>services/search-service</module>
+    <module>services/newfeed-service</module>
   </modules>
   <properties>
     <java.version>17</java.version>

@@ -8,7 +8,7 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>group-service</artifactId>
-    <packaging>war</packaging>
+    <packaging>pom</packaging>
     <name>group-service Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <dependencies>

@@ -5,7 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 import viosmash.dal.dataobject.token.AuthAccessToken;
-import viosmash.event.notify.forgotpassword.ForgotPasswordEvent;
+import viosmash.event.forgotpassword.ForgotPasswordEvent;
 import viosmash.collection.CollUtils;
 import viosmash.date.DateUtils;
 import viosmash.json.JsonUtils;

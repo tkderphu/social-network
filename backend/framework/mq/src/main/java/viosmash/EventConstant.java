@@ -16,4 +16,10 @@ public interface EventConstant {
      */
     String USER_CREATED = "user_created_";
     String FORGOT_PASSWORD = "forgot_password_";
+
+    String CREATE_REACTION = "create_reaction_";
+    String ACCEPT_FRIENDS_REQUEST = "accept_friend_request_";
+    String CREATE_REQUEST_FRIEND_REQUEST = "create_request_friend_request_";
+    String CREATE_COMMENT = "create_comment_";
+    String CREATE_REPLY_COMMENT = "create_comment_reply_";
 }

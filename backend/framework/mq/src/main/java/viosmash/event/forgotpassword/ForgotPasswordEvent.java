@@ -1,4 +1,4 @@
-package viosmash.event.notify.forgotpassword;
+package viosmash.event.forgotpassword;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
