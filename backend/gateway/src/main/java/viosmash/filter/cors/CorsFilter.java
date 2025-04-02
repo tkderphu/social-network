@@ -31,10 +31,10 @@ public class CorsFilter implements WebFilter {
 
         ServerHttpResponse response = exchange.getResponse();
         HttpHeaders headers = response.getHeaders();
-        headers.add("Access-Control-Allow-Origin", ALL);
-        headers.add("Access-Control-Allow-Methods", ALL);
-        headers.add("Access-Control-Allow-Headers", ALL);
-        headers.add("Access-Control-Max-Age", MAX_AGE);
+        headers.add("Access-Control-Allow-Origin", "*");
+        headers.add("Access-Control-Allow-Methods", "*");
+        headers.add("Access-Control-Allow-Headers", "*");
+        headers.add("Access-Control-Max-Age", "3600");
         if (request.getMethod() == HttpMethod.OPTIONS) {
             response.setStatusCode(HttpStatus.OK);
             return Mono.empty();

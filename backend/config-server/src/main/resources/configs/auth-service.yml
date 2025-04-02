@@ -33,4 +33,3 @@ spring:
       expiresMinute: 500000000
     forgotPassword:
       codeExpiredMinutes: 5
-

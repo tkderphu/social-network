@@ -1,4 +1,4 @@
-import api from "../axios/interceptor"
+import api from "../../axios/interceptor"
 
 
 class FriendshipService {

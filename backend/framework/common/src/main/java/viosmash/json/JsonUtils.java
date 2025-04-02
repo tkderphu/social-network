@@ -36,4 +36,12 @@ public class JsonUtils {
             throw new RuntimeException(e);
         }
     }
+
+    public static byte[] toJsonByte(Object obj) {
+        try {
+            return objectMapper.writeValueAsBytes(obj);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

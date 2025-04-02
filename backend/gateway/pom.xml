@@ -11,6 +11,7 @@
     <name>gateway Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <dependencies>
+
         <dependency>
             <groupId>com.viosmash</groupId>
             <artifactId>authen-api</artifactId>

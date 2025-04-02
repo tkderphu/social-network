@@ -5,25 +5,59 @@
     <file url="file://$PROJECT_DIR$/backend/dependencies/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/discovery-services/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/framework/common/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/framework/db/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/framework/mq/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/framework/redis/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/framework/rpc/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/framework/security/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/framework/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/framework/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/framework/test/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/framework/web/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/framework/websocket/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/gateway/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/authen-service/api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/authen-service/authentication/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/authen-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/authen-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/chat-service/chat-biz/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/chat-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/chat-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/comment-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/friendship-service/friendship-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/friendship-service/friendship-biz/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/friendship-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/friendship-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/group-service/group-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/group-service/group-biz/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/group-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/group-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/newfeed-service/newfeed-biz/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/newfeed-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/newfeed-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/notification-service/notification-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/notification-service/notification-biz/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/notification-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/notification-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/post-service/post-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/post-service/post-biz/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/post-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/post-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/profile-service/profile-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/profile-service/profile/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/profile-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/reaction-service/reaction-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/reaction-service/reaction-biz/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/reaction-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/reaction-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/search-service/search-biz/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/search-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/search-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/upload-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/upload-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/upload-service/upload-biz/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/upload-service/src/main/java" charset="UTF-8" />
   </component>
 </project>

@@ -17,9 +17,13 @@ import Home from './screens/home/Home'
 import Group from './screens/group/Group'
 import { Provider } from 'react-redux'
 import store from './redux/store'
+import { TokenUtils } from './common'
 function App() {
   const [userChatBoxs, setUserChatBoxs] = useState<Array<any>>()
-  console.log(location.pathname)
+  
+  if(!["/login", "/forgot-password", "/register"].includes(location.pathname) && !TokenUtils.tokenIsExpired) {
+      
+  }
 
   return (
     <>
@@ -35,7 +39,7 @@ function App() {
             <Route path='login' element={<LoginScreen />}></Route>
             <Route path='register' element={<RegisterScreen />}></Route>
             <Route path='forgot-password' element={<ForgotPassworScreen />}></Route>
-            <Route path='profile' element={<ProfileScreen />}></Route>
+            <Route path='profile/:id' element={<ProfileScreen />}></Route>
             <Route path='search' element={<SearchResult />}></Route>
             <Route path='search/posts' element={<PostSearchResult />}></Route>
             <Route path='groups' element={<Group />}></Route>

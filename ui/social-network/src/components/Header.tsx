@@ -1,3 +1,4 @@
+import { defaultAvatar } from "../common"
 import Chat from "../screens/chat/Chat"
 
 
@@ -48,7 +49,7 @@ function Header(props: { container: any, fn: any }) {
                     </li>
                     <li className="nav-item dropleft">
                         <a className="nav-link dropleft-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/476450809_1784477312312387_1952110202159581686_n.jpg?_nc_cat=111&ccb=1-7&_nc_sid=6ee11a&_nc_ohc=DuBNvJVG_zkQ7kNvgEiqKcd&_nc_oc=Adj-YaOwl266RZFGfQWGpa8biHUbRK0gJALasPgZIH30AW_Dy1iRrVKCZf_dXb6lPlpmyYMOateYoD_INYmg-Q0s&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=AT_-3H-j5FUaU5ttQx3qqE1&oh=00_AYEsXz0kpl40gpsygZTlXMgh8w54iyxQ10kuGdCrXg2tzA&oe=67D87DB1"
+                            <img src={defaultAvatar}
                                 height={40} className='rounded-circle' width={40}
                             />
                         </a>

@@ -1,11 +1,23 @@
 package viosmash.date;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Date;
 
 public class DateUtils {
 
+    public static final String PATTERN_1 = "dd/MM/yyyy";
+    public  static final  String PATTERN_2 = "dd/MM/yyyy hh:MM:ss";
     public static Long getCurrentMilliseconds() {
         return System.currentTimeMillis();
+    }
+
+    public static String format(Date date) {
+        return null;
+    }
+    public static String format(LocalDateTime localDateTime) {
+         return null;
     }
 
     public static Long between(Long milliseconds, ChronoUnit chronoUnit) {

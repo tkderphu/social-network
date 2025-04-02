@@ -8,11 +8,17 @@
         <option value="$PROJECT_DIR$/backend/pom.xml" />
         <option value="$PROJECT_DIR$/backend/services/authen-service/pom.xml" />
         <option value="$PROJECT_DIR$/backend/services/authen-service/authentication/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/services/notification-service/notification-biz/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/services/notification-service/notification-api/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/services/group-service/group-biz/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/services/group-service/group-api/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
       <set>
+        <option value="$PROJECT_DIR$/backend/reaction-service/pom.xml" />
         <option value="$PROJECT_DIR$/backend/services/untitled/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/upload-service/pom.xml" />
       </set>
     </option>
   </component>

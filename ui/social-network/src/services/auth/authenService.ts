@@ -1,5 +1,5 @@
-import api from "../axios/interceptor"
-import { AuthInitPasswordReqVO, AuthLoginReqVO, AuthRegisterReqVO } from "../model/authModel"
+import api from "../../axios/interceptor"
+import { AuthInitPasswordReqVO, AuthLoginReqVO, AuthRegisterReqVO } from "../../model/authModel"
 
 
 class AuthenService {

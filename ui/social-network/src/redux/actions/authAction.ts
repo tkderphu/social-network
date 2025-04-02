@@ -1,6 +1,6 @@
-import { CommonResult } from "../../common"
+import { CommonResult, TokenUtils } from "../../common"
 import { ACCOUNT_CREATE_BEGIN, ACCOUNT_CREATE_FAIL, ACCOUNT_CREATE_SUCCESS, ACCOUNT_FORGOT_PASSWORD_BEGIN, ACCOUNT_FORGOT_PASSWORD_FAIL, ACCOUNT_FORGOT_PASSWORD_SUCCESS, ACCOUNT_INIT_PASSWORD_BEGIN, ACCOUNT_INIT_PASSWORD_FAIL, ACCOUNT_INIT_PASSWORD_SUCCESS, ACCOUNT_LOGIN_BEGIN, ACCOUNT_LOGIN_FAIL, ACCOUNT_LOGIN_SUCCESS, REDIRECT } from "../constants/authenConstant"
-import authenService from "../../services/authenService"
+import authenService from "../../services/auth/authenService"
 import { AuthInitPasswordReqVO, AuthLoginReqVO, AuthRegisterReqVO } from "../../model/authModel"
 
 
@@ -12,6 +12,7 @@ export const loginAction = (authLoginReq: AuthLoginReqVO) => {
         authenService.login(authLoginReq).then(response => {
             const data: CommonResult<any> = response.data
             if(data.code == 200) {
+                TokenUtils.storeToken(data.data)
                 dispatch({
                     type: ACCOUNT_LOGIN_SUCCESS
                 })
@@ -20,6 +21,7 @@ export const loginAction = (authLoginReq: AuthLoginReqVO) => {
                     path: "/"
                 })
             } else {
+                console.log("err: ", data)
                 dispatch({
                     type: ACCOUNT_LOGIN_FAIL,
                     payload: {
@@ -29,6 +31,7 @@ export const loginAction = (authLoginReq: AuthLoginReqVO) => {
                 })
             }
         }).catch(err => {
+            console.log("err: ", err)
             dispatch({
                 type: ACCOUNT_LOGIN_FAIL,
                 payload: {

@@ -2,6 +2,7 @@
 <project version="4">
   <component name="CompilerConfiguration">
     <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
       <profile name="Maven default annotation processors profile" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
@@ -27,22 +28,39 @@
           <entry name="$MAVEN_REPOSITORY$/joda-time/joda-time/2.9/joda-time-2.9.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
         </processorPath>
+        <module name="notification-api" />
+        <module name="chat-biz" />
+        <module name="group-api" />
+        <module name="reaction-biz" />
+        <module name="group-biz" />
+        <module name="notification-biz" />
+        <module name="redis" />
+        <module name="newfeed-biz" />
+        <module name="comment-service" />
+        <module name="security" />
+        <module name="friendship-api" />
+        <module name="reaction-api" />
+        <module name="common" />
+        <module name="friendship-biz" />
+        <module name="web" />
+        <module name="websocket" />
+        <module name="api" />
+        <module name="authentication" />
+        <module name="post-api" />
         <module name="discovery-services" />
         <module name="mq" />
         <module name="rpc" />
+        <module name="test" />
         <module name="profile" />
         <module name="profile-service" />
-        <module name="redis" />
+        <module name="post-biz" />
         <module name="dependencies" />
         <module name="config-server" />
-        <module name="security" />
-        <module name="friendship-api" />
         <module name="profile-api" />
-        <module name="common" />
-        <module name="friendship-biz" />
-        <module name="api" />
+        <module name="upload-biz" />
+        <module name="search-biz" />
+        <module name="db" />
         <module name="gateway" />
-        <module name="authentication" />
       </profile>
     </annotationProcessing>
   </component>
@@ -51,8 +69,12 @@
       <module name="api" options="-parameters" />
       <module name="authen-service" options="-parameters" />
       <module name="authentication" options="-parameters" />
+      <module name="chat-biz" options="-parameters" />
+      <module name="chat-service" options="-parameters" />
+      <module name="comment-service" options="-parameters" />
       <module name="common" options="-parameters" />
       <module name="config-server" options="-parameters" />
+      <module name="db" options="-parameters" />
       <module name="dependencies" options="-parameters" />
       <module name="discovery-services" options="-parameters" />
       <module name="framework" options="-parameters" />
@@ -60,14 +82,35 @@
       <module name="friendship-biz" options="-parameters" />
       <module name="friendship-service" options="-parameters" />
       <module name="gateway" options="-parameters" />
+      <module name="group-api" options="-parameters" />
+      <module name="group-biz" options="-parameters" />
+      <module name="group-service" options="-parameters" />
       <module name="mq" options="-parameters" />
+      <module name="newfeed-biz" options="-parameters" />
+      <module name="newfeed-service" options="-parameters" />
+      <module name="notification-api" options="-parameters" />
+      <module name="notification-biz" options="-parameters" />
+      <module name="notification-service" options="-parameters" />
+      <module name="post-api" options="-parameters" />
+      <module name="post-biz" options="-parameters" />
+      <module name="post-service" options="-parameters" />
       <module name="profile" options="-parameters" />
       <module name="profile-api" options="-parameters" />
       <module name="profile-service" options="-parameters" />
+      <module name="reaction-api" options="-parameters" />
+      <module name="reaction-biz" options="-parameters" />
+      <module name="reaction-service" options="-parameters" />
       <module name="redis" options="-parameters" />
       <module name="rpc" options="-parameters" />
+      <module name="search-biz" options="-parameters" />
+      <module name="search-service" options="-parameters" />
       <module name="security" options="-parameters" />
       <module name="social-network" options="-parameters" />
+      <module name="test" options="-parameters" />
+      <module name="upload-biz" options="-parameters" />
+      <module name="upload-service" options="-parameters" />
+      <module name="web" options="-parameters" />
+      <module name="websocket" options="-parameters" />
     </option>
   </component>
 </project>

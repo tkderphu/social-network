@@ -52,7 +52,7 @@ function RegisterScreen() {
             </div>
             <div className="form-group">
                 <label htmlFor="exampleInputPassword1">Date Of Birth</label>
-                <input type="text" name="dateOfBirth" 
+                <input type="date" name="dateOfBirth" 
                 onChange={(e: any) => setState(e, setAuthRegisterReq)}
                 className="form-control" id="exampleInputPassword1" placeholder="Date of birth" />
             </div>

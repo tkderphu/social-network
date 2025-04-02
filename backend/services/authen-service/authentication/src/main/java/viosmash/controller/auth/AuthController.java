@@ -18,7 +18,6 @@ import static viosmash.pojo.CommonResult.success;
 @RestController
 @RequestMapping("/api/auth")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class AuthController {
 
     private final AuthService authService;

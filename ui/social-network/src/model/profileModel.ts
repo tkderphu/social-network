@@ -9,6 +9,27 @@ export interface ProfileUpdateEducationReqVO {
     educationEnum: "", pageId: number
 }
 
-export interface UserProfile {
-
+export interface UserProfileResp {
+    userId?: string
+    firstName?: string
+    lastName?: string
+    phoneNumber?: string
+    sexEnum?: string,
+    dateOfBirth?: any
+    createdDate?: any
+    educations?: Array<{
+        educationEnum: any,
+        pageId?: number
+        pageName?: string
+    }>
+    addresses?: Array<{
+        addressEnum: any,
+        pageId?: string
+        pageName?: string
+    }>
+}
+export interface ProfileSimpleResp {
+    firstName: string,
+    lastName: string
+    imageUrl?: string
 }

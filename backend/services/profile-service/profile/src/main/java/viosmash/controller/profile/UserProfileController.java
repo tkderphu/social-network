@@ -5,6 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import viosmash.controller.profile.vo.UserProfileRespVO;
 import viosmash.controller.profile.vo.UserProfileUpdateReqVO;
+import viosmash.core.utils.SecurityUtils;
 import viosmash.pojo.CommonResult;
 import viosmash.service.profile.UserProfileService;
 
@@ -14,10 +15,9 @@ import viosmash.service.profile.UserProfileService;
 public class UserProfileController {
     private final UserProfileService userProfileService;
 
-    @GetMapping
-    public CommonResult<UserProfileRespVO> getProfile() {
-        Long userId = 1L;
-
+    @GetMapping("/{userId}")
+    public CommonResult<UserProfileRespVO> getProfile(@PathVariable("userId") Long userId) {
+//        Long userId = SecurityUtils.getLoginUserMemberId();
         return CommonResult.success(userProfileService.getProfileById(userId));
     }
 
