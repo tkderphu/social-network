@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.stereotype.Service;
+import viosmash.constant.FriendshipStatus;
 import viosmash.nodes.Friend;
 import viosmash.nodes.User;
 import viosmash.nodes.UserMakesFriendRequest;
@@ -12,6 +13,7 @@ import viosmash.repository.UserRepository;
 import java.util.List;
 import java.util.Set;
 
+import static viosmash.constant.FriendshipStatus.*;
 import static viosmash.exception.utils.ServiceUtils.exception;
 
 @Slf4j
@@ -86,5 +88,17 @@ public class FriendshipServiceImpl implements FriendshipService{
     @Override
     public List<Long> getListSuggestionUser(Long userId) {
         return userRepository.suggestionFriendsToUser(userId);
+    }
+
+    @Override
+    public FriendshipStatus getStatusFriendship(Long fromUserId, Long toUserId) {
+        boolean isFriend = this.userRepository.checkFriendStatus(fromUserId, toUserId).isPresent();
+        if(isFriend) return FRIEND;
+        boolean isMakeFriend = this.userRepository.checkMakeFriendRequest(fromUserId, toUserId).isPresent();
+        if(isMakeFriend) return MAKE_FRIEND;
+        boolean isReceiveInvitation = this.userRepository.checkMakeFriendRequest(toUserId, fromUserId).isPresent();
+        if(isReceiveInvitation) return ACCEPT_FRIEND;
+
+        return NONE;
     }
 }

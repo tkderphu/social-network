@@ -23,7 +23,7 @@ public class UserProfileController {
 
     @PutMapping
     public CommonResult<Boolean> updateProfile(@RequestBody UserProfileUpdateReqVO req) {
-        Long userId = 1L;
+        Long userId = SecurityUtils.getLoginUserMemberId();
         userProfileService.updateProfile(userId, req);
         return CommonResult.success(true);
     }

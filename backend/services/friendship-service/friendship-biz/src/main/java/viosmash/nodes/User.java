@@ -1,6 +1,7 @@
 package viosmash.nodes;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
@@ -14,6 +15,7 @@ import static viosmash.nodes.RelationshipConstant.*;
 
 @Node("USERS")
 @Data
+@NoArgsConstructor
 public class User {
     @Id
     private Long id;
@@ -25,6 +27,9 @@ public class User {
     @Relationship(value = MAKE_FRIEND_REQUEST, direction = Relationship.Direction.OUTGOING)
     private Set<UserMakesFriendRequest> userMakesFriendRequests = new HashSet<>();
 
+    public User(Long id) {
+        this.id = id;
+    }
 
 
     public boolean makesNewFriendRequest(User user) {
@@ -53,4 +58,6 @@ public class User {
     public int hashCode() {
         return Objects.hashCode(id);
     }
+
+
 }

@@ -1,7 +1,6 @@
 package viosmash.service;
 
-import viosmash.nodes.Friend;
-import viosmash.nodes.User;
+import viosmash.constant.FriendshipStatus;
 import viosmash.nodes.UserMakesFriendRequest;
 
 import java.util.List;
@@ -65,4 +64,6 @@ public interface FriendshipService {
      * @return danh sach id cua user, dua tren 2 tieu chi goi y tren
      */
     List<Long> getListSuggestionUser(Long userId);
+
+    FriendshipStatus getStatusFriendship(Long fromUserId, Long toUserId);
 }

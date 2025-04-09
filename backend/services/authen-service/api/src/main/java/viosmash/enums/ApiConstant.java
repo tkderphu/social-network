@@ -1,6 +1,6 @@
 package viosmash.enums;
 
 public interface ApiConstant {
-    String NAME = "auth-service";
+    String NAME = "localhost:8081";
     String PREFIX = RpcConstant.PREFIX  + "/auth";
 }

@@ -1,13 +1,12 @@
 package viosmash.repository;
 
-import org.neo4j.cypherdsl.core.Use;
 import org.springframework.data.neo4j.repository.Neo4jRepository;
 import org.springframework.data.neo4j.repository.query.Query;
-import org.springframework.data.repository.query.Param;
 import viosmash.nodes.User;
 import viosmash.nodes.UserMakesFriendRequest;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserRepository extends Neo4jRepository<User, Long> {
 
@@ -16,7 +15,7 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
     List<User> findAllMutualFriendsByTwoUser(Long userOneId, Long userTwoId);
 
 
-    @Query(value = "match (user:USERS {id: 26})-[b:FRIEND]->(user1:USERS {id: $userId})\n" +
+    @Query(value = "match (user:USERS {id: $userOne})-[b:FRIEND]->(user1:USERS {id: $userTwo})\n" +
             "match (user1)-[c:FRIEND]->(user)\n" +
             "delete b, c", delete = true)
     void removeFriendship(Long userOne, Long userTwo);
@@ -26,7 +25,13 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
             "return m")
     List<UserMakesFriendRequest> findAllReceivedFriendRequests(Long receiverId);
 
-    
+    @Query("match (uOne:USERS {id: $userOne})-[:FRIEND]->(friend:USERS {id: $userTwo}) return uOne")
+    Optional<User> checkFriendStatus(Long userOne, Long userTwo);
+
+    @Query("match (uOne: USERS {id: $fromUser})-[:MAKE_FRIEND_REQUEST]->(uTwo:USERS {id: $toUser}) return uOne")
+    Optional<User> checkMakeFriendRequest(Long fromUser, Long toUser);
+
+
     @Query("match (user:USERS {id: $userId})-[:FRIEND]->(friend:USERS)-[:FRIEND]->(mutual:USERS),\n" +
             "(friend)<-[:MAKE_FRIEND_REQUEST]-(userMake:USERS)\n" +
             "where mutual.id <> $userId \n" +

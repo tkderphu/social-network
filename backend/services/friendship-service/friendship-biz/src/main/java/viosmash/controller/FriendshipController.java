@@ -4,9 +4,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import viosmash.api.ProfileApi;
+import viosmash.constant.FriendshipStatus;
 import viosmash.controller.vo.UserMakeFriendRequestRespVO;
 import viosmash.controller.vo.UserRespVO;
 import viosmash.convert.UserConvert;
+import viosmash.core.utils.SecurityUtils;
 import viosmash.pojo.CommonResult;
 import viosmash.service.FriendshipService;
 
@@ -21,31 +23,37 @@ public class FriendshipController {
     private final FriendshipService friendshipService;
     private final ProfileApi profileApi;
 
-    @PostMapping("/{userOne}/make-friend-request/{userTwo}")
-    public CommonResult<Boolean> makeFriendRequest(@PathVariable("userOne") Long userOne,
-                                             @PathVariable("userTwo") Long userTwo) {
-        boolean isOke = this.friendshipService.addNewUserMakeFriendRequest(userOne, userTwo);
+    @PostMapping("/make/{userId}")
+    public CommonResult<Boolean> makeFriendRequest(@PathVariable("userId") Long userId) {
+        Long currentUserId = SecurityUtils.getLoginUserMemberId();
+        boolean isOke = this.friendshipService.addNewUserMakeFriendRequest(currentUserId, userId);
+        return success(isOke);
+    }
+    @GetMapping("/status/{userId}")
+    public CommonResult<FriendshipStatus> getStatusFriendship(@PathVariable("userId") Long userId) {
+        Long currentUserId = SecurityUtils.getLoginUserMemberId();
+        FriendshipStatus status = this.friendshipService.getStatusFriendship(currentUserId, userId);
+        return success(status);
+    }
+
+    @PostMapping("/accept/{userId}")
+    public CommonResult<Boolean> acceptFriendRequest(@PathVariable("userId") Long userId) {
+        Long currentUserId = SecurityUtils.getLoginUserMemberId();
+        boolean isOke = this.friendshipService.acceptUserFriendRequest(currentUserId, userId);
         return success(isOke);
     }
 
-    @PostMapping("/{userOne}/accept-friend-request/{userTwo}")
-    public CommonResult<Boolean> acceptFriendRequest(@PathVariable("userOne") Long userOne,
-                                                     @PathVariable("userTwo") Long userTwo) {
-        boolean isOke = this.friendshipService.acceptUserFriendRequest(userOne, userTwo);
-        return success(isOke);
-    }
-
-    @DeleteMapping("/{userOne}/remove-friend/{userTwo}")
-    public CommonResult<Boolean> removeFriend(@PathVariable("userOne") Long userOne,
-                                              @PathVariable("userTwo") Long userTwo) {
-        boolean isOk = this.friendshipService.removeFriend(userOne, userTwo);
+    @DeleteMapping("/cancel/{userId}")
+    public CommonResult<Boolean> removeFriend(@PathVariable("userId") Long userId) {
+        Long currentUserId = SecurityUtils.getLoginUserMemberId();
+        boolean isOk = this.friendshipService.removeFriend(currentUserId, userId);
         return success(isOk);
     }
 
-    @GetMapping("/get-all-friends-by-{userId}")
+    @GetMapping("/get-friends/{userId}")
     public CommonResult<List<UserRespVO>> getFriends(@PathVariable("userId") Long userId,
                                                @RequestParam(value = "limit", required = false) Integer limit) {
-        Long currentUserId = 1L;
+        Long currentUserId = SecurityUtils.getLoginUserMemberId();
         List<Long> friends = friendshipService.getListFriends(userId);
         if(currentUserId.compareTo(userId) == 0) {
             return success(UserConvert.INSTANCE.convert(profileApi.getAllUsers(friends)));
@@ -65,9 +73,9 @@ public class FriendshipController {
         }
     }
 
-    @GetMapping("/get-all-make-friend-requests")
+    @GetMapping("/get-requests")
     public CommonResult<List<UserMakeFriendRequestRespVO>> getAllMakeFriendRequests() {
-        Long currentUserId = 1L;
+        Long currentUserId = SecurityUtils.getLoginUserMemberId();
         List<UserMakeFriendRequestRespVO> result = friendshipService
                 .getListUserFriendRequests(currentUserId)
                 .stream()
@@ -84,9 +92,9 @@ public class FriendshipController {
     }
 
 
-    @GetMapping("/get-all-make-friend-request-received")
+    @GetMapping("/receive-invitations")
     public CommonResult<List<UserMakeFriendRequestRespVO>> getAllMakeFriendRequestReceived() {
-        Long currentUserId = 1L;
+        Long currentUserId = SecurityUtils.getLoginUserMemberId();
         List<UserMakeFriendRequestRespVO> result = friendshipService
                 .getListUserFriendRequestsByReceiver(currentUserId)
                 .stream()

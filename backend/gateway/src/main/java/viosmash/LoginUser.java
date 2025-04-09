@@ -9,8 +9,10 @@ import lombok.ToString;
 public class LoginUser {
     private String accessToken;
     private String refreshToken;
-    private Long expires;
+
+    private long expires;
     private Long userId;
+
 
     @JsonIgnore
     public boolean isExpired() {

@@ -16,9 +16,9 @@ public interface TokenApi {
     String URL_CHECK = "http://" + ApiConstant.NAME + PREFIX + "/check";
 
     @PutMapping(PREFIX + "/refresh")
-    CommonResult<AuthTokenDTO> refreshAccessToken(@RequestParam("refreshToken") String refreshToken);
+    AuthTokenDTO refreshAccessToken(@RequestParam("refreshToken") String refreshToken);
 
     @GetMapping(PREFIX + "/check")
-    CommonResult<AuthTokenDTO> checkAccessToken(@RequestParam("accessToken") String accessToken);
+    AuthTokenDTO checkAccessToken(@RequestParam("accessToken") String accessToken);
 
 }

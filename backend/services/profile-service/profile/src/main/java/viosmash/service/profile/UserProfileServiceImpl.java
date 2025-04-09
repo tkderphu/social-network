@@ -75,14 +75,14 @@ public class UserProfileServiceImpl implements UserProfileService{
     @Override
     public void updateProfile(Long userId, UserProfileUpdateReqVO userProfileUpdateReqVO) {
         UserProfile userProfile = getById(userId);
-        if(StringUtils.isEmpty(userProfileUpdateReqVO.getFirstName())) {
+        if(!StringUtils.isEmpty(userProfileUpdateReqVO.getFirstName())) {
             userProfile.setFirstName(userProfileUpdateReqVO.getFirstName());
         }
-        if(StringUtils.isEmpty(userProfileUpdateReqVO.getLastName())) {
-            userProfile.setFirstName(userProfileUpdateReqVO.getLastName());
+        if(!StringUtils.isEmpty(userProfileUpdateReqVO.getLastName())) {
+            userProfile.setLastName(userProfileUpdateReqVO.getLastName());
         }
-        if(StringUtils.isEmpty(userProfileUpdateReqVO.getPhoneNumber())) {
-            userProfile.setFirstName(userProfileUpdateReqVO.getPhoneNumber());
+        if(!StringUtils.isEmpty(userProfileUpdateReqVO.getPhoneNumber())) {
+            userProfile.setPhoneNumber(userProfileUpdateReqVO.getPhoneNumber());
         }
         if(!ObjectUtils.isNull(userProfileUpdateReqVO.getDateOfBirth())) {
             userProfile.setDateOfBirth(userProfileUpdateReqVO.getDateOfBirth());

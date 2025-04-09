@@ -7,6 +7,6 @@ public class StringUtils {
         return str.trim().toLowerCase();
     }
     public static boolean isEmpty(String str) {
-        return str == null || str.isBlank();
+        return str == null || str.isEmpty() || str.isBlank();
     }
 }

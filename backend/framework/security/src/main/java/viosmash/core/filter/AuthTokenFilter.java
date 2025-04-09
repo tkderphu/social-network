@@ -7,7 +7,9 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import viosmash.core.utils.LoginUser;
 import viosmash.core.utils.SecurityUtils;
+import viosmash.json.JsonUtils;
 
 import java.io.IOException;
 
@@ -25,8 +27,8 @@ public class AuthTokenFilter extends OncePerRequestFilter {
             filterChain.doFilter(request, response);
             return;
         }
-//        LoginUser loginUser = JsonUtils.toObject(loginUserJson, LoginUser.class);
-//        SecurityUtils.setUserLogin(loginUser, request);
+        LoginUser loginUser = JsonUtils.toObject(loginUserJson, LoginUser.class);
+        SecurityUtils.setUserLogin(loginUser, request);
         filterChain.doFilter(request, response);
     }
 }

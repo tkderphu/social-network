@@ -53,7 +53,7 @@ public class SecurityUtils {
     }
     public static Long getLoginUserMemberId() {
         LoginUser userMember = getLoginUserMember();
-        return userMember != null ? userMember.getId() : null;
+        return userMember != null ? userMember.getUserId() : null;
     }
 
 

@@ -17,9 +17,7 @@ public class UserProfile {
     private String firstName;
     private String lastName;
     private String phoneNumber;
-
     private SexEnum sexEnum;
     private Date dateOfBirth;
     private Date createdDate;
-
 }

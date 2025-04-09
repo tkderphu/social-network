@@ -17,6 +17,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import static viosmash.constant.ErrorCodeConstant.REFRESH_TOKEN_INVALID;
+import static viosmash.date.DateUtils.*;
 import static viosmash.exception.utils.ServiceUtils.exception;
 
 @Service
@@ -60,7 +61,7 @@ public class AuthTokenServiceImpl implements AuthTokenService{
             authAccessToken = this.authAccessTokenRepository
                     .findByAccessToken(accessToken)
                     .orElse(null);
-            if(authAccessToken == null || DateUtils.before(authAccessToken.getExpires())) {
+            if(authAccessToken == null || (authAccessToken.getExpires() != null && before(authAccessToken.getExpires()))) {
                 throw exception(401, "Access token is invalid");
             }
             this.authRedisRepository.setToken(authAccessToken);
@@ -76,7 +77,7 @@ public class AuthTokenServiceImpl implements AuthTokenService{
         /**
          * currentDate < expires
          */
-        if(DateUtils.before(authRefreshToken.getExpires())) {
+        if(before(authRefreshToken.getExpires())) {
             AuthAccessToken authAccessToken = new AuthAccessToken()
                     .setAccessToken(UUID.randomUUID().toString())
                     .setRefreshToken(authRefreshToken.getRefreshToken())
@@ -103,10 +104,10 @@ public class AuthTokenServiceImpl implements AuthTokenService{
 
 
     private Long refreshExpires() {
-        return DateUtils.getCurrentMilliseconds() + Duration.of(refreshTokenExpires, ChronoUnit.MINUTES).toMillis();
+        return getCurrentMilliseconds() + Duration.of(refreshTokenExpires, ChronoUnit.MINUTES).toMillis();
     }
     private Long accessExpires() {
-        return DateUtils.getCurrentMilliseconds() + Duration.of(accessTokenExpires, ChronoUnit.MINUTES).toMillis();
+        return getCurrentMilliseconds() + Duration.of(accessTokenExpires, ChronoUnit.MINUTES).toMillis();
     }
 
 }

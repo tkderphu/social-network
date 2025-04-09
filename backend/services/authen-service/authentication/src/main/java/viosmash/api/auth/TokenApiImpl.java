@@ -1,28 +1,29 @@
 package viosmash.api.auth;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import viosmash.dal.dataobject.token.AuthAccessToken;
+import viosmash.object.BeanUtil;
 import viosmash.pojo.CommonResult;
+import viosmash.service.token.AuthTokenService;
 
 import java.util.UUID;
 
 @RestController
 @RequestMapping(TokenApi.PREFIX)
+@RequiredArgsConstructor
 public class TokenApiImpl implements TokenApi{
+    private final AuthTokenService authTokenService;
     @Override
     @PutMapping("/refresh")
-    public CommonResult<AuthTokenDTO> refreshAccessToken(String refreshToken) {
+    public AuthTokenDTO refreshAccessToken(String refreshToken) {
         return null;
     }
 
     @Override
     @GetMapping("/check")
-    public CommonResult<AuthTokenDTO> checkAccessToken(@RequestParam("accessToken") String accessToken) {
-        System.out.println("receive token: " + accessToken);
-        AuthTokenDTO authTokenDTO = new AuthTokenDTO();
-        authTokenDTO.setAccessToken(UUID.randomUUID().toString());
-        authTokenDTO.setRefreshToken(UUID.randomUUID().toString());
-        authTokenDTO.setExpires(System.currentTimeMillis());
-        authTokenDTO.setUserId(5l);
-        return CommonResult.success(authTokenDTO);
+    public AuthTokenDTO checkAccessToken(@RequestParam("accessToken") String accessToken) {
+        AuthAccessToken authAccessToken = this.authTokenService.getAccessToken(accessToken);
+        return BeanUtil.copy(authAccessToken, AuthTokenDTO.class);
     }
 }

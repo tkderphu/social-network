@@ -1,6 +1,5 @@
 package viosmash.controller.profile.vo;
 
-import com.rabbitmq.client.Address;
 import lombok.Data;
 import viosmash.dal.dataobject.profile.AddressEnum;
 import viosmash.dal.dataobject.profile.EducationEnum;

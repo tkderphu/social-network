@@ -1,6 +1,5 @@
 spring:
-  neo4j:
-    uri: bolt://localhost:7687
-    authentication:
-      username: neo4j
-      password: nguyenquangphu
+  config:
+    import: optional:configserver:http://localhost:8888
+  application:
+    name: friendship-service
