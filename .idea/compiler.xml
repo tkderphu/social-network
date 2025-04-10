@@ -38,8 +38,8 @@
         <module name="newfeed-biz" />
         <module name="comment-service" />
         <module name="security" />
-        <module name="friendship-api" />
         <module name="reaction-api" />
+        <module name="friendship-api" />
         <module name="common" />
         <module name="friendship-biz" />
         <module name="web" />

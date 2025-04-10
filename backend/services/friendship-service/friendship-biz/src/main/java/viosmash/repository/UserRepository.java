@@ -7,12 +7,13 @@ import viosmash.nodes.UserMakesFriendRequest;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface UserRepository extends Neo4jRepository<User, Long> {
 
 
-    @Query("match (user:USERS {id: $userOneId})-[:FRIEND]->(person:USERS)-[:FRIEND]->(userTwo:USERS {id: $userTwoId}) return person")
-    List<User> findAllMutualFriendsByTwoUser(Long userOneId, Long userTwoId);
+    @Query("match (user:USERS {id: $userOneId})-[:FRIEND]->(person:USERS)-[:FRIEND]->(userTwo:USERS {id: $userTwoId}) return person.id")
+    Set<Long> findAllMutualFriendsByTwoUser(Long userOneId, Long userTwoId);
 
 
     @Query(value = "match (user:USERS {id: $userOne})-[b:FRIEND]->(user1:USERS {id: $userTwo})\n" +
@@ -41,5 +42,9 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
             "(friend)<-[:MAKE_FRIEND_REQUEST]-(userMake:USERS)\n" +
             "where not (user)<-[:MAKE_FRIEND_REQUEST]-(userMake)\n" +
             "return userMake.id as id")
-    List<Long> suggestionFriendsToUser(Long userId);
+    Set<Long> suggestionFriendsToUser(Long userId);
+
+    @Query(value = "match (fromUser:USERS {id: $fromUserId})-[request:MAKE_FRIEND_REQUEST]->(userMake:USERS {id: $toUserId}) \n" +
+            "delete request", delete = true)
+    void removeMakeFriendRequest(Long fromUserId, Long toUserId);
 }

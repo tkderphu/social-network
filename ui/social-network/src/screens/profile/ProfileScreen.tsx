@@ -12,6 +12,10 @@ import { TokenUtils } from "../../common"
 import { useParams } from "react-router"
 import Spinner from "../../components/Spinner"
 import Alert from "../../components/Alert"
+import InfoComponent from "./InfoComponent"
+import PhotosComponent from "./PhotosComponent"
+import AddressComponent from "./AddressComponent"
+import EduactionComponent from "./EducationComponent"
 function ProfileScreen() {
     const { id } = useParams()
     const fetchProfile: {
@@ -74,126 +78,31 @@ function ProfileScreen() {
                             </div>
                         </div>
                         <div>
-                            <button style={{ border: 'none', backgroundColor: "white" }} className='m-3'>
-                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-chat-fill" viewBox="0 0 16 16">
-                                    <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9 9 0 0 0 8 15" />
-                                </svg></button>
-                            <button className="btn btn-primary ">Add to story</button>
-                            <button className="btn btn-secondary m-3" data-toggle="modal" data-target=".edit-profile">Edit profile</button>
-                            <button className="btn btn-primary" data-toggle="modal" data-target=".settings-privacy">Settings</button>
+                            {id === TokenUtils.authLogin.userId ? (
+                                <>
+                                    <button className="btn btn-primary ">Add to story</button>
+                                    <button className="btn btn-secondary m-3" data-toggle="modal" data-target=".edit-profile">Edit profile</button>
+                                    <button className="btn btn-primary" data-toggle="modal" data-target=".settings-privacy">Settings</button>
+                                </>
+                            ) : (
+                                <>
+                                    <button className="btn btn-primary" data-toggle="modal" data-target=".settings-privacy">Add friends</button>
+
+                                    <button style={{ border: 'none', backgroundColor: "white" }} className='m-3'>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-chat-fill" viewBox="0 0 16 16">
+                                            <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9 9 0 0 0 8 15" />
+                                        </svg>
+                                    </button>
+
+                                </>
+                            )}
                             <Modal id="edit-profile"
                                 title="Edit profile"
                                 html={<>
-                                    <div className="mb-3">
-                                        <div className="card">
-                                            <div className="card-header">
-                                                Personal Image
-                                            </div>
-                                            <div className="card-body">
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="card-footer"><button className="btn btn-primary w-50">Edit</button></div>
-                                    </div>
-                                    <div className="mb-3">
-                                        <div className="card">
-                                            <div className="card-header">
-                                                Cover photos
-                                            </div>
-                                            <div className="card-body">
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="card-footer"><button className="btn btn-primary w-50">Edit</button></div>
-                                    </div>
-                                    <div className="mb-3">
-                                        <div className="card">
-                                            <div className="card-header">
-                                                Info
-                                            </div>
-                                            <div className="card-body">
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="card-footer"><button className="btn btn-primary w-50">Edit</button></div>
-                                    </div>
-                                    <div className="mb-3">
-                                        <div className="card">
-                                            <div className="card-header">
-                                                Education
-                                            </div>
-                                            <div className="card-body">
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="card-footer"><button className="btn btn-primary w-50">Edit</button></div>
-                                    </div>
-                                    <div className="mb-3">
-                                        <div className="card">
-                                            <div className="card-header">
-                                                Address
-                                            </div>
-                                            <div className="card-body">
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                                <div className="form-floating mb-3 w-100">
-                                                    <input type="email" className="form-control" id="floatingInput" placeholder="name@example.com" />
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div className="card-footer"><button className="btn btn-primary w-50">Edit</button></div>
-                                    </div>
+                                    <PhotosComponent />
+                                    <InfoComponent />
+                                    <EduactionComponent />
+                                    <AddressComponent />
                                 </>}
                             />
                             <Modal id="settings-privacy"
@@ -270,12 +179,12 @@ function ProfileScreen() {
                                             <h5>Intro</h5>
                                             {fetchProfile.userProfile.educations?.map(err => {
                                                 return <>
-                                                <p>Studied at {err.pageName}</p>
+                                                    <p>Studied at {err.pageName}</p>
                                                 </>
                                             })}
                                             {fetchProfile.userProfile.addresses?.map(err => {
                                                 return <>
-                                                <p>{err.addressEnum + " " + err.pageName}</p>
+                                                    <p>{err.addressEnum + " " + err.pageName}</p>
                                                 </>
                                             })}
                                             <p>Joined {fetchProfile.userProfile.createdDate}</p>
@@ -283,13 +192,13 @@ function ProfileScreen() {
                                     </div>
                                     <div className="card mb-3">
                                         <div className="d-flex flex-column align-items-center">
-                                        <h5>Photos</h5>
-                                        <p>Studied at Học viện Công nghệ Bưu chính Viễn thông - PTIT</p>
-                                        <p>From Bắc Ninh</p>
-                                        <p>Joined October 2017</p>
-                                        <p>Followed by 20 people</p>
-                                        <button className="btn btn-primary">Edit details</button>
-                                            </div>
+                                            <h5>Photos</h5>
+                                            <p>Studied at Học viện Công nghệ Bưu chính Viễn thông - PTIT</p>
+                                            <p>From Bắc Ninh</p>
+                                            <p>Joined October 2017</p>
+                                            <p>Followed by 20 people</p>
+                                            <button className="btn btn-primary">Edit details</button>
+                                        </div>
                                     </div>
                                     <div className="card mb-3">
                                         <h5>Friends</h5>

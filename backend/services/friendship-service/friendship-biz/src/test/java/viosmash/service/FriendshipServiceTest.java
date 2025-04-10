@@ -17,6 +17,7 @@ import viosmash.nodes.User;
 import viosmash.nodes.UserMakesFriendRequest;
 import viosmash.repository.UserRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -43,6 +44,28 @@ public class FriendshipServiceTest extends BaseTest{
 
     @Test
     void getListMutualFriends() {
+        createRelationFriendBetweenUser(USER_TABLES.get(0).getId(), USER_TABLES.get(1).getId());
+        createRelationFriendBetweenUser(USER_TABLES.get(0).getId(), USER_TABLES.get(2).getId());
+        createRelationFriendBetweenUser(USER_TABLES.get(0).getId(), USER_TABLES.get(3).getId());
+        createRelationFriendBetweenUser(USER_TABLES.get(1).getId(), USER_TABLES.get(2).getId());
+        createRelationFriendBetweenUser(USER_TABLES.get(1).getId(), USER_TABLES.get(3).getId());
+        createRelationFriendBetweenUser(USER_TABLES.get(4).getId(), USER_TABLES.get(3).getId());
+
+
+        //mutual friends between user (0, 1) = [2, 3]
+        //                            (0, 4) = [3]
+
+        Set<Long> mutual1 = friendshipService.getListMutualFriends(USER_TABLES.get(0).getId(), USER_TABLES.get(1).getId());
+        Assertions.assertEquals(mutual1.size(), 2);
+        Set<Long> mutual2 = friendshipService.getListMutualFriends(USER_TABLES.get(0).getId(), USER_TABLES.get(4).getId());
+        Assertions.assertEquals(mutual2.size(), 1);
+        Assertions.assertEquals(new ArrayList<>(mutual2).get(0), USER_TABLES.get(3).getId());
+
+    }
+
+    private void createRelationFriendBetweenUser(Long userOne, Long userTwo) {
+        friendshipService.addNewUserMakeFriendRequest(userOne, userTwo);
+        friendshipService.acceptUserFriendRequest(userTwo, userOne);
     }
 
     @Test
@@ -101,6 +124,17 @@ public class FriendshipServiceTest extends BaseTest{
 
     @Test
     void getListSuggestionUser() {
+        /// make suggestion
+        friendshipService.addNewUserMakeFriendRequest(USER_TABLES.get(0).getId(), USER_TABLES.get(1).getId());
+        createRelationFriendBetweenUser(USER_TABLES.get(1).getId(), USER_TABLES.get(2).getId());
+        createRelationFriendBetweenUser(USER_TABLES.get(1).getId(), USER_TABLES.get(3).getId());
+        createRelationFriendBetweenUser(USER_TABLES.get(0).getId(), USER_TABLES.get(4).getId());
+        createRelationFriendBetweenUser(USER_TABLES.get(4).getId(), USER_TABLES.get(5).getId());
+
+        //suggestion of user(0) = [2, 3, 5]
+        Set<Long> users = friendshipService.getListSuggestionUser(0l);
+        Assertions.assertEquals(users.size(), 3); //fail
+
     }
 
     @Test

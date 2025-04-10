@@ -1,4 +1,5 @@
 import axios, { AxiosError } from "axios";
+import { T } from "react-router/dist/development/fog-of-war-Cm1iXIp7";
 import { TokenUtils } from "../common";
 // import {configDotenv} from 'dotenv'
 // configDotenv()
@@ -12,9 +13,11 @@ const api = axios.create({
 api.interceptors.request.use(
     (config) => {
         const token = TokenUtils.authLogin.accessToken
+        console.log("token: ", token)
         if (token) {
             config.headers.Authorization = `Bearer ${token}`; // Attach auth token
         } 
+        console.log("config: ", config)
         console.log("Before send request")
         return config;
     },

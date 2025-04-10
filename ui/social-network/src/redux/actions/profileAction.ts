@@ -1,17 +1,21 @@
-import { CommonResult } from "../../common"
+import { CommonResult, TokenUtils } from "../../common"
 import { ProfileUpdateAddressReqVO, ProfileUpdateEducationReqVO, ProfileUpdateInfoReqVO, UserProfileResp } from "../../model/profileModel"
 import profileService from "../../services/profile/profileService"
-import { FETCH_COMMON_PROFILE_BEGIN, FETCH_COMMON_PROFILE_FAILED, FETCH_COMMON_PROFILE_SUCCESS, UPDATE_ADDRESS_BEGIN, UPDATE_ADDRESS_FAIL, UPDATE_EDUCATION_BEGIN, UPDATE_EDUCATION_FAIL, UPDATE_INFO_BEGIN, UPDATE_INFO_FAIL, UPLOAD_PERSONAL_IMAGE_BEGIN, UPLOAD_PERSONAL_IMAGE_FAIL } from "../constants/profileConstant"
+import { FETCH_BASIC_INFO_USER_BEGIN, FETCH_COMMON_PROFILE_BEGIN, FETCH_COMMON_PROFILE_FAILED, FETCH_COMMON_PROFILE_SUCCESS, FETCH_INFO_USER_ADDRESS_BEGIN, FETCH_INFO_USER_EDUCATION_BEGIN, UPDATE_ADDRESS_BEGIN, UPDATE_ADDRESS_FAIL, UPDATE_EDUCATION_BEGIN, UPDATE_EDUCATION_FAIL, UPDATE_INFO_BEGIN, UPDATE_INFO_FAIL, UPDATE_INFO_SUCCESS, UPDATE_PERSONAL_GALLERY_IMAGES_BEGIN, UPLOAD_PERSONAL_IMAGE_BEGIN, UPLOAD_PERSONAL_IMAGE_FAIL } from "../constants/profileConstant"
 
-export const updateInfoProfile = (updateInfoReq: ProfileUpdateInfoReqVO) => {
+export const updateInfoProfile = (userId: number, updateInfoReq: ProfileUpdateInfoReqVO) => {
     return (dispatch: any) => {
         dispatch({
             type: UPDATE_INFO_BEGIN
         })
         profileService.updateInfo(updateInfoReq).then(response => {
             const data: CommonResult<any> = response.data;
+            console.log(updateInfoReq, data)
             if(data.code === 200) {
-                //fetch info
+                dispatch({
+                    type: UPDATE_INFO_SUCCESS
+                })
+                location.reload()
             } else {
                 dispatch({
                     type: UPDATE_INFO_FAIL,
@@ -27,6 +31,7 @@ export const updateInfoProfile = (updateInfoReq: ProfileUpdateInfoReqVO) => {
                 alert("Your token is expired, please login again");
                 location.href = '/login'
             }
+            console.log("err: ", err)
             dispatch({
                 type: UPDATE_INFO_FAIL,
                 payload: {
@@ -184,5 +189,42 @@ export const fetchProfileAction = (userId: number) => {
                 }
             })
         })
+    }
+}
+
+
+export const updatePersonalGalleryImagesAction = (imageUrl: string) => {
+    return (dispatch: any) => {
+        dispatch({
+            type: UPDATE_PERSONAL_GALLERY_IMAGES_BEGIN
+        })
+        //call api
+    }
+}
+export const fetchPersonalGalleryImagesAction = () => {
+
+}
+export const fetchBasicInfoUserAction = () => {
+    return (dispatch: any) => {
+        dispatch({
+            type: FETCH_BASIC_INFO_USER_BEGIN
+        })
+        //call api
+    }
+}
+export const fetchInfoAddressAction = () => {
+    return (dispatch: any) => {
+        dispatch({
+            type: FETCH_INFO_USER_ADDRESS_BEGIN
+        })
+        //call api
+    }
+}
+export const fetchInfoEducationAction = () => {
+    return (dispatch: any) => {
+        dispatch({
+            type: FETCH_INFO_USER_EDUCATION_BEGIN
+        })
+        //call api
     }
 }

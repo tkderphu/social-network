@@ -13,6 +13,7 @@ import viosmash.pojo.CommonResult;
 import viosmash.service.FriendshipService;
 
 import java.util.List;
+import java.util.Set;
 
 import static viosmash.pojo.CommonResult.success;
 
@@ -59,7 +60,7 @@ public class FriendshipController {
             return success(UserConvert.INSTANCE.convert(profileApi.getAllUsers(friends)));
         } else {
             List<UserRespVO> result = friends.stream().map(friend -> {
-                List<Long> mutualFriends = this.friendshipService.getListMutualFriends(friend, currentUserId);
+                Set<Long> mutualFriends = this.friendshipService.getListMutualFriends(friend, currentUserId);
                 if (CollectionUtils.isEmpty(mutualFriends)) {
                     return UserConvert.INSTANCE.convert(profileApi.getUserById(friend), null);
                 } else {
@@ -80,7 +81,7 @@ public class FriendshipController {
                 .getListUserFriendRequests(currentUserId)
                 .stream()
                 .map(friendRequest -> {
-            List<Long> mutualFriends = friendshipService.getListMutualFriends(
+            Set<Long> mutualFriends = friendshipService.getListMutualFriends(
                     currentUserId,
                     friendRequest.getUser().getId());
             return UserConvert.INSTANCE.convert0(
@@ -99,7 +100,7 @@ public class FriendshipController {
                 .getListUserFriendRequestsByReceiver(currentUserId)
                 .stream()
                 .map(make -> {
-                    List<Long> mutualFriends = friendshipService.getListMutualFriends(
+                    Set<Long> mutualFriends = friendshipService.getListMutualFriends(
                             currentUserId,
                             make.getUser().getId());
                     return UserConvert.INSTANCE.convert0(
@@ -117,7 +118,7 @@ public class FriendshipController {
         Long currentUserId = 1L;
         List<UserRespVO> result = this.friendshipService.getListSuggestionUser(currentUserId)
                 .stream().map(userId -> {
-                    List<Long> mutualFriends = friendshipService.getListMutualFriends(userId, currentUserId);
+                    Set<Long> mutualFriends = friendshipService.getListMutualFriends(userId, currentUserId);
                     return UserConvert.INSTANCE.convert(
                             profileApi.getUserById(userId),
                             profileApi.getAllUsers(mutualFriends)

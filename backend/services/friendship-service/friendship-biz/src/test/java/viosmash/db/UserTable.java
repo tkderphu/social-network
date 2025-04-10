@@ -11,6 +11,7 @@ public class UserTable {
             new User(2l),
             new User(3l),
             new User(4l),
-            new User(5l)
+            new User(5l),
+            new User(6l)
     ));
 }

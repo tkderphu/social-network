@@ -23,5 +23,8 @@ class FriendshipService {
     removeFriend(userId: number) {
         return api.delete(`/friendship/remove-friend/${userId}`)
     }
+    getFriendshipStatus(userId: number) {
+        return api.get(`/friendship/${userId}`)
+    }
 }
 export default new FriendshipService()

@@ -1,4 +1,4 @@
-import { defaultAvatar } from "../common"
+import { defaultAvatar, TokenUtils } from "../common"
 import Chat from "../screens/chat/Chat"
 
 
@@ -54,7 +54,7 @@ function Header(props: { container: any, fn: any }) {
                             />
                         </a>
                         <div className="dropdown-menu" aria-labelledby="navbarDropdown" style={{ fontSize: "18px" }}>
-                            <a href="/profile" className="dropdown-item" >Profile</a>
+                            <a href={`/profile/${TokenUtils.authLogin.userId}`} className="dropdown-item" >Profile</a>
                             <a className="dropdown-item" href="#">Change password</a>
                             <a className="dropdown-item" href="#">Logout</a>
                         </div>

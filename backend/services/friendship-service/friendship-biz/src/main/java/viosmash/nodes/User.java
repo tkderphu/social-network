@@ -40,9 +40,6 @@ public class User {
     public boolean acceptFriendRequest(User user) {
         boolean isOk = this.friends.add(new Friend(LocalDateTime.now(), user));
         isOk = isOk && user.friends.add(new Friend(LocalDateTime.now(), this));
-
-        isOk = isOk && user.userMakesFriendRequests.remove(new UserMakesFriendRequest(null, this));
-
         return isOk;
     }
 

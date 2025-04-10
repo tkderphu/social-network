@@ -24,7 +24,7 @@ export const TokenUtils = {
     storeToken: (data: AuthLoginRespVO) => {
         localStorage.setItem("jwt", JSON.stringify(data))
     },
-    authLogin: (localStorage.getItem('jwt') || {}) as AuthLoginRespVO,
+    authLogin: JSON.parse(localStorage.getItem('jwt') || "{}") as AuthLoginRespVO,
     tokenIsExpired: ((localStorage.getItem('jwt') || {}) as AuthLoginRespVO).expires < new Date().getMilliseconds()
 }
 

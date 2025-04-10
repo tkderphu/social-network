@@ -2,10 +2,10 @@ package viosmash.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.neo4j.core.Neo4jClient;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import viosmash.constant.FriendshipStatus;
-import viosmash.nodes.Friend;
+import viosmash.exception.ServiceException;
 import viosmash.nodes.User;
 import viosmash.nodes.UserMakesFriendRequest;
 import viosmash.repository.UserRepository;
@@ -31,9 +31,8 @@ public class FriendshipServiceImpl implements FriendshipService{
     }
 
     @Override
-    public List<Long> getListMutualFriends(Long userOneId, Long userTwoId) {
-        return userRepository.findAllMutualFriendsByTwoUser(userOneId, userTwoId)
-                .stream().map(User::getId).toList();
+    public Set<Long> getListMutualFriends(Long userOneId, Long userTwoId) {
+        return userRepository.findAllMutualFriendsByTwoUser(userOneId, userTwoId);
     }
 
     @Override
@@ -51,8 +50,6 @@ public class FriendshipServiceImpl implements FriendshipService{
         user.makesNewFriendRequest(targetUser);
 
         this.userRepository.save(user);
-        this.userRepository.save(targetUser);
-
         return true;
     }
 
@@ -62,17 +59,18 @@ public class FriendshipServiceImpl implements FriendshipService{
     }
 
     @Override
+    @Transactional(rollbackFor = ServiceException.class)
     public boolean acceptUserFriendRequest(Long userId, Long targetUserId) {
         User user = getUserById(userId);
         User targetUser = getUserById(targetUserId);
 
 
-        user.acceptFriendRequest(targetUser);
-
+        boolean result = user.acceptFriendRequest(targetUser);
         this.userRepository.save(user);
         this.userRepository.save(targetUser);
+        this.userRepository.removeMakeFriendRequest(targetUserId, userId);
 
-        return true;
+        return result;
     }
 
     @Override
@@ -86,7 +84,7 @@ public class FriendshipServiceImpl implements FriendshipService{
     }
 
     @Override
-    public List<Long> getListSuggestionUser(Long userId) {
+    public Set<Long> getListSuggestionUser(Long userId) {
         return userRepository.suggestionFriendsToUser(userId);
     }
 

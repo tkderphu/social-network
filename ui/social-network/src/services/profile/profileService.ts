@@ -1,21 +1,22 @@
 import api from "../../axios/interceptor"
 import { ProfileUpdateAddressReqVO, ProfileUpdateEducationReqVO, ProfileUpdateInfoReqVO } from "../../model/profileModel"
 
+const PATH = "/profiles"
 class ProfileService {
     updateInfo(info: ProfileUpdateInfoReqVO) {
-        return api.put('/profile', info)
+        return api.put(`${PATH}`, info)
     }
     updateEducation(info: ProfileUpdateEducationReqVO) {
-        return api.put('/profile/education', info)
+        return api.put(`${PATH}/education`, info)
     }
     updateAddress(info: ProfileUpdateAddressReqVO) {
-        return api.put('/profile/address', info)
+        return api.put(`${PATH}/address`, info)
     }
     uploadImage(type: "PEROSNAL_IMAGE" | "COVER_PHOTOS",formData: FormData) {
-        return api.post(`/profile/upload?type=${type}`, formData)
+        return api.post(`${PATH}/upload?type=${type}`, formData)
     }
     fetchProfileUser(userId: number) {
-        return api.get(`/profiles/${userId}`)
+        return api.get(`${PATH}/${userId}`)
     }
     
 }
