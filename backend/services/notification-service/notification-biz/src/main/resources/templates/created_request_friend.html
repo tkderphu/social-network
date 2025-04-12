@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            background-color: #1e1e1e;
+            font-family: Arial, sans-serif;
+            color: #fff;
+        }
+
+        .notification {
+            background-color: #2a2a2a;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            border-radius: 8px;
+            width: 400px;
+            margin: 20px;
+            position: relative;
+        }
+
+        .avatar-container {
+            position: relative;
+            margin-right: 12px;
+        }
+
+        .avatar {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background-color: #aaa;
+            object-fit: cover;
+        }
+
+        .friend-icon {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            background-color: #ffaa00;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+            border: 2px solid #2a2a2a;
+        }
+
+        .content {
+            flex: 1;
+        }
+
+        .name {
+            font-weight: bold;
+            color: #e0e0e0;
+        }
+
+        .message {
+            color: #ccc;
+            margin-top: 2px;
+        }
+
+        .timestamp {
+            font-size: 12px;
+            color: #888;
+            margin-top: 4px;
+        }
+
+        .sparkle {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 16px;
+            color: #ffc400;
+        }
+    </style>
+</head>
+<body>
+
+<div class="notification">
+    <div class="avatar-container">
+        <img class="avatar" th:src="@{${imageUrl}}" th:alt="${name}">
+        <div class="friend-icon">➕</div>
+    </div>
+    <div class="content">
+        <div class="name" th:text="${name}">Thu Hương</div>
+        <div class="message">received your friend request.</div>
+        <div class="timestamp" th:text="${timestamp}">Just now</div>
+    </div>
+    <div class="sparkle">✨</div>
+</div>
+
+</body>
+</html>

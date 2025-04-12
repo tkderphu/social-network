@@ -1,19 +1,14 @@
 package viosmash.service;
 
-import org.checkerframework.checker.units.qual.A;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.cloud.client.discovery.simple.SimpleDiscoveryClientAutoConfiguration;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Import;
 import viosmash.BaseTest;
 import viosmash.config.EmbeddedNeo4jConfig;
 import viosmash.constant.FriendshipStatus;
-import viosmash.db.UserTable;
-import viosmash.nodes.User;
 import viosmash.nodes.UserMakesFriendRequest;
 import viosmash.repository.UserRepository;
 
@@ -32,9 +27,14 @@ public class FriendshipServiceTest extends BaseTest{
     private FriendshipService friendshipService;
     @BeforeEach
     void init() {
+        System.out.println("saved");
         userRepository.saveAll(USER_TABLES);
     }
 
+    @AfterEach
+    void destroy() {
+        userRepository.deleteAll(USER_TABLES);
+    }
     @Test
     void getListFriends() {
         Long userId = USER_TABLES.get(0).getId();
@@ -65,7 +65,7 @@ public class FriendshipServiceTest extends BaseTest{
 
     private void createRelationFriendBetweenUser(Long userOne, Long userTwo) {
         friendshipService.addNewUserMakeFriendRequest(userOne, userTwo);
-        friendshipService.acceptUserFriendRequest(userTwo, userOne);
+        friendshipService.acceptUserMakeFriendRequest(userTwo, userOne);
     }
 
     @Test
@@ -74,7 +74,7 @@ public class FriendshipServiceTest extends BaseTest{
         Long userTwo = USER_TABLES.get(1).getId();
         friendshipService.addNewUserMakeFriendRequest(userOne, userTwo);
 
-        boolean isSuccess = friendshipService.acceptUserFriendRequest(userTwo, userOne);
+        boolean isSuccess = friendshipService.acceptUserMakeFriendRequest(userTwo, userOne);
         FriendshipStatus status = friendshipService.getStatusFriendship(userOne, userTwo);
 
 
@@ -101,12 +101,12 @@ public class FriendshipServiceTest extends BaseTest{
     }
 
     @Test
-    void acceptUserFriendRequest() {
+    void acceptUserMakeFriendRequest() {
         Long userOne = USER_TABLES.get(0).getId();
         Long userTwo = USER_TABLES.get(1).getId();
         friendshipService.addNewUserMakeFriendRequest(userOne, userTwo);
 
-        boolean isSuccess = friendshipService.acceptUserFriendRequest(userTwo, userOne);
+        boolean isSuccess = friendshipService.acceptUserMakeFriendRequest(userTwo, userOne);
         FriendshipStatus status = friendshipService.getStatusFriendship(userOne, userTwo);
 
 
@@ -116,10 +116,24 @@ public class FriendshipServiceTest extends BaseTest{
 
     @Test
     void getListUserFriendRequests() {
+        friendshipService.addNewUserMakeFriendRequest(USER_TABLES.get(0).getId(), USER_TABLES.get(1).getId());
+        friendshipService.addNewUserMakeFriendRequest(USER_TABLES.get(0).getId(), USER_TABLES.get(2).getId());
+        friendshipService.addNewUserMakeFriendRequest(USER_TABLES.get(0).getId(), USER_TABLES.get(3).getId());
+
+        Set<UserMakesFriendRequest> ll = friendshipService.getListUserFriendRequests(USER_TABLES.get(0).getId());
+
+        Assertions.assertEquals(ll.size(), 3);
     }
 
     @Test
     void getListUserFriendRequestsByReceiver() {
+        friendshipService.addNewUserMakeFriendRequest(USER_TABLES.get(0).getId(), USER_TABLES.get(3).getId());
+        friendshipService.addNewUserMakeFriendRequest(USER_TABLES.get(1).getId(), USER_TABLES.get(3).getId());
+        friendshipService.addNewUserMakeFriendRequest(USER_TABLES.get(2).getId(), USER_TABLES.get(3).getId());
+
+        Set<UserMakesFriendRequest> ll = friendshipService.getListUserFriendRequestsByReceiver(USER_TABLES.get(3).getId());
+
+        Assertions.assertEquals(3, ll.size());
     }
 
     @Test
@@ -130,10 +144,18 @@ public class FriendshipServiceTest extends BaseTest{
         createRelationFriendBetweenUser(USER_TABLES.get(1).getId(), USER_TABLES.get(3).getId());
         createRelationFriendBetweenUser(USER_TABLES.get(0).getId(), USER_TABLES.get(4).getId());
         createRelationFriendBetweenUser(USER_TABLES.get(4).getId(), USER_TABLES.get(5).getId());
+        friendshipService.addNewUserMakeFriendRequest(USER_TABLES.get(2).getId(), USER_TABLES.get(0).getId());
 
-        //suggestion of user(0) = [2, 3, 5]
-        Set<Long> users = friendshipService.getListSuggestionUser(0l);
-        Assertions.assertEquals(users.size(), 3); //fail
+        /**
+         * 0 make friend with 1
+         * 1 is friends (2, 3) -> (2, 3)
+         * 0 is friend (4)
+         * 4 is friends (5) -> (5)
+         */
+
+        //suggestion of user(0) = [3, 5]
+        Set<Long> users = friendshipService.getListSuggestionUser(USER_TABLES.get(0).getId());
+        Assertions.assertEquals(users.size(), 2); //fail
 
     }
 

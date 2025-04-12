@@ -5,7 +5,6 @@ import org.springframework.data.neo4j.repository.query.Query;
 import viosmash.nodes.User;
 import viosmash.nodes.UserMakesFriendRequest;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
@@ -21,10 +20,11 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
             "delete b, c", delete = true)
     void removeFriendship(Long userOne, Long userTwo);
 
-    @Query("match (receiver:USERS)<-[m:MAKE_FRIEND_REQUEST]-(sender:USERS) \n" +
-            "where receiver.id = $receiverId\n" +
-            "return m")
-    List<UserMakesFriendRequest> findAllReceivedFriendRequests(Long receiverId);
+    @Query("""
+        MATCH (sender:USERS)-[m:MAKE_FRIEND_REQUEST]->(receiver:USERS {id: $receiverId})
+        RETURN m, m.since as since, sender as user
+    """)
+    Set<UserMakesFriendRequest> findAllReceivedFriendRequests(Long receiverId);
 
     @Query("match (uOne:USERS {id: $userOne})-[:FRIEND]->(friend:USERS {id: $userTwo}) return uOne")
     Optional<User> checkFriendStatus(Long userOne, Long userTwo);
@@ -33,18 +33,25 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
     Optional<User> checkMakeFriendRequest(Long fromUser, Long toUser);
 
 
-    @Query("match (user:USERS {id: $userId})-[:FRIEND]->(friend:USERS)-[:FRIEND]->(mutual:USERS),\n" +
-            "(friend)<-[:MAKE_FRIEND_REQUEST]-(userMake:USERS)\n" +
-            "where mutual.id <> $userId \n" +
-            "return mutual.id as id\n" +
-            "union\n" +
-            "match (user:USERS {id: $userId})-[:FRIEND]->(friend:USERS)-[:FRIEND]->(mutual:USERS),\n" +
-            "(friend)<-[:MAKE_FRIEND_REQUEST]-(userMake:USERS)\n" +
-            "where not (user)<-[:MAKE_FRIEND_REQUEST]-(userMake)\n" +
-            "return userMake.id as id")
+    @Query("MATCH (user:USERS {id: $userId})-[:FRIEND]->(:USERS)-[:FRIEND]->(mutual:USERS)\n" +
+            "WHERE NOT (user)-[:FRIEND]-(mutual)\n" +
+            "  AND NOT (user)-[:MAKE_FRIEND_REQUEST]->(mutual)\n" +
+            "  AND NOT (mutual)-[:MAKE_FRIEND_REQUEST]->(user)\n" +
+            "  AND mutual.id <> $userId\n" +
+            "RETURN \n" +
+            "  mutual.id AS id\n" +
+            "UNION\n" +
+            "MATCH (us2:USERS {id: $userId})-[:MAKE_FRIEND_REQUEST]->(:USERS)-[:FRIEND]->(mutual2:USERS)\n" +
+            "WHERE NOT (us2)-[:FRIEND]-(mutual2)\n" +
+            "  AND NOT (us2)-[:MAKE_FRIEND_REQUEST]->(mutual2)\n" +
+            "  AND NOT (mutual2)-[:MAKE_FRIEND_REQUEST]->(us2)\n" +
+            "  AND mutual2.id <> $userId\n"+
+            "RETURN \n" +
+            "  mutual2.id AS id\n")
     Set<Long> suggestionFriendsToUser(Long userId);
 
     @Query(value = "match (fromUser:USERS {id: $fromUserId})-[request:MAKE_FRIEND_REQUEST]->(userMake:USERS {id: $toUserId}) \n" +
             "delete request", delete = true)
     void removeMakeFriendRequest(Long fromUserId, Long toUserId);
+
 }

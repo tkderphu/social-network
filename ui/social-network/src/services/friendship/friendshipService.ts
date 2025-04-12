@@ -3,10 +3,13 @@ import api from "../../axios/interceptor"
 
 class FriendshipService {
     makeFriendRequest(userId: number) {
-        return api.post(`/friendship/make-friend-request/${userId}`)
+        return api.post(`/friendship/make/${userId}`)
     }
-    acceptFriendRequest(userId: number) {
-        return api.post(`/friendship/accept-friend-request/${userId}`)
+    getStatusFriendship(userId: number) {
+        return api.get(`/friendship/status/${userId}`)
+    }
+    acceptMakeFriendRequest(userId: number) {
+        return api.put(`/friendship/make/accept/${userId}`)
     }
     getFriends(userId: number, page: number = 1, limit: number = 6) {
         return api.get(`/friendship/get-all-friends-by-${userId}?page=${page}&limit=${limit}`)
@@ -20,11 +23,14 @@ class FriendshipService {
     getSuggestionUsers() {
         return api.get('/friendship/suggestion-users')
     }
-    removeFriend(userId: number) {
-        return api.delete(`/friendship/remove-friend/${userId}`)
+    cancelFriend(userId: number) {
+        return api.delete(`/friendship/cancel/${userId}`)
     }
-    getFriendshipStatus(userId: number) {
-        return api.get(`/friendship/${userId}`)
+    cancelMakeFriendRequest(userId: number) {
+        return api.delete(`/friendship/make/${userId}`)
+    }
+    rejectMakeFriendRequest(userId: number) {
+        return api.delete(`/friendship/make/reject/${userId}`)
     }
 }
 export default new FriendshipService()

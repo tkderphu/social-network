@@ -16,6 +16,9 @@ public class DateUtils {
     public static String format(Date date) {
         return null;
     }
+    public static String formatFull(Date date) {
+        return null;
+    }
     public static String format(LocalDateTime localDateTime) {
          return null;
     }

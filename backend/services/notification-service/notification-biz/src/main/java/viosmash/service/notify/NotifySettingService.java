@@ -29,6 +29,4 @@ public interface NotifySettingService {
     
     NotifySetting getSetting(Long userId);
 
-
-    void deleteNotifyMessage(String notifyMessageId);
 }

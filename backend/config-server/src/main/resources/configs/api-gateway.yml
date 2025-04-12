@@ -16,6 +16,11 @@ spring:
           uri: lb://PROFILE-SERVICE
           predicates:
             - Path=/api/profiles/**
+
+        - id: friendship-service
+          uri: lb://FRIENDSHIP-SERVICE
+          predicates:
+            - Path=/api/friendship/**
       discovery:
         locator:
           enabled: true

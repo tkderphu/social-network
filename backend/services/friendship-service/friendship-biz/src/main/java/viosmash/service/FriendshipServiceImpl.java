@@ -11,6 +11,7 @@ import viosmash.nodes.UserMakesFriendRequest;
 import viosmash.repository.UserRepository;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import static viosmash.constant.FriendshipStatus.*;
@@ -54,13 +55,19 @@ public class FriendshipServiceImpl implements FriendshipService{
     }
 
     private User getUserById(Long userId) {
-        return this.userRepository.findById(userId)
-                .orElseThrow(() -> exception(404, "user not found"));
+        Optional<User> optionalUser = this.userRepository.findById(userId);
+        if(optionalUser.isEmpty()) {
+            User user = new User();
+            user.setId(userId);
+            this.userRepository.save(user);
+            return user;
+        }
+        return optionalUser.get();
     }
 
     @Override
     @Transactional(rollbackFor = ServiceException.class)
-    public boolean acceptUserFriendRequest(Long userId, Long targetUserId) {
+    public boolean acceptUserMakeFriendRequest(Long userId, Long targetUserId) {
         User user = getUserById(userId);
         User targetUser = getUserById(targetUserId);
 
@@ -79,7 +86,7 @@ public class FriendshipServiceImpl implements FriendshipService{
     }
 
     @Override
-    public List<UserMakesFriendRequest> getListUserFriendRequestsByReceiver(Long userId) {
+    public Set<UserMakesFriendRequest> getListUserFriendRequestsByReceiver(Long userId) {
         return this.userRepository.findAllReceivedFriendRequests(userId);
     }
 
@@ -98,5 +105,17 @@ public class FriendshipServiceImpl implements FriendshipService{
         if(isReceiveInvitation) return ACCEPT_FRIEND;
 
         return NONE;
+    }
+
+    @Override
+    public boolean cancelMakeFriendRequest(Long fromUserId, Long toUserId) {
+        userRepository.removeMakeFriendRequest(fromUserId, toUserId);
+        return true;
+    }
+
+    @Override
+    public boolean rejectMakeFriendRequest(Long userIdReceivedMakeFriendRequest, Long userMadeFriendRequest) {
+        userRepository.removeMakeFriendRequest(userMadeFriendRequest, userIdReceivedMakeFriendRequest);
+        return true;
     }
 }

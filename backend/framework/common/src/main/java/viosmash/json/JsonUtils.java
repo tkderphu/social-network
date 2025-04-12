@@ -19,6 +19,9 @@ public class JsonUtils {
         objectMapper.registerModules(new JavaTimeModule());
     }
 
+    public static ObjectMapper getObjectMapper() {
+        return objectMapper;
+    }
 
     public static String toStringJson(Object object) {
         try {

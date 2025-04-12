@@ -41,7 +41,7 @@ public interface FriendshipService {
     boolean addNewUserMakeFriendRequest(Long userId, Long targetUserId);
 //    boolean removeUserFriendRequest(Long userId, boolean isUserFriendRequest)
 
-    boolean acceptUserFriendRequest(Long userId, Long targetUserId);
+    boolean acceptUserMakeFriendRequest(Long userId, Long targetUserId);
 
     /**
      * Lay danh sach gui yeu cau ket ban cua user co id = {userId}
@@ -52,10 +52,11 @@ public interface FriendshipService {
 
     /**
      * Lay danh sach yeu cau ket ban toi {userId}
+     *
      * @param userId: id cua user
      * @return danh sach id cua user, nguoi ma gui yeu cau ket ban toi {userId}
      */
-    List<UserMakesFriendRequest> getListUserFriendRequestsByReceiver(Long userId);
+    Set<UserMakesFriendRequest> getListUserFriendRequestsByReceiver(Long userId);
 
     /**
      * Lay danh sach goi y cho {userId} dua tren
@@ -67,4 +68,8 @@ public interface FriendshipService {
     Set<Long> getListSuggestionUser(Long userId);
 
     FriendshipStatus getStatusFriendship(Long fromUserId, Long toUserId);
+
+    boolean cancelMakeFriendRequest(Long fromUserId, Long toUserId);
+
+    boolean rejectMakeFriendRequest(Long userIdReceivedMakeFriendRequest, Long userMadeFriendRequest);
 }

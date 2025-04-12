@@ -30,6 +30,18 @@ public class FriendshipController {
         boolean isOke = this.friendshipService.addNewUserMakeFriendRequest(currentUserId, userId);
         return success(isOke);
     }
+    @DeleteMapping("/make/reject/{userId}")
+    public CommonResult<Boolean> rejectMakeFriendRequest(@PathVariable("userId") Long userId) {
+        Long currentUserId = SecurityUtils.getLoginUserMemberId();
+        boolean isOke = this.friendshipService.rejectMakeFriendRequest(currentUserId, userId);
+        return success(isOke);
+    }
+    @DeleteMapping("/make/{userId}")
+    public CommonResult<Boolean> cancelMakeFriendRequest(@PathVariable("userId") Long userId) {
+        Long currentUserId = SecurityUtils.getLoginUserMemberId();
+        boolean isOke = this.friendshipService.cancelMakeFriendRequest(currentUserId, userId);
+        return success(isOke);
+    }
     @GetMapping("/status/{userId}")
     public CommonResult<FriendshipStatus> getStatusFriendship(@PathVariable("userId") Long userId) {
         Long currentUserId = SecurityUtils.getLoginUserMemberId();
@@ -37,10 +49,10 @@ public class FriendshipController {
         return success(status);
     }
 
-    @PostMapping("/accept/{userId}")
-    public CommonResult<Boolean> acceptFriendRequest(@PathVariable("userId") Long userId) {
+    @PutMapping("/make/accept/{userId}")
+    public CommonResult<Boolean> acceptMakeFriendRequest(@PathVariable("userId") Long userId) {
         Long currentUserId = SecurityUtils.getLoginUserMemberId();
-        boolean isOke = this.friendshipService.acceptUserFriendRequest(currentUserId, userId);
+        boolean isOke = this.friendshipService.acceptUserMakeFriendRequest(currentUserId, userId);
         return success(isOke);
     }
 

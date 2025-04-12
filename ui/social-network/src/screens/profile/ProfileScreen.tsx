@@ -16,6 +16,7 @@ import InfoComponent from "./InfoComponent"
 import PhotosComponent from "./PhotosComponent"
 import AddressComponent from "./AddressComponent"
 import EduactionComponent from "./EducationComponent"
+import { acceptMakeFriendRequestAction, cancelFriendAction, cancelMakeFriendRequestAction, createFriendRequestAction, fetchStatusBetweenUserAction, rejectMakeFriendRequestAction } from "../../redux/actions/friendshipAction"
 function ProfileScreen() {
     const { id } = useParams()
     const fetchProfile: {
@@ -27,6 +28,14 @@ function ProfileScreen() {
         return state.fetchProfile
     })
 
+    const fetchStatusState: {
+        status: "FRIEND" | "MAKE_FRIEND" |
+        "ACCEPT_FRIEND" |
+        "NONE"
+    } = useSelector((state: any) => {
+        return state.fetchStatusBetweenUser
+    })
+
     const dispatch = useDispatch()
 
     const [navigateContent, setNavigateContent] = useState<"#posts_nav" | "#friends" | "#photos">("#posts_nav")
@@ -35,7 +44,26 @@ function ProfileScreen() {
     useEffect(() => {
         //@ts-ignore
         dispatch(fetchProfileAction(id))
+        //@ts-ignore
+        dispatch(fetchStatusBetweenUserAction(id))
     }, [])
+
+
+    const friendshipActionOnClick = () => {
+        if (fetchStatusState.status === 'NONE') {
+            //@ts-ignore
+            dispatch(createFriendRequestAction(id))
+        }else if (fetchStatusState.status === 'ACCEPT_FRIEND') {
+            //@ts-ignore
+            dispatch(acceptMakeFriendRequestAction(id))
+        } else if (fetchStatusState.status == 'MAKE_FRIEND'){
+            //@ts-ignore
+            dispatch(cancelMakeFriendRequestAction(id))
+        } else {
+            //@ts-ignore
+            dispatch(cancelFriendAction(id))
+        }
+    }
 
     return (
         <div className="container-fluid" style={{ minWidth: "1000px" }} >
@@ -78,7 +106,7 @@ function ProfileScreen() {
                             </div>
                         </div>
                         <div>
-                            {id === TokenUtils.authLogin.userId ? (
+                            {id == TokenUtils.authLogin.userId ? (
                                 <>
                                     <button className="btn btn-primary ">Add to story</button>
                                     <button className="btn btn-secondary m-3" data-toggle="modal" data-target=".edit-profile">Edit profile</button>
@@ -86,7 +114,14 @@ function ProfileScreen() {
                                 </>
                             ) : (
                                 <>
-                                    <button className="btn btn-primary" data-toggle="modal" data-target=".settings-privacy">Add friends</button>
+                                    {fetchStatusState.status === 'ACCEPT_FRIEND' && <button className="btn btn-secondary mx-3" onClick={() => {
+                                        //@ts-ignore
+                                        dispatch(rejectMakeFriendRequestAction(id))
+                                    }}>Cancel</button>}
+
+                                    <button className="btn btn-primary" onClick={() => {
+                                        friendshipActionOnClick()
+                                    }}>{fetchStatusState.status === 'NONE' ? "Add friend" : (fetchStatusState.status === 'MAKE_FRIEND' ? "Cancel made friend" : (fetchStatusState.status === 'ACCEPT_FRIEND' ? "Accept friend" : "Cancel friend"))}</button>
 
                                     <button style={{ border: 'none', backgroundColor: "white" }} className='m-3'>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-chat-fill" viewBox="0 0 16 16">
