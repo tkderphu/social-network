@@ -2,9 +2,22 @@ package viosmash.service.firebase;
 import com.google.firebase.messaging.FirebaseMessaging;
 import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import viosmash.dal.dataobject.FirebaseMessageToken;
+import viosmash.dal.repo.FirebaseMessageTokenRepository;
+
 @Service
+@RequiredArgsConstructor
 public class FCMService {
+
+    private final FirebaseMessageTokenRepository firebaseMessageTokenRepository;
+
+    public void storeFirebaseMessageToken(Long userId, String token) {
+        firebaseMessageTokenRepository.save(new FirebaseMessageToken()
+                .setToken(token)
+                .setUserId(userId));
+    }
 
     public void sendNotification(String title, String body, String token) {
         Message message = Message.builder()
