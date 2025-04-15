@@ -18,34 +18,62 @@ import Group from './screens/group/Group'
 import { Provider } from 'react-redux'
 import store from './redux/store'
 import { TokenUtils } from './common'
+import FriendRequest from './screens/friend/FriendRequest'
+import ListFriend from './screens/friend/ListFriend'
+import FriendAccept from './screens/friend/FriendAccept'
+import ChatList from './screens/chat/ChatList'
+import NewFeed from './screens/feed/NewFeed'
+import GroupPage from './screens/group/GroupPage'
+import UserSearchResult from './screens/search/UserSearchResult'
+import Post from './screens/post/Post'
+import PostGlobal from './screens/post/PostGlobal'
 function App() {
   const [userChatBoxs, setUserChatBoxs] = useState<Array<any>>()
-  
-  if(!["/login", "/forgot-password", "/register"].includes(location.pathname) && !TokenUtils.tokenIsExpired) {
-      
+
+  if (!["/login", "/forgot-password", "/register"].includes(location.pathname) && !TokenUtils.tokenIsExpired) {
+
   }
 
   return (
     <>
       <Provider store={store}>
-        {!["/login", "/forgot-password", "/register"].includes(location.pathname) && <Header container={userChatBoxs || new Array<any>()} fn={(arr: Array<any>) => {
-          setUserChatBoxs(arr)
-        }} />}
         <BrowserRouter>
+          {!["/login", "/forgot-password", "/register"].includes(location.pathname) && <Header container={userChatBoxs || new Array<any>()} fn={(arr: Array<any>) => {
+            setUserChatBoxs(arr)
+          }} />}
           <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='friends/suggestions' element={<Suggestion />} />
-            <Route path='friends' element={<Friend />} />
+            <Route path='friends' element={<Friend />}>
+              <Route element={<ListFriend type='MY' />} index></Route>
+              <Route path='suggestions' element={<Suggestion />} />
+              <Route path='requests' element={<FriendRequest />} />
+              <Route path='accepts' element={<FriendAccept />} />
+            </Route>
+            <Route path='messages' element={<ChatList />} >
+              <Route index path=':conversationId' element={<UserChatBox removeThisUserChatboxFn={() => { }} />} />
+            </Route>
             <Route path='login' element={<LoginScreen />}></Route>
             <Route path='register' element={<RegisterScreen />}></Route>
             <Route path='forgot-password' element={<ForgotPassworScreen />}></Route>
             <Route path='profile/:id' element={<ProfileScreen />}></Route>
-            <Route path='search' element={<SearchResult />}></Route>
+            <Route path='search' element={<SearchResult />}>
+              <Route index element={<UserSearchResult />} />
+              <Route path='profile/:id' element={<ProfileScreen />} />
+            </Route>
             <Route path='search/posts' element={<PostSearchResult />}></Route>
-            <Route path='groups' element={<Group />}></Route>
+            <Route path='groups' element={<Group />}>
+              {/* <Route path='joined' element={<GroupPage/>} /> */}
+              <Route path='feed' element={<NewFeed />} />
+              <Route path=':name' element={<GroupPage />} />
+            </Route>
+            {/* <Route path='posts' element={<Post />}>
+
+            </Route> */}
           </Routes>
+          <PostGlobal />
         </BrowserRouter>
         <ChatContainer userChatBoxs={userChatBoxs} />
+
       </Provider>
     </>
   )

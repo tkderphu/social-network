@@ -1,9 +1,7 @@
-import { redirect } from 'react-router'
 import {combineReducers} from 'redux'
-import { rejectMakeFriendRequestAction } from '../actions/friendshipAction'
-import { fetchProfileAction } from '../actions/profileAction'
 import { forgotPasswordReducer, loginReducer, redirectReducer, registerReducer } from './authReducer'
 import { cancelFriendReducer, cancelMakeFriendRequestReducer, createFriendRequestReducer, fetchStatusBetweenUserReducer, rejectMakeFriendRequestReducer } from './friendshipReducer'
+import { countUnreadMessageReducer, fetchNotifyMessagesReducer, fetchNotifySettingReducer, updateNotifyChatReducer, updateNotifyCommentReducer, updateNotifyFriendReducer, updateNotifyReactionReducer } from './notificationReducer'
 import { acceptMakeFriendRequestReducer, fetchProfileReducer, updateAddressReducer, updateEducationReducer, updateInfoReducer, uploadPersonalImageReducer } from './profileReducer'
 const rootReducer = combineReducers({
     uploadPersonalImage: uploadPersonalImageReducer,
@@ -22,6 +20,15 @@ const rootReducer = combineReducers({
     cancelMakeFriendRequest: cancelMakeFriendRequestReducer,
     rejectMakeFriendRequest: rejectMakeFriendRequestReducer,
     acceptMakeFrienRequest: acceptMakeFriendRequestReducer,
-    cancelFriend: cancelFriendReducer
+    cancelFriend: cancelFriendReducer,
+    //notification
+    countUnreadMessage: countUnreadMessageReducer,
+    fetchNotifyMessages: fetchNotifyMessagesReducer,
+    updateNotifyReaction: updateNotifyReactionReducer,
+    updateNotifyComment: updateNotifyCommentReducer,
+    updateNotifyChat: updateNotifyChatReducer,
+    updateNotifyFriend: updateNotifyFriendReducer,
+    fetchNotifySetting: fetchNotifySettingReducer
+
 })
 export default rootReducer

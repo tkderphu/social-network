@@ -3,11 +3,6 @@ function Home() {
     return (
         <div className="row mt-3 m-1">
             <div className="col-3 sticky-sidebar ">
-                <button className="w-100 text-left p-3 " style={{ border: "none" }}>Posts</button>
-                <button className="w-100 text-left p-3" style={{ border: "none" }}>People</button>
-                <button className="w-100 text-left p-3" style={{ border: "none" }}>Pages</button>
-                <button className="w-100 text-left p-3" style={{ border: "none" }}>Groups</button>
-                <hr style={{ backgroundColor: "red" }} />
                 <h4>Your shortcut</h4>
                 <div >
                     <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>

@@ -44,3 +44,6 @@
     max-width: 100%;
     overflow-x: auto; /* Enable horizontal scrolling if too many */
 }
+.active-bg-black {
+    background-color: rgb(189, 184, 184);
+}

@@ -1,5 +1,7 @@
+import { useNavigate } from "react-router"
 import "./Chat"
 function UserChatBox(props: {removeThisUserChatboxFn: any}) {
+    const nav = useNavigate()
     return (
         <div className="user-chat-box card">
             <div className="d-flex justify-content-between">
@@ -18,7 +20,9 @@ function UserChatBox(props: {removeThisUserChatboxFn: any}) {
                     </div>
             </div>
             <div className="user-chat-box-content">
-
+                    <button onClick={() => {
+                        nav(-1)
+                    }}>Recall</button>
             </div>
             <div className="user-chat-box-send-message d-flex flex-column ">
                 <input type={'file'} className="mb-3" />
