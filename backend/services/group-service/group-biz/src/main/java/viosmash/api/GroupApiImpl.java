@@ -8,8 +8,4 @@ public class GroupApiImpl implements GroupApi{
         return null;
     }
 
-    @Override
-    public GroupSettingDTO getSetting(Long groupId) {
-        return null;
-    }
 }

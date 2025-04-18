@@ -10,6 +10,4 @@ public interface GroupApi {
 
     @GetMapping("/{id}")
     GroupDTO getGroup(@PathVariable("id") Long groupId);
-    @GetMapping("/settings/{id}")
-    GroupSettingDTO getSetting(@PathVariable("id") Long groupId);
 }

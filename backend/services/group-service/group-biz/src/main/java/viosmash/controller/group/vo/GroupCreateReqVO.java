@@ -1,4 +1,4 @@
-package viosmash.controller.vo;
+package viosmash.controller.group.vo;
 
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -8,6 +8,7 @@ import org.hibernate.validator.constraints.Length;
 import viosmash.enums.GroupType;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class GroupCreateReqVO {
@@ -19,5 +20,5 @@ public class GroupCreateReqVO {
     @Length(min = 20, message = "at least 20 character")
     private String description;
     @Size(min = 3, message = "number of users must greater equal than 3")
-    private List<Long> userIds;
+    private Set<Long> userIds;
 }

@@ -4,19 +4,26 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import viosmash.aop.GroupPermission;
+import viosmash.dal.dataobject.Group;
 import viosmash.dal.dataobject.MemberWaitingReview;
 import viosmash.dal.dataobject.UserMemberGroup;
+import viosmash.dal.repo.GroupRepository;
 import viosmash.dal.repo.MemberWaitingReviewRepository;
 import viosmash.dal.repo.UserMemberGroupRepository;
 import viosmash.enums.GroupRole;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
+import static viosmash.exception.utils.ServiceUtils.exception;
 
 @RequiredArgsConstructor
 @Service
 public class UserMemberGroupServiceImpl implements UserMemberGroupService{
     private final UserMemberGroupRepository userMemberGroupRepository;
     private final MemberWaitingReviewRepository memberWaitingReviewRepository;
+    private final GroupRepository groupRepository;
+
     @Override
     public UserMemberGroup getMember(Long memberId, Long groupId) {
         return userMemberGroupRepository.findByGroupIdAndMemberId(groupId, memberId);
@@ -81,5 +88,36 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
     @Override
     public List<MemberWaitingReview> getListRequestAttendGroup(Long groupId) {
         return this.memberWaitingReviewRepository.findAllByGroupId(groupId);
+    }
+
+    @Override
+    public Boolean checkUserJoinedGroup(Long userId, Long groupId) {
+        return this.userMemberGroupRepository.findByGroupIdAndMemberId(groupId, userId) != null;
+    }
+
+    @Override
+    @GroupPermission
+    public Boolean cancelMemberJoinGroup(Long groupId, Long userId) {
+        this.memberWaitingReviewRepository.deleteAllByUserIdAndGroupId(userId, groupId);
+        return true;
+    }
+
+    @Override
+    public Boolean requestJoinGroup(Long groupId, Long userId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> exception(404, "not found group with id: " + groupId));
+        if(group.getEnableAutoAcceptMember()) {
+            UserMemberGroup userMemberGroup = new UserMemberGroup()
+                    .setGroupId(groupId).setMemberId(userId)
+                    .setJoined(LocalDateTime.now())
+                    .setGroupRole(GroupRole.MEMBER);
+            this.userMemberGroupRepository.save(userMemberGroup);
+        } else {
+            MemberWaitingReview memberWaitingReview = new MemberWaitingReview()
+                    .setGroupId(groupId).setUserId(userId)
+                    .setRequestDate(LocalDateTime.now());
+            this.memberWaitingReviewRepository.save(memberWaitingReview);
+        }
+        return true;
     }
 }

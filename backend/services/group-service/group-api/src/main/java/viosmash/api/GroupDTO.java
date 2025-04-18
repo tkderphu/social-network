@@ -10,4 +10,7 @@ public class GroupDTO {
     private String imageUrl;
     private GroupType groupType;
     private Integer members;
+
+    private Boolean enableAutoAcceptMember;
+    private Boolean enableAutoReviewPost;
 }

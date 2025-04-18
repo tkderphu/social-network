@@ -5,9 +5,11 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import viosmash.controller.vo.ConversationCreateReq;
 import viosmash.controller.vo.MessageReqVO;
+import viosmash.controller.vo.MessageRespVO;
 import viosmash.dal.dataobject.Conversation;
 import viosmash.dal.dataobject.Message;
 import viosmash.dal.repo.MessageRepository;
@@ -27,22 +29,22 @@ public class MessageServiceImpl implements MessageService{
 
     private final MessageRepository messageRepository;
     private final ConversationService conversationService;
-
+    private final SimpMessagingTemplate simpMessagingTemplate;
     @Override
     public Message createMessage(MessageReqVO req) {
         Message message = BeanUtil.copy(req, Message.class);
         if(req.getConversationId() != null) {
             this.messageRepository.save(message);
-            return message;
         } else if(req.getToUserId() != null) {
             Conversation conversation = conversationService.createConversation(new ConversationCreateReq(
                     null, ONE_ONE, List.of(req.getSenderId(), req.getToUserId())
             ));
             message.setConversationId(conversation.getId());
             this.messageRepository.save(message);
-            return message;
+        } else {
+            throw exception(HttpStatus.BAD_REQUEST.value(), "Destination(conversationId or toUserId) can't null");
         }
-        throw exception(HttpStatus.BAD_REQUEST.value(), "Destination(conversationId or toUserId) can't null");
+        return message;
     }
 
     @Override
@@ -50,5 +52,10 @@ public class MessageServiceImpl implements MessageService{
         PageRequest pageRequest = PageRequest.of(page - 1, limit, Sort.by("createdAt").descending());
         Page<Message> pageResp = this.messageRepository.findAll(pageRequest);
         return new PageResult<>(pageResp.getNumber() + 1, limit, pageResp.getContent());
+    }
+
+    @Override
+    public MessageRespVO getLatestMessage(Long conversationId) {
+        return null;
     }
 }

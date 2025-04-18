@@ -12,23 +12,23 @@ public class NotifySettingServiceImpl implements NotifySettingService{
     private final NotifySettingRepository notifySettingRepository;
 
     @Override
-    public Boolean updateNotifyChatAction(Long userId, Boolean enable) {
-        return null;
+    public void updateNotifyChatAction(Long userId, Boolean enable) {
+        notifySettingRepository.save(getSetting(userId).setEnableNotifyChatAction(enable));
     }
 
     @Override
-    public Boolean updateNotifyCommentAction(Long userId, Boolean enable) {
-        return null;
+    public void updateNotifyCommentAction(Long userId, Boolean enable) {
+        notifySettingRepository.save(getSetting(userId).setEnableNotifyCommentAction(enable));
     }
 
     @Override
-    public Boolean updateNotifyReactionAction(Long userId, Boolean enable) {
-        return null;
+    public void updateNotifyReactionAction(Long userId, Boolean enable) {
+        notifySettingRepository.save(getSetting(userId).setEnableNotifyReactionAction(enable));
     }
 
     @Override
-    public Boolean updateNotifyFriendAction(Long userId, Boolean enable) {
-        return null;
+    public void updateNotifyFriendAction(Long userId, Boolean enable) {
+        notifySettingRepository.save(getSetting(userId).setEnableNotifyFriendAction(enable));
     }
 
     @Override

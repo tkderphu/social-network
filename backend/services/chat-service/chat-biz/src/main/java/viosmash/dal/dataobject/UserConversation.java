@@ -14,6 +14,9 @@ import java.time.LocalDateTime;
 @Table(name = "tblUserConversation")
 public class UserConversation {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private Long conversationId;
 
     private Long userId;

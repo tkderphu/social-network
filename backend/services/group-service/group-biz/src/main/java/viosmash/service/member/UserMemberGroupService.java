@@ -27,6 +27,13 @@ public interface UserMemberGroupService {
     Boolean acceptMemberJoinGroup(Long groupId,
                                   Long memberId);
 
+
+
     List<MemberWaitingReview> getListRequestAttendGroup(Long groupId);
 
+    Boolean checkUserJoinedGroup(Long userId, Long groupId);
+
+    Boolean cancelMemberJoinGroup(Long groupId, Long userId);
+
+    Boolean requestJoinGroup(Long groupId, Long userId);
 }

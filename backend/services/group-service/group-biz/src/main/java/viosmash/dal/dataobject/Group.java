@@ -20,4 +20,7 @@ public class Group {
     @Enumerated(EnumType.STRING)
     private GroupType groupType;
     private LocalDateTime createdAt;
+    private Long ownerId;
+    private Boolean enableAutoAcceptMember;
+    private Boolean enableAutoReviewPost;
 }

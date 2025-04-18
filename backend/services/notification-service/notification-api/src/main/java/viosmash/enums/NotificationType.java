@@ -1,0 +1,12 @@
+package viosmash.enums;
+
+public enum NotificationType {
+
+    ACCEPTED_REQUEST_FRIEND,
+    CREATED_REQUEST_FRIEND,
+    CREATED_REACTION,
+    CREATED_COMMENT,
+    CREATED_REPLY_COMMENT,
+    FORGOT_PASSWORD,
+    FOLLOW_USER;
+}

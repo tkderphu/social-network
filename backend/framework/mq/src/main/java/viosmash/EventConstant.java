@@ -22,4 +22,6 @@ public interface EventConstant {
     String CREATE_REQUEST_FRIEND_REQUEST = "create_request_friend_request_";
     String CREATE_COMMENT = "create_comment_";
     String CREATE_REPLY_COMMENT = "create_comment_reply_";
+
+    String FOLLOW_USER = "follow_user_";
 }

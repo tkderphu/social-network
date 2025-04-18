@@ -12,6 +12,5 @@ public interface PostWaitingReviewService {
     Boolean acceptPost(Long groupId,
                        Long postId);
 
-    List<PostWaitingReview> getListRequestPublishAtGroup(Long groupId);
     Boolean deletePost(Long postId);
 }

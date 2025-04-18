@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import viosmash.enums.GroupRole;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Accessors(chain = true)
@@ -16,7 +18,7 @@ public class UserMemberGroup {
 
     private Long memberId;
     private Long groupId;
-
+    private LocalDateTime joined;
     @Enumerated(EnumType.STRING)
     private GroupRole groupRole;
 }

@@ -1,14 +1,17 @@
 package viosmash.service.notify;
 
 import viosmash.dal.dataobject.NotifyMessage;
-import viosmash.pojo.PageResult;
+import viosmash.dal.dataobject.NotifyTemplate;
 
 import java.util.List;
+import java.util.Map;
 
 public interface NotifyMessageService {
-    NotifyMessage createNotifyMessage(Long userId, String title, String body);
-    PageResult<NotifyMessage> getListNotify(Long userId, int page, int limit);
+    NotifyMessage createNotifyMessage(Long userId, NotifyTemplate template, Map<String, Object> templateParams);
+    List<NotifyMessage> getListNotify(Long userId);
+    List<NotifyMessage> getListUnreadNotify(Long userId);
     int countUnreadNotify(Long userId);
     void readAllNotifyMessage(Long userId);
-    NotifyMessage readNotifyMessage(String notifyMessageId);
+
+    void readNotifyMessage(Long notifyMessageId);
 }

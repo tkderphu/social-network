@@ -1,13 +1,15 @@
 package viosmash.dal.dataobject;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "FirebaseMessageToken")
+@Table(name = "tblFirebaseMessageToken")
 @Accessors(chain = true)
 @Data
+@Entity
 public class FirebaseMessageToken {
     @Id
     private Long userId;

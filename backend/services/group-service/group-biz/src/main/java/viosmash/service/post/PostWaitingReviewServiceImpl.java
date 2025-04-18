@@ -4,12 +4,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import viosmash.aop.GroupPermission;
 import viosmash.dal.dataobject.PostWaitingReview;
+import viosmash.dal.repo.PostWaitingReviewRepository;
 
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class PostWaitingReviewServiceImpl implements PostWaitingReviewService{
+    private final PostWaitingReviewRepository postWaitingReviewRepository;
     @Override
     public Boolean pushPostToWaitingBucket(Long groupId, Long postId) {
         return null;
@@ -27,14 +29,11 @@ public class PostWaitingReviewServiceImpl implements PostWaitingReviewService{
     }
 
     @Override
+    @GroupPermission
     public Boolean acceptPost(Long groupId, Long postId) {
         return null;
     }
 
-    @Override
-    public List<PostWaitingReview> getListRequestPublishAtGroup(Long groupId) {
-        return List.of();
-    }
 
     @Override
     @GroupPermission

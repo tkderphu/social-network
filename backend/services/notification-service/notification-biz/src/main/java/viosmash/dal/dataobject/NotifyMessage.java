@@ -1,22 +1,26 @@
 package viosmash.dal.dataobject;
 
 
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import viosmash.converter.JsonObjectConverter;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
-@Document(collection = "NotifyMessage")
+@Table(name = "tblNotifyMessage")
+@Entity
 @Accessors(chain = true)
 @Data
 public class NotifyMessage {
     @Id
-    private String id;
-    private String content;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private Long userId;
     private LocalDateTime createdAt;
     private LocalDateTime readAt;
     private Boolean read;
+    private String content;
+
 }
