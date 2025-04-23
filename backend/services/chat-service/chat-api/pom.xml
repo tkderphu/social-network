@@ -3,18 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.viosmash</groupId>
-        <artifactId>social-network</artifactId>
+        <artifactId>chat-service</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
-    <artifactId>chat-service</artifactId>
-    <packaging>pom</packaging>
-    <name>chat-service Maven Webapp</name>
+    <artifactId>chat-api</artifactId>
+    <packaging>war</packaging>
+    <name>chat-api Maven Webapp</name>
     <url>http://maven.apache.org</url>
-    <modules>
-        <module>chat-biz</module>
-        <module>chat-api</module>
-    </modules>
     <dependencies>
         <dependency>
             <groupId>junit</groupId>
@@ -24,6 +19,6 @@
         </dependency>
     </dependencies>
     <build>
-        <finalName>chat-service</finalName>
+        <finalName>chat-api</finalName>
     </build>
 </project>

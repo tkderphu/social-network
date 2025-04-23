@@ -23,8 +23,8 @@ public class NotifyMessageServiceImpl implements NotifyMessageService{
                                              NotifyTemplate template,
                                              Map<String, Object> templateParams) {
         NotifyMessage notifyMessage = new NotifyMessage().setCreatedAt(LocalDateTime.now())
-                .setRead(false).setReadAt(null).setUserId(userId)
-                .setContent(StringUtils.formatPlaceHolders(template.getContent(), templateParams));
+                .setRead(false).setUserId(userId)
+                .setNotifyTemplate(template).setTemplateParams(templateParams);
         return this.notifyMessageRepository.save(notifyMessage);
     }
 

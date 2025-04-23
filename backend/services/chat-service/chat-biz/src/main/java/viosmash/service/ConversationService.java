@@ -1,6 +1,7 @@
 package viosmash.service;
 
 import viosmash.controller.vo.ConversationCreateReq;
+import viosmash.controller.vo.ConversationRespVO;
 import viosmash.dal.dataobject.Conversation;
 
 import java.util.Collection;
@@ -9,7 +10,7 @@ import java.util.List;
 public interface ConversationService {
 
     Conversation createConversation(ConversationCreateReq req);
-    List<Conversation> getListConversation(Long userId);
+    List<ConversationRespVO> getListConversation(Long userId);
     Conversation getConversation(Long id);
 
     /**

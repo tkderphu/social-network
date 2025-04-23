@@ -5,10 +5,13 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import viosmash.collection.CollUtils;
 import viosmash.controller.vo.ConversationCreateReq;
+import viosmash.controller.vo.ConversationRespVO;
 import viosmash.dal.dataobject.Conversation;
 import viosmash.dal.dataobject.UserConversation;
 import viosmash.dal.repo.ConversationRepository;
+import viosmash.dal.repo.MessageRepository;
 import viosmash.dal.repo.UserConversationRepository;
+import viosmash.object.BeanUtil;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -22,6 +25,7 @@ public class ConversationServiceImpl implements ConversationService{
 
     private final UserConversationRepository userConversationRepository;
     private final ConversationRepository conversationRepository;
+    private final MessageService  messageService;
     @Override
     public Conversation createConversation(ConversationCreateReq req) {
         Conversation conversation = new Conversation()
@@ -39,8 +43,12 @@ public class ConversationServiceImpl implements ConversationService{
     }
 
     @Override
-    public List<Conversation> getListConversation(Long userId) {
-        return this.conversationRepository.findAll(Sort.by("createdAt").descending());
+    public List<ConversationRespVO> getListConversation(Long userId) {
+        List<UserConversation> userConversations = this.userConversationRepository.findAllByUserId(userId);
+        return CollUtils.convertList(userConversations, uc -> {
+            return BeanUtil.copy(getConversation(uc.getId()), ConversationRespVO.class)
+                    .setLatestMessage(messageService.getLatestMessage(uc.getConversationId()));
+        });
     }
 
     @Override

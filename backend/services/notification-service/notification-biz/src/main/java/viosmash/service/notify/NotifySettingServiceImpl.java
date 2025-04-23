@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import viosmash.dal.dataobject.NotifySetting;
 import viosmash.dal.repo.NotifySettingRepository;
 
+import static viosmash.exception.utils.ServiceUtils.exception;
+
 @Service
 @RequiredArgsConstructor
 public class NotifySettingServiceImpl implements NotifySettingService{
@@ -33,6 +35,7 @@ public class NotifySettingServiceImpl implements NotifySettingService{
 
     @Override
     public NotifySetting getSetting(Long userId) {
-        return null;
+        return this.notifySettingRepository.findByUserId(userId)
+                .orElseThrow(() -> exception(404, "not found notifySetting by userId: " + userId));
     }
 }

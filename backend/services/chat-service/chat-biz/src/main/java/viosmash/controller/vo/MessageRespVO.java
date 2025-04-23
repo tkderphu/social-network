@@ -1,12 +1,14 @@
 package viosmash.controller.vo;
 
 import lombok.Data;
+import lombok.ToString;
 import lombok.experimental.Accessors;
 import viosmash.api.UserDTO;
 
 import java.util.List;
 
 @Data
+@ToString
 @Accessors(chain = true)
 public class MessageRespVO {
     private Long id;

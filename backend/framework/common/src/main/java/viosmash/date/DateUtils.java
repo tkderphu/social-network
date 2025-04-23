@@ -41,8 +41,27 @@ public class DateUtils {
         }
     }
 
+    public static String timeAgo(LocalDateTime from) {
+        LocalDateTime now = LocalDateTime.now();
 
+        long minutes = ChronoUnit.MINUTES.between(from, now);
+        if (minutes < 60) {
+            return minutes + "m";
+        }
 
+        long hours = ChronoUnit.HOURS.between(from, now);
+        if (hours < 24) {
+            return hours + "h";
+        }
+
+        long days = ChronoUnit.DAYS.between(from, now);
+        if (days < 7) {
+            return days + "d";
+        }
+
+        long weeks = ChronoUnit.WEEKS.between(from, now);
+        return weeks + "w";
+    }
 
     public static boolean before(Long expires) {
         Long current =  getCurrentMilliseconds();

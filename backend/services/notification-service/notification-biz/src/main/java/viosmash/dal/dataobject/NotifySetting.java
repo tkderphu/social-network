@@ -1,6 +1,5 @@
 package viosmash.dal.dataobject;
 
-import jakarta.persistence.Access;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;

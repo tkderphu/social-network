@@ -29,9 +29,10 @@ public class ChatController {
     private final ConversationService conversationService;
     private final MessageService messageService;
     private final ProfileApi profileApi;
+
     @PostMapping("/send")
     public CommonResult<Boolean> sendMessage(@Valid @RequestBody MessageReqVO req) {
-        Message message = messageService.createMessage(req);
+        messageService.createMessage(req);
         //send to all instance websocket(redis pub/sub)
         return success(true);
     }
@@ -44,12 +45,13 @@ public class ChatController {
 
     @GetMapping("/conversations/user/{userId}")
     public CommonResult<List<ConversationRespVO>> getListConversation(@PathVariable("userId") Long userId) {
-        return success(convertList(
-                conversationService.getListConversation(userId),
-                conversation -> BeanUtil
-                        .copy(conversation, ConversationRespVO.class)
-                        .setLatestMessage(messageService.getLatestMessage(conversation.getId()))
-        ));
+        return null;
+//        return success(convertList(
+//                conversationService.getListConversation(userId),
+//                conversation -> BeanUtil
+//                        .copy(conversation, ConversationRespVO.class)
+//                        .setLatestMessage(messageService.getLatestMessage(conversation.getId()))
+//        ));
     }
     @GetMapping("/conversations/{conversationId}/messages")
     public CommonResult<PageResult<MessageRespVO>> getListMessage(

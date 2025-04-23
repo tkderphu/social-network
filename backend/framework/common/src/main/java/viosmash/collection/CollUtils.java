@@ -13,6 +13,13 @@ public class CollUtils {
         return collection.stream().map(func).toList();
     }
 
+    public static <T> List<T> convertList(T[] t) {
+        List<T> list = new ArrayList<>();
+        for(T x : t) {
+            list.add(x);
+        }
+        return list;
+    }
     public static <T>Set<T> convertSet() {
         return null;
     }
