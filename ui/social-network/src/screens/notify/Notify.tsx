@@ -4,9 +4,9 @@ import "./Notify.css"
 export default function Notify() {
     return (
         <div>
+            {/* <NotifyReaction/>
             <NotifyReaction/>
-            <NotifyReaction/>
-            <NotifyReaction/>
+            <NotifyReaction/> */}
         </div>
     )
 }

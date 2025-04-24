@@ -29,17 +29,17 @@
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
         </processorPath>
         <module name="notification-api" />
-        <module name="chat-biz" />
         <module name="group-api" />
+        <module name="chat-biz" />
         <module name="reaction-biz" />
         <module name="group-biz" />
         <module name="notification-biz" />
         <module name="redis" />
         <module name="newfeed-biz" />
-        <module name="comment-service" />
         <module name="security" />
-        <module name="reaction-api" />
+        <module name="comment-service" />
         <module name="friendship-api" />
+        <module name="reaction-api" />
         <module name="common" />
         <module name="friendship-biz" />
         <module name="web" />
@@ -60,6 +60,7 @@
         <module name="upload-biz" />
         <module name="search-biz" />
         <module name="db" />
+        <module name="chat-api" />
         <module name="gateway" />
       </profile>
     </annotationProcessing>
@@ -69,6 +70,7 @@
       <module name="api" options="-parameters" />
       <module name="authen-service" options="-parameters" />
       <module name="authentication" options="-parameters" />
+      <module name="chat-api" options="-parameters" />
       <module name="chat-biz" options="-parameters" />
       <module name="chat-service" options="-parameters" />
       <module name="comment-service" options="-parameters" />

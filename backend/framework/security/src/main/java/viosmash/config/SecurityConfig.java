@@ -60,7 +60,9 @@ public class SecurityConfig {
                 })
                 .authorizeHttpRequests(request -> {
 //                    request.requestMatchers(securityProperties.getPermitAllUrls().toArray(new String[]{})).permitAll();
-                    request.anyRequest().permitAll();
+
+                    request.requestMatchers("/chat/ws").permitAll()
+                            .anyRequest().permitAll();
                 });
 //        Map<HttpMethod, Set<String>> mapUrls = getAllUrls();
 //        httpSecurity.authorizeHttpRequests(request -> {

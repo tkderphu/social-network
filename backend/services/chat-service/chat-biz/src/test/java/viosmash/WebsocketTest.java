@@ -6,12 +6,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.messaging.converter.GsonMessageConverter;
-import org.springframework.messaging.converter.JsonbMessageConverter;
 import org.springframework.messaging.converter.MappingJackson2MessageConverter;
-import org.springframework.messaging.converter.StringMessageConverter;
 import org.springframework.messaging.simp.stomp.*;
-import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
@@ -27,11 +23,9 @@ import viosmash.enums.TopicChannel;
 import viosmash.json.JsonUtils;
 import viosmash.random.RandomUtils;
 import viosmash.service.MessageService;
-import viosmash.service.MessageServiceImpl;
 
 import java.lang.reflect.Type;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -57,7 +51,7 @@ public class WebsocketTest extends BaseTest{
         stompClient.setMessageConverter(new MappingJackson2MessageConverter(JsonUtils.getObjectMapper()));
 
         session = stompClient
-                .connectAsync("ws://localhost:" + port + "/ws", new StompSessionHandlerAdapter() {
+                .connectAsync("ws://localhost:" + port + "/chat.ws", new StompSessionHandlerAdapter() {
                     @Override
                     public void afterConnected(StompSession session, StompHeaders connectedHeaders) {
                         log.info("Connected success");

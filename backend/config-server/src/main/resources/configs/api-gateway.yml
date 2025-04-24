@@ -36,7 +36,16 @@ spring:
         - id: chat-service
           uri: lb://CHAT-SERVICE
           predicates:
-            - Path=/api/chats/**
+            - Path=/api/chats/**, /chat/ws/**
+
+        - id: chat-sockjs-route
+          uri: lb://CHAT-SERVICE
+          predicates:
+            - Path=/chat/ws/info/**
+        - id: chat-service-route
+          uri: lb:ws://CHAT-SERVICE
+          predicates:
+            - Path=/chat/ws/**
       discovery:
         locator:
           enabled: true

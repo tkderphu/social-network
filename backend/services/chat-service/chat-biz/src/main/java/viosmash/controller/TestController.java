@@ -6,6 +6,8 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 @Controller
 @Slf4j
@@ -17,5 +19,12 @@ public class TestController {
         log.info("received message: {}", message);
         simpMessagingTemplate.convertAndSend("/topic/messages", message);
         return "Received: " + message;
+    }
+    @GetMapping("/api/chats/hello-world")
+    @ResponseBody
+    public String helloword() {
+        simpMessagingTemplate.convertAndSend("/topic/greetings", "hello word");
+
+        return "hello world";
     }
 }
