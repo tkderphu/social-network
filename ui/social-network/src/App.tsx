@@ -30,10 +30,32 @@ import PostGlobal from './screens/post/PostGlobal'
 import PostDetailDialog from './screens/post/PostDetailDialog'
 import Messenger from './screens/chat/Messenger'
 import GroupChatForm from './screens/chat/GroupChatForm'
+import { ac } from 'react-router/dist/development/route-data-BmvbmBej'
+export interface HandleChat {
+  handleClickChat: any,
+  handleCloseChat: any
+}
 function App() {
+
+  const [activeChats, setActiveChats] = useState<any>([]);
+
+  const handleClickChat = (chatComponent: any) => {
+    // Kiểm tra nếu user chưa có trong danh sách chat thì mới thêm
+    // if (!activeChats.find(chat => chat.id === user.id)) {
+    //   setActiveChats([...activeChats, user]);
+    // }
+    console.log("add new chat")
+    setActiveChats([...activeChats, chatComponent])
+  };
+
+  const handleCloseChat = () => {
+    // setActiveChats(activeChats.filter(chat => chat.id !== id));
+  };
+
   const [userChatBoxs, setUserChatBoxs] = useState<Array<any>>()
   const location = useLocation();
   const state = location.state as { backgroundLocation?: Location };
+  console.log("location: ", location)
   if (!["/login", "/forgot-password", "/register"].includes(location.pathname) && !TokenUtils.tokenIsExpired) {
 
   }
@@ -41,9 +63,10 @@ function App() {
   return (
     <>
       <Provider store={store}>
-        {!["/login", "/forgot-password", "/register"].includes(location.pathname) && <Header container={userChatBoxs || new Array<any>()} fn={(arr: Array<any>) => {
-          setUserChatBoxs(arr)
-        }} />}
+        {!["/login", "/forgot-password", "/register"].includes(location.pathname) &&
+          <Header container={userChatBoxs || new Array<any>()} fn={(arr: Array<any>) => {
+            setUserChatBoxs(arr)
+          }} />}
         <Routes location={state?.backgroundLocation || location}>
           <Route path='/' element={<Home />} />
           <Route path='friends' element={<Friend />}>
@@ -51,19 +74,19 @@ function App() {
             <Route path='suggestions' element={<Suggestion />} />
             <Route path='requests' element={<FriendRequest />} />
             <Route path='accepts' element={<FriendAccept />} />
-            <Route path='profile/:id' element={<ProfileScreen />} />
+            <Route path='profile/:id' element={<ProfileScreen handleChat={{handleClickChat, handleCloseChat}}/>} />
           </Route>
           <Route path='messages' element={<Messenger />} >
-            <Route path='group' element={<GroupChatForm/>} />
-            <Route index path=':conversationId' element={<UserChatBox removeThisUserChatboxFn={() => { }} />} />
+            <Route path='group' element={<GroupChatForm />} />
+            {/* <Route index path=':conversationId' element={<UserChatBox removeThisUserChatboxFn={() => { }} />} /> */}
           </Route>
           <Route path='login' element={<LoginScreen />}></Route>
           <Route path='register' element={<RegisterScreen />}></Route>
           <Route path='forgot-password' element={<ForgotPassworScreen />}></Route>
-          <Route path='profile/:id' element={<ProfileScreen />}></Route>
+          <Route path='profile/:id' element={<ProfileScreen handleChat={{handleClickChat, handleCloseChat}}/>} ></Route>
           <Route path='search' element={<SearchResult />}>
             <Route index element={<UserSearchResult />} />
-            <Route path='profile/:id' element={<ProfileScreen />} />
+            <Route path='profile/:id' element={<ProfileScreen  handleChat={{handleClickChat, handleCloseChat}}/>}  />
           </Route>
           <Route path='search/posts' element={<PostSearchResult />}></Route>
           <Route path='groups' element={<Group />}>
@@ -80,7 +103,7 @@ function App() {
             <Route path="/posts/:id" element={<PostDetailDialog />} />
           </Routes>
         )}
-        <ChatContainer userChatBoxs={userChatBoxs} />
+        <ChatContainer userChatBoxs={activeChats} />
 
       </Provider>
     </>

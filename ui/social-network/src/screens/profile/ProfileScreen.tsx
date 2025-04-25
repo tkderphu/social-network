@@ -9,7 +9,7 @@ import { UserProfileResp } from "../../model/profileModel"
 import { useDispatch, useSelector } from "react-redux"
 import { fetchProfileAction } from "../../redux/actions/profileAction"
 import { TokenUtils } from "../../common"
-import { useParams } from "react-router"
+import { useNavigate, useParams } from "react-router"
 import Spinner from "../../components/Spinner"
 import Alert from "../../components/Alert"
 import InfoComponent from "./InfoComponent"
@@ -17,7 +17,9 @@ import PhotosComponent from "./PhotosComponent"
 import AddressComponent from "./AddressComponent"
 import EduactionComponent from "./EducationComponent"
 import { acceptMakeFriendRequestAction, cancelFriendAction, cancelMakeFriendRequestAction, createFriendRequestAction, fetchStatusBetweenUserAction, rejectMakeFriendRequestAction } from "../../redux/actions/friendshipAction"
-function ProfileScreen() {
+import UserChatBox from "../chat/UserChatBox"
+import {  HandleChat } from "../../App"
+function ProfileScreen(props: {handleChat: HandleChat}) {
     const { id } = useParams()
     const fetchProfile: {
         userProfile: UserProfileResp,
@@ -67,6 +69,14 @@ function ProfileScreen() {
 
     return (
         <div className="container-fluid" style={{ minWidth: "1000px" }} >
+            <button onClick={() => {
+                props.handleChat.handleClickChat(<UserChatBox removeThisUserChatboxFn={props.handleChat.handleCloseChat} user={{
+                    firstName: "phu",
+                    lastName: "quang",
+                    userId: 2,
+                    imageUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Blackpink_Ros%C3%A9_Rimowa_1.jpg"
+                }} />)
+            }}>Chat</button>
             {fetchProfile.loading && <Spinner loading={fetchProfile.loading} />}
             {fetchProfile.hasError && <Alert message={fetchProfile.message} type='danger' />}
             {fetchProfile.userProfile && (

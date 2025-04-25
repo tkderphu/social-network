@@ -56,6 +56,7 @@ export interface UserProfileResp {
     }>
 }
 export interface ProfileSimpleResp {
+    userId: number
     firstName: string,
     lastName: string
     imageUrl?: string
