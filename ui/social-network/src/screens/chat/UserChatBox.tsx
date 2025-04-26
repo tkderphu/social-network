@@ -1,18 +1,55 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
+import { CommonResult } from "../../common"
 import { ProfileSimpleResp } from "../../model/profileModel"
+import conversationService, { ConversationRespVO } from "../../services/chat/conversationService"
+import messageService, { MessageCreateReqVO, MessageRespVO } from "../../services/chat/messageService"
+import { sendMessage } from "../../utils/stomp/stomp.client"
 import "./Chat"
-function UserChatBox(props: { removeThisUserChatboxFn: any , user: ProfileSimpleResp}) {
-    const [conversation, setConversation] = useState<any>(undefined)
+
+function UserChatBox(props: { removeThisUserChatboxFn: any, user?: ProfileSimpleResp }) {
+    const [conversation, setConversation] = useState<undefined | ConversationRespVO>(undefined)
+    const [messages, setMessages] = useState<MessageRespVO[]>([])
+    const [messageReq, setMessageReq] = useState<MessageCreateReqVO>({
+        message: ''
+    })
+    useEffect(() => {
+        //@ts-ignore
+        conversationService.getConversation(props.user?.userId).then(resp => {
+            const result: CommonResult<ConversationRespVO> = resp.data
+            console.log(result)
+            if (result.code === 200) {
+                setConversation(result.data)
+                //@ts-ignore
+                messageService.getListMessage(conversation?.id).then(rp => {
+                    const r: CommonResult<MessageRespVO[]> = rp.data
+                    if(r.code === 200) {
+                        setMessages(r.data)
+                    }
+                })
+            }
+        })
+    }, [])
+
+    const sendMessageToConversation = () => {
+        const req: MessageCreateReqVO = {
+            ...messageReq,
+            conversationId: conversation?.id,
+            toUserId: props.user?.userId
+        }
+        
+        sendMessage(req, "/app/chat/send")
+        
+    }
 
     return (
         <div className="user-chat-box card">
             <div className="d-flex justify-content-between">
                 <div className="d-flex align-items-center">
-                    <img src={props.user.imageUrl}
+                    <img src={conversation?.imageUrl || props.user?.imageUrl}
                         height={"50px"}
                     />
-                    <h5 className="mx-3">{props.user.firstName + " " + props.user.lastName}</h5>
+                    <h5 className="mx-3">{conversation?.name || props.user?.firstName + " " + props.user?.lastName}</h5>
                 </div>
                 <div>
                     <button onClick={() => {
@@ -23,13 +60,15 @@ function UserChatBox(props: { removeThisUserChatboxFn: any , user: ProfileSimple
                 </div>
             </div>
             <div className="user-chat-box-content">
-                
+
             </div>
             <div className="user-chat-box-send-message d-flex flex-column ">
                 <input type={'file'} className="mb-3" />
                 <div className="d-flex">
                     <input type={"text"} className="form-control" />
-                    <button className="btn btn-primary">Send</button>
+                    <button onClick={() => {
+                        sendMessageToConversation()
+                    }}  type="button" className="btn btn-primary">Send</button>
                 </div>
             </div>
         </div>

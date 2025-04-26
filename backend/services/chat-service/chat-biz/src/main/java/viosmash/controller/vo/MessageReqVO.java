@@ -3,14 +3,14 @@ package viosmash.controller.vo;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+import viosmash.core.utils.SecurityUtils;
 
 import java.util.List;
 
 @Data
 public class MessageReqVO {
 
-    @NotNull
-    private Long senderId;
+    private Long senderId = SecurityUtils.getLoginUserMemberId();
 
     private Long conversationId;
     private Long toUserId;

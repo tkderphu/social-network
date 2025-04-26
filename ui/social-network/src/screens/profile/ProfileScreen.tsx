@@ -18,8 +18,8 @@ import AddressComponent from "./AddressComponent"
 import EduactionComponent from "./EducationComponent"
 import { acceptMakeFriendRequestAction, cancelFriendAction, cancelMakeFriendRequestAction, createFriendRequestAction, fetchStatusBetweenUserAction, rejectMakeFriendRequestAction } from "../../redux/actions/friendshipAction"
 import UserChatBox from "../chat/UserChatBox"
-import {  HandleChat } from "../../App"
-function ProfileScreen(props: {handleChat: HandleChat}) {
+import { HandleChat } from "../../App"
+function ProfileScreen(props: { handleChat: HandleChat }) {
     const { id } = useParams()
     const fetchProfile: {
         userProfile: UserProfileResp,
@@ -55,10 +55,10 @@ function ProfileScreen(props: {handleChat: HandleChat}) {
         if (fetchStatusState.status === 'NONE') {
             //@ts-ignore
             dispatch(createFriendRequestAction(id))
-        }else if (fetchStatusState.status === 'ACCEPT_FRIEND') {
+        } else if (fetchStatusState.status === 'ACCEPT_FRIEND') {
             //@ts-ignore
             dispatch(acceptMakeFriendRequestAction(id))
-        } else if (fetchStatusState.status == 'MAKE_FRIEND'){
+        } else if (fetchStatusState.status == 'MAKE_FRIEND') {
             //@ts-ignore
             dispatch(cancelMakeFriendRequestAction(id))
         } else {
@@ -69,14 +69,14 @@ function ProfileScreen(props: {handleChat: HandleChat}) {
 
     return (
         <div className="container-fluid" style={{ minWidth: "1000px" }} >
-            <button onClick={() => {
+            {/* <button onClick={() => {
                 props.handleChat.handleClickChat(<UserChatBox removeThisUserChatboxFn={props.handleChat.handleCloseChat} user={{
                     firstName: "phu",
                     lastName: "quang",
                     userId: 2,
                     imageUrl: "https://upload.wikimedia.org/wikipedia/commons/b/b3/Blackpink_Ros%C3%A9_Rimowa_1.jpg"
                 }} />)
-            }}>Chat</button>
+            }}>Chat</button> */}
             {fetchProfile.loading && <Spinner loading={fetchProfile.loading} />}
             {fetchProfile.hasError && <Alert message={fetchProfile.message} type='danger' />}
             {fetchProfile.userProfile && (
@@ -87,7 +87,7 @@ function ProfileScreen(props: {handleChat: HandleChat}) {
                                 alt="Profile Picture" height={"400px"} width={"100%"}
 
                             /></a>
-                            <Modal id="photo-cover-modal" title="Cover photo" html={
+                            {/* <Modal id="photo-cover-modal" title="Cover photo" html={
                                 <>
                                     <div className="row">
                                         <div className="col-8">
@@ -102,7 +102,7 @@ function ProfileScreen(props: {handleChat: HandleChat}) {
                                         </div>
                                     </div>
                                 </>
-                            } />
+                            } /> */}
                             {/* <button>Add cover photo</button> */}
                         </div>
                     </div>
@@ -133,7 +133,14 @@ function ProfileScreen(props: {handleChat: HandleChat}) {
                                         friendshipActionOnClick()
                                     }}>{fetchStatusState.status === 'NONE' ? "Add friend" : (fetchStatusState.status === 'MAKE_FRIEND' ? "Cancel made friend" : (fetchStatusState.status === 'ACCEPT_FRIEND' ? "Accept friend" : "Cancel friend"))}</button>
 
-                                    <button style={{ border: 'none', backgroundColor: "white" }} className='m-3'>
+                                    <button 
+                                    onClick={() => {
+                                        props.handleChat.handleClickChat(<UserChatBox
+                                            removeThisUserChatboxFn={props.handleChat.handleCloseChat}
+                                            user={fetchProfile.userProfile}
+                                        />)
+                                    }}
+                                    style={{ border: 'none', backgroundColor: "white" }} className='m-3'>
                                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" className="bi bi-chat-fill" viewBox="0 0 16 16">
                                             <path d="M8 15c4.418 0 8-3.134 8-7s-3.582-7-8-7-8 3.134-8 7c0 1.76.743 3.37 1.97 4.6-.097 1.016-.417 2.13-.771 2.966-.079.186.074.394.273.362 2.256-.37 3.597-.938 4.18-1.234A9 9 0 0 0 8 15" />
                                         </svg>
@@ -141,7 +148,7 @@ function ProfileScreen(props: {handleChat: HandleChat}) {
 
                                 </>
                             )}
-                            <Modal id="edit-profile"
+                            {/* <Modal id="edit-profile"
                                 title="Edit profile"
                                 html={<>
                                     <PhotosComponent />
@@ -149,8 +156,8 @@ function ProfileScreen(props: {handleChat: HandleChat}) {
                                     <EduactionComponent />
                                     <AddressComponent />
                                 </>}
-                            />
-                            <Modal id="settings-privacy"
+                            /> */}
+                            {/* <Modal id="settings-privacy"
                                 title="Settings privacy"
                                 html={<>
                                     <div className="mb-3">
@@ -202,7 +209,7 @@ function ProfileScreen(props: {handleChat: HandleChat}) {
                                         </div>
                                     </div>
                                 </>}
-                            />
+                            /> */}
                         </div>
                     </div>
                     <ul className="nav nav-tabs mt-3">
@@ -367,24 +374,24 @@ function ProfileScreen(props: {handleChat: HandleChat}) {
                                                 cursor: "pointer"
                                             }} aria-label="With textarea"><span>What's on your mind?</span></div>
 
-                                            <Modal id="your-bulletin" title="Create post" html={
+                                            {/* <Modal id="your-bulletin" title="Create post" html={
                                                 <>
                                                     <div className="input-group mb-3">
                                                         <textarea className="form-control" aria-label="With textarea" placeholder="Write your content"
                                                             rows={9}
                                                         ></textarea>
-                                                    </div>
+                                                    </div> */}
                                                     {/* <div className="input-group">
                                                 <span className="input-group-text">With textarea</span>
                                                 <textarea className="form-control" aria-label="With textarea"></textarea>
                                             </div> */}
-                                                    <div className="mb-3 input-group">
+                                                    {/* <div className="mb-3 input-group">
                                                         <label htmlFor="formFile" className="form-label input-group-text" style={{ cursor: "pointer" }}>Add your photos</label>
                                                         <input className="form-control" type="file" id="formFile" />
                                                     </div>
                                                     <button className="btn btn-primary w-50">Submit</button>
                                                 </>
-                                            } />
+                                            } /> */}
                                         </div>
                                     </div>
                                     <div className="right-section">

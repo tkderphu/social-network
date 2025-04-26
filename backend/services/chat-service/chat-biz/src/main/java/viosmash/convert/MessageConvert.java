@@ -11,6 +11,7 @@ public interface MessageConvert {
     MessageConvert INSTANCE = Mappers.getMapper(MessageConvert.class);
     MessageRespVO convert(Message message);
     default MessageRespVO convert(Message message, UserDTO user) {
+        if(message == null) return null;
         MessageRespVO resp = convert(message)
                 .setSender(user);
         return resp;

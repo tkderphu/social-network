@@ -18,4 +18,5 @@ public interface ConversationService {
      */
     void addUsersToGroup(Long conversationId, Collection<Long> userIds);
 
+    ConversationRespVO getConversation(Long userOne, Long userTwo);
 }

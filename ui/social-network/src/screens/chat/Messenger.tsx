@@ -1,7 +1,7 @@
 import { Client, IMessage, Message, Stomp } from "@stomp/stompjs";
 import { useEffect, useState } from "react";
 import SockJS from "sockjs-client";
-import { connectStomp } from "../../utils/stomp.client";
+import { connectStomp } from "../../utils/stomp/stomp.client";
 import { useStomp } from "../../utils/useStomp";
 
 export const users = [

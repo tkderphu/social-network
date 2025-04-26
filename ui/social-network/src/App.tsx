@@ -31,6 +31,7 @@ import PostDetailDialog from './screens/post/PostDetailDialog'
 import Messenger from './screens/chat/Messenger'
 import GroupChatForm from './screens/chat/GroupChatForm'
 import { ac } from 'react-router/dist/development/route-data-BmvbmBej'
+import { connectStomp, stompClient } from './utils/stomp/stomp.client'
 export interface HandleChat {
   handleClickChat: any,
   handleCloseChat: any
@@ -51,6 +52,13 @@ function App() {
   const handleCloseChat = () => {
     // setActiveChats(activeChats.filter(chat => chat.id !== id));
   };
+
+
+  useEffect(() => {
+    connectStomp()
+  }, [])
+
+
 
   const [userChatBoxs, setUserChatBoxs] = useState<Array<any>>()
   const location = useLocation();

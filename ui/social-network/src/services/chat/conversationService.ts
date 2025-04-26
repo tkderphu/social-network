@@ -26,7 +26,7 @@ class ConversationService {
     }
 
     getConversation(userId: number) {
-        return api.get(`/with/${userId}`)
+        return api.get(`${PATH}/with/user/${userId}`)
     }
 
     deleteConversation(id: number) {
