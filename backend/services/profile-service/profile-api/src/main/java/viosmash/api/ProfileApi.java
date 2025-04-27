@@ -9,12 +9,14 @@ import viosmash.constant.ApiConstant;
 import java.util.Collection;
 import java.util.List;
 
-@FeignClient(name = ApiConstant.NAME)
+@FeignClient(name = ApiConstant.NAME, path = ApiConstant.PREFIX)
 public interface ProfileApi {
+    String PREFIX = ApiConstant.PREFIX;
 
     @GetMapping("/get-all-by-collection-id")
     List<UserDTO> getAllUsers(@RequestBody Collection<Long> ids);
-    @GetMapping
+
+    @GetMapping("/{userId}")
     UserDTO getUserById(@PathVariable("userId") Long userId);
 
 }

@@ -12,6 +12,8 @@ import viosmash.dal.dataobject.Conversation;
 import viosmash.pojo.CommonResult;
 import viosmash.service.ConversationService;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequiredArgsConstructor
@@ -24,6 +26,12 @@ public class ConversationController {
         ConversationRespVO conversationRespVO = conversationService.getConversation(SecurityUtils.getLoginUserMemberId(), userId);
         log.info("conversation: {}", conversationRespVO);
         return CommonResult.success(conversationRespVO);
+    }
+    @GetMapping
+    public CommonResult<List<ConversationRespVO>> getListConversation() {
+        List<ConversationRespVO> conversations = conversationService.getListConversation(SecurityUtils.getLoginUserMemberId());
+        log.info("conversation size: ", conversations.size());
+        return CommonResult.success(conversations);
     }
     @GetMapping("/{id}")
     public CommonResult<ConversationRespVO> getConversationById() {

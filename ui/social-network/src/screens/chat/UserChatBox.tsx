@@ -1,10 +1,12 @@
+import { Message } from "@stomp/stompjs"
 import { useEffect, useState } from "react"
 import { useNavigate } from "react-router"
-import { CommonResult } from "../../common"
+import { CommonResult, TokenUtils } from "../../common"
 import { ProfileSimpleResp } from "../../model/profileModel"
 import conversationService, { ConversationRespVO } from "../../services/chat/conversationService"
 import messageService, { MessageCreateReqVO, MessageRespVO } from "../../services/chat/messageService"
-import { sendMessage } from "../../utils/stomp/stomp.client"
+import { sendMessage, subscribe } from "../../utils/stomp/stomp.client"
+import { USER_ESTABLISHED_CHAT_TOPIC } from "../../utils/stomp/stomp.topic"
 import "./Chat"
 
 function UserChatBox(props: { removeThisUserChatboxFn: any, user?: ProfileSimpleResp }) {
@@ -17,17 +19,22 @@ function UserChatBox(props: { removeThisUserChatboxFn: any, user?: ProfileSimple
         //@ts-ignore
         conversationService.getConversation(props.user?.userId).then(resp => {
             const result: CommonResult<ConversationRespVO> = resp.data
-            console.log(result)
+            console.log("conversation: ", result)
             if (result.code === 200) {
                 setConversation(result.data)
                 //@ts-ignore
-                messageService.getListMessage(conversation?.id).then(rp => {
+                messageService.getListMessage(result.data.id).then(rp => {
                     const r: CommonResult<MessageRespVO[]> = rp.data
-                    if(r.code === 200) {
+                    if (r.code === 200) {
                         setMessages(r.data)
                     }
                 })
             }
+        })
+        subscribe(USER_ESTABLISHED_CHAT_TOPIC(TokenUtils.authLogin.userId), (message: Message) => {
+            const payload: ConversationRespVO = JSON.parse(message.body)
+            setMessages([...messages, payload.latestMessage])
+
         })
     }, [])
 
@@ -37,9 +44,9 @@ function UserChatBox(props: { removeThisUserChatboxFn: any, user?: ProfileSimple
             conversationId: conversation?.id,
             toUserId: props.user?.userId
         }
-        
+
         sendMessage(req, "/app/chat/send")
-        
+
     }
 
     return (
@@ -60,15 +67,22 @@ function UserChatBox(props: { removeThisUserChatboxFn: any, user?: ProfileSimple
                 </div>
             </div>
             <div className="user-chat-box-content">
-
+                {messages.map(msg => {
+                    return <>
+                        <div>{msg.sender.firstName + " " + msg.sender.lastName}: {msg.message}</div>
+                    </>
+                })}
             </div>
             <div className="user-chat-box-send-message d-flex flex-column ">
                 <input type={'file'} className="mb-3" />
                 <div className="d-flex">
-                    <input type={"text"} className="form-control" />
+                    <input type={"text"} className="form-control" onChange={(e: any) => setMessageReq((prev) => ({
+                        ...prev,
+                        'message': e.target.value
+                    }))} />
                     <button onClick={() => {
                         sendMessageToConversation()
-                    }}  type="button" className="btn btn-primary">Send</button>
+                    }} type="button" className="btn btn-primary">Send</button>
                 </div>
             </div>
         </div>

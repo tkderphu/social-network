@@ -1,6 +1,7 @@
 package viosmash.service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import viosmash.api.ProfileApi;
 import viosmash.collection.CollUtils;
@@ -23,6 +24,7 @@ import java.util.Optional;
 import static viosmash.convert.MessageConvert.INSTANCE;
 import static viosmash.exception.utils.ServiceUtils.exception;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class ConversationServiceImpl implements ConversationService{
@@ -50,9 +52,10 @@ public class ConversationServiceImpl implements ConversationService{
     @Override
     public List<ConversationRespVO> getListConversation(Long userId) {
         List<UserConversation> userConversations = this.userConversationRepository.findAllByUserId(userId);
+        log.info("size: {}{}", userConversations.size(), userConversations.get(0));
         return CollUtils.convertList(userConversations, uc -> {
             Optional<Message> message = messageRepository.findLatestMessageByConversationId(uc.getConversationId());
-            return BeanUtil.copy(getConversation(uc.getId()), ConversationRespVO.class)
+            return BeanUtil.copy(getConversation(uc.getConversationId()), ConversationRespVO.class)
                     .setLatestMessage(INSTANCE.convert(message.get(), profileApi.getUserById(message.get().getSenderId())));
         });
     }
@@ -73,7 +76,7 @@ public class ConversationServiceImpl implements ConversationService{
     public ConversationRespVO getConversation(Long userOne, Long userTwo) {
         Conversation conversation = this.conversationRepository.findOneBy(userOne, userTwo);
         if(conversation == null) throw exception(404, String.format("User %s and User %s haven't chat yet", userOne, userTwo));
-        Message message = messageRepository.findLatestMessageByConversationId(conversation.getId()).get();
+        Message message = messageRepository.findLatestMessageByConversationId(conversation.getId()).orElse(null);
         if(message == null) return ConversationConvert.INSTANCE.convert(conversation);
         return ConversationConvert.INSTANCE.convert(conversation, message, profileApi.getUserById(message.getSenderId()));
     }

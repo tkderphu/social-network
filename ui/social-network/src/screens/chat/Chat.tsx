@@ -1,8 +1,16 @@
+import { useEffect, useState } from "react"
 import { Link } from "react-router"
+import conversationService from "../../services/chat/conversationService"
 import "./Chat.css"
 import UserChatBox from "./UserChatBox"
 
 function Chat(props: { container: Array<any>, fn: any }) {
+    const [conversations, setConversations] = useState<any>()
+    useEffect(() => {
+        conversationService.getListConversation().then(resp => {
+            console.log("conversation: ", resp.data)
+        })
+    }, [])
     const onClickAddChatBox = () => {
         console.log("adu men")
         props.container.push(<UserChatBox removeThisUserChatboxFn={() => {

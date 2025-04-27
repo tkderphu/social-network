@@ -1,3 +1,4 @@
+import { T } from "react-router/dist/development/fog-of-war-Cm1iXIp7"
 import api from "../../axios/interceptor"
 import { MessageRespVO } from "./messageService"
 
@@ -22,7 +23,10 @@ class ConversationService {
     }
 
     getListConversation(type?: "PRIVATE" | "PUBLIC") {
-        
+        if(type) {
+
+        }
+        return api.get(PATH)
     }
 
     getConversation(userId: number) {

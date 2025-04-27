@@ -1,6 +1,6 @@
 import api from "../../axios/interceptor"
 
-const PATH = "/messages"
+const PATH = "/chats/messages"
 export interface MessageCreateReqVO {
     conversationId?: number,
     toUserId?: number

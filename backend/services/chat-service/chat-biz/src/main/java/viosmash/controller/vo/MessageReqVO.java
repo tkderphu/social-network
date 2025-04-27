@@ -10,7 +10,8 @@ import java.util.List;
 @Data
 public class MessageReqVO {
 
-    private Long senderId = SecurityUtils.getLoginUserMemberId();
+
+    private Long senderId;
 
     private Long conversationId;
     private Long toUserId;

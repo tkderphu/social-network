@@ -36,6 +36,10 @@
     width: 330px;
 }
 
+.user-chat-box-content {
+    overflow-y: auto;
+    min-height: 500px;
+}
 #chat-container {
     position: fixed;
     bottom: 0;
