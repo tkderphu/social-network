@@ -1,13 +1,11 @@
 package viosmash.service;
 
-import viosmash.controller.vo.MessageReqVO;
-import viosmash.controller.vo.MessageRespVO;
-import viosmash.dal.dataobject.Message;
-import viosmash.pojo.PageResult;
+import viosmash.controller.message.vo.MessageCreateReqVO;
+import viosmash.controller.message.vo.MessageRespVO;
 
 import java.util.List;
 
 public interface MessageService {
-    void createMessage(MessageReqVO req);
+    void createMessage(MessageCreateReqVO req);
     List<MessageRespVO> getListMessage(Long conversationId, Long beforeMessageId, int limit);
 }

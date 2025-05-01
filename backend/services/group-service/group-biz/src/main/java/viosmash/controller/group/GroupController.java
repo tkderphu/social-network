@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import viosmash.api.ProfileApi;
+import viosmash.api.UserApi;
 import viosmash.controller.group.vo.GroupCreateReqVO;
 import viosmash.controller.group.vo.GroupRespVO;
 import viosmash.controller.group.vo.GroupUpdateReqVO;
@@ -27,7 +27,7 @@ import static viosmash.pojo.CommonResult.success;
 public class GroupController {
 
     private final GroupService groupService;
-    private final ProfileApi profileApi;
+    private final UserApi userApi;
     private final UserMemberGroupService userMemberGroupService;
     @PostMapping
     public CommonResult<Long> createGroup(@Valid @RequestBody GroupCreateReqVO req) {
@@ -55,7 +55,7 @@ public class GroupController {
         return success(convertList(userMemberGroupService.getListGroup(getLoginUserMemberId()), groupId -> {
             Group group = groupService.getGroup(groupId);
             return BeanUtil.copy(group, GroupRespVO.class)
-                    .setOwner(profileApi.getUserById(group.getOwnerId()))
+                    .setOwner(userApi.getUserById(group.getOwnerId()))
                     .setNumberOfMembers(userMemberGroupService.countMember(groupId));
         }));
     }

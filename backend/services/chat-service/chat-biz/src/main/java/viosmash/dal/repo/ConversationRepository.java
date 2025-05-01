@@ -11,7 +11,7 @@ public interface ConversationRepository extends JpaRepository<Conversation, Long
             "WHERE c.type = 'ONE_ONE'\n" +
             "  AND c.id IN (\n" +
             "      SELECT uc.conversationId\n" +
-            "      FROM UserConversation uc\n" +
+            "      FROM Member uc\n" +
             "      WHERE uc.userId IN (:userOne, :userTwo)\n" +
             "      GROUP BY uc.conversationId\n" +
             "      HAVING COUNT(DISTINCT uc.userId) = 2\n" +

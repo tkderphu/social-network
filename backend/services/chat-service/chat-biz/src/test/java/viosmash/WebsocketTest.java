@@ -7,26 +7,20 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.messaging.converter.MappingJackson2MessageConverter;
 import org.springframework.messaging.simp.stomp.*;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
-import org.springframework.web.socket.client.standard.StandardWebSocketClient;
 import org.springframework.web.socket.config.annotation.EnableWebSocket;
-import org.springframework.web.socket.messaging.WebSocketStompClient;
-import org.springframework.web.socket.sockjs.client.SockJsClient;
-import org.springframework.web.socket.sockjs.client.WebSocketTransport;
-import viosmash.api.ProfileApi;
+import viosmash.api.UserApi;
 import viosmash.controller.vo.ConversationRespVO;
 import viosmash.controller.vo.MessageReqVO;
 import viosmash.controller.vo.MessageRespVO;
 import viosmash.dal.dataobject.Conversation;
+import viosmash.dal.dataobject.Member;
 import viosmash.dal.dataobject.Message;
-import viosmash.dal.dataobject.UserConversation;
 import viosmash.dal.repo.ConversationRepository;
 import viosmash.dal.repo.MessageRepository;
 import viosmash.dal.repo.UserConversationRepository;
 import viosmash.enums.TopicChannel;
-import viosmash.json.JsonUtils;
 import viosmash.random.RandomUtils;
 import viosmash.service.ConversationService;
 import viosmash.service.MessageService;
@@ -47,7 +41,7 @@ public class WebsocketTest extends BaseTest{
     private int port;
 
     @MockitoBean
-    private ProfileApi profileApi;
+    private UserApi userApi;
     private StompSession session;
 
     @Autowired
@@ -83,14 +77,14 @@ public class WebsocketTest extends BaseTest{
                 .setType(Conversation.ConversationType.ONE_ONE);
 
         this.conversationRepository.save(conversation);
-        UserConversation userConversation1 = new UserConversation()
+        Member member1 = new Member()
                 .setUserId(1l).setConversationId(conversation.getId());
 
-        UserConversation userConversation2 = new UserConversation()
+        Member member2 = new Member()
                 .setUserId(2l).setConversationId(conversation.getId());
 
-        this.userConversationRepository.save(userConversation1);
-        this.userConversationRepository.save(userConversation2);
+        this.userConversationRepository.save(member1);
+        this.userConversationRepository.save(member2);
 
 
         List<Message> messages =new ArrayList<>();
@@ -116,14 +110,14 @@ public class WebsocketTest extends BaseTest{
                 .setType(Conversation.ConversationType.ONE_ONE);
 
         this.conversationRepository.save(conversation);
-        UserConversation userConversation1 = new UserConversation()
+        Member member1 = new Member()
                 .setUserId(1l).setConversationId(conversation.getId());
 
-        UserConversation userConversation2 = new UserConversation()
+        Member member2 = new Member()
                 .setUserId(2l).setConversationId(conversation.getId());
 
-        this.userConversationRepository.save(userConversation1);
-        this.userConversationRepository.save(userConversation2);
+        this.userConversationRepository.save(member1);
+        this.userConversationRepository.save(member2);
 
         Message message = new Message().setConversationId(conversation.getId())
                         .setMessage("hello world").setSenderId(1l);

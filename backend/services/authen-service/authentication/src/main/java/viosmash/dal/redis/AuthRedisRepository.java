@@ -4,9 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
-import viosmash.dal.dataobject.token.AuthAccessToken;
-import viosmash.event.forgotpassword.ForgotPasswordEvent;
 import viosmash.collection.CollUtils;
+import viosmash.dal.dataobject.AuthAccessToken;
 import viosmash.date.DateUtils;
 import viosmash.json.JsonUtils;
 
@@ -21,21 +20,6 @@ public class AuthRedisRepository {
     private final RedisTemplate<String, String> redisTemplate;
 
 
-    public void setForgetCode(ForgotPasswordEvent event, int expireMinutes) {
-        redisTemplate.opsForValue()
-                .set(event.getCode(),
-                        JsonUtils.toStringJson(event),
-                        expireMinutes,
-                        TimeUnit.MINUTES);
-    }
-
-    public ForgotPasswordEvent getForgotPasswordEvent(String code) {
-        if(this.redisTemplate.hasKey(code)) {
-            return JsonUtils.toObject(redisTemplate.opsForValue().get(code), ForgotPasswordEvent.class);
-        } else {
-            return null;
-        }
-    }
 
 
     public void setToken(AuthAccessToken authAccessToken) {

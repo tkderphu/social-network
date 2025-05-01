@@ -16,19 +16,13 @@ import java.util.List;
 @Accessors(chain = true)
 @Table(name = "tblConversation")
 @ToString
-public class Conversation {
+@Inheritance(strategy = InheritanceType.JOINED)
+public abstract class Conversation {
     @Id
     @GeneratedValue(strategy =   GenerationType.IDENTITY)
     private Long id;
-    private String name;
-    private String imageUrl;
-    @Enumerated(EnumType.STRING)
-    private ConversationType type;
-
+    private String nickname;
+    private String thumbnail;
     private LocalDateTime createdAt;
 
-    public static enum ConversationType {
-        MANY_MANY,
-        ONE_ONE
-    }
 }

@@ -20,9 +20,12 @@ public class BeanUtil {
         }
     }
 
+
+
     public static <T> void setTargetIfNotNull(T target, T something) {
         Field[] fields = ObjectUtils.getFields(something.getClass());
         for(Field field : fields) {
+            field.setAccessible(true);
            try {
                Object value = field.get(something);
                if(value != null) {

@@ -1,0 +1,8 @@
+
+spring:
+  cloud:
+    discovery:
+      enabled: false
+  datasource:
+    url: jdbc:h2:mem:testdb;MODE=MYSQL;DATABASE_TO_UPPER=false;NON_KEYWORDS=value;
+    driver-class-name: org.h2.Driver

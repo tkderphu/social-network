@@ -12,10 +12,7 @@
     <name>mq Maven Webapp</name>
     <url>http://maven.apache.org</url>
     <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-amqp</artifactId>
-        </dependency>
+
     </dependencies>
     <build>
         <finalName>mq</finalName>

@@ -3,21 +3,19 @@ package viosmash.service.token;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import viosmash.dal.dataobject.auth.User;
-import viosmash.dal.dataobject.token.AuthAccessToken;
-import viosmash.dal.dataobject.token.AuthRefreshToken;
+import viosmash.dal.dataobject.AuthAccessToken;
+import viosmash.dal.dataobject.AuthRefreshToken;
 import viosmash.dal.redis.AuthRedisRepository;
-import viosmash.dal.repository.token.AuthAccessTokenRepository;
-import viosmash.dal.repository.token.AuthRefreshTokenRepository;
-import viosmash.date.DateUtils;
+import viosmash.dal.repository.AuthAccessTokenRepository;
+import viosmash.dal.repository.AuthRefreshTokenRepository;
 
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import static viosmash.constant.ErrorCodeConstant.REFRESH_TOKEN_INVALID;
-import static viosmash.date.DateUtils.*;
+import static viosmash.date.DateUtils.before;
+import static viosmash.date.DateUtils.getCurrentMilliseconds;
 import static viosmash.exception.utils.ServiceUtils.exception;
 
 @Service
@@ -34,16 +32,16 @@ public class AuthTokenServiceImpl implements AuthTokenService{
     private final AuthAccessTokenRepository authAccessTokenRepository;
 
     @Override
-    public AuthAccessToken createAccessToken(User user) {
+    public AuthAccessToken createAccessToken(Long userId) {
         AuthRefreshToken refreshToken = new AuthRefreshToken()
                 .setRefreshToken(UUID.randomUUID().toString())
                 .setExpires(refreshExpires())
-                .setUserId(user.getId());
+                .setUserId(userId);
 
         AuthAccessToken authAccessToken = new AuthAccessToken()
                 .setAccessToken(UUID.randomUUID().toString())
                 .setRefreshToken(refreshToken.getRefreshToken())
-                .setUserId(user.getId()).setExpires(accessExpires());
+                .setUserId(userId).setExpires(accessExpires());
 
         this.authAccessTokenRepository.save(authAccessToken);
         this.authRefreshTokenRepository.save(refreshToken);

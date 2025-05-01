@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import viosmash.api.GroupApi;
-import viosmash.api.ProfileApi;
+import viosmash.api.UserApi;
 import viosmash.controller.vo.PostCreateReqVO;
 import viosmash.controller.vo.PostRespVO;
 import viosmash.dal.dataobject.Post;
@@ -21,7 +21,7 @@ import static viosmash.pojo.CommonResult.success;
 public class PostController {
 
     private final PostService postService;
-    private final ProfileApi profileApi;
+    private final UserApi userApi;
     private final GroupApi groupApi;
 
     @PostMapping
@@ -58,7 +58,7 @@ public class PostController {
     private PostRespVO getPostResp(Post post) {
         return new PostRespVO().setPostType(post.getPostType())
                 .setId(post.getId())
-                .setUser(profileApi.getUserById(post.getUserId()))
+                .setUser(userApi.getUserById(post.getUserId()))
                 .setContent(post.getContent()).setFileUrls(post.getFileUrls())
                 .setImageUrls(post.getImageUrls())
                 .setGroup(groupApi.getGroup(post.getGroupId()))

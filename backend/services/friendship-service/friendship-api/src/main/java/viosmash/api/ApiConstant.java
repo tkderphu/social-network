@@ -1,7 +1,9 @@
 package viosmash.api;
 
+import viosmash.enums.RpcConstant;
+
 public interface ApiConstant {
-    String NAME = "friendship-server";
-    String PREFIX = "";
+    String NAME = "friendship-service";
+    String PREFIX = RpcConstant.PREFIX + "/friendship";
 
 }

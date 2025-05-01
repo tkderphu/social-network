@@ -3,7 +3,7 @@ package viosmash.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import viosmash.api.ProfileApi;
+import viosmash.api.UserApi;
 import viosmash.constant.FriendshipStatus;
 import viosmash.controller.vo.UserMakeFriendRequestRespVO;
 import viosmash.controller.vo.UserRespVO;
@@ -22,7 +22,7 @@ import static viosmash.pojo.CommonResult.success;
 @RequestMapping("/api/friendship")
 public class FriendshipController {
     private final FriendshipService friendshipService;
-    private final ProfileApi profileApi;
+    private final UserApi userApi;
 
     @PostMapping("/make/{userId}")
     public CommonResult<Boolean> makeFriendRequest(@PathVariable("userId") Long userId) {
@@ -69,14 +69,14 @@ public class FriendshipController {
         Long currentUserId = SecurityUtils.getLoginUserMemberId();
         List<Long> friends = friendshipService.getListFriends(userId);
         if(currentUserId.compareTo(userId) == 0) {
-            return success(UserConvert.INSTANCE.convert(profileApi.getAllUsers(friends)));
+            return success(UserConvert.INSTANCE.convert(userApi.getAllUsers(friends)));
         } else {
             List<UserRespVO> result = friends.stream().map(friend -> {
                 Set<Long> mutualFriends = this.friendshipService.getListMutualFriends(friend, currentUserId);
                 if (CollectionUtils.isEmpty(mutualFriends)) {
-                    return UserConvert.INSTANCE.convert(profileApi.getUserById(friend), null);
+                    return UserConvert.INSTANCE.convert(userApi.getUserById(friend), null);
                 } else {
-                    return UserConvert.INSTANCE.convert(profileApi.getUserById(friend), profileApi.getAllUsers(mutualFriends));
+                    return UserConvert.INSTANCE.convert(userApi.getUserById(friend), userApi.getAllUsers(mutualFriends));
                 }
             }).sorted((s1, s2) -> s2.getMutualFriends().size() - s1.getMutualFriends().size()).toList();
             if(limit != null) {
@@ -98,8 +98,8 @@ public class FriendshipController {
                     friendRequest.getUser().getId());
             return UserConvert.INSTANCE.convert0(
                     friendRequest,
-                    profileApi.getUserById(friendRequest.getUser().getId()),
-                    profileApi.getAllUsers(mutualFriends));
+                    userApi.getUserById(friendRequest.getUser().getId()),
+                    userApi.getAllUsers(mutualFriends));
         }).toList();
         return success(result);
     }
@@ -117,8 +117,8 @@ public class FriendshipController {
                             make.getUser().getId());
                     return UserConvert.INSTANCE.convert0(
                             make,
-                            profileApi.getUserById(make.getUser().getId()),
-                            profileApi.getAllUsers(mutualFriends));
+                            userApi.getUserById(make.getUser().getId()),
+                            userApi.getAllUsers(mutualFriends));
                 }).toList();
 
         return success(result);
@@ -132,8 +132,8 @@ public class FriendshipController {
                 .stream().map(userId -> {
                     Set<Long> mutualFriends = friendshipService.getListMutualFriends(userId, currentUserId);
                     return UserConvert.INSTANCE.convert(
-                            profileApi.getUserById(userId),
-                            profileApi.getAllUsers(mutualFriends)
+                            userApi.getUserById(userId),
+                            userApi.getAllUsers(mutualFriends)
                     );
                 }).toList();
         return success(result);

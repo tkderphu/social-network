@@ -10,7 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import viosmash.BaseTest;
 import viosmash.api.GroupApi;
 import viosmash.api.GroupDTO;
-import viosmash.api.ProfileApi;
+import viosmash.api.UserApi;
 import viosmash.api.UserDTO;
 import viosmash.controller.vo.PostCreateReqVO;
 import viosmash.controller.vo.PostRespVO;
@@ -21,8 +21,6 @@ import viosmash.pojo.CommonResult;
 import viosmash.random.RandomUtils;
 import viosmash.service.PostService;
 
-import java.util.Optional;
-
 class PostControllerTest extends BaseTest {
 
     @InjectMocks
@@ -30,7 +28,7 @@ class PostControllerTest extends BaseTest {
     @Autowired
     private PostRepository postRepository;
     @Mock
-    private ProfileApi profileApi;
+    private UserApi userApi;
     @Mock
     private PostService postService;
     @Mock
@@ -43,7 +41,7 @@ class PostControllerTest extends BaseTest {
         mockGroup = RandomUtils.randomObject(GroupDTO.class);
         mockUser = RandomUtils.randomObject(UserDTO.class);
 
-        Mockito.when(profileApi.getUserById(mockUser.getId())).thenReturn(mockUser);
+        Mockito.when(userApi.getUserById(mockUser.getId())).thenReturn(mockUser);
         Mockito.when(groupApi.getGroup(mockGroup.getId())).thenReturn(mockGroup);
 
 

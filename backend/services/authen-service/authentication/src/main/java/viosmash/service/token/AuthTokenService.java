@@ -1,11 +1,10 @@
 package viosmash.service.token;
 
-import viosmash.dal.dataobject.auth.User;
-import viosmash.dal.dataobject.token.AuthAccessToken;
+import viosmash.dal.dataobject.AuthAccessToken;
 
 public interface AuthTokenService {
 
-    AuthAccessToken createAccessToken(User user);
+    AuthAccessToken createAccessToken(Long userId);
 
     AuthAccessToken getAccessToken(String accessToken);
 

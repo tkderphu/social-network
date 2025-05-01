@@ -22,6 +22,10 @@ public class StringUtils {
         return content;
     }
 
+    public static boolean equal(String s1, String s2) {
+        return (s1.trim().toLowerCase()).equals(s2.trim().toLowerCase());
+    }
+
 
     public static List<String> extractPlaceholders(String input, Pattern pattern) {
         List<String> result = new ArrayList<>();

@@ -2,12 +2,9 @@ package viosmash.api.auth;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import viosmash.dal.dataobject.token.AuthAccessToken;
+import viosmash.dal.dataobject.AuthAccessToken;
 import viosmash.object.BeanUtil;
-import viosmash.pojo.CommonResult;
 import viosmash.service.token.AuthTokenService;
-
-import java.util.UUID;
 
 @RestController
 @RequestMapping(TokenApi.PREFIX)

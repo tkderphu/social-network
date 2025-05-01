@@ -7,13 +7,3 @@ spring:
     authentication:
       username: neo4j
       password: nguyenquangphu
-  rabbitmq:
-    host: localhost
-    port: 5672
-    username: guest
-    password: guest
-    virtual-host: /
-    listener:
-      simple:
-        concurrency: 3
-        max-concurrency: 10

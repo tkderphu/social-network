@@ -8,8 +8,7 @@ import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Component;
 import org.springframework.web.socket.messaging.SessionConnectEvent;
 import org.springframework.web.socket.messaging.SessionDisconnectEvent;
-import viosmash.api.auth.UserApi;
-import viosmash.api.auth.UserUpdatedStatus;
+import viosmash.api.UserApi;
 
 @Component
 @RequiredArgsConstructor
@@ -30,11 +29,7 @@ public class WebsocketHandleEvent {
         SimpMessageHeaderAccessor accessor = SimpMessageHeaderAccessor.wrap(message);
         log.info("user at accessor: {}", accessor.getUser());
         Long userId = Long.parseLong(accessor.getUser().getName());
-
-        UserUpdatedStatus updatedStatus = new UserUpdatedStatus();
-        updatedStatus.setOnline(isOnline);
-        updatedStatus.setUserId(userId);
-        userApi.updateOnlineStatus(updatedStatus);
+        userApi.updateOnlineStatus(userId, isOnline);
 
         log.info("updated status user: {}", isOnline);
     }
