@@ -2,13 +2,8 @@ package viosmash.controller.member;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import viosmash.controller.group.vo.GroupRespVO;
-import viosmash.dal.dataobject.Group;
-import viosmash.object.BeanUtil;
 import viosmash.pojo.CommonResult;
 import viosmash.service.member.UserMemberGroupService;
-
-import java.util.List;
 
 import static viosmash.collection.CollUtils.convertList;
 import static viosmash.core.utils.SecurityUtils.getLoginUserMemberId;

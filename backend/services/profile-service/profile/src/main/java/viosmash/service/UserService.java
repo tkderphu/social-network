@@ -1,12 +1,12 @@
 package viosmash.service;
 
 
-import viosmash.constant.AddressEnum;
-import viosmash.constant.PolicyEnum;
-import viosmash.constant.SchoolEnum;
-import viosmash.controller.vo.UserCreateReqVO;
-import viosmash.controller.vo.UserRespVO;
-import viosmash.controller.vo.UserUpdateInfoReqVO;
+import viosmash.profile.constant.AddressEnum;
+import viosmash.profile.constant.PolicyEnum;
+import viosmash.profile.constant.SchoolEnum;
+import viosmash.controller.post.vo.UserCreateReqVO;
+import viosmash.controller.post.vo.UserRespVO;
+import viosmash.controller.post.vo.UserUpdateInfoReqVO;
 import viosmash.dal.dataobject.User;
 
 import java.util.Map;
@@ -21,6 +21,6 @@ public interface UserService {
     void updateUserStatus(Long userId, Boolean isOnline);
     UserRespVO getProfile(Long userId);
     User getUserById(Long userId);
-
     User checkUser(String email, String password);
+
 }

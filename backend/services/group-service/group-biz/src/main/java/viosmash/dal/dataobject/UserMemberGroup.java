@@ -3,7 +3,7 @@ package viosmash.dal.dataobject;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import viosmash.enums.GroupRole;
+import viosmash.group.enums.GroupRole;
 
 import java.time.LocalDateTime;
 

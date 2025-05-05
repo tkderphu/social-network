@@ -19,8 +19,12 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long senderId;
-    private Long conversationId;
+    @ManyToOne
+    @JoinColumn(name = "senderId")
+    private Member sender;
+    @ManyToOne
+    @JoinColumn(name = "conversationId")
+    private Conversation conversation;
 
     private String message;
 

@@ -4,15 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import viosmash.core.utils.SecurityUtils;
 import viosmash.dal.dataobject.UserMemberGroup;
-import viosmash.enums.GroupRole;
+import viosmash.group.enums.GroupRole;
 import viosmash.service.member.UserMemberGroupService;
-
-import java.lang.reflect.Parameter;
 
 import static viosmash.exception.utils.ServiceUtils.exception;
 

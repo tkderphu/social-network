@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
-import viosmash.dal.dataobject.NotifyTemplate;
 import viosmash.dal.repo.FirebaseMessageTokenRepository;
 import viosmash.dal.repo.NotifySettingRepository;
 import viosmash.enums.NotificationType;

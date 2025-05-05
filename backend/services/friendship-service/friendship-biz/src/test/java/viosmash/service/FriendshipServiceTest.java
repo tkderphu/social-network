@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Import;
 import viosmash.BaseTest;
 import viosmash.config.EmbeddedNeo4jConfig;
-import viosmash.constant.FriendshipStatus;
+import viosmash.friendship.constant.FriendshipStatus;
 import viosmash.nodes.UserMakesFriendRequest;
 import viosmash.repository.UserRepository;
 

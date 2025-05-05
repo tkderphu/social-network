@@ -7,22 +7,54 @@ import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Data
 @Accessors(chain = true)
-@Table(name = "tblConversation")
 @ToString
-@Inheritance(strategy = InheritanceType.JOINED)
-public abstract class Conversation {
+@Table(name = "tblConversation")
+public  class Conversation {
     @Id
     @GeneratedValue(strategy =   GenerationType.IDENTITY)
     private Long id;
-    private String nickname;
-    private String thumbnail;
+    protected String nickname;
+    protected String thumbnail;
     private LocalDateTime createdAt;
+
+    @Enumerated(EnumType.STRING)
+    private ConversationType conversationType;
+
+    @OneToMany(mappedBy = "conversation")
+    private List<MemberConversation> memberConversations;
+
+    /**
+     * group chat
+     */
+    private boolean onlyAdminChat;
+    private boolean onlyAdminInvite;
+    private boolean onlyAdminUpdateNickname;
+    private boolean onlyAdminUpdateThumbnail;
+
+
+    public String getNickname() {
+        return nickname;
+    }
+
+    public String getThumbnail() {
+        return thumbnail;
+    }
+
+
+    public void addMember(MemberConversation memberConversation) {
+        if(memberConversations == null) {
+            memberConversations = new ArrayList<>();
+        }
+        memberConversations.add(memberConversation);
+    }
 
 }

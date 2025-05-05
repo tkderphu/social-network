@@ -6,8 +6,8 @@ import viosmash.aop.GroupPermission;
 import viosmash.controller.group.vo.GroupCreateReqVO;
 import viosmash.dal.dataobject.Group;
 import viosmash.dal.repo.GroupRepository;
-import viosmash.enums.GroupRole;
-import viosmash.enums.GroupType;
+import viosmash.group.enums.GroupRole;
+import viosmash.group.enums.GroupType;
 import viosmash.string.StringUtils;
 
 import java.time.LocalDateTime;

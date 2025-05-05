@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 import viosmash.dal.dataobject.NotifyMessage;
 import viosmash.dal.dataobject.NotifyTemplate;
 import viosmash.dal.repo.NotifyMessageRepository;
-import viosmash.string.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;

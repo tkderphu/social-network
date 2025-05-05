@@ -3,12 +3,12 @@ package viosmash.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import viosmash.constant.AddressEnum;
-import viosmash.constant.PolicyEnum;
-import viosmash.constant.SchoolEnum;
-import viosmash.controller.vo.UserCreateReqVO;
-import viosmash.controller.vo.UserRespVO;
-import viosmash.controller.vo.UserUpdateInfoReqVO;
+import viosmash.profile.constant.AddressEnum;
+import viosmash.profile.constant.PolicyEnum;
+import viosmash.profile.constant.SchoolEnum;
+import viosmash.controller.post.vo.UserCreateReqVO;
+import viosmash.controller.post.vo.UserRespVO;
+import viosmash.controller.post.vo.UserUpdateInfoReqVO;
 import viosmash.core.utils.SecurityUtils;
 import viosmash.pojo.CommonResult;
 import viosmash.service.UserService;

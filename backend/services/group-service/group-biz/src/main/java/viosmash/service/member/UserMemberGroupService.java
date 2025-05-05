@@ -1,9 +1,8 @@
 package viosmash.service.member;
 
-import viosmash.aop.GroupPermission;
 import viosmash.dal.dataobject.MemberWaitingReview;
 import viosmash.dal.dataobject.UserMemberGroup;
-import viosmash.enums.GroupRole;
+import viosmash.group.enums.GroupRole;
 
 import java.util.List;
 

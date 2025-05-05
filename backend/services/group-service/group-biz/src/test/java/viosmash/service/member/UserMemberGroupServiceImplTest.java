@@ -15,8 +15,8 @@ import viosmash.dal.repo.UserMemberGroupRepository;
 import viosmash.exception.ErrorCode;
 import viosmash.random.RandomUtils;
 
-import static viosmash.enums.GroupRole.MEMBER;
-import static viosmash.enums.GroupRole.OWNER;
+import static viosmash.group.enums.GroupRole.MEMBER;
+import static viosmash.group.enums.GroupRole.OWNER;
 
 public class UserMemberGroupServiceImplTest extends BaseTest {
 

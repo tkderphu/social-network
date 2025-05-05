@@ -2,7 +2,7 @@ package viosmash.service.notify;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import viosmash.controller.vo.template.NotifyTemplateCreatedReqVO;
+import viosmash.controller.post.vo.template.NotifyTemplateCreatedReqVO;
 import viosmash.dal.dataobject.NotifyTemplate;
 import viosmash.dal.repo.NotifyTemplateRepository;
 import viosmash.exception.ServiceException;

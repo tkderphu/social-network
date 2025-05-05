@@ -1,19 +1,16 @@
 package viosmash.service.notify;
 
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import viosmash.BaseTest;
-import viosmash.controller.vo.template.NotifyTemplateCreatedReqVO;
+import viosmash.controller.post.vo.template.NotifyTemplateCreatedReqVO;
 import viosmash.dal.dataobject.NotifyMessage;
 import viosmash.enums.NotificationType;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class NotifyMessageServiceTest extends BaseTest {
     @Autowired

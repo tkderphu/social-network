@@ -1,16 +1,17 @@
 package viosmash.service;
 
-import viosmash.controller.vo.PostCreateReqVO;
-import viosmash.controller.vo.PostUpdatedReqVO;
+import viosmash.controller.post.vo.PagingUserPostReqVO;
+import viosmash.controller.post.vo.PostCreateReqVO;
+import viosmash.controller.post.vo.PostRespVO;
+import viosmash.controller.post.vo.PostUpdatedReqVO;
 import viosmash.dal.dataobject.Post;
-
-import java.util.List;
+import viosmash.pojo.PageResult;
 
 public interface PostService {
     Post createPost(PostCreateReqVO postCreateReq);
     Post updatePost(PostUpdatedReqVO postUpdateReq);
-    List<Post> getListPostByUserId(Long userId);
-    Post getPostById(Long postId);
-    int countSharePost(Long postId);
+    PageResult<PostRespVO> getListPostByUserId(PagingUserPostReqVO req);
+    PostRespVO getPostById(Long postId);
     void deletePost(Long postId);
+
 }

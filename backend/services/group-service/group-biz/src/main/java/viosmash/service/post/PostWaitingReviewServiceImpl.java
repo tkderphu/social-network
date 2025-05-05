@@ -3,7 +3,6 @@ package viosmash.service.post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import viosmash.aop.GroupPermission;
-import viosmash.dal.dataobject.PostWaitingReview;
 import viosmash.dal.repo.PostWaitingReviewRepository;
 
 import java.util.List;

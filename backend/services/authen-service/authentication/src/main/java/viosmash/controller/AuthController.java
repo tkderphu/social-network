@@ -5,8 +5,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import viosmash.controller.vo.AuthLoginReqVO;
-import viosmash.controller.vo.AuthLoginRespVO;
+import viosmash.controller.post.vo.AuthLoginReqVO;
+import viosmash.controller.post.vo.AuthLoginRespVO;
 import viosmash.pojo.CommonResult;
 import viosmash.service.auth.AuthService;
 

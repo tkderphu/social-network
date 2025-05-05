@@ -2,7 +2,7 @@ package viosmash.convert;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import viosmash.controller.vo.message.NotifyMessageRespVO;
+import viosmash.controller.post.vo.message.NotifyMessageRespVO;
 import viosmash.dal.dataobject.NotifyMessage;
 import viosmash.object.BeanUtil;
 

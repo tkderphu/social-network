@@ -1,12 +1,15 @@
 package viosmash.controller.message;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.*;
-import viosmash.controller.vo.MessageReqVO;
-import viosmash.controller.vo.MessageRespVO;
+import viosmash.controller.message.vo.MessageCreateReqVO;
+import viosmash.controller.message.vo.MessageRespVO;
+import viosmash.chat.enums.ApiConstant;
 import viosmash.pojo.CommonResult;
 import viosmash.service.MessageService;
 
@@ -16,13 +19,14 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @Slf4j
-@RequestMapping("/api/chats/messages")
+@Tag(name = "Message Controller")
+@RequestMapping(ApiConstant.APP_PREFIX + "/messages")
 public class MessageController {
 
     private final MessageService messageService;
 
     @MessageMapping("/chat/send")
-    public void createMessage(@Payload MessageReqVO req, Principal principal) {
+    public void createMessage(@Payload MessageCreateReqVO req, Principal principal) {
         log.info("principle: {}", principal);
         req.setSenderId(Long.parseLong(principal.getName()));
         log.info("message: {}", req);
@@ -30,6 +34,7 @@ public class MessageController {
     }
 
     @GetMapping("/conversation/{conversationId}")
+    @Operation(summary = "get list message in conversation")
     public CommonResult<List<MessageRespVO>> getListMessageByConversation(
             @PathVariable("conversationId") Long conversationId,
             @RequestParam(value = "before", required = false, defaultValue = "0") Long beforeMessageId,

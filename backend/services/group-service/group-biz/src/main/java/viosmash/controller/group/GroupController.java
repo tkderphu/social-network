@@ -4,7 +4,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import viosmash.api.UserApi;
+import viosmash.profile.api.UserApi;
 import viosmash.controller.group.vo.GroupCreateReqVO;
 import viosmash.controller.group.vo.GroupRespVO;
 import viosmash.controller.group.vo.GroupUpdateReqVO;

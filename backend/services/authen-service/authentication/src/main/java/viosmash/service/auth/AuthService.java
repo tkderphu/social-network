@@ -1,7 +1,7 @@
 package viosmash.service.auth;
 
-import viosmash.controller.vo.AuthLoginReqVO;
-import viosmash.controller.vo.AuthLoginRespVO;
+import viosmash.controller.post.vo.AuthLoginReqVO;
+import viosmash.controller.post.vo.AuthLoginRespVO;
 
 public interface AuthService {
     AuthLoginRespVO login(AuthLoginReqVO loginReqVO);

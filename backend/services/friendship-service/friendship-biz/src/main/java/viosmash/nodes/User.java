@@ -2,6 +2,7 @@ package viosmash.nodes;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 import org.springframework.data.neo4j.core.schema.Id;
 import org.springframework.data.neo4j.core.schema.Node;
 import org.springframework.data.neo4j.core.schema.Relationship;
@@ -16,10 +17,13 @@ import static viosmash.nodes.RelationshipConstant.*;
 @Node("USERS")
 @Data
 @NoArgsConstructor
+@Accessors(chain = true)
 public class User {
     @Id
     private Long id;
-
+    private String firstName;
+    private String lastName;
+    private String avatar;
 
     @Relationship(value = FRIEND, direction = Relationship.Direction.OUTGOING)
     private Set<Friend> friends = new HashSet<>();

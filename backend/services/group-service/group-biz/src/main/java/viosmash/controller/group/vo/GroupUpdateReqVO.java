@@ -2,7 +2,7 @@ package viosmash.controller.group.vo;
 
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
-import viosmash.enums.GroupType;
+import viosmash.group.enums.GroupType;
 
 @Data
 public class GroupUpdateReqVO {

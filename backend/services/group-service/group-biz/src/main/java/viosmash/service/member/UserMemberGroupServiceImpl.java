@@ -10,7 +10,7 @@ import viosmash.dal.dataobject.UserMemberGroup;
 import viosmash.dal.repo.GroupRepository;
 import viosmash.dal.repo.MemberWaitingReviewRepository;
 import viosmash.dal.repo.UserMemberGroupRepository;
-import viosmash.enums.GroupRole;
+import viosmash.group.enums.GroupRole;
 
 import java.time.LocalDateTime;
 import java.util.List;

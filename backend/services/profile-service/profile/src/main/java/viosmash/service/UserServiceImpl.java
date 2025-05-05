@@ -5,17 +5,18 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import viosmash.api.FriendshipApi;
-import viosmash.constant.AddressEnum;
-import viosmash.constant.PolicyEnum;
-import viosmash.constant.SchoolEnum;
-import viosmash.controller.vo.UserCreateReqVO;
-import viosmash.controller.vo.UserRespVO;
-import viosmash.controller.vo.UserUpdateInfoReqVO;
+import viosmash.date.DateUtils;
+import viosmash.friendship.api.UserApi;
+import viosmash.friendship.api.UserDTO;
+import viosmash.object.BeanUtil;
+import viosmash.profile.constant.AddressEnum;
+import viosmash.profile.constant.PolicyEnum;
+import viosmash.profile.constant.SchoolEnum;
+import viosmash.controller.post.vo.UserCreateReqVO;
+import viosmash.controller.post.vo.UserRespVO;
+import viosmash.controller.post.vo.UserUpdateInfoReqVO;
 import viosmash.dal.dataobject.User;
 import viosmash.dal.repository.UserRepository;
-import viosmash.date.DateUtils;
-import viosmash.object.BeanUtil;
 
 import java.util.Date;
 import java.util.Map;
@@ -29,7 +30,9 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
-    private final FriendshipApi friendshipApi;
+    private final UserApi friendshipApi;
+    private final viosmash.chat.api.UserApi chatUserApi;
+
     @Override
     @Transactional
     public void createUser(UserCreateReqVO req) {
@@ -44,7 +47,8 @@ public class UserServiceImpl implements UserService {
                 .setCreatedDate(new Date())
                 .setIsOnline(false);
         userRepository.save(user);
-        friendshipApi.updateUser(user.getId());
+        friendshipApi.updateUser(BeanUtil.copy(user, UserDTO.class));
+        chatUserApi.updateUserInfo(BeanUtil.copy(user, viosmash.chat.api.UserDTO.class));
     }
 
     @Override

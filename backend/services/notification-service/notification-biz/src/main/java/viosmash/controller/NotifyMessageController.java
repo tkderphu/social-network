@@ -3,13 +3,9 @@ package viosmash.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import viosmash.collection.CollUtils;
-import viosmash.controller.vo.message.NotifyMessageRespVO;
-import viosmash.convert.NotificationConvert;
-import viosmash.core.utils.SecurityUtils;
+import viosmash.controller.post.vo.message.NotifyMessageRespVO;
 import viosmash.dal.dataobject.NotifyMessage;
 import viosmash.pojo.CommonResult;
-import viosmash.pojo.PageResult;
-import viosmash.service.firebase.FCMService;
 import viosmash.service.notify.NotifyMessageService;
 
 import java.util.List;

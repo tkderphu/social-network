@@ -3,23 +3,23 @@ package viosmash.dal.dataobject;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import viosmash.enums.Role;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Data
 @Accessors(chain = true)
-@Table(name = "tblUserConversation")
+@Table(name = "tblMember")
 public class Member {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long conversationId;
-    private Long userId;
-    private Role role;
-    private LocalDateTime invitedAt;
-    private Long invitedBy;
+    private String firstName;
+    private String lastName;
+    private String avatar;
+    private Boolean isOnline;
 
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberConversation> memberConversations;
 }

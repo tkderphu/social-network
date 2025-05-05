@@ -1,6 +1,6 @@
 package viosmash.aop;
 
-import viosmash.enums.GroupRole;
+import viosmash.group.enums.GroupRole;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

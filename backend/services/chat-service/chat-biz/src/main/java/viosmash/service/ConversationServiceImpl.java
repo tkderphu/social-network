@@ -3,36 +3,43 @@ package viosmash.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import viosmash.api.UserApi;
-import viosmash.collection.CollUtils;
+import org.springframework.transaction.annotation.Transactional;
 import viosmash.controller.conversation.vo.*;
-import viosmash.convert.ConversationConvert;
+import viosmash.controller.message.vo.MessageRespVO;
 import viosmash.dal.dataobject.Conversation;
+import viosmash.dal.dataobject.ConversationType;
 import viosmash.dal.dataobject.Member;
-import viosmash.dal.dataobject.Message;
-import viosmash.dal.dataobject.PublicConversation;
 import viosmash.dal.repo.ConversationRepository;
 import viosmash.dal.repo.MessageRepository;
-import viosmash.dal.repo.UserConversationRepository;
+import viosmash.exception.ServiceException;
 import viosmash.object.BeanUtil;
 
 import java.time.LocalDateTime;
-import java.util.Collection;
 import java.util.List;
-import java.util.Optional;
 
-import static viosmash.convert.MessageConvert.INSTANCE;
+import static viosmash.collection.CollUtils.convertList;
 import static viosmash.exception.utils.ServiceUtils.exception;
+import static viosmash.object.BeanUtil.copy;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
 public class ConversationServiceImpl implements ConversationService{
 
-
+    private final ConversationRepository conversationRepository;
+    private final MemberService memberService;
+    private final MessageRepository messageRepository;
     @Override
-    public Long createConversation(ConversationCreateReq req) {
-        return 0L;
+    @Transactional(rollbackFor = ServiceException.class)
+    public Long createConversation(Long ownerId, ConversationCreateReq req) {
+        Conversation conversation = BeanUtil.copy(req, Conversation.class)
+                .setCreatedAt(LocalDateTime.now())
+                .setConversationType(ConversationType.PUBLIC);
+
+        Long conversationId = conversationRepository.save(conversation).getId();
+        memberService.invite(conversation.getId(), req.getUserIds());
+
+        return conversationId;
     }
 
     @Override
@@ -52,6 +59,22 @@ public class ConversationServiceImpl implements ConversationService{
 
     @Override
     public List<ConversationRespVO> getListConversation(Long userId) {
-        return List.of();
+        return convertList(conversationRepository.findAllByUserId(userId), list -> {
+            ConversationRespVO resp = copy(list[0], ConversationRespVO.class)
+                    .setLatestMessage(copy(list[1], MessageRespVO.class));
+            return resp;
+        }).stream().toList();
+    }
+
+    @Override
+    public ConversationRespVO getConversationById(Long conversationId) {
+        Conversation conversation = conversationRepository.findById(conversationId)
+                .orElseThrow(() -> exception(404, "conversation not found"));
+        ConversationRespVO resp = copy(conversation, ConversationRespVO.class)
+                .setLatestMessage(copy(
+                        messageRepository.findLatestMessageByConversationId(conversation.getId()),
+                        MessageRespVO.class)
+                );
+        return resp;
     }
 }

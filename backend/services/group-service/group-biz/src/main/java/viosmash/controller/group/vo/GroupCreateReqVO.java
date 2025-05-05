@@ -5,9 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 import org.hibernate.validator.constraints.Length;
-import viosmash.enums.GroupType;
+import viosmash.group.enums.GroupType;
 
-import java.util.List;
 import java.util.Set;
 
 @Data

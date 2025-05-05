@@ -3,9 +3,9 @@ package viosmash.dal.dataobject;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import viosmash.constant.AddressEnum;
-import viosmash.constant.PolicyEnum;
-import viosmash.constant.SchoolEnum;
+import viosmash.profile.constant.AddressEnum;
+import viosmash.profile.constant.PolicyEnum;
+import viosmash.profile.constant.SchoolEnum;
 import viosmash.converter.JsonMapConverter;
 
 import java.util.Date;

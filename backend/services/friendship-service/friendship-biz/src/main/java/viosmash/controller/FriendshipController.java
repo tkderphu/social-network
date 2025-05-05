@@ -1,19 +1,15 @@
 package viosmash.controller;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
-import viosmash.api.UserApi;
-import viosmash.constant.FriendshipStatus;
-import viosmash.controller.vo.UserMakeFriendRequestRespVO;
-import viosmash.controller.vo.UserRespVO;
-import viosmash.convert.UserConvert;
+import viosmash.controller.post.vo.UserMakeFriendRequestRespVO;
+import viosmash.controller.post.vo.UserRespVO;
 import viosmash.core.utils.SecurityUtils;
+import viosmash.friendship.constant.FriendshipStatus;
 import viosmash.pojo.CommonResult;
 import viosmash.service.FriendshipService;
 
 import java.util.List;
-import java.util.Set;
 
 import static viosmash.pojo.CommonResult.success;
 
@@ -22,7 +18,6 @@ import static viosmash.pojo.CommonResult.success;
 @RequestMapping("/api/friendship")
 public class FriendshipController {
     private final FriendshipService friendshipService;
-    private final UserApi userApi;
 
     @PostMapping("/make/{userId}")
     public CommonResult<Boolean> makeFriendRequest(@PathVariable("userId") Long userId) {
@@ -66,76 +61,26 @@ public class FriendshipController {
     @GetMapping("/get-friends/{userId}")
     public CommonResult<List<UserRespVO>> getFriends(@PathVariable("userId") Long userId,
                                                @RequestParam(value = "limit", required = false) Integer limit) {
-        Long currentUserId = SecurityUtils.getLoginUserMemberId();
-        List<Long> friends = friendshipService.getListFriends(userId);
-        if(currentUserId.compareTo(userId) == 0) {
-            return success(UserConvert.INSTANCE.convert(userApi.getAllUsers(friends)));
-        } else {
-            List<UserRespVO> result = friends.stream().map(friend -> {
-                Set<Long> mutualFriends = this.friendshipService.getListMutualFriends(friend, currentUserId);
-                if (CollectionUtils.isEmpty(mutualFriends)) {
-                    return UserConvert.INSTANCE.convert(userApi.getUserById(friend), null);
-                } else {
-                    return UserConvert.INSTANCE.convert(userApi.getUserById(friend), userApi.getAllUsers(mutualFriends));
-                }
-            }).sorted((s1, s2) -> s2.getMutualFriends().size() - s1.getMutualFriends().size()).toList();
-            if(limit != null) {
-                result = result.stream().limit(limit).toList();
-            }
-            return success(result);
-        }
+        return null;
     }
 
     @GetMapping("/get-requests")
     public CommonResult<List<UserMakeFriendRequestRespVO>> getAllMakeFriendRequests() {
         Long currentUserId = SecurityUtils.getLoginUserMemberId();
-        List<UserMakeFriendRequestRespVO> result = friendshipService
-                .getListUserFriendRequests(currentUserId)
-                .stream()
-                .map(friendRequest -> {
-            Set<Long> mutualFriends = friendshipService.getListMutualFriends(
-                    currentUserId,
-                    friendRequest.getUser().getId());
-            return UserConvert.INSTANCE.convert0(
-                    friendRequest,
-                    userApi.getUserById(friendRequest.getUser().getId()),
-                    userApi.getAllUsers(mutualFriends));
-        }).toList();
-        return success(result);
+        return null;
     }
 
 
     @GetMapping("/receive-invitations")
     public CommonResult<List<UserMakeFriendRequestRespVO>> getAllMakeFriendRequestReceived() {
         Long currentUserId = SecurityUtils.getLoginUserMemberId();
-        List<UserMakeFriendRequestRespVO> result = friendshipService
-                .getListUserFriendRequestsByReceiver(currentUserId)
-                .stream()
-                .map(make -> {
-                    Set<Long> mutualFriends = friendshipService.getListMutualFriends(
-                            currentUserId,
-                            make.getUser().getId());
-                    return UserConvert.INSTANCE.convert0(
-                            make,
-                            userApi.getUserById(make.getUser().getId()),
-                            userApi.getAllUsers(mutualFriends));
-                }).toList();
-
-        return success(result);
+        return null;
     }
 
 
     @GetMapping("/suggestion-users")
     public CommonResult<List<UserRespVO>> getSuggestionUsers() {
         Long currentUserId = 1L;
-        List<UserRespVO> result = this.friendshipService.getListSuggestionUser(currentUserId)
-                .stream().map(userId -> {
-                    Set<Long> mutualFriends = friendshipService.getListMutualFriends(userId, currentUserId);
-                    return UserConvert.INSTANCE.convert(
-                            userApi.getUserById(userId),
-                            userApi.getAllUsers(mutualFriends)
-                    );
-                }).toList();
-        return success(result);
+       return null;
     }
 }

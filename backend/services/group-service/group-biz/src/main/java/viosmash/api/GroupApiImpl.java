@@ -1,6 +1,9 @@
 package viosmash.api;
 
-public class GroupApiImpl implements GroupApi{
+import viosmash.group.api.GroupApi;
+import viosmash.group.api.GroupDTO;
+
+public class GroupApiImpl implements GroupApi {
 
 
     @Override

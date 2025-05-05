@@ -1,7 +1,5 @@
 package viosmash.service.post;
 
-import viosmash.dal.dataobject.PostWaitingReview;
-
 import java.util.List;
 
 public interface PostWaitingReviewService {

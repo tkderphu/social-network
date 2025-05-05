@@ -4,7 +4,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import viosmash.dal.dataobject.UserMemberGroup;
-import viosmash.enums.GroupRole;
+import viosmash.group.enums.GroupRole;
 
 import java.util.List;
 

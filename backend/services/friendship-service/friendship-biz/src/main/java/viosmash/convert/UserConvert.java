@@ -2,9 +2,9 @@ package viosmash.convert;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
-import viosmash.api.UserDTO;
-import viosmash.controller.vo.UserMakeFriendRequestRespVO;
-import viosmash.controller.vo.UserRespVO;
+import viosmash.profile.api.UserDTO;
+import viosmash.controller.post.vo.UserMakeFriendRequestRespVO;
+import viosmash.controller.post.vo.UserRespVO;
 import viosmash.nodes.UserMakesFriendRequest;
 import viosmash.collection.CollUtils;
 import viosmash.object.BeanUtil;

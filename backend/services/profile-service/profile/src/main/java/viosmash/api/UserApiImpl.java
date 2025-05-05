@@ -5,6 +5,9 @@ import org.springframework.web.bind.annotation.*;
 import viosmash.dal.dataobject.User;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.CommonResult;
+import viosmash.profile.api.CheckUserReqVO;
+import viosmash.profile.api.UserApi;
+import viosmash.profile.api.UserDTO;
 import viosmash.service.UserService;
 
 import java.util.Collection;

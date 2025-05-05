@@ -2,7 +2,7 @@ package viosmash.service.group;
 
 import viosmash.controller.group.vo.GroupCreateReqVO;
 import viosmash.dal.dataobject.Group;
-import viosmash.enums.GroupType;
+import viosmash.group.enums.GroupType;
 
 import java.util.List;
 

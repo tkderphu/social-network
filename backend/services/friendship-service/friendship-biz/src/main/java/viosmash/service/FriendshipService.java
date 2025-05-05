@@ -1,6 +1,6 @@
 package viosmash.service;
 
-import viosmash.constant.FriendshipStatus;
+import viosmash.friendship.constant.FriendshipStatus;
 import viosmash.nodes.UserMakesFriendRequest;
 
 import java.util.List;

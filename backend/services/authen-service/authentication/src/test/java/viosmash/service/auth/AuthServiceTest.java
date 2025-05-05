@@ -1,22 +1,18 @@
 package viosmash.service.auth;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import viosmash.BaseTest;
-import viosmash.api.CheckUserReqVO;
-import viosmash.api.UserApi;
-import viosmash.api.UserDTO;
-import viosmash.controller.vo.AuthLoginReqVO;
-import viosmash.controller.vo.AuthLoginRespVO;
+import viosmash.profile.api.CheckUserReqVO;
+import viosmash.profile.api.UserApi;
+import viosmash.profile.api.UserDTO;
+import viosmash.controller.post.vo.AuthLoginReqVO;
+import viosmash.controller.post.vo.AuthLoginRespVO;
 import viosmash.exception.ServiceException;
 import viosmash.pojo.CommonResult;
-import viosmash.random.RandomUtils;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static viosmash.exception.utils.ServiceUtils.exception;
