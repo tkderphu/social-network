@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import viosmash.collection.CollUtils;
 import viosmash.controller.comment.vo.CommentCreateReqVO;
 import viosmash.controller.comment.vo.CommentRespVO;
-import viosmash.controller.comment.vo.PagingCommentReqVO;
 import viosmash.dal.dataobject.Comment;
 import viosmash.dal.repo.CommentRepository;
 import viosmash.date.DateUtils;
@@ -25,25 +24,26 @@ import java.util.List;
 public class CommentServiceImpl implements CommentService{
     private final CommentRepository commentRepository;
     private final UserApi userApi;
+
     @Override
-    public Long createComment(Long userId, CommentCreateReqVO req) {
+    public Comment createComment(Long userId, CommentCreateReqVO req) {
         Comment comment = BeanUtil.copy(req, Comment.class)
                 .setCreatedDate(LocalDateTime.now())
                 .setUserId(userId)
                 .setRootComment(req.getRootCommentId() != null ? new Comment().setId(req.getRootCommentId()) : null);
 
         this.commentRepository.save(comment);
-        return comment.getId();
+        return comment;
     }
 
     @Override
-    public PageResult<CommentRespVO> getPageCommentResp(PagingCommentReqVO req) {
+    public PageResult<CommentRespVO> getPageCommentRespByPost(Long postId, int pageNumber, int limit) {
         Pageable pageable = PageRequest.of(
-                req.getPage() - 1,
-                req.getLimit(),
+                pageNumber - 1,
+                limit,
                 Sort.by("createdDate").descending());
 
-        Page<Object[]> page = commentRepository.findAllByPostId(req.getPostId(), pageable);
+        Page<Object[]> page = commentRepository.findAllByPostId(postId, pageable);
 
         List<CommentRespVO> comments = CollUtils.convertList(page.getContent(), objects -> {
             Comment comment = (Comment) objects[0];
@@ -56,6 +56,6 @@ public class CommentServiceImpl implements CommentService{
             return commentRespVO;
         });
 
-        return new PageResult<>(req.getPage(), req.getLimit(), comments, page.getTotalPages());
+        return new PageResult<>(pageNumber, limit, comments, page.getTotalPages());
     }
 }

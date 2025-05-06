@@ -52,4 +52,10 @@ public class UserApiImpl implements UserApi {
        return friendshipService.getListFriends(userId);
     }
 
+    @Override
+    @GetMapping("/{userId}/recommendation")
+    public CommonResult<List<UserDTO>> getListRecommendUser(@PathVariable("userId") Long userId) {
+        return null;
+    }
+
 }

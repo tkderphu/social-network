@@ -1,182 +1,110 @@
-import './Home.css'
+import { Link, useLocation, useNavigate } from 'react-router';
+import ModalCustome from '../../components/modal/ModalCustom';
+import PostForm from '../post/PostForm';
+import remarkGfm from 'remark-gfm'
+import Markdown from 'react-markdown'
+import rehypeRaw from 'rehype-raw';
 function Home() {
+    const PostCard = ({ user, time, content }: any) => {
+        const navigate = useNavigate()
+        const location = useLocation()
+        return (
+            <div className="card mb-3">
+
+                <div className="card-body">
+                    <div className='d-flex justify-content-between'>
+                        <div className="d-flex align-items-center mb-3">
+                            <img
+                                src="https://via.placeholder.com/40"
+                                alt="User avatar"
+                                className="rounded-circle me-2"
+                                style={{ width: '40px', height: '40px' }}
+                            />
+                            <div>
+                                <Link to={"/profile/1"}><h6 className="mb-0">{user}</h6></Link>
+                                <small className="text-muted">{time}</small>
+                            </div>
+                        </div>
+                        <a href='/group'>Thuc tap co so</a>
+                    </div>
+
+                    <div onClick={() => {
+                        navigate("/posts/1", {
+                            state: {
+                                backgroundLocation: location
+                            }
+                        })
+                    }} style={{ cursor: 'pointer' }}>
+                        {/* <div dangerouslySetInnerHTML={{ __html: window.marked ? window.marked.parse(content) : content }} /> */}
+                        <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
+                      {content}
+                    </Markdown>                        {/* <p className="card-text">{content}</p> */}
+                    </div>
+                    <div className="d-flex justify-content-between border-top pt-2">
+                        <button className="btn btn-sm btn-outline-primary">Like: 1212</button>
+                        <button className="btn btn-sm btn-outline-secondary">Comment: 1212</button>
+                        <button className="btn btn-sm btn-outline-info">Share: 1212</button>
+                    </div>
+                </div>
+            </div>
+        );
+    };
+    const markdownText = `
+    # Heading 1
+    ## Heading 2
+    ### Heading 3
+    
+    **Bold text**  
+    *Italic text*  
+    ~~Strikethrough~~
+    
+    - List item 1
+    - List item 2
+      - Nested item
+    
+    1. Ordered item 1
+    2. Ordered item 2
+    
+    [Link to Google](https://www.google.com)
+    
+    ![Image](https://example.com/image.jpg)
+    
+    > Blockquote
+    
+    \`Inline code\`
+    
+    \`\`\`javascript
+    // Code block
+    console.log("Hello, world!");
+    \`\`\`
+    `;
+    const posts = [
+        {
+            user: "John Doe",
+            time: "2 hours ago",
+            content: "Enjoying a great day at the park! 🌳",
+        },
+        {
+            user: "Alex Johnson",
+            time: "Yesterday",
+            content: "Check out this amazing recipe I tried! \n # Foodie\n\n### Ingredients\n- Tomatoes\n- Basil\n- Olive oil\n\n[Full recipe here](https://example.com)",
+          },
+    ];
     return (
-        <div className="row mt-3 m-1">
-            <div className="col-3 sticky-sidebar ">
-                <h4>Your shortcut</h4>
-                <div >
-                    <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>
-                        <img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/387083780_1445088196067626_8190024267265276972_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_eui2=AeEyFKuDaIZFmGd8-Aj_cC_iKsTOiuND444qxM6K40Pjjia9H6zg_Rd2ZHxh5SKaWO6NBuAHp21E-FRP1D1e055g&_nc_ohc=99xXPUR4tGUQ7kNvgGuovBZ&_nc_oc=AdkjJHlFhEoPaHE-zp6BeRoAtUlk2Vw_L4U_l6VjN0WazuClvuV4xJwdT7Mvh1kTOJxw4zjx3p3KgNpnkSAc4pCB&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=76y2ewg97NdUuY02ZBLGUQ&oh=00_AYEUfbJrLwhMtewVW7CsseobxJqkIrAcUHQ_ClK_EAsT6A&oe=67E34FEF'
-                            width={"60px"}
-                        />
-                        <div className='mx-3' style={{ fontSize: "23px" }}>Hang Mu</div>
-                    </a>
-                    <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>
-                        <img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/387083780_1445088196067626_8190024267265276972_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_eui2=AeEyFKuDaIZFmGd8-Aj_cC_iKsTOiuND444qxM6K40Pjjia9H6zg_Rd2ZHxh5SKaWO6NBuAHp21E-FRP1D1e055g&_nc_ohc=99xXPUR4tGUQ7kNvgGuovBZ&_nc_oc=AdkjJHlFhEoPaHE-zp6BeRoAtUlk2Vw_L4U_l6VjN0WazuClvuV4xJwdT7Mvh1kTOJxw4zjx3p3KgNpnkSAc4pCB&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=76y2ewg97NdUuY02ZBLGUQ&oh=00_AYEUfbJrLwhMtewVW7CsseobxJqkIrAcUHQ_ClK_EAsT6A&oe=67E34FEF'
-                            width={"60px"}
-                        />
-                        <div className='mx-3' style={{ fontSize: "23px" }}>Hang Mu</div>
-                    </a>
-                    <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>
-                        <img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/387083780_1445088196067626_8190024267265276972_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_eui2=AeEyFKuDaIZFmGd8-Aj_cC_iKsTOiuND444qxM6K40Pjjia9H6zg_Rd2ZHxh5SKaWO6NBuAHp21E-FRP1D1e055g&_nc_ohc=99xXPUR4tGUQ7kNvgGuovBZ&_nc_oc=AdkjJHlFhEoPaHE-zp6BeRoAtUlk2Vw_L4U_l6VjN0WazuClvuV4xJwdT7Mvh1kTOJxw4zjx3p3KgNpnkSAc4pCB&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=76y2ewg97NdUuY02ZBLGUQ&oh=00_AYEUfbJrLwhMtewVW7CsseobxJqkIrAcUHQ_ClK_EAsT6A&oe=67E34FEF'
-                            width={"60px"}
-                        />
-                        <div className='mx-3' style={{ fontSize: "23px" }}>Hang Mu</div>
-                    </a>
-                    <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>
-                        <img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/387083780_1445088196067626_8190024267265276972_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_eui2=AeEyFKuDaIZFmGd8-Aj_cC_iKsTOiuND444qxM6K40Pjjia9H6zg_Rd2ZHxh5SKaWO6NBuAHp21E-FRP1D1e055g&_nc_ohc=99xXPUR4tGUQ7kNvgGuovBZ&_nc_oc=AdkjJHlFhEoPaHE-zp6BeRoAtUlk2Vw_L4U_l6VjN0WazuClvuV4xJwdT7Mvh1kTOJxw4zjx3p3KgNpnkSAc4pCB&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=76y2ewg97NdUuY02ZBLGUQ&oh=00_AYEUfbJrLwhMtewVW7CsseobxJqkIrAcUHQ_ClK_EAsT6A&oe=67E34FEF'
-                            width={"60px"}
-                        />
-                        <div className='mx-3' style={{ fontSize: "23px" }}>Hang Mu</div>
-                    </a>
-                    <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>
-                        <img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/387083780_1445088196067626_8190024267265276972_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_eui2=AeEyFKuDaIZFmGd8-Aj_cC_iKsTOiuND444qxM6K40Pjjia9H6zg_Rd2ZHxh5SKaWO6NBuAHp21E-FRP1D1e055g&_nc_ohc=99xXPUR4tGUQ7kNvgGuovBZ&_nc_oc=AdkjJHlFhEoPaHE-zp6BeRoAtUlk2Vw_L4U_l6VjN0WazuClvuV4xJwdT7Mvh1kTOJxw4zjx3p3KgNpnkSAc4pCB&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=76y2ewg97NdUuY02ZBLGUQ&oh=00_AYEUfbJrLwhMtewVW7CsseobxJqkIrAcUHQ_ClK_EAsT6A&oe=67E34FEF'
-                            width={"60px"}
-                        />
-                        <div className='mx-3' style={{ fontSize: "23px" }}>Hang Mu</div>
-                    </a>
-                    <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>
-                        <img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/387083780_1445088196067626_8190024267265276972_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_eui2=AeEyFKuDaIZFmGd8-Aj_cC_iKsTOiuND444qxM6K40Pjjia9H6zg_Rd2ZHxh5SKaWO6NBuAHp21E-FRP1D1e055g&_nc_ohc=99xXPUR4tGUQ7kNvgGuovBZ&_nc_oc=AdkjJHlFhEoPaHE-zp6BeRoAtUlk2Vw_L4U_l6VjN0WazuClvuV4xJwdT7Mvh1kTOJxw4zjx3p3KgNpnkSAc4pCB&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=76y2ewg97NdUuY02ZBLGUQ&oh=00_AYEUfbJrLwhMtewVW7CsseobxJqkIrAcUHQ_ClK_EAsT6A&oe=67E34FEF'
-                            width={"60px"}
-                        />
-                        <div className='mx-3' style={{ fontSize: "23px" }}>Hang Mu</div>
-                    </a>
-                    <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>
-                        <img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/387083780_1445088196067626_8190024267265276972_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_eui2=AeEyFKuDaIZFmGd8-Aj_cC_iKsTOiuND444qxM6K40Pjjia9H6zg_Rd2ZHxh5SKaWO6NBuAHp21E-FRP1D1e055g&_nc_ohc=99xXPUR4tGUQ7kNvgGuovBZ&_nc_oc=AdkjJHlFhEoPaHE-zp6BeRoAtUlk2Vw_L4U_l6VjN0WazuClvuV4xJwdT7Mvh1kTOJxw4zjx3p3KgNpnkSAc4pCB&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=76y2ewg97NdUuY02ZBLGUQ&oh=00_AYEUfbJrLwhMtewVW7CsseobxJqkIrAcUHQ_ClK_EAsT6A&oe=67E34FEF'
-                            width={"60px"}
-                        />
-                        <div className='mx-3' style={{ fontSize: "23px" }}>Hang Mu</div>
-                    </a>
-                </div>
+        <div className="row mt-3">
+            <div className="col-8">
+                <PostForm />
+                {posts.map((post, index) => (
+                    <PostCard
+                        key={index}
+                        user={post.user}
+                        time={post.time}
+                        content={post.content}
+                    />
+                ))}
             </div>
-            <div className="col-6">
-                <div className="card mt-4">
-                    <div className="card-body">
-                        <h5 className="card-title">Phu Nguyen</h5>
-                        <p className="card-text">March 1 at 7:32 PM</p>
-                        <p className="card-text">This is a sample post.</p>
-                    </div>
-                </div>
-
-                <div className="card mt-4">
-                    <div className="card-body">
-                        <h5 className="card-title">Phu Nguyen</h5>
-                        <p className="card-text">March 1 at 7:32 PM</p>
-                        <p className="card-text">This is a sample post.</p>
-                    </div>
-                </div>
-                <div className="card mt-4">
-                    <div className="card-body">
-                        <h5 className="card-title">Phu Nguyen</h5>
-                        <p className="card-text">March 1 at 7:32 PM</p>
-                        <p className="card-text">This is a sample post.</p>
-                    </div>
-                </div>
-                <div className="card mt-4">
-                    <div className="card-body">
-                        <h5 className="card-title">Phu Nguyen</h5>
-                        <p className="card-text">March 1 at 7:32 PM</p>
-                        <p className="card-text">This is a sample post.</p>
-                    </div>
-                </div>
-                <div className="card mt-4">
-                    <div className="card-body">
-                        <h5 className="card-title">Phu Nguyen</h5>
-                        <p className="card-text">March 1 at 7:32 PM</p>
-                        <p className="card-text">This is a sample post.</p>
-                    </div>
-                </div>
-                <div className="card mt-4">
-                    <div className="card-body">
-                        <h5 className="card-title">Phu Nguyen</h5>
-                        <p className="card-text">March 1 at 7:32 PM</p>
-                        <p className="card-text">This is a sample post.</p>
-                    </div>
-                </div>
-                <div className="card mt-4">
-                    <div className="card-body">
-                        <h5 className="card-title">Phu Nguyen</h5>
-                        <p className="card-text">March 1 at 7:32 PM</p>
-                        <p className="card-text">This is a sample post.</p>
-                    </div>
-                </div>
-                <div className="card mt-4">
-                    <div className="card-body">
-                        <h5 className="card-title">Phu Nguyen</h5>
-                        <p className="card-text">March 1 at 7:32 PM</p>
-                        <p className="card-text">This is a sample post.</p>
-                    </div>
-                </div>
-                <div className="card mt-4">
-                    <div className="card-body">
-                        <h5 className="card-title">Phu Nguyen</h5>
-                        <p className="card-text">March 1 at 7:32 PM</p>
-                        <p className="card-text">This is a sample post.</p>
-                    </div>
-                </div>
-            </div>
-            <div className="col-3 sticky-sidebar ">
-               <div className='d-flex justify-content-between'>
-               <h4>Contacts</h4>
-               <button>Search</button>
-               </div>
-                <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>
-                    <img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/387083780_1445088196067626_8190024267265276972_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_eui2=AeEyFKuDaIZFmGd8-Aj_cC_iKsTOiuND444qxM6K40Pjjia9H6zg_Rd2ZHxh5SKaWO6NBuAHp21E-FRP1D1e055g&_nc_ohc=99xXPUR4tGUQ7kNvgGuovBZ&_nc_oc=AdkjJHlFhEoPaHE-zp6BeRoAtUlk2Vw_L4U_l6VjN0WazuClvuV4xJwdT7Mvh1kTOJxw4zjx3p3KgNpnkSAc4pCB&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=76y2ewg97NdUuY02ZBLGUQ&oh=00_AYEUfbJrLwhMtewVW7CsseobxJqkIrAcUHQ_ClK_EAsT6A&oe=67E34FEF'
-                        width={"50px" } className='rounded-circle'
-                    />
-                    <div className='mx-3' style={{ fontSize: "19px" }}>Hang Mu</div>
-                </a>
-                <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>
-                    <img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/387083780_1445088196067626_8190024267265276972_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_eui2=AeEyFKuDaIZFmGd8-Aj_cC_iKsTOiuND444qxM6K40Pjjia9H6zg_Rd2ZHxh5SKaWO6NBuAHp21E-FRP1D1e055g&_nc_ohc=99xXPUR4tGUQ7kNvgGuovBZ&_nc_oc=AdkjJHlFhEoPaHE-zp6BeRoAtUlk2Vw_L4U_l6VjN0WazuClvuV4xJwdT7Mvh1kTOJxw4zjx3p3KgNpnkSAc4pCB&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=76y2ewg97NdUuY02ZBLGUQ&oh=00_AYEUfbJrLwhMtewVW7CsseobxJqkIrAcUHQ_ClK_EAsT6A&oe=67E34FEF'
-                        width={"50px" } className='rounded-circle'
-                    />
-                    <div className='mx-3' style={{ fontSize: "19px" }}>Hang Mu</div>
-                </a>
-                <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>
-                    <img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/387083780_1445088196067626_8190024267265276972_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_eui2=AeEyFKuDaIZFmGd8-Aj_cC_iKsTOiuND444qxM6K40Pjjia9H6zg_Rd2ZHxh5SKaWO6NBuAHp21E-FRP1D1e055g&_nc_ohc=99xXPUR4tGUQ7kNvgGuovBZ&_nc_oc=AdkjJHlFhEoPaHE-zp6BeRoAtUlk2Vw_L4U_l6VjN0WazuClvuV4xJwdT7Mvh1kTOJxw4zjx3p3KgNpnkSAc4pCB&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=76y2ewg97NdUuY02ZBLGUQ&oh=00_AYEUfbJrLwhMtewVW7CsseobxJqkIrAcUHQ_ClK_EAsT6A&oe=67E34FEF'
-                        width={"50px" } className='rounded-circle'
-                    />
-                    <div className='mx-3' style={{ fontSize: "19px" }}>Hang Mu</div>
-                </a>
-                <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>
-                    <img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/387083780_1445088196067626_8190024267265276972_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_eui2=AeEyFKuDaIZFmGd8-Aj_cC_iKsTOiuND444qxM6K40Pjjia9H6zg_Rd2ZHxh5SKaWO6NBuAHp21E-FRP1D1e055g&_nc_ohc=99xXPUR4tGUQ7kNvgGuovBZ&_nc_oc=AdkjJHlFhEoPaHE-zp6BeRoAtUlk2Vw_L4U_l6VjN0WazuClvuV4xJwdT7Mvh1kTOJxw4zjx3p3KgNpnkSAc4pCB&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=76y2ewg97NdUuY02ZBLGUQ&oh=00_AYEUfbJrLwhMtewVW7CsseobxJqkIrAcUHQ_ClK_EAsT6A&oe=67E34FEF'
-                        width={"50px" } className='rounded-circle'
-                    />
-                    <div className='mx-3' style={{ fontSize: "19px" }}>Hang Mu</div>
-                </a>
-                <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>
-                    <img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/387083780_1445088196067626_8190024267265276972_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_eui2=AeEyFKuDaIZFmGd8-Aj_cC_iKsTOiuND444qxM6K40Pjjia9H6zg_Rd2ZHxh5SKaWO6NBuAHp21E-FRP1D1e055g&_nc_ohc=99xXPUR4tGUQ7kNvgGuovBZ&_nc_oc=AdkjJHlFhEoPaHE-zp6BeRoAtUlk2Vw_L4U_l6VjN0WazuClvuV4xJwdT7Mvh1kTOJxw4zjx3p3KgNpnkSAc4pCB&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=76y2ewg97NdUuY02ZBLGUQ&oh=00_AYEUfbJrLwhMtewVW7CsseobxJqkIrAcUHQ_ClK_EAsT6A&oe=67E34FEF'
-                        width={"50px" } className='rounded-circle'
-                    />
-                    <div className='mx-3' style={{ fontSize: "19px" }}>Hang Mu</div>
-                </a>
-                <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>
-                    <img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/387083780_1445088196067626_8190024267265276972_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_eui2=AeEyFKuDaIZFmGd8-Aj_cC_iKsTOiuND444qxM6K40Pjjia9H6zg_Rd2ZHxh5SKaWO6NBuAHp21E-FRP1D1e055g&_nc_ohc=99xXPUR4tGUQ7kNvgGuovBZ&_nc_oc=AdkjJHlFhEoPaHE-zp6BeRoAtUlk2Vw_L4U_l6VjN0WazuClvuV4xJwdT7Mvh1kTOJxw4zjx3p3KgNpnkSAc4pCB&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=76y2ewg97NdUuY02ZBLGUQ&oh=00_AYEUfbJrLwhMtewVW7CsseobxJqkIrAcUHQ_ClK_EAsT6A&oe=67E34FEF'
-                        width={"50px" } className='rounded-circle'
-                    />
-                    <div className='mx-3' style={{ fontSize: "19px" }}>Hang Mu</div>
-                </a>
-                <hr style={{ backgroundColor: "red" }} />
-
-                <h4>Group chats</h4>
-                <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>
-                    <img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/387083780_1445088196067626_8190024267265276972_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_eui2=AeEyFKuDaIZFmGd8-Aj_cC_iKsTOiuND444qxM6K40Pjjia9H6zg_Rd2ZHxh5SKaWO6NBuAHp21E-FRP1D1e055g&_nc_ohc=99xXPUR4tGUQ7kNvgGuovBZ&_nc_oc=AdkjJHlFhEoPaHE-zp6BeRoAtUlk2Vw_L4U_l6VjN0WazuClvuV4xJwdT7Mvh1kTOJxw4zjx3p3KgNpnkSAc4pCB&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=76y2ewg97NdUuY02ZBLGUQ&oh=00_AYEUfbJrLwhMtewVW7CsseobxJqkIrAcUHQ_ClK_EAsT6A&oe=67E34FEF'
-                        width={"50px" } className='rounded-circle'
-                    />
-                    <div className='mx-3' style={{ fontSize: "19px" }}>Hang Mu</div>
-                </a>
-                <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>
-                    <img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/387083780_1445088196067626_8190024267265276972_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_eui2=AeEyFKuDaIZFmGd8-Aj_cC_iKsTOiuND444qxM6K40Pjjia9H6zg_Rd2ZHxh5SKaWO6NBuAHp21E-FRP1D1e055g&_nc_ohc=99xXPUR4tGUQ7kNvgGuovBZ&_nc_oc=AdkjJHlFhEoPaHE-zp6BeRoAtUlk2Vw_L4U_l6VjN0WazuClvuV4xJwdT7Mvh1kTOJxw4zjx3p3KgNpnkSAc4pCB&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=76y2ewg97NdUuY02ZBLGUQ&oh=00_AYEUfbJrLwhMtewVW7CsseobxJqkIrAcUHQ_ClK_EAsT6A&oe=67E34FEF'
-                        width={"50px" } className='rounded-circle'
-                    />
-                    <div className='mx-3' style={{ fontSize: "19px" }}>Hang Mu</div>
-                </a>
-                <a href='hhi' className='short-cut-group d-flex align-items-center mb-3'>
-                    <img src='https://scontent.fhan2-3.fna.fbcdn.net/v/t39.30808-6/387083780_1445088196067626_8190024267265276972_n.jpg?_nc_cat=1&ccb=1-7&_nc_sid=2285d6&_nc_eui2=AeEyFKuDaIZFmGd8-Aj_cC_iKsTOiuND444qxM6K40Pjjia9H6zg_Rd2ZHxh5SKaWO6NBuAHp21E-FRP1D1e055g&_nc_ohc=99xXPUR4tGUQ7kNvgGuovBZ&_nc_oc=AdkjJHlFhEoPaHE-zp6BeRoAtUlk2Vw_L4U_l6VjN0WazuClvuV4xJwdT7Mvh1kTOJxw4zjx3p3KgNpnkSAc4pCB&_nc_zt=23&_nc_ht=scontent.fhan2-3.fna&_nc_gid=76y2ewg97NdUuY02ZBLGUQ&oh=00_AYEUfbJrLwhMtewVW7CsseobxJqkIrAcUHQ_ClK_EAsT6A&oe=67E34FEF'
-                        width={"50px" } className='rounded-circle'
-                    />
-                    <div className='mx-3' style={{ fontSize: "19px" }}>Hang Mu</div>
-                </a>
+            <div className='col-4'>
+                {/* <h1>sasa</h1> */}
             </div>
         </div>
     )

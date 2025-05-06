@@ -28,18 +28,16 @@
           <entry name="$MAVEN_REPOSITORY$/joda-time/joda-time/2.9/joda-time-2.9.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
         </processorPath>
+        <module name="newfeed-api" />
         <module name="notification-api" />
         <module name="group-api" />
         <module name="chat-biz" />
-        <module name="reaction-biz" />
         <module name="group-biz" />
         <module name="notification-biz" />
         <module name="redis" />
         <module name="newfeed-biz" />
         <module name="security" />
-        <module name="comment-service" />
         <module name="friendship-api" />
-        <module name="reaction-api" />
         <module name="common" />
         <module name="friendship-biz" />
         <module name="web" />
@@ -58,12 +56,19 @@
         <module name="config-server" />
         <module name="profile-api" />
         <module name="upload-biz" />
-        <module name="search-biz" />
-        <module name="db" />
         <module name="chat-api" />
+        <module name="db" />
         <module name="gateway" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="comment-service" target="17" />
+      <module name="reaction-api" target="17" />
+      <module name="reaction-biz" target="17" />
+      <module name="reaction-service" target="17" />
+      <module name="search-biz" target="17" />
+      <module name="search-service" target="17" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
@@ -88,6 +93,7 @@
       <module name="group-biz" options="-parameters" />
       <module name="group-service" options="-parameters" />
       <module name="mq" options="-parameters" />
+      <module name="newfeed-api" options="-parameters" />
       <module name="newfeed-biz" options="-parameters" />
       <module name="newfeed-service" options="-parameters" />
       <module name="notification-api" options="-parameters" />

@@ -9,7 +9,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import viosmash.group.api.GroupApi;
 import viosmash.collection.CollUtils;
-import viosmash.controller.post.vo.PagingUserPostReqVO;
 import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
 import viosmash.controller.post.vo.PostUpdatedReqVO;
@@ -49,14 +48,14 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public PageResult<PostRespVO> getListPostByUserId(PagingUserPostReqVO req) {
+    public PageResult<PostRespVO> getListPostByUserId(Long userId, int pageNumber, int limit) {
         Pageable pageable = PageRequest.of(
-                req.getPage() - 1,
-                req.getLimit(),
+                pageNumber - 1,
+                limit,
                 Sort.by("createdDate").descending()
         );
 
-        Page<Object[]> page = postRepository.findAllByUserId(req.getUserId(), pageable);
+        Page<Object[]> page = postRepository.findAllByUserId(userId, pageable);
         List<PostRespVO> posts = CollUtils.convertList(page.getContent(), objects -> {
             Post post = (Post) objects[0];
             return BeanUtil.copy(post, PostRespVO.class)
@@ -67,7 +66,7 @@ public class PostServiceImpl implements PostService{
                     .setNumComment((Integer) objects[3]);
         });
 
-        return new PageResult<>(req.getPage(), req.getLimit(), posts, page.getTotalPages()) ;
+        return new PageResult<>(pageNumber, limit, posts, page.getTotalPages()) ;
     }
 
 

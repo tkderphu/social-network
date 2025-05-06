@@ -1,54 +1,71 @@
-.user-chat {
-    cursor: pointer;
-}
-.user-chat:hover {
-    background-color: rgb(165, 161, 161);
-}
-.chat-box {
-    max-height: 700px;
-    overflow-y: scroll;
+.messenger {
+    margin: 0;
+    padding: 0;
+    background-color: #f3f4f6;
+    /* Fallback background */
 }
 
-.user-chat-box {
-    width: 350px;
-    min-height: 500px;
-    background: white;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    padding: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    display: flex;
-    flex-direction: column;
-    /* flex-wrap: wrap; */
-    /* position: fixed;  
-    bottom: 0;       
-    right: 50px;     
-    width: 500px;     
-    min-height: 500px; 
-    background: white;
-    border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-    overflow: hidden; */
-}
-.user-chat-box-send-message {
-    position: absolute;
-    bottom: 0;
-    width: 330px;
+.chat-item:hover {
+    background-color: #f8f9fa;
+    /* Bootstrap's light gray */
 }
 
-.user-chat-box-content {
+.chat-sidebar-scroll {
+    height: calc(100vh - 80px);
+    /* Matches Tailwind's h-[calc(100vh-80px)] */
     overflow-y: auto;
-    min-height: 500px;
 }
-#chat-container {
-    position: fixed;
-    bottom: 0;
-    right: 30px;
-    display: flex; /* Arrange chat boxes in a row */
-    gap: 20px; /* Space between chat boxes */
-    max-width: 100%;
-    overflow-x: auto; /* Enable horizontal scrolling if too many */
+
+.chat-item {
+    border-bottom: 1px solid #e5e7eb;
+    /* Matches Tailwind's border-gray-200 */
+    transition: background-color 0.2s;
 }
-.active-bg-black {
-    background-color: rgb(189, 184, 184);
+
+.chat-item:hover {
+    background-color: #f3f4f6;
+    /* Matches Tailwind's hover:bg-gray-100 */
+}
+
+.chat-avatar {
+    width: 40px;
+    /* Matches Tailwind's w-10 */
+    height: 40px;
+    /* Matches Tailwind's h-10 */
+}
+
+.cursor-pointer {
+    cursor: pointer;
+    /* Matches Tailwind's cursor-pointer */
+}
+
+.chat-avatar {
+    width: 40px;
+    /* Matches Tailwind's w-10 */
+    height: 40px;
+    /* Matches Tailwind's h-10 */
+}
+
+.chat-message {
+    max-width: 300px;
+    /* Matches Tailwind's max-w-xs */
+    border: 1px solid #e5e7eb;
+    /* Matches Tailwind's border-gray-200 */
+}
+
+.btn.rounded-circle {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.bg-light {
+    background-color: #f9fafb; /* Matches Tailwind's bg-gray-50 */
+  }
+
+.btn.rounded-circle svg {
+    width: 20px;
+    height: 20px;
 }

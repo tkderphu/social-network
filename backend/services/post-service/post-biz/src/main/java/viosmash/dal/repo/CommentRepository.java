@@ -12,7 +12,7 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
 
     @Query("SELECT c, a.countVal, (SELECT  COUNT(cn.id)  FROM Comment cn WHERE cn.rootComment.id = c.id) \n" +
             "FROM Comment c INNER JOIN Activity a \n" +
-            "ON c.id = a.reactionTypeId AND a.reactionType = viosmash.enums.ReactionType.COMMENT \n" +
-            "WHERE c.postId = :postId AND c.rootComment.id IS NULL")
+            "ON c.id = a.reactionTypeId AND a.reactionType = viosmash.post.enums.ReactionType.COMMENT \n" +
+            "WHERE c.post.id = :postId AND c.rootComment.id IS NULL")
     Page<Object[]> findAllByPostId(@Param("postId") Long postId, Pageable pageable);
 }

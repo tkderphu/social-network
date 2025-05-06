@@ -1,39 +1,28 @@
-import "./Post.css"
-export default function Post() {
+const PostCard = ({ user: {userId, fullName, avatar}, post: {content, time, postId, imageUrls, like, comment, share}, group: {groupId, groupName},  }: any) => {
     return (
-        <div className="container">
-            <div className="post">
-                <div className="post-header">
-                    <img src="https://i.pravatar.cc/48?img=12" alt="Avatar" className="avatar" />
+        <div className="card mb-3">
+            <div className="card-body">
+                <div className="d-flex align-items-center mb-3">
+                    <img
+                        src={avatar}
+                        alt="User avatar"
+                        className="rounded-circle me-2"
+                        style={{ width: '40px', height: '40px' }}
+                    />
                     <div>
-                        <div><strong>Michael Jordan</strong></div>
-                        <div className="text-muted" style={{ fontSize: "13px" }}>2 hrs ago · Public</div>
+                        <h6 className="mb-0">{fullName}</h6>
+                        <small className="text-muted">{time}</small>
                     </div>
                 </div>
-
-                <div className="post-body">
-                    Just read this amazing article about productivity. 💡 Highly recommend giving it a read!
-                </div>
-
-                <div className="article-preview mt-2">
-                    <img src="https://source.unsplash.com/600x300/?productivity,office" alt="Article Image" />
-                    <div className="article-preview-content">
-                        <div className="article-title">10 Ways to Supercharge Your Daily Productivity</div>
-                        <div className="article-link">www.productivityguru.com</div>
-                    </div>
-                </div>
-
-                <div className="post-footer mt-2">
-                    <div>
-                        <button>👍 Like</button>
-                        <button>💬 Comment</button>
-                        <button>↗️ Share</button>
-                    </div>
-                    <div>
-                        <span>32 Likes · 10 Comments</span>
-                    </div>
+                <p className="card-text">{content}</p>
+                <div className="d-flex justify-content-between border-top pt-2">
+                    <button className="btn btn-sm btn-outline-primary">Like</button>
+                    <button className="btn btn-sm btn-outline-secondary">Comment</button>
+                    <button className="btn btn-sm btn-outline-info">Share</button>
                 </div>
             </div>
         </div>
-    )
-}
+    );
+};
+
+export default PostCard

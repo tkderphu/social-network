@@ -1,8 +1,11 @@
 package viosmash.post.api;
 
+import viosmash.pojo.CommonResult;
+
 import java.util.Collection;
+import java.util.List;
 
 public interface PostApi {
 
-    void getPagePostByAuthorIds(Collection<Long> userIds);
+    CommonResult<List<PostDTO>> getPagePostByAuthorIds(Collection<Long> userIds);
 }

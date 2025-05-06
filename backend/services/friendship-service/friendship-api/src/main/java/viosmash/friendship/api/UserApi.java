@@ -22,5 +22,8 @@ public interface UserApi {
     @GetMapping("/friends/{userId}")
     List<Long> getListFriends(@PathVariable("userId") Long userId);
 
+    @GetMapping("/{userId}/recommendation")
+    CommonResult<List<UserDTO>> getListRecommendUser(@PathVariable("userId") Long userId);
+
 
 }

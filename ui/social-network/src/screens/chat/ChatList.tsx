@@ -1,13 +1,17 @@
-import { Link, Outlet, useParams } from "react-router"
+import { Link, Outlet, useLocation, useParams } from "react-router"
 import UserChatBox from "./UserChatBox"
 import "./Chat.css"
 function ChatList() {
     const { conversationId } = useParams()
+    const location = useLocation()
+
     return (
         <div className="row">
             <div className="col-3">
                 <div className="drop-down mt-3 user-chat " >
-                    <Link to={"6"} onClick={() => {
+                    <Link to={"6"} state={{
+                        backgroundLocation: location
+                    }} onClick={() => {
                         // onClickAddChatBox()
                     }}>
                         <div className="d-flex align-items-center">

@@ -10,4 +10,6 @@ public interface GroupApi {
 
     @GetMapping("/{id}")
     GroupDTO getGroup(@PathVariable("id") Long groupId);
+
+
 }
