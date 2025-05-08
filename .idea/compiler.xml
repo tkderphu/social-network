@@ -30,8 +30,8 @@
         </processorPath>
         <module name="newfeed-api" />
         <module name="notification-api" />
-        <module name="group-api" />
         <module name="chat-biz" />
+        <module name="group-api" />
         <module name="group-biz" />
         <module name="notification-biz" />
         <module name="redis" />

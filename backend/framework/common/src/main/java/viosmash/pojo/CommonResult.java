@@ -1,11 +1,13 @@
 package viosmash.pojo;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import viosmash.exception.ErrorCode;
 
 import java.util.function.Function;
 
 @Data
+@NoArgsConstructor
 public class CommonResult <T>{
 
     private String message;

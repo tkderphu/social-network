@@ -21,7 +21,7 @@ export default function PostForm() {
     setFile(e.target.files[0]);
   };
 
-  const [showDialog, setShowDialog] = useState(true)
+  const [showDialog, setShowDialog] = useState(false)
   return (
     <>
       <div className="card mb-3">
@@ -88,7 +88,9 @@ export default function PostForm() {
                 </label>
                 <input
                   type="file"
+                  accept="image/*,video/*"
                   className="form-control"
+                  multiple
                   id="file"
                   onChange={handleFileChange}
                 />

@@ -4,14 +4,44 @@ import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.function.Function;
+import java.util.function.Predicate;
 
 public class CollUtils {
+//    public static <U> List<U> convertList(Collection<U> collection, Predicate<U> filter) {
+//        if(CollectionUtils.isEmpty(collection)) {
+//            return Collections.emptyList();
+//        }
+//        return collection.stream().filter(filter).toList();
+//    }
+
     public static <T, U> List<T> convertList(Collection<U> collection, Function<U, T> func) {
         if(CollectionUtils.isEmpty(collection)) {
             return Collections.emptyList();
         }
         return collection.stream().map(func).toList();
     }
+
+    public static <T, U> List<T> convertList(Collection<U> collection,
+                                             Function<U, T> func,
+                                             Predicate<U> filterBeforeMap) {
+        if(CollectionUtils.isEmpty(collection)) {
+            return Collections.emptyList();
+        }
+        return collection.stream().filter(filterBeforeMap).map(func).toList();
+    }
+
+
+
+    public static <T, U> List<T> convertList(Collection<U> collection,
+                                             Function<U, T> func,
+                                             Predicate<U> filterBeforeMap,
+                                             Predicate<T> filterAfterMap) {
+        if(CollectionUtils.isEmpty(collection)) {
+            return Collections.emptyList();
+        }
+        return collection.stream().filter(filterBeforeMap).map(func).filter(filterAfterMap).toList();
+    }
+
 
     public static <T> List<T> convertList(T[] t) {
         List<T> list = new ArrayList<>();

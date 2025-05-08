@@ -11,4 +11,9 @@ public class GroupApiImpl implements GroupApi {
         return null;
     }
 
+    @Override
+    public Boolean existsInGroup(Long groupId, Long userId) {
+        return null;
+    }
+
 }

@@ -1,6 +1,7 @@
 package viosmash.post.api;
 
 import lombok.Data;
+import lombok.experimental.Accessors;
 import viosmash.group.api.GroupDTO;
 import viosmash.post.enums.PostType;
 import viosmash.profile.api.UserDTO;
@@ -8,6 +9,7 @@ import viosmash.profile.api.UserDTO;
 import java.util.List;
 
 @Data
+@Accessors(chain = true)
 public class PostDTO {
     private Long id;
     private String content;
@@ -20,4 +22,5 @@ public class PostDTO {
     private Integer numberOfShare;
     private Integer numReaction;
     private Integer numComment;
+    private Long createdDate;
 }

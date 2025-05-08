@@ -3,8 +3,17 @@ package viosmash.api;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import viosmash.collection.CollUtils;
+import viosmash.dal.dataobject.NewfeedItem;
+import viosmash.dal.redis.NewfeedItemRedis;
+import viosmash.dal.redis.NewfeedRedis;
+import viosmash.dal.redis.PostRedis;
+import viosmash.dal.repo.NewfeedItemRepository;
 import viosmash.friendship.api.UserApi;
 import viosmash.friendship.api.UserDTO;
 import viosmash.group.api.GroupApi;
@@ -13,34 +22,89 @@ import viosmash.pojo.CommonResult;
 import viosmash.post.api.PostApi;
 import viosmash.post.api.PostDTO;
 
+import java.util.Collection;
+import java.util.Date;
 import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
 @Slf4j
+@RequestMapping(NewfeedApi.PREFIX)
 public class NewfeedApiImpl implements NewfeedApi {
 
     private final UserApi userApi;
     private final PostApi postApi;
     private final GroupApi groupApi;
+    private final NewfeedItemRepository newfeedItemRepository;
+    private final PostRedis postRedis;
+    private final NewfeedRedis newfeedRedis;
+    private final NewfeedItemRedis newfeedItemRedis;
+
     @Override
     @PutMapping
     @Async
     public CommonResult<Boolean> updateNewFeed(PostDTO postDTO) {
+        if(postDTO.getGroup() != null) {
+            CommonResult<List<UserDTO>> membersResp = new CommonResult<>();
+            if(membersResp.getCode() == 200) {
+                storeNewfeed(postDTO, membersResp);
+            }
+            return CommonResult.success(true);
+        }
         CommonResult<List<UserDTO>> userResp = userApi.getListRecommendUser(postDTO.getUser().getId());
-        if(userResp.getCode() != 200) {
-            log.warn("[updateNewFeed(post: {}) -> error when fetch recommendation user]", postDTO);
-            throw new RuntimeException();
+        if(userResp.getCode() == 200) {
+            storeNewfeed(postDTO, userResp);
+            return CommonResult.success(true);
         }
 
-        CommonResult<List<UserDTO>> memberResp = null;
-        if(memberResp.getCode() != null) {
-            log.warn("[updateNewFeed(post: {}) -> error when fetch members ]", postDTO);
-            throw new RuntimeException();
-        }
+        return CommonResult.success(true);
+    }
 
+    private void storeNewfeed(PostDTO postDTO, CommonResult<List<UserDTO>> userResp) {
+        List<NewfeedItem> newfeedItems = newfeedItemRepository.saveAll(CollUtils.convertList(userResp.getData(), user -> {
+            return new NewfeedItem().setTimeline(new Date(postDTO.getCreatedDate()))
+                    .setIsRead(false).setIsAdvertised(0)
+                    .setUserId(user.getId()).setPostId(postDTO.getId());
+        }));
 
+        postRedis.setValue(postDTO.getId(), postDTO);
+        CollUtils.convertList(userResp.getData(), user -> {
+            newfeedRedis.setValue(user.getId(), List.of(postDTO));
+            return null;
+        });
 
+        newfeedItemRepository.saveAll(newfeedItems);
+    }
+
+    @Override
+    @Transactional
+    @PutMapping("/user/{userId}/post/{postId}")
+    public CommonResult<Boolean> updateRead(Long postId, Long userId) {
+        newfeedItemRepository.updateIsRead(postId, userId);
+        return CommonResult.success(true);
+    }
+
+    @Override
+    @PutMapping("/user/{userId}")
+    public CommonResult<Boolean> updateNewfeed(Long userId, Collection<PostDTO> posts) {
+        List<NewfeedItem> newfeedItems = CollUtils.convertList(posts, post -> {
+            return new NewfeedItem().setTimeline(new Date(post.getCreatedDate()))
+                    .setIsAdvertised(0).setIsRead(false)
+                    .setUserId(userId).setPostId(post.getId());
+        });
+        newfeedItemRepository.saveAll(newfeedItems);
+        return CommonResult.success(true);
+    }
+
+    @Override
+    @Transactional
+    @DeleteMapping("/user/{userId}")
+    public CommonResult<Boolean> deleteNewfeed(Long userId, Collection<Long> postIds) {
+        CollUtils.convertList(postIds, post -> {
+            newfeedItemRepository.deleteByUserIdAndPostId(userId, post);
+            return null;
+        });
         return null;
     }
+
 }
