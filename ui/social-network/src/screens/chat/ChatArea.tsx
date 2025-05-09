@@ -6,23 +6,13 @@ const messages = [
 ];
 
 export default function ChatArea(props: any) {
-    if (!props.selectedChat) {
-        return (
-            <div className="flex-grow-1 d-flex align-items-center justify-content-center bg-light">
-                <div className="text-center">
-                    <h1 className="display-4 fw-bold">sasas</h1>
-                    <p className="text-muted">Select a chat to start messaging</p>
-                </div>
-            </div>
-        );
-    }
-
+    
     return (
-        <div className="flex-grow-1 d-flex flex-column bg-white h-100">
+        <div className="container-fluid d-flex flex-column bg-white h-100">
             <div className="d-flex justify-content-between align-items-center p-4 border-bottom">
                 <div className="d-flex align-items-center">
-                    <img src={props.selectedChat.avatar} alt={props.selectedChat.name} className="rounded-circle me-3 chat-avatar" />
-                    <h2 className="fs-5 fw-bold mb-0">{props.selectedChat.name}</h2>
+                    <img src={props.selectedChat?.avatar} alt={props.selectedChat?.name} className="rounded-circle me-3 chat-avatar" />
+                    <h2 className="fs-5 fw-bold mb-0">{props.selectedChat?.name}</h2>
                 </div>
                 <button className="btn btn-outline-secondary">
                     <svg

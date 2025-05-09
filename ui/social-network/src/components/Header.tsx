@@ -31,6 +31,7 @@ function Header(props: { container: any, fn: any }) {
                     <li className={`nav-item ${nav === "group" ? "active" : ""}`}>
                         <Link className="nav-link" to='/groups' onClick={() => setNav("group")}>Groups</Link>
                     </li>
+                    
                 </ul>
                 <ul className="navbar-nav d-flex align-items-center flex-wrap">
                     <li className="nav-item dropleft">

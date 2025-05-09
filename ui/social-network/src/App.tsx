@@ -33,6 +33,13 @@ import { connectStomp } from './utils/stomp/stomp.client'
 import Messenger1 from './screens/chat/Messenger1'
 import ConversationInfo from './screens/chat/ConversationInfo'
 import Sidebar from './components/Sidebar'
+import FriendProfile from './screens/friend/FriendProfile'
+import ChatArea from './screens/chat/ChatArea'
+import ProfilePostComponent from './screens/profile/ProfilePostComponent'
+import PhotosComponent from './screens/profile/ProfilePhotosComponent'
+import ProfilePhotosComponent from './screens/profile/ProfilePhotosComponent'
+import ProfileAbouComponent from './screens/profile/ProfileAboutComponent'
+import ProfileFriendsComponent from './screens/profile/ProfileFriends'
 export interface HandleChat {
   handleClickChat: any,
   handleCloseChat: any
@@ -91,36 +98,51 @@ function App() {
               <Routes location={state?.backgroundLocation || location}>
                 <Route path='/' element={<Home />} />
                 <Route path='friends' element={<Friend />}>
-                  <Route element={<ListFriend type='MY' />} index></Route>
-                  <Route path='suggestions' element={<Suggestion />} />
-                  <Route path='requests' element={<FriendRequest />} />
-                  <Route path='accepts' element={<FriendAccept />} />
-                  <Route path='profile/:id' element={<ProfileScreen handleChat={{ handleClickChat, handleCloseChat }} />} />
+                  <Route element={<ListFriend type='MY' />} index />
+
+                  <Route path='suggestions' element={<Suggestion />} >
+                  </Route>
+
+                  <Route path='requests' element={<FriendRequest />} >
+                  </Route>
+
+                  <Route path='accepts' element={<FriendAccept />}>
+                  </Route>
+
+                  <Route path='profile/:id' element={<FriendProfile />}>
+                  </Route>
+
                 </Route>
-                <Route path='messages' element={<Messenger />} >
-                  <Route path='group' element={<GroupChatForm />} />
-                  {/* <Route index path=':conversationId' element={<UserChatBox removeThisUserChatboxFn={() => { }} />} /> */}
-                </Route>
+
                 <Route path='login' element={<LoginScreen />}></Route>
                 <Route path='register' element={<RegisterScreen />}></Route>
                 <Route path='forgot-password' element={<ForgotPassworScreen />}></Route>
-                <Route path='profile/:id' element={<ProfileScreen handleChat={{ handleClickChat, handleCloseChat }} />} ></Route>
+                
+                <Route path='profile/:id' element={<ProfileScreen />} >
+                <Route element={<ProfilePostComponent/>} index path='posts'/>
+                <Route element={<ProfilePhotosComponent/>} index path='photos'/>
+                <Route element={<ProfileAbouComponent/>} index path='about'/>
+                <Route element={<ProfileFriendsComponent/>} index path='friends'/>
+
+                </Route>
+                
                 <Route path='search' element={<SearchResult />}>
                   <Route index element={<UserSearchResult />} />
-                  <Route path='profile/:id' element={<ProfileScreen handleChat={{ handleClickChat, handleCloseChat }} />} />
+                  <Route path='profile/:id' element={<ProfileScreen />} />
                 </Route>
                 <Route path='search/posts' element={<PostSearchResult />}></Route>
-                <Route element={<Messenger1 />} path='inbox' />
-                <Route element={<ConversationInfo />} path='inbox1' />
+                <Route element={<Messenger1 />} path='inbox' >
+
+                  <Route element={<ChatArea />} path="c/:id" />
+                  {/* <Route elemen /> */}
+                </Route>
 
                 <Route path='groups' element={<Group />}>
                   {/* <Route path='joined' element={<GroupPage/>} /> */}
                   <Route path='feed' element={<NewFeed />} />
                   <Route path=':name' element={<GroupPage />} />
                 </Route>
-                {/* <Route path='posts' element={<Post />}>
 
-            </Route> */}
               </Routes>
               {state?.backgroundLocation && (
                 <Routes>

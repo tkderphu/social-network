@@ -7,7 +7,7 @@ import { ProfileUpdateInfoReqVO } from "../../model/profileModel"
 import { updateInfoProfile } from "../../redux/actions/profileAction"
 import profileService from "../../services/profile/profileService"
 
-function InfoComponent() {
+function ProfileAbouComponent() {
 
     const [updateInfoReq, setUpdateInfoReq] = useState<ProfileUpdateInfoReqVO>()
     const {loading, hasError, message} = useSelector((state: any) => {
@@ -50,12 +50,10 @@ function InfoComponent() {
                     <div className="form-floating mb-3 w-100">
                         <input type="date" className="form-control"  onChange={onChange}name='dataOfBirth' id="floatingInput" placeholder="name@example.com" />
                     </div>
-                    <Spinner loading={loading} />
-                    {hasError && <Alert  type="danger" message={message}/>}
                 </div>
             </div>
             <div className="card-footer"><button className="btn btn-primary w-100" onClick={onSubmit}>Edit</button></div>
         </div>
     )
 }
-export default InfoComponent
+export default ProfileAbouComponent

@@ -1,5 +1,5 @@
 
-function PhotosComponent() {
+function ProfilePhotosComponent() {
     return (
         <div className="mb-3">
             <div className="card">
@@ -37,4 +37,4 @@ function PhotosComponent() {
         </div>
     )
 }
-export default PhotosComponent
+export default ProfilePhotosComponent
