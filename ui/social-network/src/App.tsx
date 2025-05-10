@@ -23,7 +23,7 @@ import ListFriend from './screens/friend/ListFriend'
 import FriendAccept from './screens/friend/FriendAccept'
 import ChatList from './screens/chat/ChatList'
 import NewFeed from './screens/feed/NewFeed'
-import GroupPage from './screens/group/GroupPage'
+import GroupPage from './screens/group/GroupDetails'
 import UserSearchResult from './screens/search/UserSearchResult'
 import PostDetailDialog from './screens/post/PostDetailDialog'
 import Messenger from './screens/chat/Messenger'
@@ -40,6 +40,10 @@ import PhotosComponent from './screens/profile/ProfilePhotosComponent'
 import ProfilePhotosComponent from './screens/profile/ProfilePhotosComponent'
 import ProfileAbouComponent from './screens/profile/ProfileAboutComponent'
 import ProfileFriendsComponent from './screens/profile/ProfileFriends'
+import GroupDetails from './screens/group/GroupDetails'
+import GroupAbout from './screens/group/GroupAbout'
+import GroupPost from './screens/group/GroupPost'
+import GroupMember from './screens/group/GroupMember'
 export interface HandleChat {
   handleClickChat: any,
   handleCloseChat: any
@@ -140,7 +144,13 @@ function App() {
                 <Route path='groups' element={<Group />}>
                   {/* <Route path='joined' element={<GroupPage/>} /> */}
                   <Route path='feed' element={<NewFeed />} />
-                  <Route path=':name' element={<GroupPage />} />
+                  <Route path=':name' element={<GroupDetails />} >
+                    <Route path='about' element={<GroupAbout/>} />
+                    <Route path='posts'  element={<GroupPost/>}/>
+                    <Route index  element={<GroupPost/>}/>
+                    <Route path='members' element={<GroupMember/>} />
+                  </Route>
+
                 </Route>
 
               </Routes>

@@ -1,16 +1,28 @@
+import ModalCustome from "../../components/modal/ModalCustom"
+
 function GroupForm() {
     return (
         <>
-            <button type="button" className="w-100 mt-2 p-2 create-group" data-toggle="modal" data-target=".form-group">Large modal</button>
-
-            <div className="modal fade form-group" tabIndex={-1} role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div className="modal-dialog modal-lg">
-                    <div className="modal-content">
-                        ...
-                    </div>
-                </div>
+            <div className="form-group">
+                <label htmlFor="exampleInputEmail1">Email address</label>
+                <input type="email" className="form-control" id="exampleInputEmail1"
+                    // name='email' onChange={(e: any) => setState(e, setAuthLoginReq)}
+                    aria-describedby="emailHelp" placeholder="Enter email" />
             </div>
-
+            <div className="form-group">
+                <label htmlFor="exampleInputPassword1">Password</label>
+                <input type="password" className="form-control"
+                    // name='password' onChange={(e: any) => setState(e, setAuthLoginReq)}
+                    id="exampleInputPassword1" placeholder="Password" />
+            </div>
+            <div className="mb-2 d-flex justify-content-between">
+                <a href="/register">Register</a>
+                <a href="/forgot-password">Forgot password?</a>
+            </div>
+            {/* <Spinner loading={loading} /> */}
+            <button className="btn btn-primary w-100" onClick={() => {
+                // login()
+            }}>Submit</button>
         </>
     )
 }

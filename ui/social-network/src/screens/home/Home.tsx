@@ -105,7 +105,7 @@ function Home() {
                 ))}
             </div>
             <div className='col-4'>
-                {/* <h1>sasa</h1> */}
+                
             </div>
         </div>
     )
