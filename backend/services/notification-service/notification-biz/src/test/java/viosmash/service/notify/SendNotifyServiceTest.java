@@ -6,7 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import viosmash.BaseTest;
 import viosmash.controller.post.vo.template.NotifyTemplateCreatedReqVO;
 import viosmash.dal.dataobject.NotifyMessage;
-import viosmash.enums.NotificationType;
+import viosmash.notification.enums.NotificationType;
 
 import java.util.HashMap;
 import java.util.List;

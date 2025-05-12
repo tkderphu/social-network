@@ -8,7 +8,7 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
       </profile>
-      <profile name="Annotation profile for social-network Maven Webapp" enabled="true">
+      <profile name="Annotation profile for authentication Maven Webapp" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
@@ -30,8 +30,8 @@
         </processorPath>
         <module name="newfeed-api" />
         <module name="notification-api" />
-        <module name="chat-biz" />
         <module name="group-api" />
+        <module name="chat-biz" />
         <module name="group-biz" />
         <module name="notification-biz" />
         <module name="redis" />
@@ -46,7 +46,6 @@
         <module name="authentication" />
         <module name="post-api" />
         <module name="discovery-services" />
-        <module name="mq" />
         <module name="rpc" />
         <module name="test" />
         <module name="profile" />
@@ -63,6 +62,7 @@
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="comment-service" target="17" />
+      <module name="mq" target="17" />
       <module name="reaction-api" target="17" />
       <module name="reaction-biz" target="17" />
       <module name="reaction-service" target="17" />

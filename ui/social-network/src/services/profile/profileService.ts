@@ -1,8 +1,20 @@
 import api from "../../axios/interceptor"
 import { ProfileUpdateAddressReqVO, ProfileUpdateEducationReqVO, ProfileUpdateInfoReqVO } from "../../model/profileModel"
 
+export interface UserCreateReq {
+    firstName: string,
+    lastName: string,
+    isMale: boolean,
+    email: string
+    dateOfBirth: any,
+    password: string
+}
+
 const PATH = "/profiles"
 class ProfileService {
+    createUser(userCreateReq: UserCreateReq) {
+        return api.post(PATH, userCreateReq)
+    }
     updateInfo(info: ProfileUpdateInfoReqVO) {
         return api.put(`${PATH}`, info)
     }

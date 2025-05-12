@@ -5,6 +5,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import viosmash.dal.redis.ForgotCodeRedis;
 import viosmash.date.DateUtils;
 import viosmash.friendship.api.UserApi;
 import viosmash.friendship.api.UserDTO;
@@ -17,8 +18,11 @@ import viosmash.controller.post.vo.UserRespVO;
 import viosmash.controller.post.vo.UserUpdateInfoReqVO;
 import viosmash.dal.dataobject.User;
 import viosmash.dal.repository.UserRepository;
+import viosmash.random.RandomUtils;
+import viosmash.string.StringUtils;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 import static viosmash.exception.utils.ServiceUtils.exception;
@@ -32,7 +36,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordEncoder encoder;
     private final UserApi friendshipApi;
     private final viosmash.chat.api.UserApi chatUserApi;
-
+    private final ForgotCodeRedis forgotCodeRedis;
     @Override
     @Transactional
     public void createUser(UserCreateReqVO req) {
@@ -47,8 +51,8 @@ public class UserServiceImpl implements UserService {
                 .setCreatedDate(new Date())
                 .setIsOnline(false);
         userRepository.save(user);
-        friendshipApi.updateUser(BeanUtil.copy(user, UserDTO.class));
-        chatUserApi.updateUserInfo(BeanUtil.copy(user, viosmash.chat.api.UserDTO.class));
+//        friendshipApi.updateUser(BeanUtil.copy(user, UserDTO.class));
+//        chatUserApi.updateUserInfo(BeanUtil.copy(user, viosmash.chat.api.UserDTO.class));
     }
 
     @Override
@@ -108,6 +112,23 @@ public class UserServiceImpl implements UserService {
             return user;
         }
         throw exception(404, "password invalid");
+    }
+
+    @Override
+    public String forgotPassword(String email) {
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> exception(404, "email invalid"));
+
+        String forgotCode = RandomUtils.randomObject(String.class);
+        forgotCodeRedis.set(StringUtils.lower(email), forgotCode);
+
+        //notification
+        Map<String, Object> map = new HashMap<>();
+        map.put("fullName", user.getFirstName() + " " + user.getLastName());
+        map.put("joined", DateUtils.format(user.getCreatedDate()));
+        map.put("forgotCode", forgotCode);
+
+
     }
 
 }

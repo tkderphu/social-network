@@ -39,6 +39,13 @@ public class UserController {
         return CommonResult.success(true);
     }
 
+    @GetMapping("/forgot-password")
+    public CommonResult<String> forgotPassword(@RequestParam("email") String email) {
+        String message = userService.forgotPassword(email);
+        return CommonResult.success(message);
+    }
+
+
     @PutMapping("/policy")
     public CommonResult<Boolean> updatePolicy(@RequestBody Map<PolicyEnum, String> privates) {
         userService.updatePolicy(SecurityUtils.getLoginUserMemberId(), privates);

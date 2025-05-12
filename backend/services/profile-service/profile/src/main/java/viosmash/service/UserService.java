@@ -23,4 +23,5 @@ public interface UserService {
     User getUserById(Long userId);
     User checkUser(String email, String password);
 
+    String forgotPassword(String email);
 }

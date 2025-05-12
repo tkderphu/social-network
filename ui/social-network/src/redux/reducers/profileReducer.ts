@@ -1,5 +1,5 @@
 import { ACCEPT_FRIEND_REQUEST_BEGIN, ACCEPT_FRIEND_REQUEST_FAILED, ACCEPT_FRIEND_REQUEST_SUCCESS } from "../constants/friendshipConstant";
-import { FETCH_COMMON_PROFILE_BEGIN, FETCH_COMMON_PROFILE_FAILED, FETCH_COMMON_PROFILE_SUCCESS, UPDATE_ADDRESS_BEGIN, UPDATE_ADDRESS_FAIL, UPDATE_ADDRESS_SUCCESS, UPDATE_EDUCATION_BEGIN, UPDATE_EDUCATION_FAIL, UPDATE_EDUCATION_SUCCESS, UPDATE_INFO_BEGIN, UPDATE_INFO_FAIL, UPDATE_INFO_SUCCESS, UPLOAD_PERSONAL_IMAGE_BEGIN, UPLOAD_PERSONAL_IMAGE_FAIL, UPLOAD_PERSONAL_IMAGE_SUCCESS } from "../constants/profileConstant";
+import { ACCOUNT_CREATE_BEGIN, ACCOUNT_CREATE_FAIL, ACCOUNT_CREATE_SUCCESS, FETCH_COMMON_PROFILE_BEGIN, FETCH_COMMON_PROFILE_FAILED, FETCH_COMMON_PROFILE_SUCCESS, UPDATE_ADDRESS_BEGIN, UPDATE_ADDRESS_FAIL, UPDATE_ADDRESS_SUCCESS, UPDATE_EDUCATION_BEGIN, UPDATE_EDUCATION_FAIL, UPDATE_EDUCATION_SUCCESS, UPDATE_INFO_BEGIN, UPDATE_INFO_FAIL, UPDATE_INFO_SUCCESS, UPLOAD_PERSONAL_IMAGE_BEGIN, UPLOAD_PERSONAL_IMAGE_FAIL, UPLOAD_PERSONAL_IMAGE_SUCCESS } from "../constants/profileConstant";
 
 export const updateInfoReducer = (state = {}, action: any) => {
     switch(action.type) {
@@ -21,6 +21,30 @@ export const updateInfoReducer = (state = {}, action: any) => {
             }
         }
         default: return state
+    }
+}
+
+export const createUserReducer = (state = {}, action: any) => {
+    switch(action.type) {
+        case ACCOUNT_CREATE_BEGIN: {
+            return {
+                loading: true
+            }
+        }
+        case ACCOUNT_CREATE_SUCCESS: {
+            return {
+                loading: false,
+                success: true
+            }
+        }
+        case ACCOUNT_CREATE_FAIL: {
+            return {
+                loading: false,
+                hasError: true,
+                message: action.payload.message
+            }
+        }
+        default: return state;
     }
 }
 export const updateEducationReducer = (state = {}, action: any) => {

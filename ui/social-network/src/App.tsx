@@ -44,6 +44,8 @@ import GroupDetails from './screens/group/GroupDetails'
 import GroupAbout from './screens/group/GroupAbout'
 import GroupPost from './screens/group/GroupPost'
 import GroupMember from './screens/group/GroupMember'
+import ProtectedRoute from './components/ProtectedRoute'
+import LogoutScreen from './screens/authen/Logout'
 export interface HandleChat {
   handleClickChat: any,
   handleCloseChat: any
@@ -100,57 +102,61 @@ function App() {
             </div>
             <div className='col-md-11'>
               <Routes location={state?.backgroundLocation || location}>
-                <Route path='/' element={<Home />} />
-                <Route path='friends' element={<Friend />}>
-                  <Route element={<ListFriend type='MY' />} index />
-
-                  <Route path='suggestions' element={<Suggestion />} >
-                  </Route>
-
-                  <Route path='requests' element={<FriendRequest />} >
-                  </Route>
-
-                  <Route path='accepts' element={<FriendAccept />}>
-                  </Route>
-
-                  <Route path='profile/:id' element={<FriendProfile />}>
-                  </Route>
-
-                </Route>
 
                 <Route path='login' element={<LoginScreen />}></Route>
                 <Route path='register' element={<RegisterScreen />}></Route>
                 <Route path='forgot-password' element={<ForgotPassworScreen />}></Route>
-                
-                <Route path='profile/:id' element={<ProfileScreen />} >
-                <Route element={<ProfilePostComponent/>} index path='posts'/>
-                <Route element={<ProfilePhotosComponent/>} index path='photos'/>
-                <Route element={<ProfileAbouComponent/>} index path='about'/>
-                <Route element={<ProfileFriendsComponent/>} index path='friends'/>
 
-                </Route>
-                
-                <Route path='search' element={<SearchResult />}>
-                  <Route index element={<UserSearchResult />} />
-                  <Route path='profile/:id' element={<ProfileScreen />} />
-                </Route>
-                <Route path='search/posts' element={<PostSearchResult />}></Route>
-                <Route element={<Messenger1 />} path='inbox' >
+                <Route element={<ProtectedRoute />}>
+                  <Route path='/' element={<Home />} />
+                  <Route path='logout' element={<LogoutScreen/>} />
+                  <Route path='friends' element={<Friend />}>
+                    <Route element={<ListFriend type='MY' />} index />
 
-                  <Route element={<ChatArea />} path="c/:id" />
-                  {/* <Route elemen /> */}
-                </Route>
+                    <Route path='suggestions' element={<Suggestion />} >
+                    </Route>
 
-                <Route path='groups' element={<Group />}>
-                  {/* <Route path='joined' element={<GroupPage/>} /> */}
-                  <Route path='feed' element={<NewFeed />} />
-                  <Route path=':name' element={<GroupDetails />} >
-                    <Route path='about' element={<GroupAbout/>} />
-                    <Route path='posts'  element={<GroupPost/>}/>
-                    <Route index  element={<GroupPost/>}/>
-                    <Route path='members' element={<GroupMember/>} />
+                    <Route path='requests' element={<FriendRequest />} >
+                    </Route>
+
+                    <Route path='accepts' element={<FriendAccept />}>
+                    </Route>
+
+                    <Route path='profile/:id' element={<FriendProfile />}>
+                    </Route>
+
                   </Route>
 
+                  <Route path='profile/:id' element={<ProfileScreen />} >
+                    <Route element={<ProfilePostComponent />} index path='posts' />
+                    <Route element={<ProfilePhotosComponent />} index path='photos' />
+                    <Route element={<ProfileAbouComponent />} index path='about' />
+                    <Route element={<ProfileFriendsComponent />} index path='friends' />
+
+                  </Route>
+
+                  <Route path='search' element={<SearchResult />}>
+                    <Route index element={<UserSearchResult />} />
+                    <Route path='profile/:id' element={<ProfileScreen />} />
+                  </Route>
+                  <Route path='search/posts' element={<PostSearchResult />}></Route>
+                  <Route element={<Messenger1 />} path='inbox' >
+
+                    <Route element={<ChatArea />} path="c/:id" />
+                    {/* <Route elemen /> */}
+                  </Route>
+
+                  <Route path='groups' element={<Group />}>
+                    {/* <Route path='joined' element={<GroupPage/>} /> */}
+                    <Route path='feed' element={<NewFeed />} />
+                    <Route path=':name' element={<GroupDetails />} >
+                      <Route path='about' element={<GroupAbout />} />
+                      <Route path='posts' element={<GroupPost />} />
+                      <Route index element={<GroupPost />} />
+                      <Route path='members' element={<GroupMember />} />
+                    </Route>
+
+                  </Route>
                 </Route>
 
               </Routes>

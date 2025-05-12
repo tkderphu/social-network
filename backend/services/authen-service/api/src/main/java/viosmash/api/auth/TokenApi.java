@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import viosmash.enums.ApiConstant;
 
 
-@FeignClient(name = ApiConstant.NAME, path = ApiConstant.PREFIX + "/token", contextId = "tokenApi")
+@FeignClient(name = ApiConstant.NAME, path = ApiConstant.PREFIX + "/token")
 public interface TokenApi {
 
     String PREFIX = ApiConstant.PREFIX + "/token";

@@ -8,6 +8,7 @@ import org.springframework.web.server.WebFilter;
 import org.springframework.web.server.WebFilterChain;
 import reactor.core.publisher.Mono;
 import viosmash.LoginUser;
+import viosmash.api.auth.TokenApi;
 import viosmash.pojo.CommonResult;
 import viosmash.utils.SecurityFrameworkUtils;
 
@@ -16,14 +17,14 @@ import java.net.URI;
 @Component
 @RequiredArgsConstructor
 public class AuthenticationTokenFilter implements WebFilter {
-    private final WebClient webClient;
+    private final WebClient.Builder webClientBuilder;
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         String token = SecurityFrameworkUtils.obtainTokenFromHeader(exchange);
         if(token == null || token.isEmpty()) {
             return chain.filter(exchange);
         }
-        return webClient.get().uri(uri -> {
+        return webClientBuilder.baseUrl(TokenApi.URL_CHECK).build().get().uri(uri -> {
                     URI accessToken = uri.queryParam("accessToken", token).build();
                     System.out.println(accessToken);
                     return accessToken;

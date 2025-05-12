@@ -1,7 +1,8 @@
+import { useNavigate } from "react-router"
 import { CommonResult, TokenUtils } from "../../common"
 import { ProfileUpdateAddressReqVO, ProfileUpdateEducationReqVO, ProfileUpdateInfoReqVO, UserProfileResp } from "../../model/profileModel"
-import profileService from "../../services/profile/profileService"
-import { FETCH_BASIC_INFO_USER_BEGIN, FETCH_COMMON_PROFILE_BEGIN, FETCH_COMMON_PROFILE_FAILED, FETCH_COMMON_PROFILE_SUCCESS, FETCH_INFO_USER_ADDRESS_BEGIN, FETCH_INFO_USER_EDUCATION_BEGIN, UPDATE_ADDRESS_BEGIN, UPDATE_ADDRESS_FAIL, UPDATE_EDUCATION_BEGIN, UPDATE_EDUCATION_FAIL, UPDATE_INFO_BEGIN, UPDATE_INFO_FAIL, UPDATE_INFO_SUCCESS, UPDATE_PERSONAL_GALLERY_IMAGES_BEGIN, UPLOAD_PERSONAL_IMAGE_BEGIN, UPLOAD_PERSONAL_IMAGE_FAIL } from "../constants/profileConstant"
+import profileService, { UserCreateReq } from "../../services/profile/profileService"
+import { ACCOUNT_CREATE_BEGIN, ACCOUNT_CREATE_FAIL, ACCOUNT_CREATE_SUCCESS, FETCH_BASIC_INFO_USER_BEGIN, FETCH_COMMON_PROFILE_BEGIN, FETCH_COMMON_PROFILE_FAILED, FETCH_COMMON_PROFILE_SUCCESS, FETCH_INFO_USER_ADDRESS_BEGIN, FETCH_INFO_USER_EDUCATION_BEGIN, UPDATE_ADDRESS_BEGIN, UPDATE_ADDRESS_FAIL, UPDATE_EDUCATION_BEGIN, UPDATE_EDUCATION_FAIL, UPDATE_INFO_BEGIN, UPDATE_INFO_FAIL, UPDATE_INFO_SUCCESS, UPDATE_PERSONAL_GALLERY_IMAGES_BEGIN, UPLOAD_PERSONAL_IMAGE_BEGIN, UPLOAD_PERSONAL_IMAGE_FAIL } from "../constants/profileConstant"
 
 export const updateInfoProfile = (userId: number, updateInfoReq: ProfileUpdateInfoReqVO) => {
     return (dispatch: any) => {
@@ -229,3 +230,36 @@ export const fetchInfoEducationAction = () => {
     }
 }
 
+
+
+export const createUserAction = (userCreateReq: UserCreateReq) => {
+    return (dispatch: any) => {
+        dispatch({
+            type: ACCOUNT_CREATE_BEGIN
+        })
+        profileService.createUser(userCreateReq).then(response => {
+            const data: CommonResult<any> = response.data;
+            if(data.code === 200) {
+                dispatch({
+                    type: ACCOUNT_CREATE_SUCCESS
+                })
+            } else {
+                dispatch({
+                    type: ACCOUNT_CREATE_FAIL,
+                    payload: {
+                        message: data.message,
+                        status: data.code
+                    }
+                })
+            }
+        }).catch(err => {
+            dispatch({
+                type: ACCOUNT_CREATE_FAIL,
+                payload: {
+                    message: err.message,
+                    status: err.status
+                }
+            })
+        })
+    }
+}

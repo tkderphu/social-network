@@ -4,9 +4,12 @@ import jakarta.annotation.security.PermitAll;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import viosmash.controller.post.vo.AuthLoginReqVO;
 import viosmash.controller.post.vo.AuthLoginRespVO;
+import viosmash.core.utils.LoginUser;
+import viosmash.core.utils.SecurityUtils;
 import viosmash.pojo.CommonResult;
 import viosmash.service.auth.AuthService;
 
@@ -27,8 +30,10 @@ public class AuthController {
     }
 
 
-    @PostMapping("/logout")
-    public CommonResult<Boolean> logout(HttpServletRequest request) {
+    @GetMapping("/logout")
+    public CommonResult<Boolean> logout() {
+        LoginUser userLogin = SecurityUtils.getLoginUserMember();
+        authService.logout(userLogin.getAccessToken(), userLogin.getRefreshToken());
         return success(true);
     }
 

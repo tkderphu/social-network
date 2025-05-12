@@ -16,7 +16,6 @@
     <module>config-server</module>
     <module>discovery-services</module>
     <module>dependencies</module>
-    <module>framework/mq</module>
     <module>framework/security</module>
     <module>framework/redis</module>
     <module>services/authen-service</module>

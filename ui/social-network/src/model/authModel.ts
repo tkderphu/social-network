@@ -8,10 +8,7 @@ export interface AuthLoginRespVO {
     refreshToken?: string 
     expires: number
 }
-export interface AuthRegisterReqVO {
-    email?: string, password?: string, firstName?: string, 
-    lastName?: string, dob?: any, sex?: "MALE" | "FEMALE"
-}
+
 export interface AuthInitPasswordReqVO {
 
 }

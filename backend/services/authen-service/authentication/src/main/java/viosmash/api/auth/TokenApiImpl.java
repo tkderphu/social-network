@@ -20,7 +20,11 @@ public class TokenApiImpl implements TokenApi{
     @Override
     @GetMapping("/check")
     public AuthTokenDTO checkAccessToken(@RequestParam("accessToken") String accessToken) {
-        AuthAccessToken authAccessToken = this.authTokenService.getAccessToken(accessToken);
-        return BeanUtil.copy(authAccessToken, AuthTokenDTO.class);
+        try {
+            AuthAccessToken authAccessToken = this.authTokenService.getAccessToken(accessToken);
+            return BeanUtil.copy(authAccessToken, AuthTokenDTO.class);
+        } catch (Exception ex) {
+            return null;
+        }
     }
 }

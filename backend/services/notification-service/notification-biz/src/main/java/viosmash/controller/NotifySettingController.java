@@ -17,7 +17,7 @@ public class NotifySettingController {
     public CommonResult<NotifySetting> getNotifySetting() {
         return CommonResult.success(notifySettingService.getSetting(SecurityUtils.getLoginUserMemberId()));
     }
-    @PutMapping("/user//friend/{enable}")
+    @PutMapping("/user/friend/{enable}")
     public CommonResult<Boolean> updateEnableFriendAction(@PathVariable("enable") Boolean enable) {
         notifySettingService.updateNotifyFriendAction(SecurityUtils.getLoginUserMemberId(), enable);
         return CommonResult.success(true);

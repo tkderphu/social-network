@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
-import viosmash.enums.NotificationType;
+import viosmash.notification.enums.NotificationType;
 
 @Component
 @RequiredArgsConstructor

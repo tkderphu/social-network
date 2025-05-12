@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { Link } from "react-router";
 
+
+
 export default function Sidebar(){
-    const [useLink, setUseLik] = useState<"HOME" | "PROFILE" | "NOTIFICATIONS" | "FRIENDS" | "GROUPS" | "INBOX">("HOME")
+    const [useLink, setUseLik] = useState<"HOME" | "PROFILE" | "NOTIFICATIONS" | "FRIENDS" | "GROUPS" | "INBOX" | "LOGOUT">("HOME")
     return (
         <div className="d-flex flex-column bg-light vh-100 p-3" style={{ position: 'fixed', top: 0, left: 0 }}>
             <ul className="nav nav-pills flex-column">
@@ -35,6 +37,12 @@ export default function Sidebar(){
                     <Link to={"/groups"} className={`nav-link ${useLink === 'NOTIFICATIONS' ? "active" : ""}`} onClick={() => {
                         setUseLik("NOTIFICATIONS")
                     }}><i className="bi bi-bell " style={{fontSize: "24px"}}></i></Link>
+                </li>
+                <li className="nav-item">
+                <Link to={"/logout"} className={`nav-link ${useLink === 'LOGOUT' ? "active" : ""}`} onClick={() => {
+                        setUseLik("LOGOUT")
+                    }}><i className="fa fa-sign-out" style={{fontSize: "24px"}}></i></Link>
+
                 </li>
             </ul>
         </div>

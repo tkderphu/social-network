@@ -11,7 +11,7 @@ public class GatewayApplicationConfig {
 
     @Bean
     @LoadBalanced
-    public WebClient webClient() {
-        return WebClient.builder().baseUrl(TokenApi.URL_CHECK).build();
+    public WebClient.Builder webClient() {
+        return WebClient.builder();
     }
 }

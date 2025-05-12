@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import viosmash.collection.CollUtils;
 import viosmash.controller.post.vo.template.NotifyTemplateCreatedReqVO;
 import viosmash.dal.dataobject.NotifyTemplate;
-import viosmash.enums.NotificationType;
+import viosmash.notification.enums.NotificationType;
 import viosmash.pojo.CommonResult;
 import viosmash.service.notify.NotifyTemplateService;
 

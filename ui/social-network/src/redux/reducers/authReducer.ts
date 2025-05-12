@@ -1,6 +1,6 @@
+import { ac } from "react-router/dist/development/route-data-BmvbmBej";
 import { ACCOUNT_LOGIN_BEGIN, ACCOUNT_LOGIN_SUCCESS, REDIRECT, 
-    ACCOUNT_CREATE_BEGIN, ACCOUNT_CREATE_SUCCESS, ACCOUNT_CREATE_FAIL ,
-    ACCOUNT_FORGOT_PASSWORD_BEGIN, ACCOUNT_FORGOT_PASSWORD_FAIL, ACCOUNT_FORGOT_PASSWORD_SUCCESS, ACCOUNT_LOGIN_FAIL
+    ACCOUNT_FORGOT_PASSWORD_BEGIN, ACCOUNT_FORGOT_PASSWORD_FAIL, ACCOUNT_FORGOT_PASSWORD_SUCCESS, ACCOUNT_LOGIN_FAIL, LOGOUT_BEGIN, LOGOUT_SUCCESS
 } from "../constants/authenConstant";
 
 
@@ -28,28 +28,25 @@ export const loginReducer = (state = {}, action: any) => {
         default: return state
     }
 }
-export const registerReducer = (state = {}, action: any) => {
+
+
+export const logoutReducer = (state = {}, action: any) => {
     switch(action.type) {
-        case ACCOUNT_CREATE_BEGIN: {
+        case LOGOUT_BEGIN: {
             return {
                 loading: true
             }
         }
-        case ACCOUNT_CREATE_SUCCESS: {
-            return {
-                loading: false
-            }
-        }
-        case ACCOUNT_CREATE_FAIL: {
+        case LOGOUT_SUCCESS: {
             return {
                 loading: false,
-                hasError: true,
-                message: action.payload.message
+                success: action.payload
             }
         }
-        default: return state;
+        default: return state
     }
 }
+
 export const forgotPasswordReducer = (state = {}, action: any) => {
     switch(action.type) {
         case ACCOUNT_FORGOT_PASSWORD_BEGIN: {

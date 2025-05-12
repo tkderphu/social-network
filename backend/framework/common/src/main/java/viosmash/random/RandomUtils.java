@@ -11,7 +11,7 @@ public class RandomUtils {
     static  {
         easyRandom = new EasyRandom();
         EasyRandomParameters parameters = new EasyRandomParameters();
-        parameters.setStringLengthRange(new EasyRandomParameters.Range<>(6, 6));
+        parameters.setStringLengthRange(new EasyRandomParameters.Range<>(12, 12));
         parameters.setCollectionSizeRange(new EasyRandomParameters.Range<>(5, 5));
     }
     public static <T> T randomObject(Class<T> clazz) {

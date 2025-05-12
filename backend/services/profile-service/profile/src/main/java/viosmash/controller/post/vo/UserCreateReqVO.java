@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.Data;
 
+import java.util.Date;
+
 @Data
 public class UserCreateReqVO {
 
@@ -18,7 +20,7 @@ public class UserCreateReqVO {
 
     @NotEmpty(message = "Your email can't be empty")
     private String email;
-
+    private Date dateOfBirth;
     @Size(message = "Your password must equal greater than 8", min = 8)
     private String password;
 }
