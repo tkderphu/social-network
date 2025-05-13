@@ -1,5 +1,5 @@
 import { CommonResult, TokenUtils } from "../../common"
-import { ACCOUNT_FORGOT_PASSWORD_BEGIN, ACCOUNT_FORGOT_PASSWORD_FAIL, ACCOUNT_FORGOT_PASSWORD_SUCCESS, ACCOUNT_INIT_PASSWORD_BEGIN, ACCOUNT_INIT_PASSWORD_FAIL, ACCOUNT_INIT_PASSWORD_SUCCESS, ACCOUNT_LOGIN_BEGIN, ACCOUNT_LOGIN_FAIL, ACCOUNT_LOGIN_SUCCESS, LOGOUT_BEGIN, LOGOUT_SUCCESS, REDIRECT } from "../constants/authenConstant"
+import {  ACCOUNT_INIT_PASSWORD_BEGIN, ACCOUNT_INIT_PASSWORD_FAIL, ACCOUNT_INIT_PASSWORD_SUCCESS, ACCOUNT_LOGIN_BEGIN, ACCOUNT_LOGIN_FAIL, ACCOUNT_LOGIN_SUCCESS, LOGOUT_BEGIN, LOGOUT_SUCCESS, REDIRECT } from "../constants/authenConstant"
 import authenService from "../../services/auth/authenService"
 import { AuthInitPasswordReqVO, AuthLoginReqVO } from "../../model/authModel"
 
@@ -106,34 +106,3 @@ export const initPasswordAction = (authInitPassword: AuthInitPasswordReqVO) => {
     }
 }
 
-export const forgotPasswordAction = (email: string) => {
-    return (dispatch: any) => {
-        dispatch({
-            type: ACCOUNT_FORGOT_PASSWORD_BEGIN
-        })
-        authenService.forgotPassword(email).then(response => {
-            const data: CommonResult<any> = response.data
-            if (data.code === 200) {
-                dispatch({
-                    type: ACCOUNT_FORGOT_PASSWORD_SUCCESS
-                })
-            } else {
-                dispatch({
-                    type: ACCOUNT_FORGOT_PASSWORD_FAIL,
-                    payload: {
-                        message: data.message,
-                        status: data.code
-                    }
-                })
-            }
-        }).catch(err => {
-            dispatch({
-                type: ACCOUNT_FORGOT_PASSWORD_FAIL,
-                payload: {
-                    message: err.message,
-                    status: err.status
-                }
-            })
-        })
-    }
-}

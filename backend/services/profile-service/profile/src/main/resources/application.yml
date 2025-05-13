@@ -5,5 +5,5 @@ spring:
     name: profile-service
   redis:
     host: localhost
-    port: 4555
+    port: 6379
     timeToLive: 5 #minutes

@@ -24,4 +24,8 @@ public interface UserService {
     User checkUser(String email, String password);
 
     String forgotPassword(String email);
+
+    void updateNewPassword(String email, String newPassword);
+
+    void changePassword(Long userId, String oldPassword, String oldPassword1);
 }

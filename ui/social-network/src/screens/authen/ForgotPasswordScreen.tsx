@@ -2,20 +2,29 @@
 import { useState } from "react"
 import "./Authen.css"
 import { useSelector, useDispatch } from 'react-redux'
-import { forgotPasswordAction } from "../../redux/actions/authAction"
 import Spinner from "../../components/Spinner"
+import { forgotPasswordAction } from "../../redux/actions/profileAction"
+import { Navigate } from "react-router"
 function ForgotPassworScreen() {
     const [email, setEmail] = useState('')
 
     
     const dispatch = useDispatch()
-    const { loading, hasError, message } = useSelector((state: any) => {
+    const { loading, hasError, message, success } = useSelector((state: any) => {
         return state.forgotPassword
     })
      
     const submitForgotPassword = () => {
         //@ts-ignore
         dispatch(forgotPasswordAction(email))
+    }
+
+
+    if(success) {
+        return <Navigate to={"/forgot-password-code"} state={{
+            email: email.toLocaleLowerCase(),
+            message: message
+        }}  replace={true} />
     }
 
     return (

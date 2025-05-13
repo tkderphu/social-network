@@ -15,20 +15,28 @@ public class ForgotCodeRedis {
     private final RedisTemplate<String, String> redisTemplate;
     @Value("${spring.redis.timeToLive}")
     private int timeToLive;
-    public void set(String email, String code) {
-        redisTemplate.opsForValue().set(formatKey(email), code, Duration.ofMinutes(timeToLive));
+    public void set(String code, String email) {
+        redisTemplate.opsForValue().set(formatKey(code), email , Duration.ofMinutes(timeToLive));
     }
 
-    public String get(String email) {
-        String key = formatKey(email);
+    public String get(String code) {
+        String key = formatKey(code);
         if(redisTemplate.hasKey(key)) {
             return redisTemplate.opsForValue().get(key);
         }
         throw exception(400, "your forgot code invalid");
     }
 
-    public String formatKey(String email) {
-        String commonKey = "%s_FORGOT_CODE";
-        return String.format(commonKey, email);
+    public String formatKey(String code) {
+        String commonKey = "FORGOT_CODE_%s";
+        return String.format(commonKey, code);
+    }
+
+    public int getTimeToLive() {
+        return timeToLive;
+    }
+
+    public void clear(String code) {
+        redisTemplate.delete(formatKey(code));
     }
 }

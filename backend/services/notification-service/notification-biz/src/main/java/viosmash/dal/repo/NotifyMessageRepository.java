@@ -1,7 +1,5 @@
 package viosmash.dal.repo;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -17,16 +15,16 @@ public interface NotifyMessageRepository extends JpaRepository<NotifyMessage, Lo
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE NotifyMessage n set n.read = :read where n.id = :id")
+    @Query(value = "UPDATE NotifyMessage n set n.seen = :read where n.id = :id")
     void updateReadById(@Param("read") Boolean read,@Param("id") Long id);
 
     @Modifying
     @Transactional
-    @Query(value = "UPDATE NotifyMessage n set n.read = :read where n.userId = :userId")
+    @Query(value = "UPDATE NotifyMessage n set n.seen = :read where n.userId = :userId")
     void updateReadByUserId(@Param("read") Boolean read,@Param("userId") Long userId);
 
-    @Query("select count(*) from NotifyMessage n where n.read = false and n.userId = :userId")
+    @Query("select count(*) from NotifyMessage n where n.seen = false and n.userId = :userId")
     int countUnreadNotifyByUserId(@Param("userId") Long userId);
 
-    List<NotifyMessage> findAllByUserIdAndRead(Long userId, boolean read);
+    List<NotifyMessage> findAllByUserIdAndSeen(Long userId, boolean seen);
 }

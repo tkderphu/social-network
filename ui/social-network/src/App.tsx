@@ -46,6 +46,8 @@ import GroupPost from './screens/group/GroupPost'
 import GroupMember from './screens/group/GroupMember'
 import ProtectedRoute from './components/ProtectedRoute'
 import LogoutScreen from './screens/authen/Logout'
+import ForgotPassworCodeScreen from './screens/authen/ForgotPasswordCodeScreen'
+import CreateNewPasswordScreen from './screens/authen/CreateNewPasswordScreen'
 export interface HandleChat {
   handleClickChat: any,
   handleCloseChat: any
@@ -105,7 +107,9 @@ function App() {
 
                 <Route path='login' element={<LoginScreen />}></Route>
                 <Route path='register' element={<RegisterScreen />}></Route>
-                <Route path='forgot-password' element={<ForgotPassworScreen />}></Route>
+                <Route path='forgot-password' element={<ForgotPassworScreen />}/>
+                <Route path='forgot-password-code' element={<ForgotPassworCodeScreen/>}/>
+                <Route path='new-password' element={<CreateNewPasswordScreen/>}/>
 
                 <Route element={<ProtectedRoute />}>
                   <Route path='/' element={<Home />} />

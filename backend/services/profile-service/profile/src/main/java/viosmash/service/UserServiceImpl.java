@@ -2,6 +2,7 @@ package viosmash.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -9,6 +10,9 @@ import viosmash.dal.redis.ForgotCodeRedis;
 import viosmash.date.DateUtils;
 import viosmash.friendship.api.UserApi;
 import viosmash.friendship.api.UserDTO;
+import viosmash.notification.api.NotificationApi;
+import viosmash.notification.api.NotificationDto;
+import viosmash.notification.enums.NotificationType;
 import viosmash.object.BeanUtil;
 import viosmash.profile.constant.AddressEnum;
 import viosmash.profile.constant.PolicyEnum;
@@ -37,6 +41,7 @@ public class UserServiceImpl implements UserService {
     private final UserApi friendshipApi;
     private final viosmash.chat.api.UserApi chatUserApi;
     private final ForgotCodeRedis forgotCodeRedis;
+    private final ApplicationContext applicationContext;
     @Override
     @Transactional
     public void createUser(UserCreateReqVO req) {
@@ -120,15 +125,42 @@ public class UserServiceImpl implements UserService {
                 .orElseThrow(() -> exception(404, "email invalid"));
 
         String forgotCode = RandomUtils.randomObject(String.class);
-        forgotCodeRedis.set(StringUtils.lower(email), forgotCode);
+        forgotCodeRedis.set(forgotCode, StringUtils.lower(email));
 
         //notification
         Map<String, Object> map = new HashMap<>();
         map.put("fullName", user.getFirstName() + " " + user.getLastName());
         map.put("joined", DateUtils.format(user.getCreatedDate()));
         map.put("forgotCode", forgotCode);
+        map.put("email", StringUtils.lower(email));
+        map.put("expires", forgotCodeRedis.getTimeToLive());
 
+        NotificationDto dto = new NotificationDto();
+        dto.setType(NotificationType.FORGOT_PASSWORD);
+        dto.setProperties(map);
 
+        applicationContext.publishEvent(dto);
+        log.info("forgot password code sent to user");
+        return String.format("We have sent to your email with code for initial password, please enter it here.");
+    }
+
+    @Override
+    public void updateNewPassword(String email, String newPassword) {
+        User user = userRepository.findByEmailIgnoreCase(email)
+                .orElseThrow(() -> exception(404, "email invalid"));
+
+        user.setPassword(encoder.encode(newPassword));
+
+        this.userRepository.save(user);
+    }
+
+    @Override
+    public void changePassword(Long userId, String oldPassword, String newPassword) {
+        User user = getUserById(userId);
+        if(!encoder.matches(oldPassword, user.getPassword())) {
+            throw exception(404, "Password not match");
+        }
+        user.setPassword(encoder.encode(newPassword));
     }
 
 }

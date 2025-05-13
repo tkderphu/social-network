@@ -1,0 +1,26 @@
+server:
+  port: 8085
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/social_network_notification_service?createDatabaseIfNotExist=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: quangphu2060@gmail.com
+    password: moyu hiyp hfms vttm
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

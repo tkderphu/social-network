@@ -22,7 +22,7 @@ public class NotifyMessageServiceImpl implements NotifyMessageService{
                                              NotifyTemplate template,
                                              Map<String, Object> templateParams) {
         NotifyMessage notifyMessage = new NotifyMessage().setCreatedAt(LocalDateTime.now())
-                .setRead(false).setUserId(userId)
+                .setSeen(false).setUserId(userId)
                 .setNotifyTemplate(template).setTemplateParams(templateParams);
         return this.notifyMessageRepository.save(notifyMessage);
     }
@@ -34,7 +34,7 @@ public class NotifyMessageServiceImpl implements NotifyMessageService{
 
     @Override
     public List<NotifyMessage> getListUnreadNotify(Long userId) {
-        return this.notifyMessageRepository.findAllByUserIdAndRead(userId, false);
+        return this.notifyMessageRepository.findAllByUserIdAndSeen(userId, false);
     }
 
     @Override

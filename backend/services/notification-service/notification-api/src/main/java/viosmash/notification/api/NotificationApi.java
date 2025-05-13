@@ -14,7 +14,6 @@ public interface NotificationApi {
     String PREFIX = ApiConstant.RPC_PREFIX;
 
     @PostMapping("/send")
-    @Async
     void sendNotification(@RequestBody NotificationDto req);
 
 

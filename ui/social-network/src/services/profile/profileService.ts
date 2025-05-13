@@ -30,6 +30,19 @@ class ProfileService {
     fetchProfileUser(userId: number) {
         return api.get(`${PATH}/${userId}`)
     }
-    
+    forgotPassword(email: string) {
+        return api.get(`${PATH}/forgot-password?email=${email}`)
+    }
+
+    updateNewPassword(req: UserUpdateNewPassword) {
+        return api.put(`${PATH}/init-password`, req)
+    }
+    checkforgotPasswordCode(code: string) {
+        return api.get(`${PATH}/forgot-password/code/${code}`)
+    }
+}
+export interface UserUpdateNewPassword {
+    newPassword: string,
+    codeForgotPassword: string
 }
 export default new ProfileService()

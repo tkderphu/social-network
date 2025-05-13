@@ -1,18 +1,29 @@
-#spring:
-#  cloud:
-#    discovery:
-#      enabled: false
-#
-#eureka:
-#  client:
-#    enabled: false
-#
-#feign:
-#  client:
-#    enabled: false
+
+
+eureka:
+  client:
+    enabled: false
+
+feign:
+  client:
+    enabled: false
 
 
 spring:
+  cloud:
+    discovery:
+      enabled: false
   datasource:
     url: jdbc:h2:mem:testdb;MODE=MYSQL;DATABASE_TO_UPPER=false;NON_KEYWORDS=value;
     driver-class-name: org.h2.Driver
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: quangphu2060@gmail.com
+    password: moyu hiyp hfms vttm
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true

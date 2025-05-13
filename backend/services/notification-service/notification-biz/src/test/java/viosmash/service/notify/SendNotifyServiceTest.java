@@ -1,57 +1,70 @@
 package viosmash.service.notify;
 
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import viosmash.BaseTest;
-import viosmash.controller.post.vo.template.NotifyTemplateCreatedReqVO;
-import viosmash.dal.dataobject.NotifyMessage;
+import viosmash.notification.api.NotificationApi;
+import viosmash.notification.api.NotificationDto;
 import viosmash.notification.enums.NotificationType;
+import viosmash.service.mail.MailService;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
+import java.util.Scanner;
+
+import static viosmash.notification.enums.NotificationType.FORGOT_PASSWORD;
 
 class SendNotifyServiceTest extends BaseTest {
+
+    @Autowired
+    private MailService mailService;
     @Autowired
     private SendNotifyService sendNotifyService;
-    @Autowired
-    private NotifyTemplateService notifyTemplateService;
-    @Autowired
-    private NotifyMessageService notifyMessageService;
+    @MockitoBean
+    private NotificationApi notificationApi;
+    @Test
+    void testMail() {
+        mailService.sendMail("quangphu2050@gmail.com", "hello world", "vl");
+        System.out.println("vcl");
+    }
+
     @Test
     void sendNotifyMessage() {
-        NotifyTemplateCreatedReqVO req = new NotifyTemplateCreatedReqVO();
-        req.setName("Notify to user when received follower");
-        req.setId(NotificationType.FOLLOW_USER.name());
-        String input = "<li class='list-group-item notify-background d-flex align-items-start {{read}}'>\n" +
-                "    <img\n" +
-                "        src='{{userAvatar}}'\n" +
-                "        alt='avatar'\n" +
-                "        class='rounded-circle me-3'\n" +
-                "        width='40'\n" +
-                "        height='40'\n" +
-                "    />\n" +
-                "    <div class='flex-grow-1'>\n" +
-                "        <div class='mb-1'>\n" +
-                "            <strong>{{userFullName}}</strong> đã theo doi ban\n" +
-                "        </div>\n" +
-                "        <small class='text-muted'>{{time}}</small>\n" +
-                "    </div>\n" +
-                "</li>\n";
-        req.setContent(input);
-        notifyTemplateService.createNotifyTemplate(req);
-        Map<String, Object> templateParams = new HashMap<>();
-        templateParams.put("read", "");
-        templateParams.put("userAvatar", "hehe");
-        templateParams.put("userFullName", "dasdasd");
-        templateParams.put("time", "2h");
+    }
 
-        sendNotifyService.sendNotifyMessage(1l, NotificationType.FOLLOW_USER.name(), templateParams);
+    @Test
+    void notifySingleMessage() {
+    }
 
-        List<NotifyMessage> listNotify = notifyMessageService.getListNotify(1l);
-        System.out.println(listNotify.get(0).getContent());
-        Assertions.assertEquals(listNotify.size(), 1l);
+    @Test
+    void mailNotifySingleMessage() {
+        Mockito.doAnswer(invocation -> {
+            NotificationDto dto = invocation.getArgument(0); // get the method argument
+            sendNotifyService.mailNotifySingleMessage(
+                    dto.getProperties(),
+                    dto.getType(),
+                    "Forgot password"
+            );
 
+            // Your custom logic here
+            // e.g., simulate side effects or assert intermediate state
+
+            return null; // because the method returns void
+        }).when(notificationApi).sendNotification(Mockito.any(NotificationDto.class));
+        Map<String, Object> map = new HashMap<>();
+        map.put("email", "quangphu2050@gmail.com");
+        map.put("fullName", "Phu Quang");
+        map.put("forgotCode", "23532or523tfwekfjwelft");
+        map.put("joined", "2025-05-12 11:23:33");
+        map.put("expires", 5);
+        NotificationDto dto = new NotificationDto();
+        dto.setProperties(map);
+        dto.setType(FORGOT_PASSWORD);
+        notificationApi.sendNotification(dto);
+
+        System.out.println("----------------------send success---------------------");
+        new Scanner(System.in).nextLine();
     }
 }

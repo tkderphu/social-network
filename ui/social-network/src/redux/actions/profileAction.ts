@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router"
 import { CommonResult, TokenUtils } from "../../common"
 import { ProfileUpdateAddressReqVO, ProfileUpdateEducationReqVO, ProfileUpdateInfoReqVO, UserProfileResp } from "../../model/profileModel"
-import profileService, { UserCreateReq } from "../../services/profile/profileService"
-import { ACCOUNT_CREATE_BEGIN, ACCOUNT_CREATE_FAIL, ACCOUNT_CREATE_SUCCESS, FETCH_BASIC_INFO_USER_BEGIN, FETCH_COMMON_PROFILE_BEGIN, FETCH_COMMON_PROFILE_FAILED, FETCH_COMMON_PROFILE_SUCCESS, FETCH_INFO_USER_ADDRESS_BEGIN, FETCH_INFO_USER_EDUCATION_BEGIN, UPDATE_ADDRESS_BEGIN, UPDATE_ADDRESS_FAIL, UPDATE_EDUCATION_BEGIN, UPDATE_EDUCATION_FAIL, UPDATE_INFO_BEGIN, UPDATE_INFO_FAIL, UPDATE_INFO_SUCCESS, UPDATE_PERSONAL_GALLERY_IMAGES_BEGIN, UPLOAD_PERSONAL_IMAGE_BEGIN, UPLOAD_PERSONAL_IMAGE_FAIL } from "../constants/profileConstant"
+import profileService, { UserCreateReq, UserUpdateNewPassword } from "../../services/profile/profileService"
+import { ACCOUNT_CREATE_BEGIN,ACCOUNT_FORGOT_PASSWORD_BEGIN, ACCOUNT_FORGOT_PASSWORD_FAIL, ACCOUNT_FORGOT_PASSWORD_SUCCESS, ACCOUNT_CREATE_FAIL, ACCOUNT_CREATE_SUCCESS, FETCH_BASIC_INFO_USER_BEGIN, FETCH_COMMON_PROFILE_BEGIN, FETCH_COMMON_PROFILE_FAILED, FETCH_COMMON_PROFILE_SUCCESS, FETCH_INFO_USER_ADDRESS_BEGIN, FETCH_INFO_USER_EDUCATION_BEGIN, UPDATE_ADDRESS_BEGIN, UPDATE_ADDRESS_FAIL, UPDATE_EDUCATION_BEGIN, UPDATE_EDUCATION_FAIL, UPDATE_INFO_BEGIN, UPDATE_INFO_FAIL, UPDATE_INFO_SUCCESS, UPDATE_PERSONAL_GALLERY_IMAGES_BEGIN, UPLOAD_PERSONAL_IMAGE_BEGIN, UPLOAD_PERSONAL_IMAGE_FAIL, CHECK_FORGOT_PASSWORD_CODE_BEGIN, CHECK_FORGOT_PASSWORD_CODE_SUCCESS, CHECK_FORGOT_PASSWORD_CODE_FAIL, CREATE_NEW_PASSWORD_BEGIN, CREATE_NEW_PASSWORD_SUCCESS, CREATE_NEW_PASSWORD_FAIL } from "../constants/profileConstant"
 
 export const updateInfoProfile = (userId: number, updateInfoReq: ProfileUpdateInfoReqVO) => {
     return (dispatch: any) => {
@@ -231,6 +231,106 @@ export const fetchInfoEducationAction = () => {
 }
 
 
+export const createNewPasswordAction = (req: UserUpdateNewPassword) => {
+    return (dispatch: any) => {
+        dispatch({
+            type: CREATE_NEW_PASSWORD_BEGIN
+        })
+        profileService.updateNewPassword(req).then(response => {
+            const data: CommonResult<any> = response.data
+            if (data.code === 200) {
+                dispatch({
+                    type: CREATE_NEW_PASSWORD_SUCCESS,
+                    payload: data.data
+                })
+            } else {
+                dispatch({
+                    type: CREATE_NEW_PASSWORD_FAIL,
+                    payload: {
+                        message: data.message,
+                        status: data.code
+                    }
+                })
+            }
+        }).catch(err => {
+            dispatch({
+                type: CREATE_NEW_PASSWORD_FAIL,
+                payload: {
+                    message: err.message,
+                    status: err.status
+                }
+            })
+        })
+    }
+}
+
+
+export const checkForgotPasswordCodeAction = (code: string) => {
+    return (dispatch: any) => {
+        dispatch({
+            type: CHECK_FORGOT_PASSWORD_CODE_BEGIN
+        })
+        profileService.checkforgotPasswordCode(code).then(response => {
+            const data: CommonResult<any> = response.data
+            if (data.code === 200) {
+                dispatch({
+                    type: CHECK_FORGOT_PASSWORD_CODE_SUCCESS,
+                    payload: data.data
+                })
+            } else {
+                dispatch({
+                    type: CHECK_FORGOT_PASSWORD_CODE_FAIL,
+                    payload: {
+                        message: data.message,
+                        status: data.code
+                    }
+                })
+            }
+        }).catch(err => {
+            dispatch({
+                type: CHECK_FORGOT_PASSWORD_CODE_FAIL,
+                payload: {
+                    message: err.message,
+                    status: err.status
+                }
+            })
+        })
+    }
+}
+
+
+export const forgotPasswordAction = (email: string) => {
+    return (dispatch: any) => {
+        dispatch({
+            type: ACCOUNT_FORGOT_PASSWORD_BEGIN
+        })
+        profileService.forgotPassword(email).then(response => {
+            const data: CommonResult<any> = response.data
+            if (data.code === 200) {
+                dispatch({
+                    type: ACCOUNT_FORGOT_PASSWORD_SUCCESS,
+                    payload: data.data
+                })
+            } else {
+                dispatch({
+                    type: ACCOUNT_FORGOT_PASSWORD_FAIL,
+                    payload: {
+                        message: data.message,
+                        status: data.code
+                    }
+                })
+            }
+        }).catch(err => {
+            dispatch({
+                type: ACCOUNT_FORGOT_PASSWORD_FAIL,
+                payload: {
+                    message: err.message,
+                    status: err.status
+                }
+            })
+        })
+    }
+}
 
 export const createUserAction = (userCreateReq: UserCreateReq) => {
     return (dispatch: any) => {

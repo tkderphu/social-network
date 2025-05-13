@@ -1,8 +1,8 @@
 import {combineReducers} from 'redux'
-import { forgotPasswordReducer, loginReducer, logoutReducer, redirectReducer } from './authReducer'
+import { loginReducer, logoutReducer, redirectReducer } from './authReducer'
 import { cancelFriendReducer, cancelMakeFriendRequestReducer, createFriendRequestReducer, fetchStatusBetweenUserReducer, rejectMakeFriendRequestReducer } from './friendshipReducer'
 import { countUnreadMessageReducer, fetchNotifyMessagesReducer, fetchNotifySettingReducer, updateNotifyChatReducer, updateNotifyCommentReducer, updateNotifyFriendReducer, updateNotifyReactionReducer } from './notificationReducer'
-import { acceptMakeFriendRequestReducer, createUserReducer, fetchProfileReducer, updateAddressReducer, updateEducationReducer, updateInfoReducer, uploadPersonalImageReducer } from './profileReducer'
+import { acceptMakeFriendRequestReducer, checkForgotPasswordCodeReducer, createNewPasswordReducer, createUserReducer, fetchProfileReducer, forgotPasswordReducer, updateAddressReducer, updateEducationReducer, updateInfoReducer, uploadPersonalImageReducer } from './profileReducer'
 const rootReducer = combineReducers({
     uploadPersonalImage: uploadPersonalImageReducer,
     updateInfo: updateInfoReducer,
@@ -15,6 +15,8 @@ const rootReducer = combineReducers({
     login: loginReducer,
     logout: logoutReducer,
     forgotPassword: forgotPasswordReducer,
+    checkForgotPasswordCode: checkForgotPasswordCodeReducer,
+    createNewPassword: createNewPasswordReducer,
     //friendship
     fetchStatusBetweenUser: fetchStatusBetweenUserReducer,
     createFriendRequest: createFriendRequestReducer,
