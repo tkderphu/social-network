@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface MessageService {
     void createMessage(MessageCreateReqVO req);
-    List<MessageRespVO> getListMessage(Long conversationId, Long beforeMessageId, int limit);
+    List<MessageRespVO> getListMessage(String conversationId, Long beforeMessageId, int limit);
 }

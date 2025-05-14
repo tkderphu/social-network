@@ -30,7 +30,7 @@ export const TokenUtils = {
         localStorage.removeItem("jwt")
     },
     //@ts-ignore
-    authLogin: localStorage.getItem("jwt") == null ? {} : JSON.parse(localStorage.getItem("jwt")) as AuthLoginRespVO,
+    authLogin: (localStorage.getItem("jwt") == null ? {} : JSON.parse(localStorage.getItem("jwt"))) as AuthLoginRespVO,
     //@ts-ignore
     tokenIsExpired: localStorage.getItem("jwt") == null ? true : (JSON.parse(localStorage.getItem("jwt")) as AuthLoginRespVO).expires < new Date().getMilliseconds()
 }

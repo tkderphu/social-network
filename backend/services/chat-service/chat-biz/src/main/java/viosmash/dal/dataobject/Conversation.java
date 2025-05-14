@@ -20,8 +20,7 @@ import java.util.List;
 @Table(name = "tblConversation")
 public  class Conversation {
     @Id
-    @GeneratedValue(strategy =   GenerationType.IDENTITY)
-    private Long id;
+    private String id;
     protected String nickname;
     protected String thumbnail;
     private LocalDateTime createdAt;

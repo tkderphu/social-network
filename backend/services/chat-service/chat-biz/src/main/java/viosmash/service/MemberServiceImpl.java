@@ -27,20 +27,20 @@ public class MemberServiceImpl implements MemberService{
     private final MemberConversationRepository memberConversationRepository;
     @Override
     @Transactional
-    public void leave(Long userId, Long conversationId) {
+    public void leave(Long userId, String conversationId) {
     }
 
     @Override
     @ConversationPermission(errorMessage = "you can't kick member")
     @Transactional
-    public void kick(Long conversationId, Collection<Long> userIds) {
+    public void kick(String conversationId, Collection<Long> userIds) {
         userIds.forEach(userId -> leave(userId, conversationId));
     }
 
     @Override
     @Transactional
     @ConversationPermission(errorMessage = "conversation policy didn't allow you invite")
-    public void invite(Long conversationId, Collection<Long> userIds) {
+    public void invite(String conversationId, Collection<Long> userIds) {
         Set<MemberConversation> memberConversations = userIds.stream().map(userId -> {
             return new MemberConversation()
                     .setConversation(new Conversation().setId(conversationId))
@@ -54,7 +54,7 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
-    public Set<MemberRespVO> getListMemberConversationId(Long conversationId) {
+    public Set<MemberRespVO> getListMemberConversationId(String conversationId) {
         List<MemberConversation> members = this.memberConversationRepository.findAllByConversationId(conversationId);
         return members.stream().map(mc -> {
             return BeanUtil.copy(mc.getMember(), MemberRespVO.class)

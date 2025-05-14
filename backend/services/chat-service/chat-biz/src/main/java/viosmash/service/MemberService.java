@@ -7,8 +7,8 @@ import java.util.Collection;
 import java.util.Set;
 
 public interface MemberService {
-    void leave(Long userId, Long conversationId);
-    void kick(Long conversationId, Collection<Long> userIds);
-    void invite(Long conversationId, Collection<Long> userIds);
-    Set<MemberRespVO> getListMemberConversationId(Long conversationId);
+    void leave(Long userId, String conversationId);
+    void kick(String conversationId, Collection<Long> userIds);
+    void invite(String conversationId, Collection<Long> userIds);
+    Set<MemberRespVO> getListMemberConversationId(String conversationId);
 }

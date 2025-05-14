@@ -3,28 +3,27 @@ import { Client, Message } from '@stomp/stompjs';
 import SockJS from 'sockjs-client';
 import { TokenUtils } from '../../common';
 import { ConversationRespVO } from '../../services/chat/conversationService';
-import { USER_CHAT_TOPIC, USER_ESTABLISHED_CHAT_TOPIC } from './stomp.topic';
 
 
 
 let stompClient: Client | null = null;
-export function connectStomp(): void {
+export function connectStomp(path: string): void {
     stompClient = new Client({
-        brokerURL: 'ws://localhost:8080/chat/ws',
-        reconnectDelay: 5000,
-        connectHeaders: {
-            Authorization: `Bearer ${TokenUtils.authLogin.accessToken}`,
-            // You can add more headers here if needed
-        },
-        onConnect: () => {
-            console.log("connectd websocket")
-        },
-        onStompError: () => {
-            console.log('err connected')
-        },
-        onWebSocketError: (err: any) => {
-            console.log("error with websocket", err)
-        }
+      brokerURL: `${import.meta.env.VITE_WEBSOCKET_URL}/${path}`,
+      reconnectDelay: 5000,
+      connectHeaders: {
+        Authorization: `Bearer ${TokenUtils.authLogin.accessToken}`,
+        // You can add more headers here if needed
+      },
+      onConnect: () => {
+        console.log("connectd websocket")
+      },
+      onStompError: () => {
+        console.log('err connected')
+      },
+      onWebSocketError: (err: any) => {
+        console.log("error with websocket", err)
+      }
     });
 
     stompClient.activate()

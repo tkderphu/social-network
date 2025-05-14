@@ -9,7 +9,7 @@ import java.util.Collection;
 @Schema(name = "MemberInviteReqVO")
 public class MemberInviteReqVO {
     @Schema(description = "conversation id", defaultValue = "1", requiredMode = Schema.RequiredMode.REQUIRED)
-    private Long conversationId;
+    private String conversationId;
     @Schema(description = "list user id", requiredMode = Schema.RequiredMode.REQUIRED)
     private Collection<Long> userIds;
 }

@@ -36,7 +36,6 @@ import Sidebar from './components/Sidebar'
 import FriendProfile from './screens/friend/FriendProfile'
 import ChatArea from './screens/chat/ChatArea'
 import ProfilePostComponent from './screens/profile/ProfilePostComponent'
-import PhotosComponent from './screens/profile/ProfilePhotosComponent'
 import ProfilePhotosComponent from './screens/profile/ProfilePhotosComponent'
 import ProfileAbouComponent from './screens/profile/ProfileAboutComponent'
 import ProfileFriendsComponent from './screens/profile/ProfileFriends'
@@ -48,47 +47,21 @@ import ProtectedRoute from './components/ProtectedRoute'
 import LogoutScreen from './screens/authen/Logout'
 import ForgotPassworCodeScreen from './screens/authen/ForgotPasswordCodeScreen'
 import CreateNewPasswordScreen from './screens/authen/CreateNewPasswordScreen'
+import { useStompClient } from './utils/useStomp'
 export interface HandleChat {
   handleClickChat: any,
   handleCloseChat: any
 }
 function App() {
-
-  const [activeChats, setActiveChats] = useState<any>([]);
-
-  const handleClickChat = (chatComponent: any) => {
-    // Kiểm tra nếu user chưa có trong danh sách chat thì mới thêm
-    // if (!activeChats.find(chat => chat.id === user.id)) {
-    //   setActiveChats([...activeChats, user]);
-    // }
-    console.log("add new chat")
-    setActiveChats([...activeChats, chatComponent])
-  };
-
-  const handleCloseChat = () => {
-    // setActiveChats(activeChats.filter(chat => chat.id !== id));
-  };
-
+  useStompClient({ path: "chat/ws" });
 
   useEffect(() => {
-    handleClickChat(<UserChatBox removeThisUserChatboxFn={() => { }} user={{
-      firstName: "phu",
-      lastName: "quang",
-      userId: 1,
-      imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqoI2cNU899-rcC6ssdw8W8h8TsZlLIR-peA&s"
-    }} />)
-    // connectStomp()
   }, [])
 
 
-
-  const [userChatBoxs, setUserChatBoxs] = useState<Array<any>>()
   const location = useLocation();
   const state = location.state as { backgroundLocation?: Location };
   console.log("location: ", location)
-  if (!["/login", "/forgot-password", "/register"].includes(location.pathname) && !TokenUtils.tokenIsExpired) {
-
-  }
 
   return (
     <>
@@ -147,6 +120,7 @@ function App() {
                   <Route element={<Messenger1 />} path='inbox' >
 
                     <Route element={<ChatArea />} path="c/:id" />
+                    <Route element={<ChatArea/>}  path="c/u/:id"/>
                     {/* <Route elemen /> */}
                   </Route>
 

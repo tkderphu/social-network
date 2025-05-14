@@ -69,3 +69,16 @@
     width: 20px;
     height: 20px;
 }
+
+.hide-scrollbar {
+    scrollbar-width: none; /* Firefox */
+    -ms-overflow-style: none; /* IE 10+ */
+  }
+  
+  .hide-scrollbar::-webkit-scrollbar {
+    display: none; /* Chrome, Safari, Opera */
+  }
+
+  .comments-section::-webkit-scrollbar {
+    display: none;
+  }

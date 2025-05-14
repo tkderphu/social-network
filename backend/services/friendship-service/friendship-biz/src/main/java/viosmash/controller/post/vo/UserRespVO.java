@@ -2,7 +2,7 @@ package viosmash.controller.post.vo;
 
 import lombok.Getter;
 import lombok.Setter;
-import viosmash.profile.api.UserDTO;
+import viosmash.friendship.api.UserDTO;
 
 import java.util.List;
 

@@ -36,7 +36,7 @@ public class MessageController {
     @GetMapping("/conversation/{conversationId}")
     @Operation(summary = "get list message in conversation")
     public CommonResult<List<MessageRespVO>> getListMessageByConversation(
-            @PathVariable("conversationId") Long conversationId,
+            @PathVariable("conversationId") String conversationId,
             @RequestParam(value = "before", required = false, defaultValue = "0") Long beforeMessageId,
             @RequestParam(value = "limit", defaultValue = "20") int limit
     ) {

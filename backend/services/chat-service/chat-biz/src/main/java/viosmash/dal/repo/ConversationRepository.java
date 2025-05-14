@@ -8,7 +8,7 @@ import viosmash.dal.dataobject.Conversation;
 import java.util.List;
 import java.util.Set;
 
-public interface ConversationRepository extends JpaRepository<Conversation, Long> {
+public interface ConversationRepository extends JpaRepository<Conversation, String> {
 
 
     @Query("SELECT c, me FROM Conversation c INNER JOIN Message me on c.id = me.conversation.id \n" +

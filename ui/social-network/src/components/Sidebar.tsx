@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router";
+import { TokenUtils } from "../common";
 
 
 
@@ -14,7 +15,7 @@ export default function Sidebar(){
                     }}><i className="bi bi-house-door " style={{fontSize: "24px"}}></i></Link>
                 </li>
                 <li className="nav-item">
-                    <Link to={"/profile/1"} className={`nav-link ${useLink === 'PROFILE' ? "active" : ""}`} onClick={() => {
+                    <Link to={"/profile/" + TokenUtils.authLogin.userId} className={`nav-link ${useLink === 'PROFILE' ? "active" : ""}`} onClick={() => {
                         setUseLik("PROFILE")
                     }}><i className="bi bi-person " style={{fontSize: "24px"}}></i></Link>
                 </li>

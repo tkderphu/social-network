@@ -8,7 +8,6 @@ import viosmash.controller.conversation.vo.*;
 import viosmash.controller.message.vo.MessageRespVO;
 import viosmash.dal.dataobject.Conversation;
 import viosmash.dal.dataobject.ConversationType;
-import viosmash.dal.dataobject.Member;
 import viosmash.dal.repo.ConversationRepository;
 import viosmash.dal.repo.MessageRepository;
 import viosmash.exception.ServiceException;
@@ -31,12 +30,12 @@ public class ConversationServiceImpl implements ConversationService{
     private final MessageRepository messageRepository;
     @Override
     @Transactional(rollbackFor = ServiceException.class)
-    public Long createConversation(Long ownerId, ConversationCreateReq req) {
+    public String createConversation(Long ownerId, ConversationCreateReq req) {
         Conversation conversation = BeanUtil.copy(req, Conversation.class)
                 .setCreatedAt(LocalDateTime.now())
                 .setConversationType(ConversationType.PUBLIC);
 
-        Long conversationId = conversationRepository.save(conversation).getId();
+        String conversationId = conversationRepository.save(conversation).getId();
         memberService.invite(conversation.getId(), req.getUserIds());
 
         return conversationId;
@@ -67,7 +66,7 @@ public class ConversationServiceImpl implements ConversationService{
     }
 
     @Override
-    public ConversationRespVO getConversationById(Long conversationId) {
+    public ConversationRespVO getConversationById(String conversationId) {
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> exception(404, "conversation not found"));
         ConversationRespVO resp = copy(conversation, ConversationRespVO.class)

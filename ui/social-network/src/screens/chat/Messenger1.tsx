@@ -8,7 +8,7 @@ export default function Messenger1() {
     return (
         <div className="mt-2">
             <div className="row">
-                <div className="col-md-4 sticky-sidebar">
+                <div className="col-md-4 sticky-sidebar hide-bar">
                     <div className="d-flex flex-column">
                         <ChatList1 />
                     </div>

@@ -56,7 +56,6 @@ export default function Messenger() {
             localStorage.setItem("chat-messages", JSON.stringify(defaultData));
         }
         
-        connectStomp()
     }, []);
 
     const chat: any = chatData[selectedUser.id] || [];

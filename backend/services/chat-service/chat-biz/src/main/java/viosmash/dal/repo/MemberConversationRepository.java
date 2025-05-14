@@ -7,5 +7,5 @@ import java.util.List;
 import java.util.Set;
 
 public interface MemberConversationRepository extends JpaRepository<MemberConversation, Long> {
-    List<MemberConversation> findAllByConversationId(Long conversationId);
+    List<MemberConversation> findAllByConversationId(String conversationId);
 }

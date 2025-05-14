@@ -12,7 +12,7 @@ public class MessageRespVO {
     private Long id;
 
     private MemberRespVO sender;
-    private Long conversationId;
+    private String conversationId;
     private String message;
 
     private List<String> images;

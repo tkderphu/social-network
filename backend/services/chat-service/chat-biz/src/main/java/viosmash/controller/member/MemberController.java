@@ -31,7 +31,7 @@ public class MemberController {
     @DeleteMapping("/conversation/{conversationId}/kick")
     @Operation(summary = "Kick list member from conversation")
     public CommonResult<Boolean> kick(
-            @PathVariable("conversationId") Long conversationId,
+            @PathVariable("conversationId") String conversationId,
             @RequestBody Collection<Long> userIds) {
         memberService.kick(conversationId, userIds);
         return  CommonResult.success(true);
@@ -39,7 +39,7 @@ public class MemberController {
 
     @DeleteMapping("/conversation/{conversationId}/leave")
     @Operation(summary = "leave conversation by member")
-    public CommonResult<Boolean> leave(@PathVariable("conversationId") Long conversationId) {
+    public CommonResult<Boolean> leave(@PathVariable("conversationId") String conversationId) {
         memberService.leave(SecurityUtils.getLoginUserMemberId(), conversationId);
         return CommonResult.success(true);
     }
@@ -47,7 +47,7 @@ public class MemberController {
     @GetMapping("/conversation/{conversationId}")
     @Operation(summary = "get list member in conversation")
     public CommonResult<Set<MemberRespVO>> getListMember(
-            @PathVariable("conversationId") Long conversationId
+            @PathVariable("conversationId") String conversationId
     ) {
         return CommonResult.success(memberService.getListMemberConversationId(conversationId));
     }

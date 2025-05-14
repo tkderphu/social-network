@@ -1,18 +1,182 @@
+import { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, useLocation, useParams } from "react-router";
+import Alert from "../../components/Alert";
+import Spinner from "../../components/Spinner";
+import { ProfileSimpleResp, UserProfileResp } from "../../model/profileModel";
+import { fetchProfileAction } from "../../redux/actions/profileAction";
+import { MessageCreateReqVO, MessageRespVO } from "../../services/chat/messageService";
+import { useStompClient } from "../../utils/useStomp";
 import "./Chat.css"
-const messages = [
-    { id: 1, sender: "Alex Johnson", text: "Hey, what's up?", time: "10:30 AM" },
-    { id: 2, sender: "You", text: "Not much, just chilling!", time: "10:32 AM" },
-    { id: 3, sender: "Alex Johnson", text: "Cool, wanna grab coffee?", time: "10:35 AM" },
-];
+
+
+
+const allMessages = Array.from({ length: 500 }, (_, i) => ({
+    id: i + 1,
+    sender: i % 2 === 0 ? "You" : "Alex Johnson",
+    text: `Message #${i + 1}`,
+    time: `${Math.floor(Math.random() * 12) + 10}:${Math.floor(Math.random() * 60)}`,
+}));
+
+const MESSAGES_PER_PAGE = 20;
 
 export default function ChatArea(props: any) {
+    const location = useLocation()
+    const { id } = useParams()
+    const [establishedConversation, setEstablishedConversation] = useState<boolean>(false)
+    const [messageReq, setMessageReq] = useState<MessageCreateReqVO>({
+        conversationId: id
+    })
+    const [listMsg, setListMsg] = useState<any>()
+    const fetchListMessageState: {
+        loading: boolean,
+        message: any,
+        hasError: boolean,
+        messages: MessageRespVO[]
+    } = useSelector((state: any) => {
+        return state.fetchListMessage
+    })
+    const fetchUserState: {
+        userProfile: ProfileSimpleResp,
+        loading: boolean,
+        hasError: boolean,
+        message: any
+    } = useSelector((state: any) => {
+        return state.fetchProfile
+    })
+
+    const stompClient = useStompClient({ path: "chat/ws" })
+
+
+    const sendMessageToConversation = () => {
+        setListMsg((prev: any) => [...prev, { id: 2, sender: "You", text: "Not much, just chilling!", time: "10:32 AM" }])
+        // stompClient?.publish({
+        //     destination: "/app/chat/send",
+        //     body: JSON.stringify(messageReq),
+        // })
+    }
+
+
+
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        if (location.state && location.state.userId) {
+            //@ts-ignore
+            dispatch(fetchProfileAction(location.state.userId))
+        }
+
+        if (!location.pathname.includes("/u/")) {
+            setEstablishedConversation(true)
+        }
+
+
+    }, [])
+
+
+
+    const scrollContainerRef = useRef<HTMLDivElement>(null);
+    const [messages, setMessages] = useState<any[]>([]);
+    const [page, setPage] = useState(0);
+    const [hasMore, setHasMore] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
+
+    // Load initial messages
+    useEffect(() => {
+        loadMoreMessages(false);
+    }, []);
+
+    // Scroll handler
+    const handleScroll = () => {
+        console.log('vcl')
+        // const container = scrollContainerRef.current;
+        // if (!container || isLoading || !hasMore) return;
+
+        // if (container.scrollTop <= 50) {
+        //     loadMoreMessages();
+        // }
+    };
+
+    const loadMoreMessages = (initial = false) => {
+        setIsLoading(true);
+
+        const nextPage = page + 1;
+        const start = allMessages.length - nextPage * MESSAGES_PER_PAGE;
+        const end = start + MESSAGES_PER_PAGE;
+
+        const newMessages = allMessages.slice(Math.max(0, start), end);
+
+        if (newMessages.length === 0) {
+            setHasMore(false);
+            setIsLoading(false);
+            return;
+        }
+
+        const scrollYBefore = window.scrollY;
+        const bodyHeightBefore = document.body.scrollHeight;
+        
+        setMessages((prev) => [...newMessages, ...prev]);
+        setPage(nextPage);
+        
+        setTimeout(() => {
+            const bodyHeightAfter = document.body.scrollHeight;
+            const scrollDifference = bodyHeightAfter - bodyHeightBefore
+        
+            if (!initial) {
+                window.scrollTo({
+                    top: scrollYBefore + scrollDifference,
+                    behavior: "smooth",
+                });
+            } else {
+                window.scrollTo({
+                    top: document.body.scrollHeight,
+                    behavior: "smooth",
+                });
+            }
+        
+            setIsLoading(false);
+        }, 1000);
+        
+    };
+
+
+    useEffect(() => {
+        const handleWindowScroll = () => {
+            console.log("win down scroll")
+            if (window.scrollY <= 50 && !isLoading && hasMore) {
+                loadMoreMessages();
+            }
+        };
     
+        window.addEventListener("scroll", handleWindowScroll);
+    
+        return () => {
+            window.removeEventListener("scroll", handleWindowScroll);
+        };
+    }, [isLoading, hasMore]);
+
+
+
+    if (fetchUserState.loading) {
+        return <Spinner loading={fetchUserState.loading} />
+    }
+
+    if (fetchUserState.hasError) {
+        return <Alert message={fetchUserState.message} type={"danger"} />
+    }
     return (
-        <div className="container-fluid d-flex flex-column bg-white h-100">
-            <div className="d-flex justify-content-between align-items-center p-4 border-bottom">
+        <div className="container d-flex flex-column bg-white h-100"       >
+            <div className="d-flex justify-content-between align-items-center p-4 border-bottom  bg-white position-sticky top-0"
+                style={{ zIndex: 10 }} >
                 <div className="d-flex align-items-center">
-                    <img src={props.selectedChat?.avatar} alt={props.selectedChat?.name} className="rounded-circle me-3 chat-avatar" />
-                    <h2 className="fs-5 fw-bold mb-0">{props.selectedChat?.name}</h2>
+                    <img src={fetchUserState.userProfile?.imageUrl} alt={props.selectedChat?.name} className="rounded-circle me-3 chat-avatar" />
+                    <div className="d-flex flex-column">
+                        <Link className="text-dark text-decoration-none" to={`/profile/${fetchUserState.userProfile?.id}`}> <h2 className="fs-5 fw-bold mb-0">{fetchUserState.userProfile?.firstName + " " + fetchUserState.userProfile?.lastName}</h2>
+                        </Link>
+                        {fetchUserState.userProfile?.isOnline && <span className="text-success">Online</span>}
+                        {!fetchUserState.userProfile?.isOnline && <span className="text-danger">Offline</span>}
+
+                    </div>
                 </div>
                 <button className="btn btn-outline-secondary">
                     <svg
@@ -29,10 +193,15 @@ export default function ChatArea(props: any) {
                 </button>
             </div>
 
-            <div className="flex-grow-1 p-4 overflow-y-auto">
-                {messages.map((message) => (
+            <div className="flex-grow-1 p-4 overflow-y-auto"
+                ref={scrollContainerRef}
+            >
+
+                {isLoading && <p className="text-center text-muted">Loading...</p>}
+
+                {messages?.map((message: any, index: any) => (
                     <div
-                        key={message.id}
+                        key={index}
                         className={`mb-4 d-flex ${message.sender === 'You' ? 'justify-content-end' : 'justify-content-start'}`}
                     >
                         <div
@@ -44,17 +213,26 @@ export default function ChatArea(props: any) {
                         </div>
                     </div>
                 ))}
+
             </div>
 
-            <div className="p-4 border-top">
+            <div className="p-4 border-top position-sticky bottom-0 bg-white" style={{ zIndex: 10 }}>
                 <div className="d-flex align-items-center">
                     <input
                         type="text"
                         placeholder="Type a message..."
+                        onChange={(e: any) => {
+                            setMessageReq((prev) => ({
+                                ...prev,
+                                message: e.target.value
+                            }));
+                        }}
                         className="form-control rounded-pill flex-grow-1 me-2"
                         aria-label="Message input"
                     />
-                    <button className="btn btn-primary rounded-circle">
+                    <button className="btn btn-primary rounded-circle" onClick={() => {
+                        sendMessageToConversation()
+                    }}>
                         <svg
                             className="w-5 h-5"
                             fill="none"

@@ -2,9 +2,8 @@ import api from "../../axios/interceptor"
 
 const PATH = "/chats/messages"
 export interface MessageCreateReqVO {
-    conversationId?: number,
-    toUserId?: number
-    message: string
+    conversationId: any
+    message?: string
     images?: string[],
     files?: string[]
 }
@@ -28,11 +27,9 @@ class MessageService {
         return api.post(PATH, req)
     }
 
-    getListMessage(conversationId: number, messageId?: number) {
-        if (messageId) {
-            return api.get(`${PATH}/conversation/${conversationId}?before=${messageId}`)
-        }
-        return api.get(`${PATH}/conversation/${conversationId}`)
+    getListMessage(conversationId: string, searchParams: string) {
+        return api.get(`${PATH}/conversation/${conversationId}?${searchParams}`)
+
     }
 }
 export default new MessageService()
