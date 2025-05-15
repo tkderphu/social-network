@@ -4,17 +4,27 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import viosmash.collection.CollUtils;
+import viosmash.collection.StreamUtils;
 import viosmash.controller.conversation.vo.*;
+import viosmash.controller.member.vo.MemberRespVO;
 import viosmash.controller.message.vo.MessageRespVO;
+import viosmash.core.utils.SecurityUtils;
 import viosmash.dal.dataobject.Conversation;
 import viosmash.dal.dataobject.ConversationType;
+import viosmash.dal.dataobject.Message;
 import viosmash.dal.repo.ConversationRepository;
 import viosmash.dal.repo.MessageRepository;
 import viosmash.exception.ServiceException;
 import viosmash.object.BeanUtil;
+import viosmash.profile.api.UserApi;
+import viosmash.profile.api.UserDTO;
+import viosmash.string.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static viosmash.collection.CollUtils.convertList;
 import static viosmash.exception.utils.ServiceUtils.exception;
@@ -28,6 +38,7 @@ public class ConversationServiceImpl implements ConversationService{
     private final ConversationRepository conversationRepository;
     private final MemberService memberService;
     private final MessageRepository messageRepository;
+    private final UserApi userApi;
     @Override
     @Transactional(rollbackFor = ServiceException.class)
     public String createConversation(Long ownerId, ConversationCreateReq req) {
@@ -58,9 +69,21 @@ public class ConversationServiceImpl implements ConversationService{
 
     @Override
     public List<ConversationRespVO> getListConversation(Long userId) {
-        return convertList(conversationRepository.findAllByUserId(userId), list -> {
+        Set<Object[]> objects = conversationRepository.findAllByUserId(userId);
+        return convertList(objects, list -> {
+            Conversation conversation = (Conversation) list[0];
+            Message message = (Message)list[1];
+            Set<MemberRespVO> members = StreamUtils.filterAndThen(
+                    memberService.getListMemberConversationId(conversation.getId()),
+                    member -> !member.getId().equals(userId)
+            ).collect(Collectors.toSet());
+
             ConversationRespVO resp = copy(list[0], ConversationRespVO.class)
-                    .setLatestMessage(copy(list[1], MessageRespVO.class));
+                    .setLatestMessage(copy(list[1], MessageRespVO.class)
+                            .setSender(userApi.getUserById(message.getSenderId())))
+                    .setOnline(StreamUtils.anyMatch(members, m -> m.getIsOnline()))
+                    .setNickname(StringUtils.concat(members, ",", MemberRespVO::getFullName))
+                    .setThumbnail(StringUtils.concat(members, ",", MemberRespVO::getAvatar));
             return resp;
         }).stream().toList();
     }
@@ -69,11 +92,17 @@ public class ConversationServiceImpl implements ConversationService{
     public ConversationRespVO getConversationById(String conversationId) {
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> exception(404, "conversation not found"));
+
+        Set<MemberRespVO> members = StreamUtils.filterAndThen(
+                memberService.getListMemberConversationId(conversation.getId()),
+                member -> !member.getId().equals(SecurityUtils.getLoginUserMemberId())
+        ).collect(Collectors.toSet());
+        Message latest = messageRepository.findLatestMessageByConversationId(conversationId).get();
         ConversationRespVO resp = copy(conversation, ConversationRespVO.class)
-                .setLatestMessage(copy(
-                        messageRepository.findLatestMessageByConversationId(conversation.getId()),
-                        MessageRespVO.class)
-                );
+                .setLatestMessage(copy(latest, MessageRespVO.class)  .setSender(userApi.getUserById(latest.getSenderId())))
+                .setOnline(StreamUtils.anyMatch(members, m -> m.getIsOnline()))
+                .setNickname(StringUtils.concat(members, ",", MemberRespVO::getFullName))
+                .setThumbnail(StringUtils.concat(members, ",", MemberRespVO::getAvatar));
         return resp;
     }
 }

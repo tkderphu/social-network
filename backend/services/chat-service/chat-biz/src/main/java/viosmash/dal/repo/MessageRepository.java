@@ -19,4 +19,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
     List<Message> findAllByConversationId(@Param("conversationId") String conversationId,
                                           @Param("beforeMessageId") Long beforeMessageId,
                                           @Param("limit") int limit);
+
+    @Query("SELECT m FROM Message m WHERE m.conversation.id = :conversationId")
+    List<Message> findAllByConversationId(@Param("conversationId") String conversationId);
 }

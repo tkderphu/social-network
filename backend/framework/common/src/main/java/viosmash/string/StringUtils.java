@@ -1,8 +1,12 @@
 package viosmash.string;
 
+import org.springframework.util.CollectionUtils;
+
 import java.util.*;
+import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
 public class StringUtils {
 
@@ -20,6 +24,11 @@ public class StringUtils {
             content = content.replace("{{" + entry.getKey() + "}}", entry.getValue().toString());
         }
         return content;
+    }
+
+    public static <T, U extends String> String concat(Collection<T> coll, String delimiter, Function<T, U> func) {
+        if(CollectionUtils.isEmpty(coll)) return "";
+        return coll.stream().map(func).collect(Collectors.joining(delimiter));
     }
 
     public static boolean equal(String s1, String s2) {

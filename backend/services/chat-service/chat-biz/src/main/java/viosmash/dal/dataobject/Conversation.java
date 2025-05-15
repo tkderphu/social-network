@@ -40,13 +40,6 @@ public  class Conversation {
     private boolean onlyAdminUpdateThumbnail;
 
 
-    public String getNickname() {
-        return nickname;
-    }
-
-    public String getThumbnail() {
-        return thumbnail;
-    }
 
 
     public void addMember(MemberConversation memberConversation) {

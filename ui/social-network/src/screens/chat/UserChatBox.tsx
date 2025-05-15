@@ -17,9 +17,9 @@ import { ChangeNickNameForm, ChangeThumbnailForm, CreateGroupConversationForm, S
 function UserChatBox(props: { removeThisUserChatboxFn: any, user?: ProfileSimpleResp }) {
     const [conversation, setConversation] = useState<undefined | ConversationRespVO>(undefined)
     const [messages, setMessages] = useState<MessageRespVO[]>([])
-    const [messageReq, setMessageReq] = useState<MessageCreateReqVO>({
-        message: ''
-    })
+    // const [messageReq, setMessageReq] = useState<MessageCreateReqVO>({
+    //     message: ''
+    // })
     useEffect(() => {
         //@ts-ignore
         conversationService.getConversation(props.user?.userId).then(resp => {

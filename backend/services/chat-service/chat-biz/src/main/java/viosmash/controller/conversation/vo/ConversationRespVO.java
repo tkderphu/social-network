@@ -9,10 +9,11 @@ import java.time.LocalDateTime;
 @Data
 @Accessors(chain = true)
 public class ConversationRespVO {
-    private Long id;
+    private String id;
     private String nickname;
     private String thumbnail;
     private LocalDateTime createdAt;
-    private Boolean isOnline;
+    private Boolean online;
     private MessageRespVO latestMessage;
+
 }

@@ -10,7 +10,6 @@ public class MessageCreateReqVO {
     private Long senderId;
     private Long toUserId;
     private String conversationId;
-    private Boolean establishedConversation;
     @NotEmpty
     private String message;
     private List<String> images;

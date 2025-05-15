@@ -6,14 +6,15 @@ export interface ConversationCreateReq {
     name?: string,
     type: "PUBLIC" | "PRIVATE",
     userIds: Array<number>
+    thumbnail?: string
 }
 export interface ConversationRespVO {
     id: number,
-    name?: string,
-    imageUrl?: string
+    nickname?: string,
+    thumbnail?: string
     type: string,
-    timeAgo: string,
-    latestMessage: MessageRespVO
+    latestMessage: MessageRespVO,
+    online?: boolean
 }
 
 const PATH = "/chats/conversations"
@@ -22,15 +23,12 @@ class ConversationService {
         return api.post(PATH, req)
     }
 
-    getListConversation(type?: "PRIVATE" | "PUBLIC") {
-        if(type) {
-
-        }
+    getListConversation() {
         return api.get(PATH)
     }
 
-    getConversation(userId: number) {
-        return api.get(`${PATH}/with/user/${userId}`)
+    getConversation(conversationId: any) {
+        return api.get(`${PATH}/${conversationId}`)
     }
 
     deleteConversation(id: number) {

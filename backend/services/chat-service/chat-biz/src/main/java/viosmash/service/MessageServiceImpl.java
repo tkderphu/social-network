@@ -5,18 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import viosmash.chat.enums.Role;
 import viosmash.collection.CollUtils;
-import viosmash.controller.member.vo.MemberRespVO;
 import viosmash.controller.message.vo.MessageCreateReqVO;
 import viosmash.controller.message.vo.MessageRespVO;
 import viosmash.dal.dataobject.*;
 import viosmash.dal.repo.ConversationRepository;
-import viosmash.dal.repo.MemberConversationRepository;
-import viosmash.dal.repo.MemberRepository;
 import viosmash.dal.repo.MessageRepository;
 import viosmash.object.BeanUtil;
-import viosmash.string.StringUtils;
+import viosmash.profile.api.UserApi;
+import viosmash.profile.api.UserDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,37 +29,40 @@ public class MessageServiceImpl implements MessageService{
     private final MemberService memberService;
     private final ConversationRepository conversationRepository;
     private final MessageRepository messageRepository;
-    private final MemberRepository memberRepository;
+    private final UserApi userApi;
     private final SimpMessagingTemplate simpMessagingTemplate;
     @Override
     @Transactional
     public void createMessage(MessageCreateReqVO req) {
-        Conversation conversation = null;
-        Member sender = memberRepository.findById(req.getSenderId()).get();
-        if(!StringUtils.isEmpty(req.getConversationId())) {
-            conversation = conversationRepository.findById(req.getConversationId()).get();
-        }
-        else if(!req.getEstablishedConversation()) {
+        UserDTO sender = userApi.getUserById(req.getSenderId());
+        Conversation conversation = conversationRepository.findById(req.getConversationId())
+                .orElse(null);
+        Boolean isNewConversation = false;
+        if(conversation == null) {
             conversation = new Conversation().setId(req.getConversationId())
                     .setCreatedAt(LocalDateTime.now()).setConversationType(ConversationType.PRIVATE)
                     .setId(req.getConversationId());
             this.conversationRepository.save(conversation);
-            assert req.getToUserId() != null;
             memberService.invite(conversation.getId(), List.of(req.getSenderId(), req.getToUserId()));
+
+            isNewConversation = true;
         }
 
         Message message = BeanUtil.copy(req, Message.class)
-                .setSender(sender)
+                .setSenderId(sender.getId())
                 .setCreatedAt(LocalDateTime.now())
                 .setConversation(conversation);
 
         this.messageRepository.save(message);
 
-        MessageRespVO resp = BeanUtil.copy(message, MessageRespVO.class);
+        MessageRespVO resp = BeanUtil.copy(message, MessageRespVO.class).setSender(sender);
 
-        conversation.getMemberConversations().forEach(mc -> {
-            simpMessagingTemplate.convertAndSend("/topic/chat/user/" + mc.getMember().getId(), resp);
-        });
+        simpMessagingTemplate.convertAndSend("/topic/chat/conversation/" + req.getConversationId(), resp);
+        if(isNewConversation) {
+            List.of(req.getSenderId(), req.getToUserId()).forEach(userId -> {
+                simpMessagingTemplate.convertAndSend("/topic/chat/user/" + userId, "new conversation between user");
+            });
+        }
     }
 
 
@@ -73,7 +73,17 @@ public class MessageServiceImpl implements MessageService{
         return CollUtils.convertList(messages, msg -> {
            return BeanUtil.copy(msg, MessageRespVO.class)
                    .setConversationId(msg.getConversation().getId())
-                   .setSender(BeanUtil.copy(msg.getSender(), MemberRespVO.class));
+                   .setSender(userApi.getUserById(msg.getId()));
+        });
+    }
+
+    @Override
+    public List<MessageRespVO> getListMessage(String conversationId) {
+        List<Message> messages = messageRepository.findAllByConversationId(conversationId);
+        return CollUtils.convertList(messages, msg -> {
+            return BeanUtil.copy(msg, MessageRespVO.class)
+                    .setConversationId(msg.getConversation().getId())
+                    .setSender(userApi.getUserById(msg.getSenderId()));
         });
     }
 }

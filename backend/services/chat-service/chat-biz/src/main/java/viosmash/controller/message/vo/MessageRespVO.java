@@ -3,6 +3,8 @@ package viosmash.controller.message.vo;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import viosmash.controller.member.vo.MemberRespVO;
+import viosmash.date.DateUtils;
+import viosmash.profile.api.UserDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -11,7 +13,7 @@ import java.util.List;
 public class MessageRespVO {
     private Long id;
 
-    private MemberRespVO sender;
+    private UserDTO sender;
     private String conversationId;
     private String message;
 
@@ -20,4 +22,9 @@ public class MessageRespVO {
     private List<String> files;
 
     private LocalDateTime createdAt;
+    private String timeAgo;
+
+    public String getTimeAgo() {
+        return DateUtils.timeAgo(createdAt);
+    }
 }

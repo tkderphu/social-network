@@ -1,10 +1,14 @@
+import { IMessage } from "@stomp/stompjs";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useParams } from "react-router";
+import { CommonResult, TokenUtils } from "../../common";
 import Alert from "../../components/Alert";
 import Spinner from "../../components/Spinner";
 import { ProfileSimpleResp, UserProfileResp } from "../../model/profileModel";
+import { fetchListConversationAction, fetchListMessageAction } from "../../redux/actions/chatAction";
 import { fetchProfileAction } from "../../redux/actions/profileAction";
+import conversationService, { ConversationRespVO } from "../../services/chat/conversationService";
 import { MessageCreateReqVO, MessageRespVO } from "../../services/chat/messageService";
 import { useStompClient } from "../../utils/useStomp";
 import "./Chat.css"
@@ -25,9 +29,10 @@ export default function ChatArea(props: any) {
     const { id } = useParams()
     const [establishedConversation, setEstablishedConversation] = useState<boolean>(false)
     const [messageReq, setMessageReq] = useState<MessageCreateReqVO>({
-        conversationId: id
+        conversationId: id,
+        message: ''
     })
-    const [listMsg, setListMsg] = useState<any>()
+    const [listMsg, setListMsg] = useState<MessageRespVO[]>()
     const fetchListMessageState: {
         loading: boolean,
         message: any,
@@ -45,22 +50,39 @@ export default function ChatArea(props: any) {
         return state.fetchProfile
     })
 
+
     const stompClient = useStompClient({ path: "chat/ws" })
 
 
     const sendMessageToConversation = () => {
-        setListMsg((prev: any) => [...prev, { id: 2, sender: "You", text: "Not much, just chilling!", time: "10:32 AM" }])
-        // stompClient?.publish({
-        //     destination: "/app/chat/send",
-        //     body: JSON.stringify(messageReq),
-        // })
+        // setListMsg((prev: any) => [...prev, { id: 2, sender: "You", text: "Not much, just chilling!", time: "10:32 AM" }])
+        const req: any = {...messageReq, establishedConversation: establishedConversation}
+        if(!establishedConversation && location.state.userId) {
+            req.toUserId = location.state.userId
+        }
+        stompClient?.publish({
+            destination: "/app/chat/send",
+            body: JSON.stringify(req)
+        })
+
+        setMessageReq((prev) => ({
+            ...prev,
+            "message": "",
+            files: undefined,
+            images: undefined
+        }))
     }
 
+
+    useEffect(() => {
+        setListMsg(fetchListMessageState.messages)
+    }, [fetchListMessageState])
 
 
     const dispatch = useDispatch()
 
     useEffect(() => {
+        
         if (location.state && location.state.userId) {
             //@ts-ignore
             dispatch(fetchProfileAction(location.state.userId))
@@ -70,10 +92,47 @@ export default function ChatArea(props: any) {
             setEstablishedConversation(true)
         }
 
+        //@ts-ignore
+        dispatch(fetchListMessageAction(id))
+        // setListMsg(allMessages)
 
     }, [])
 
 
+    const fetchListConversation = () => {
+        setTimeout(() => {
+            //@ts-ignore
+            dispatch(fetchListConversationAction())
+        }, 500)
+    }
+
+    const [conversation, setConversation] = useState<ConversationRespVO | undefined>(undefined)
+    useEffect(() => {
+        conversationService.getConversation(id).then(resp => {
+            const result: CommonResult<any> = resp.data;
+            console.log("result when fetch conversation by id: ", result.data)
+            if(result.code === 200) {
+                setConversation(result.data)
+            }
+        }).catch(err => {
+            alert("Service is crashed")
+        })
+    }, [id])
+
+    useEffect(() => {
+        if(stompClient?.connected) {
+            console.log("connected")
+            stompClient?.subscribe(`/topic/chat/user/${TokenUtils.authLogin.userId}`, (msg: IMessage) => {
+                fetchListConversation()
+             })
+             stompClient?.subscribe(`/topic/chat/conversation/${id}`, (msg: IMessage) => {
+                fetchListConversation()
+                //  console.log("new message coming")
+                 const message: MessageRespVO = JSON.parse(msg.body)
+                 setListMsg((prev: any) => [...prev, message]) //add message to conversation
+             })
+        }
+    }, [stompClient?.connected])
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [messages, setMessages] = useState<any[]>([]);
@@ -85,6 +144,12 @@ export default function ChatArea(props: any) {
     useEffect(() => {
         loadMoreMessages(false);
     }, []);
+
+    useEffect(() => {
+        scrollContainerRef.current?.scrollIntoView({
+            behavior: "auto"
+        })
+    }, [listMsg?.length])
 
     // Scroll handler
     const handleScroll = () => {
@@ -98,45 +163,38 @@ export default function ChatArea(props: any) {
     };
 
     const loadMoreMessages = (initial = false) => {
-        setIsLoading(true);
+        // setIsLoading(true);
 
-        const nextPage = page + 1;
-        const start = allMessages.length - nextPage * MESSAGES_PER_PAGE;
-        const end = start + MESSAGES_PER_PAGE;
+        // const nextPage = page + 1;
+        // const start = allMessages.length - nextPage * MESSAGES_PER_PAGE;
+        // const end = start + MESSAGES_PER_PAGE;
 
-        const newMessages = allMessages.slice(Math.max(0, start), end);
+        // const newMessages = allMessages.slice(Math.max(0, start), end);
 
-        if (newMessages.length === 0) {
-            setHasMore(false);
-            setIsLoading(false);
-            return;
-        }
+        // if (newMessages.length === 0) {
+        //     setHasMore(false);
+        //     setIsLoading(false);
+        //     return;
+        // }
 
-        const scrollYBefore = window.scrollY;
-        const bodyHeightBefore = document.body.scrollHeight;
-        
-        setMessages((prev) => [...newMessages, ...prev]);
-        setPage(nextPage);
-        
-        setTimeout(() => {
-            const bodyHeightAfter = document.body.scrollHeight;
-            const scrollDifference = bodyHeightAfter - bodyHeightBefore
-        
-            if (!initial) {
-                window.scrollTo({
-                    top: scrollYBefore + scrollDifference,
-                    behavior: "smooth",
-                });
-            } else {
-                window.scrollTo({
-                    top: document.body.scrollHeight,
-                    behavior: "smooth",
-                });
-            }
-        
-            setIsLoading(false);
-        }, 1000);
-        
+        // const scrollYBefore = window.scrollY;
+        // const bodyHeightBefore = document.body.scrollHeight;
+
+        // setMessages((prev) => [...newMessages, ...prev]);
+        // setPage(nextPage);
+
+
+        //     const bodyHeightAfter = document.body.scrollHeight;
+        //     const scrollDifference = bodyHeightAfter - bodyHeightBefore
+
+        //     window.scrollTo({
+        //         top: scrollDifference,
+        //         behavior: "smooth",
+        //     });
+
+        //     setIsLoading(false);
+
+
     };
 
 
@@ -147,9 +205,9 @@ export default function ChatArea(props: any) {
                 loadMoreMessages();
             }
         };
-    
+
         window.addEventListener("scroll", handleWindowScroll);
-    
+
         return () => {
             window.removeEventListener("scroll", handleWindowScroll);
         };
@@ -169,9 +227,9 @@ export default function ChatArea(props: any) {
             <div className="d-flex justify-content-between align-items-center p-4 border-bottom  bg-white position-sticky top-0"
                 style={{ zIndex: 10 }} >
                 <div className="d-flex align-items-center">
-                    <img src={fetchUserState.userProfile?.imageUrl} alt={props.selectedChat?.name} className="rounded-circle me-3 chat-avatar" />
+                    <img src={fetchUserState.userProfile?.imageUrl || conversation?.thumbnail} alt={props.selectedChat?.name} className="rounded-circle me-3 chat-avatar" />
                     <div className="d-flex flex-column">
-                        <Link className="text-dark text-decoration-none" to={`/profile/${fetchUserState.userProfile?.id}`}> <h2 className="fs-5 fw-bold mb-0">{fetchUserState.userProfile?.firstName + " " + fetchUserState.userProfile?.lastName}</h2>
+                        <Link className="text-dark text-decoration-none" to={`/profile/${fetchUserState.userProfile?.id}`}> <h2 className="fs-5 fw-bold mb-0">{fetchUserState.userProfile ? fetchUserState.userProfile?.firstName + " " + fetchUserState.userProfile?.lastName : conversation?.nickname}</h2>
                         </Link>
                         {fetchUserState.userProfile?.isOnline && <span className="text-success">Online</span>}
                         {!fetchUserState.userProfile?.isOnline && <span className="text-danger">Offline</span>}
@@ -194,25 +252,26 @@ export default function ChatArea(props: any) {
             </div>
 
             <div className="flex-grow-1 p-4 overflow-y-auto"
-                ref={scrollContainerRef}
             >
 
-                {isLoading && <p className="text-center text-muted">Loading...</p>}
-
-                {messages?.map((message: any, index: any) => (
+                {listMsg?.map((message, index) => (
                     <div
                         key={index}
-                        className={`mb-4 d-flex ${message.sender === 'You' ? 'justify-content-end' : 'justify-content-start'}`}
+                        //@ts-ignore
+                        className={`mb-4 d-flex ${message.sender.id === TokenUtils.authLogin.userId ? 'justify-content-end' : 'justify-content-start'}`}
                     >
                         <div
-                            className={`p-3 rounded-3 chat-message ${message.sender === 'You' ? 'bg-primary text-white' : 'bg-light text-dark'
+                        //@ts-ignore
+                            className={`p-3 rounded-3 chat-message ${message.sender.id === TokenUtils.authLogin.userId  ? 'bg-primary text-white' : 'bg-light text-dark'
                                 }`}
                         >
-                            <p className="mb-1">{message.text}</p>
-                            <span className="fs-6 text-muted">{message.time}</span>
+                            <p className="mb-1">{message.message}</p>
+                            <span className="fs-6 text-muted">{message.timeAgo}</span>
                         </div>
                     </div>
                 ))}
+
+                <div ref={scrollContainerRef}></div>
 
             </div>
 
@@ -221,6 +280,7 @@ export default function ChatArea(props: any) {
                     <input
                         type="text"
                         placeholder="Type a message..."
+                        value={messageReq.message}
                         onChange={(e: any) => {
                             setMessageReq((prev) => ({
                                 ...prev,

@@ -4,11 +4,12 @@ import { TokenUtils } from "../common";
 
 // Store singleton clients by path
 const stompClientMap = new Map<string, Client>();
-
+const subscribedTopic = new Map<string, boolean>()
 type UseStompClientProps = {
-  path: string;
+  path: "chat/ws";
   topic?: []
 };
+
 
 export const useStompClient = ({ path, topic }: UseStompClientProps): Client | null => {
   const clientRef = useRef<Client | null>(null);

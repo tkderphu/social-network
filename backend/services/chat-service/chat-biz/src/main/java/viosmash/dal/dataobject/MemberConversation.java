@@ -16,16 +16,14 @@ public class MemberConversation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+
+    private Long memberId;
     @ManyToOne
     @JoinColumn(name = "conversation_id")
     private Conversation conversation;
+
     @Enumerated(EnumType.STRING)
     private Role role;
-    @ManyToOne
-    @JoinColumn(name = "invited_by_id")
-    private Member invitedBy;
+    private Long invitedByMemberId;
     private LocalDateTime invitedAt;
 }

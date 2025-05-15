@@ -1,5 +1,6 @@
 import React, { ReactNode, useEffect } from 'react';
-import './Modal.css'; // You'll create this CSS
+import ReactDOM from 'react-dom';
+import './Modal.css';
 
 interface CustomModalProps {
   show: boolean;
@@ -33,7 +34,7 @@ const ModalCustome: React.FC<CustomModalProps> = ({
 
   if (!show) return null;
 
-  return (
+  const modalContent = (
     <div className="custom-modal-backdrop">
       <div className="custom-modal">
         <div className="custom-modal-header">
@@ -58,6 +59,9 @@ const ModalCustome: React.FC<CustomModalProps> = ({
       </div>
     </div>
   );
+
+  // ⬇️ PORTAL FIX HERE
+  return ReactDOM.createPortal(modalContent, document.body);
 };
 
-export default ModalCustome
+export default ModalCustome;

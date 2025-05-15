@@ -1,6 +1,6 @@
 import {combineReducers} from 'redux'
 import { loginReducer, logoutReducer, redirectReducer } from './authReducer'
-import { fetchListMessageReducer } from './chatReducer'
+import { createConversationReducer, fetchListConversationReducer, fetchListMessageReducer } from './chatReducer'
 import { cancelFriendReducer, cancelMakeFriendRequestReducer, createFriendRequestReducer, fetchStatusBetweenUserReducer, rejectMakeFriendRequestReducer } from './friendshipReducer'
 import { countUnreadMessageReducer, fetchNotifyMessagesReducer, fetchNotifySettingReducer, updateNotifyChatReducer, updateNotifyCommentReducer, updateNotifyFriendReducer, updateNotifyReactionReducer } from './notificationReducer'
 import { acceptMakeFriendRequestReducer, checkForgotPasswordCodeReducer, createNewPasswordReducer, createUserReducer, fetchProfileReducer, forgotPasswordReducer, updateAddressReducer, updateEducationReducer, updateInfoReducer, uploadPersonalImageReducer } from './profileReducer'
@@ -33,7 +33,9 @@ const rootReducer = combineReducers({
     updateNotifyChat: updateNotifyChatReducer,
     updateNotifyFriend: updateNotifyFriendReducer,
     fetchNotifySetting: fetchNotifySettingReducer,
-    fetchListMessage: fetchListMessageReducer
+    fetchListMessage: fetchListMessageReducer,
+    fetchListConversation: fetchListConversationReducer,
+    createConversation: createConversationReducer
 
 })
 export default rootReducer

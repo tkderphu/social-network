@@ -12,7 +12,7 @@ public interface ConversationRepository extends JpaRepository<Conversation, Stri
 
 
     @Query("SELECT c, me FROM Conversation c INNER JOIN Message me on c.id = me.conversation.id \n" +
-            "WHERE :userId IN (SELECT mc.member.id FROM MemberConversation mc WHERE mc.conversation.id = c.id) \n" +
+            "WHERE :userId IN (SELECT mc.memberId FROM MemberConversation mc WHERE mc.conversation.id = c.id) \n" +
             "AND me.id = (SELECT MAX(m.id) FROM Message m WHERE m.conversation.id = c.id) \n" +
             "ORDER BY me.id DESC")
     Set<Object[]> findAllByUserId(@Param("userId") Long userId);

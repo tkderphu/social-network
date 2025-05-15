@@ -1,7 +1,6 @@
 package viosmash.service;
 
 import viosmash.controller.member.vo.MemberRespVO;
-import viosmash.dal.dataobject.Member;
 
 import java.util.Collection;
 import java.util.Set;

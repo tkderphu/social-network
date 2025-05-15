@@ -25,4 +25,10 @@ public class MemberRespVO {
     private LocalDateTime invitedAt;
     @Schema(description = "who invited")
     private MemberRespVO invitedBy;
+
+
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }
