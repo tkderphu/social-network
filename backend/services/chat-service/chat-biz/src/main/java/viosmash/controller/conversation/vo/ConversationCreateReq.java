@@ -11,6 +11,7 @@ import java.util.Collection;
 @NoArgsConstructor
 @AllArgsConstructor
 public class ConversationCreateReq {
+
     private String name;
     @NotNull
     private Collection<Long> userIds;

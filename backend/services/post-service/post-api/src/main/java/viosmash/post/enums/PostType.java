@@ -1,5 +1,10 @@
 package viosmash.post.enums;
 
 public enum PostType {
-    PRIVATE, PUBLIC, ONLY_FRIENDS
+    PROFILE_PICTURE_UPDATE,
+    COVER_PHOTO_UPDATE ,
+    TEXT ,
+    IMAGE ,
+    VIDEO ,
+    SHARED_POST
 }

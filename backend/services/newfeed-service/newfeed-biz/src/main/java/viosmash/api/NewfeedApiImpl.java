@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,7 +15,7 @@ import viosmash.dal.redis.NewfeedItemRedis;
 import viosmash.dal.redis.NewfeedRedis;
 import viosmash.dal.redis.PostRedis;
 import viosmash.dal.repo.NewfeedItemRepository;
-import viosmash.friendship.api.UserApi;
+import viosmash.friendship.api.FriendshipApi;
 import viosmash.friendship.api.UserDTO;
 import viosmash.group.api.GroupApi;
 import viosmash.newfeed.api.NewfeedApi;
@@ -32,7 +33,7 @@ import java.util.List;
 @RequestMapping(NewfeedApi.PREFIX)
 public class NewfeedApiImpl implements NewfeedApi {
 
-    private final UserApi userApi;
+    private final FriendshipApi friendshipApi;
     private final PostApi postApi;
     private final GroupApi groupApi;
     private final NewfeedItemRepository newfeedItemRepository;
@@ -45,30 +46,30 @@ public class NewfeedApiImpl implements NewfeedApi {
     @Async
     public CommonResult<Boolean> updateNewFeed(PostDTO postDTO) {
         if(postDTO.getGroup() != null) {
-            CommonResult<List<UserDTO>> membersResp = new CommonResult<>();
-            if(membersResp.getCode() == 200) {
-                storeNewfeed(postDTO, membersResp);
-            }
+//            List<UserDTO> membersResp = new CommonResult<>();
+//            if(CollectionUtils.isEmpty(membersResp)) {
+//                storeNewfeed(postDTO, membersResp);
+//            }
             return CommonResult.success(true);
         }
-        CommonResult<List<UserDTO>> userResp = userApi.getListRecommendUser(postDTO.getUser().getId());
-        if(userResp.getCode() == 200) {
-            storeNewfeed(postDTO, userResp);
-            return CommonResult.success(true);
-        }
+//        List<UserDTO> userResp = friendshipApi.getListRecommendUser(postDTO.getUser().getId());
+//        if(!CollectionUtils.isEmpty(userResp)) {
+//            storeNewfeed(postDTO, userResp);
+//            return CommonResult.success(true);
+//        }
 
         return CommonResult.success(true);
     }
 
-    private void storeNewfeed(PostDTO postDTO, CommonResult<List<UserDTO>> userResp) {
-        List<NewfeedItem> newfeedItems = newfeedItemRepository.saveAll(CollUtils.convertList(userResp.getData(), user -> {
+    private void storeNewfeed(PostDTO postDTO, List<UserDTO> userResp) {
+        List<NewfeedItem> newfeedItems = newfeedItemRepository.saveAll(CollUtils.convertList(userResp, user -> {
             return new NewfeedItem().setTimeline(new Date(postDTO.getCreatedDate()))
                     .setIsRead(false).setIsAdvertised(0)
                     .setUserId(user.getId()).setPostId(postDTO.getId());
         }));
 
         postRedis.setValue(postDTO.getId(), postDTO);
-        CollUtils.convertList(userResp.getData(), user -> {
+        CollUtils.convertList(userResp, user -> {
             newfeedRedis.setValue(user.getId(), List.of(postDTO));
             return null;
         });

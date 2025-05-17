@@ -7,13 +7,12 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import viosmash.group.api.GroupApi;
 import viosmash.collection.CollUtils;
 import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
-import viosmash.controller.post.vo.PostUpdatedReqVO;
 import viosmash.dal.dataobject.Post;
 import viosmash.dal.repo.PostRepository;
+import viosmash.group.api.GroupApi;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.PageResult;
 import viosmash.profile.api.UserApi;
@@ -38,14 +37,10 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public Post updatePost(PostUpdatedReqVO postUpdateReq) {
-//        Post post = getPostById(postUpdateReq.getId())
-//                .setPostType(postUpdateReq.getPostType())
-//                .setContent(postUpdateReq.getContent())
-//                .setFileUrls(postUpdateReq.getFileUrls())
-//        postRepository.save(post);
+    public Post updatePost(Long postId, PostCreateReqVO req) {
         return null;
     }
+
 
     @Override
     public PageResult<PostRespVO> getListPostByUserId(Long userId, int pageNumber, int limit) {

@@ -55,4 +55,9 @@ public class UserApiImpl implements UserApi {
         User user = userService.checkUser(checkUser.getEmail(), checkUser.getPassword());
         return CommonResult.success(BeanUtil.copy(user, UserDTO.class));
     }
+
+    @Override
+    public List<UserDTO> searchByFullName(String keyword) {
+        return List.of();
+    }
 }

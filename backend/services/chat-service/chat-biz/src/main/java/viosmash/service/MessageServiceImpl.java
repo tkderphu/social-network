@@ -43,7 +43,7 @@ public class MessageServiceImpl implements MessageService{
                     .setCreatedAt(LocalDateTime.now()).setConversationType(ConversationType.PRIVATE)
                     .setId(req.getConversationId());
             this.conversationRepository.save(conversation);
-            memberService.invite(conversation.getId(), List.of(req.getSenderId(), req.getToUserId()));
+            memberService.invite(conversation.getId(), List.of(req.getSenderId(), req.getToUserId()), null);
 
             isNewConversation = true;
         }

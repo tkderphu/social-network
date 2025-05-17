@@ -29,4 +29,7 @@ public interface UserApi {
 
     @PostMapping("/check")
     CommonResult<UserDTO> checkUser(@RequestBody CheckUserReqVO checkUser) ;
+
+    @GetMapping
+    List<UserDTO> searchByFullName(@RequestParam("keyword") String keyword);
 }

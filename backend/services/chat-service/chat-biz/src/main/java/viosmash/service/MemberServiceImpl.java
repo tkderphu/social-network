@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -39,13 +40,14 @@ public class MemberServiceImpl implements MemberService{
     @Override
     @Transactional
     @ConversationPermission(errorMessage = "conversation policy didn't allow you invite")
-    public void invite(String conversationId, Collection<Long> userIds) {
+    public void invite(String conversationId, Collection<Long> userIds, Function<Long, Role> func) {
+
         Set<MemberConversation> memberConversations = userIds.stream().map(userId -> {
             return new MemberConversation()
                     .setConversation(new Conversation().setId(conversationId))
                     .setMemberId(userId)
                     .setInvitedByMemberId(SecurityUtils.getLoginUserMemberId())
-                    .setRole(Role.MEMBER)
+                    .setRole(func == null ? Role.MEMBER : func.apply(userId))
                     .setInvitedAt(LocalDateTime.now());
         }).collect(Collectors.toSet());
 

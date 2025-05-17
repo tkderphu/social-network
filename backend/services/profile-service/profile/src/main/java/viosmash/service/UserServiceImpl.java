@@ -8,9 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import viosmash.dal.redis.ForgotCodeRedis;
 import viosmash.date.DateUtils;
-import viosmash.friendship.api.UserApi;
-import viosmash.friendship.api.UserDTO;
-import viosmash.notification.api.NotificationApi;
+import viosmash.friendship.api.FriendshipApi;
 import viosmash.notification.api.NotificationDto;
 import viosmash.notification.enums.NotificationType;
 import viosmash.object.BeanUtil;
@@ -38,8 +36,7 @@ public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder encoder;
-    private final UserApi friendshipApi;
-    private final viosmash.chat.api.UserApi chatUserApi;
+    private final FriendshipApi friendshipApi;
     private final ForgotCodeRedis forgotCodeRedis;
     private final ApplicationContext applicationContext;
     @Override

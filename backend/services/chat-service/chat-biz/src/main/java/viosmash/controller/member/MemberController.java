@@ -24,7 +24,7 @@ public class MemberController {
     @PostMapping
     @Operation(summary = "Invite member to conversation")
     public CommonResult<Boolean> invite(@RequestBody MemberInviteReqVO req) {
-        memberService.invite(req.getConversationId(), req.getUserIds());
+        memberService.invite(req.getConversationId(), req.getUserIds(), null);
         return CommonResult.success(true);
     }
 

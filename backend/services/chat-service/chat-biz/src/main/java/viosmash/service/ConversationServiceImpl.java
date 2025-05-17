@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import viosmash.collection.CollUtils;
+import viosmash.chat.enums.Role;
 import viosmash.collection.StreamUtils;
 import viosmash.controller.conversation.vo.*;
 import viosmash.controller.member.vo.MemberRespVO;
@@ -18,7 +18,6 @@ import viosmash.dal.repo.MessageRepository;
 import viosmash.exception.ServiceException;
 import viosmash.object.BeanUtil;
 import viosmash.profile.api.UserApi;
-import viosmash.profile.api.UserDTO;
 import viosmash.string.StringUtils;
 
 import java.time.LocalDateTime;
@@ -47,7 +46,10 @@ public class ConversationServiceImpl implements ConversationService{
                 .setConversationType(ConversationType.PUBLIC);
 
         String conversationId = conversationRepository.save(conversation).getId();
-        memberService.invite(conversation.getId(), req.getUserIds());
+        memberService.invite(conversation.getId(), req.getUserIds(), userId -> {
+            if(userId.equals(ownerId)) return Role.OWNER;
+            return Role.MEMBER;
+        });
 
         return conversationId;
     }

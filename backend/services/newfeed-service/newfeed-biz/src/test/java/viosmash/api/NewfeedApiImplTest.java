@@ -1,13 +1,11 @@
 package viosmash.api;
 
 import org.junit.jupiter.api.BeforeEach;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import viosmash.BaseTest;
 import viosmash.collection.CollUtils;
-import viosmash.dal.dataobject.NewfeedItem;
-import viosmash.friendship.api.UserApi;
+import viosmash.friendship.api.FriendshipApi;
 import viosmash.friendship.api.UserDTO;
 import viosmash.group.api.GroupApi;
 import viosmash.group.api.GroupDTO;
@@ -26,7 +24,7 @@ class NewfeedApiImplTest extends BaseTest {
     @MockitoBean
     private GroupApi groupApi;
     @MockitoBean
-    private UserApi userApi;
+    private FriendshipApi friendshipApi;
 
     @BeforeEach
     void init() {

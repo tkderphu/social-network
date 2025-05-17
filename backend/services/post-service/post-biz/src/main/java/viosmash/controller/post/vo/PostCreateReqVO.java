@@ -4,27 +4,22 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import org.springframework.validation.annotation.Validated;
+import viosmash.post.enums.PostPrivacy;
 import viosmash.post.enums.PostType;
 
 import java.util.List;
 
-@Validated
 @Data
 public class PostCreateReqVO {
     @NotEmpty
     private String content;
-    @NotNull
-    private Long userId;
 
     private Long groupId;
 
-    private List<String> imageUrls;
-    private List<String> fileUrls;
+    private List<String> mediaUrls;
 
-    @NotNull
     private PostType postType;
+    private PostPrivacy postPrivacy = PostPrivacy.PUBLIC;
 
     private Long sharePostId;
-
-    private Boolean postOnWall;
 }

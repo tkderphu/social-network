@@ -1,12 +1,11 @@
 package viosmash.controller.conversation;
 
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import viosmash.chat.enums.ApiConstant;
+import viosmash.controller.conversation.vo.ConversationCreateReq;
 import viosmash.controller.conversation.vo.ConversationRespVO;
 import viosmash.core.utils.SecurityUtils;
 import viosmash.pojo.CommonResult;
@@ -26,6 +25,12 @@ public class ConversationController {
         Long userId = SecurityUtils.getLoginUserMemberId();
         List<ConversationRespVO> conversations = conversationService.getListConversation(userId);
         return CommonResult.success(conversations);
+    }
+
+    @PostMapping
+    public CommonResult<String> createConversation(@Valid @RequestBody ConversationCreateReq req) {
+        String conversationId = conversationService.createConversation(SecurityUtils.getLoginUserMemberId(), req);
+        return CommonResult.success(conversationId);
     }
 
 

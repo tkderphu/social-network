@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import viosmash.converter.JsonListConverter;
+import viosmash.post.enums.PostPrivacy;
 import viosmash.post.enums.PostType;
 
 import java.time.LocalDateTime;
@@ -19,6 +20,7 @@ public class Post {
     private Long id;
     private String content;
 
+    @Column(nullable = false)
     private Long userId;
 
     private Long groupId;
@@ -26,17 +28,14 @@ public class Post {
     @Convert(converter = JsonListConverter.class)
     private List<String> mediaUrls;
 
-    @Convert(converter = JsonListConverter.class)
-    private List<String> fileUrls;
-
     @Enumerated(EnumType.STRING)
     private PostType postType;
 
-    @ManyToOne
-    @JoinColumn(name = "share_post_id")
-    private Post sharePost;
+    @Enumerated(EnumType.STRING)
+    private PostPrivacy postPrivacy;
 
-    private Boolean postOnWall;
+    private Long sharePostId;
 
     private LocalDateTime createdDate;
+    private LocalDateTime modifiedDate;
 }

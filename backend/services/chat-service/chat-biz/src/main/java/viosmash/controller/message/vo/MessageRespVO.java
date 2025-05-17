@@ -2,7 +2,6 @@ package viosmash.controller.message.vo;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import viosmash.controller.member.vo.MemberRespVO;
 import viosmash.date.DateUtils;
 import viosmash.profile.api.UserDTO;
 
