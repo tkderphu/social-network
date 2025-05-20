@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Navigate } from "react-router";
 import Alert from "../../components/Alert";
+import FullScreenLoader from "../../components/fullSpinner/FullScreenLoader";
 import Spinner from "../../components/Spinner";
 import { logoutAction } from "../../redux/actions/authAction";
 
@@ -21,7 +22,7 @@ export default function LogoutScreen() {
     }
 
     if(loading) {
-        return <Spinner loading={loading}/>
+       return <FullScreenLoader/>
     }
     return null
 }

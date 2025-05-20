@@ -5,8 +5,6 @@ import org.springframework.stereotype.Service;
 import viosmash.dal.dataobject.NotifySetting;
 import viosmash.dal.repo.NotifySettingRepository;
 
-import static viosmash.exception.utils.ServiceUtils.exception;
-
 @Service
 @RequiredArgsConstructor
 public class NotifySettingServiceImpl implements NotifySettingService{
@@ -14,28 +12,37 @@ public class NotifySettingServiceImpl implements NotifySettingService{
     private final NotifySettingRepository notifySettingRepository;
 
     @Override
-    public void updateNotifyChatAction(Long userId, Boolean enable) {
-        notifySettingRepository.save(getSetting(userId).setEnableNotifyChatAction(enable));
+    public void updatePostSetting(Long userId, NotifySetting.Setting setting) {
+        this.notifySettingRepository.save(getSetting(userId).setPost(setting));
     }
 
     @Override
-    public void updateNotifyCommentAction(Long userId, Boolean enable) {
-        notifySettingRepository.save(getSetting(userId).setEnableNotifyCommentAction(enable));
+    public void updateCommentSetting(Long userId, NotifySetting.Setting setting) {
+        this.notifySettingRepository.save(getSetting(userId).setComment(setting));
     }
 
     @Override
-    public void updateNotifyReactionAction(Long userId, Boolean enable) {
-        notifySettingRepository.save(getSetting(userId).setEnableNotifyReactionAction(enable));
+    public void updateReactionSetting(Long userId, NotifySetting.Setting setting) {
+        this.notifySettingRepository.save(getSetting(userId).setReaction(setting));
     }
 
     @Override
-    public void updateNotifyFriendAction(Long userId, Boolean enable) {
-        notifySettingRepository.save(getSetting(userId).setEnableNotifyFriendAction(enable));
+    public void updateChatSetting(Long userId, NotifySetting.Setting setting) {
+        this.notifySettingRepository.save(getSetting(userId).setChat(setting));
+    }
+
+    @Override
+    public void updateFriendSetting(Long userId, NotifySetting.Setting setting) {
+        this.notifySettingRepository.save(getSetting(userId).setFriend(setting));
     }
 
     @Override
     public NotifySetting getSetting(Long userId) {
-        return this.notifySettingRepository.findByUserId(userId)
-                .orElseThrow(() -> exception(404, "not found notifySetting by userId: " + userId));
+        NotifySetting notifySetting = this.notifySettingRepository.findById(userId).orElse(null);
+        if(notifySetting == null) {
+            notifySetting = new NotifySetting(userId);
+        }
+        this.notifySettingRepository.save(notifySetting);
+        return notifySetting;
     }
 }

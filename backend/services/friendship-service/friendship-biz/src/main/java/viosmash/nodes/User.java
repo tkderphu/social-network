@@ -21,10 +21,6 @@ import static viosmash.nodes.RelationshipConstant.*;
 public class User {
     @Id
     private Long id;
-    private String firstName;
-    private String lastName;
-    private String avatar;
-
     @Relationship(value = FRIEND, direction = Relationship.Direction.OUTGOING)
     private Set<Friend> friends = new HashSet<>();
 

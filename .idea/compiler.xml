@@ -42,6 +42,7 @@
         <module name="friendship-biz" />
         <module name="web" />
         <module name="websocket" />
+        <module name="search-service" />
         <module name="api" />
         <module name="authentication" />
         <module name="post-api" />
@@ -55,9 +56,11 @@
         <module name="config-server" />
         <module name="profile-api" />
         <module name="upload-biz" />
+        <module name="interaction-api" />
         <module name="chat-api" />
         <module name="db" />
         <module name="gateway" />
+        <module name="interaction-biz" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
@@ -67,7 +70,6 @@
       <module name="reaction-biz" target="17" />
       <module name="reaction-service" target="17" />
       <module name="search-biz" target="17" />
-      <module name="search-service" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -92,6 +94,9 @@
       <module name="group-api" options="-parameters" />
       <module name="group-biz" options="-parameters" />
       <module name="group-service" options="-parameters" />
+      <module name="interaction-api" options="-parameters" />
+      <module name="interaction-biz" options="-parameters" />
+      <module name="interaction-service" options="-parameters" />
       <module name="mq" options="-parameters" />
       <module name="newfeed-api" options="-parameters" />
       <module name="newfeed-biz" options="-parameters" />

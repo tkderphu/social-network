@@ -1,4 +1,4 @@
-package viosmash.controller.post.vo.template;
+package viosmash.controller.vo.template;
 
 import lombok.Data;
 

@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
+import viosmash.core.utils.SecurityUtils;
 import viosmash.pojo.CommonResult;
 import viosmash.pojo.PageResult;
 import viosmash.service.PostService;
@@ -16,7 +17,7 @@ public class PostController {
 
     @PostMapping
     public CommonResult<Boolean> createPost(@RequestBody PostCreateReqVO req) {
-        postService.createPost(req);
+        postService.createPost(SecurityUtils.getLoginUserMemberId(), req);
         return CommonResult.success(true);
     }
 
@@ -31,7 +32,5 @@ public class PostController {
     public CommonResult<PostRespVO> getPostById(@PathVariable("id") Long postId) {
         return CommonResult.success(postService.getPostById(postId));
     }
-
-
 
 }

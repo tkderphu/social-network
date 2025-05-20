@@ -38,7 +38,7 @@ public class NewfeedController {
             newfeeds = postApi.getListPostByIds(CollUtils.convertList(
                     newfeedItems,
                     newfeedItem -> newfeedItem.getPostId()
-            )).getData();
+            ));
             newfeedRedis.setValue(userId, newfeeds);
             CollUtils.convertList(newfeeds, post -> {
                 newfeedItemRedis.setValue(post.getUser().getId(), post.getId());
@@ -60,7 +60,7 @@ public class NewfeedController {
             newfeeds.addAll(postApi.getListPostByIds(CollUtils.convertList(
                     newfeedItems,
                     newfeedItem -> newfeedItem.getPostId()
-            )).getData());
+            )));
         }
 
 

@@ -12,14 +12,17 @@ import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
 import viosmash.dal.dataobject.Post;
 import viosmash.dal.repo.PostRepository;
+import viosmash.exception.Exceptional;
 import viosmash.group.api.GroupApi;
+import viosmash.interaction.api.InteractionApi;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.PageResult;
 import viosmash.profile.api.UserApi;
 
-import java.util.List;
+import java.time.LocalDateTime;
+import java.util.function.Supplier;
 
-import static viosmash.exception.utils.ServiceUtils.exception;
+import static viosmash.exception.Exceptional.process;
 
 @Service
 @RequiredArgsConstructor
@@ -28,10 +31,11 @@ public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
     private final UserApi userApi;
     private final GroupApi groupApi;
-
+    private final InteractionApi interactionApi;
     @Override
-    public Post createPost(@Valid PostCreateReqVO postCreateReq) {
-        Post post = BeanUtil.copy(postCreateReq, Post.class);
+    public Post createPost(Long userId, @Valid PostCreateReqVO postCreateReq) {
+        Post post = BeanUtil.copy(postCreateReq, Post.class)
+                .setUserId(userId).setCreatedDate(LocalDateTime.now());
         this.postRepository.save(post);
         return post;
     }
@@ -50,25 +54,20 @@ public class PostServiceImpl implements PostService{
                 Sort.by("createdDate").descending()
         );
 
-        Page<Object[]> page = postRepository.findAllByUserId(userId, pageable);
-        List<PostRespVO> posts = CollUtils.convertList(page.getContent(), objects -> {
-            Post post = (Post) objects[0];
-            return BeanUtil.copy(post, PostRespVO.class)
-                    .setNumberOfShare((Integer) objects[2])
-                    .setUser(userApi.getUserById(post.getUserId()))
-                    .setGroup(groupApi.getGroup(post.getGroupId()))
-                    .setNumReaction((Integer) objects[1])
-                    .setNumComment((Integer) objects[3]);
-        });
+        Page<Post> page = postRepository.findAllByUserId(userId, pageable);
 
-        return new PageResult<>(pageNumber, limit, posts, page.getTotalPages()) ;
+        return new PageResult<>(pageNumber, limit, CollUtils.convertList(page.getContent(), post -> {
+            return BeanUtil.copy(post, PostRespVO.class)
+                    .setUser(process(post.getUserId(), userApi::getUserById))
+                    .setGroup(process(post.getGroupId(), groupApi::getGroup))
+                    .setSharePost(getPostById(post.getSharePostId()))
+                    .setPostStats(process(post.getId(), interactionApi::countInteraction));
+        }));
     }
 
 
     @Override
     public PostRespVO getPostById(Long postId) {
-         this.postRepository.findById(postId)
-                .orElseThrow(() -> exception(404, "post not found"));
          return null;
     }
 

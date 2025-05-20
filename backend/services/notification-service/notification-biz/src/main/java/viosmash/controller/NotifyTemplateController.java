@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import viosmash.collection.CollUtils;
-import viosmash.controller.post.vo.template.NotifyTemplateCreatedReqVO;
+import viosmash.controller.vo.template.NotifyTemplateCreatedReqVO;
 import viosmash.dal.dataobject.NotifyTemplate;
 import viosmash.notification.enums.NotificationType;
 import viosmash.pojo.CommonResult;

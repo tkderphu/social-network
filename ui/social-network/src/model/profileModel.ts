@@ -37,23 +37,19 @@ export interface UserAddressResp {
     }>
 }
 export interface UserProfileResp {
-    userId?: string
-    firstName?: string
-    lastName?: string
-    phoneNumber?: string
-    sexEnum?: string,
-    dateOfBirth?: any
-    createdDate?: any
-    educations?: Array<{
-        educationEnum: any,
-        pageId?: number
-        pageName?: string
-    }>
-    addresses?: Array<{
-        addressEnum: any,
-        pageId?: string
-        pageName?: string
-    }>
+    avatar: string,
+    id: string,
+    firstName: string,
+    lastName: string,
+    phoneNumber: string
+    gender: string
+    bio: string
+    dob: string
+    joined: string
+    schools: Record<string, string>
+    aaddresses: Record<string, string>
+    policies: Record<string, string>
+    isOnline: boolean
 }
 export interface ProfileSimpleResp {
     id: number

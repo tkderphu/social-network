@@ -1,4 +1,4 @@
-import { ACCEPT_FRIEND_REQUEST_BEGIN, ACCEPT_FRIEND_REQUEST_FAILED, ACCEPT_FRIEND_REQUEST_SUCCESS } from "../constants/friendshipConstant";
+import { ACCEPT_FRIEND_REQUEST_BEGIN, ACCEPT_FRIEND_REQUEST_FAILED, ACCEPT_FRIEND_REQUEST_SUCCESS, REJECT_MAKE_FRIEND_REQUEST_BEGIN, REJECT_MAKE_FRIEND_REQUEST_FAILED, REJECT_MAKE_FRIEND_REQUEST_SUCCESS } from "../constants/friendshipConstant";
 import { ACCOUNT_CREATE_BEGIN, ACCOUNT_CREATE_FAIL, 
     ACCOUNT_FORGOT_PASSWORD_BEGIN, ACCOUNT_FORGOT_PASSWORD_FAIL, ACCOUNT_FORGOT_PASSWORD_SUCCESS,ACCOUNT_CREATE_SUCCESS, FETCH_COMMON_PROFILE_BEGIN, FETCH_COMMON_PROFILE_FAILED, FETCH_COMMON_PROFILE_SUCCESS, UPDATE_ADDRESS_BEGIN, UPDATE_ADDRESS_FAIL, UPDATE_ADDRESS_SUCCESS, UPDATE_EDUCATION_BEGIN, UPDATE_EDUCATION_FAIL, UPDATE_EDUCATION_SUCCESS, UPDATE_INFO_BEGIN, UPDATE_INFO_FAIL, UPDATE_INFO_SUCCESS, UPLOAD_PERSONAL_IMAGE_BEGIN, UPLOAD_PERSONAL_IMAGE_FAIL, UPLOAD_PERSONAL_IMAGE_SUCCESS, CHECK_FORGOT_PASSWORD_CODE_BEGIN, CHECK_FORGOT_PASSWORD_CODE_SUCCESS, CHECK_FORGOT_PASSWORD_CODE_FAIL, CREATE_NEW_PASSWORD_BEGIN, CREATE_NEW_PASSWORD_SUCCESS, CREATE_NEW_PASSWORD_FAIL } from "../constants/profileConstant";
 
@@ -213,26 +213,3 @@ export const fetchProfileReducer = (state = {}, action: any) => {
     }
 }
 
-export const acceptMakeFriendRequestReducer = (state = {}, action: any) => {
-    switch(action.type) {
-        case ACCEPT_FRIEND_REQUEST_BEGIN: {
-            return {
-                loading: true
-            }
-        }
-        case ACCEPT_FRIEND_REQUEST_SUCCESS: {
-            return {
-                loading: false
-            }
-        }
-        case ACCEPT_FRIEND_REQUEST_FAILED: {
-            return {
-                loading: false,
-                hasError: true,
-                message: action.payload.message,
-                status: action.payload.status
-            }
-        }
-        default: return state
-    }
-}

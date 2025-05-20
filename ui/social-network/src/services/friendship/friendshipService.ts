@@ -1,5 +1,17 @@
 import api from "../../axios/interceptor"
 
+export interface UserResp {
+    avatar: string,
+    firstName: string,
+    lastName: string
+    isOnline: boolean,
+    id: number
+    mutualFriends: UserResp[]
+}
+
+export interface UserRequest extends UserResp {
+    since: any
+}
 
 class FriendshipService {
     makeFriendRequest(userId: number) {
@@ -11,17 +23,17 @@ class FriendshipService {
     acceptMakeFriendRequest(userId: number) {
         return api.put(`/friendship/make/accept/${userId}`)
     }
-    getFriends(userId: number, page: number = 1, limit: number = 6) {
-        return api.get(`/friendship/get-all-friends-by-${userId}?page=${page}&limit=${limit}`)
+    getFriends(userId: number) {
+        return api.get(`/friendship/friends/${userId}`)
     }
     getAllMakeFriendRequests() {
-        return api.get('/friendship/get-all-make-friend-requests')
+        return api.get('/friendship/requests')
     }
     getAllMakeFriendRequestReceived() {
-        return api.get('/friendship/get-all-make-friend-request-received')
+        return api.get('/friendship/invitations')
     }
     getSuggestionUsers() {
-        return api.get('/friendship/suggestion-users')
+        return api.get('/friendship/suggestions')
     }
     cancelFriend(userId: number) {
         return api.delete(`/friendship/cancel/${userId}`)

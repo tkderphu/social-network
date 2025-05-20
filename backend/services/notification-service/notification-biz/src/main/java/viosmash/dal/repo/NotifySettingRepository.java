@@ -6,5 +6,4 @@ import viosmash.dal.dataobject.NotifySetting;
 import java.util.Optional;
 
 public interface NotifySettingRepository extends JpaRepository<NotifySetting, Long> {
-    Optional<NotifySetting> findByUserId(Long userId);
 }

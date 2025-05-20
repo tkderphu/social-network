@@ -13,9 +13,7 @@ import java.util.List;
 public class PostCreateReqVO {
     @NotEmpty
     private String content;
-
     private Long groupId;
-
     private List<String> mediaUrls;
 
     private PostType postType;

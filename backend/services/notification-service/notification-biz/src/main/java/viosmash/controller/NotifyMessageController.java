@@ -3,7 +3,7 @@ package viosmash.controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import viosmash.collection.CollUtils;
-import viosmash.controller.post.vo.message.NotifyMessageRespVO;
+import viosmash.controller.vo.message.NotifyMessageRespVO;
 import viosmash.dal.dataobject.NotifyMessage;
 import viosmash.pojo.CommonResult;
 import viosmash.service.notify.NotifyMessageService;

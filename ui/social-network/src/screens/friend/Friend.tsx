@@ -10,9 +10,8 @@ import { useState } from "react"
 import { Link, Outlet, useLocation, useNavigate } from "react-router"
 import "./Friend.css"
 function Friend() {
-    const location = useLocation()
-    const navigate = useNavigate()
-    const [useMode, setUseMode] = useState<"YOUR_FRIENDS" | "FRIEND_REQUESTS" | "FRIEND_ACCEPTS" | "SUGGESTIONS">()
+
+    const [useMode, setUseMode] = useState<"YOUR_FRIENDS" | "FRIEND_REQUESTS" | "FRIEND_ACCEPTS" | "SUGGESTIONS">("YOUR_FRIENDS")
     return (
         <div className="mt-2">
             <div className="row">

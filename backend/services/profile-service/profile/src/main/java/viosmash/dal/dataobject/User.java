@@ -7,6 +7,7 @@ import viosmash.profile.constant.AddressEnum;
 import viosmash.profile.constant.PolicyEnum;
 import viosmash.profile.constant.SchoolEnum;
 import viosmash.converter.JsonMapConverter;
+import viosmash.string.StringUtils;
 
 import java.util.Date;
 import java.util.Map;
@@ -44,7 +45,7 @@ public class User {
     private String avatar;
 
     public String getAvatar() {
-        if(this.avatar == null) {
+        if(StringUtils.isEmpty(avatar)) {
             return "https://icons.veryicon.com/png/o/miscellaneous/commonly-used-icon-1/personal-25.png";
         }
         return avatar;

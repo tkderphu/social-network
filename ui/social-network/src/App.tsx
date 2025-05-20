@@ -48,6 +48,7 @@ import LogoutScreen from './screens/authen/Logout'
 import ForgotPassworCodeScreen from './screens/authen/ForgotPasswordCodeScreen'
 import CreateNewPasswordScreen from './screens/authen/CreateNewPasswordScreen'
 import { useStompClient } from './utils/useStomp'
+import MyFriends from './screens/friend/MyFriends'
 export interface HandleChat {
   handleClickChat: any,
   handleCloseChat: any
@@ -88,7 +89,7 @@ function App() {
                   <Route path='/' element={<Home />} />
                   <Route path='logout' element={<LogoutScreen/>} />
                   <Route path='friends' element={<Friend />}>
-                    <Route element={<ListFriend type='MY' />} index />
+                    <Route element={<MyFriends/>} index />
 
                     <Route path='suggestions' element={<Suggestion />} >
                     </Route>

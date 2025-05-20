@@ -1,9 +1,9 @@
 import {combineReducers} from 'redux'
 import { loginReducer, logoutReducer, redirectReducer } from './authReducer'
 import { createConversationReducer, fetchListConversationReducer, fetchListMessageReducer } from './chatReducer'
-import { cancelFriendReducer, cancelMakeFriendRequestReducer, createFriendRequestReducer, fetchStatusBetweenUserReducer, rejectMakeFriendRequestReducer } from './friendshipReducer'
+import { acceptMakeFriendRequestReducer, cancelFriendReducer, cancelMakeFriendRequestReducer, createFriendRequestReducer, fetchAllFriendsReducer, fetchAllRequestFriendInvitationReducer, fetchAllRequestMakeFriendReducer, fetchStatusBetweenUserReducer, fetchSuggestionFriendsReducer, rejectMakeFriendRequestReducer } from './friendshipReducer'
 import { countUnreadMessageReducer, fetchNotifyMessagesReducer, fetchNotifySettingReducer, updateNotifyChatReducer, updateNotifyCommentReducer, updateNotifyFriendReducer, updateNotifyReactionReducer } from './notificationReducer'
-import { acceptMakeFriendRequestReducer, checkForgotPasswordCodeReducer, createNewPasswordReducer, createUserReducer, fetchProfileReducer, forgotPasswordReducer, updateAddressReducer, updateEducationReducer, updateInfoReducer, uploadPersonalImageReducer } from './profileReducer'
+import { checkForgotPasswordCodeReducer, createNewPasswordReducer, createUserReducer, fetchProfileReducer, forgotPasswordReducer, updateAddressReducer, updateEducationReducer, updateInfoReducer, uploadPersonalImageReducer } from './profileReducer'
 const rootReducer = combineReducers({
     uploadPersonalImage: uploadPersonalImageReducer,
     updateInfo: updateInfoReducer,
@@ -23,7 +23,6 @@ const rootReducer = combineReducers({
     createFriendRequest: createFriendRequestReducer,
     cancelMakeFriendRequest: cancelMakeFriendRequestReducer,
     rejectMakeFriendRequest: rejectMakeFriendRequestReducer,
-    acceptMakeFrienRequest: acceptMakeFriendRequestReducer,
     cancelFriend: cancelFriendReducer,
     //notification
     countUnreadMessage: countUnreadMessageReducer,
@@ -35,7 +34,12 @@ const rootReducer = combineReducers({
     fetchNotifySetting: fetchNotifySettingReducer,
     fetchListMessage: fetchListMessageReducer,
     fetchListConversation: fetchListConversationReducer,
-    createConversation: createConversationReducer
+    createConversation: createConversationReducer,
+    fetchAllRequestMakeFriend: fetchAllRequestMakeFriendReducer,
+    fetchAllRequestFriendInvitation: fetchAllRequestFriendInvitationReducer,
+    fetchAllFriends: fetchAllFriendsReducer,
+    fetchSuggestionFriends: fetchSuggestionFriendsReducer,
+    acceptMakeFriendRequest: acceptMakeFriendRequestReducer,
 
 })
 export default rootReducer

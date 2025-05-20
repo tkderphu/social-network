@@ -7,6 +7,9 @@ import {
     CANCEL_FRIEND_SUCCESS,
     CANCEL_MAKE_FRIEND_REQUEST_BEGIN, CANCEL_MAKE_FRIEND_REQUEST_FAILED, CANCEL_MAKE_FRIEND_REQUEST_SUCCESS,
     CREATE_FRIEND_REQUEST_BEGIN, CREATE_FRIEND_REQUEST_FAILED, CREATE_FRIEND_REQUEST_SUCCESS, 
+    FETCH_ALL_FRIENDS_BEGIN, 
+    FETCH_ALL_FRIENDS_FAILED, 
+    FETCH_ALL_FRIENDS_SUCCESS, 
     FETCH_FRIEND_REQUEST_BY_RECEIVER_BEGIN, FETCH_FRIEND_REQUEST_BY_RECEIVER_FAILED, FETCH_FRIEND_REQUEST_BY_RECEIVER_SUCCESS,
     FETCH_FRIEND_REQUEST_BY_SENDER_BEGIN, FETCH_FRIEND_REQUEST_BY_SENDER_FAILED, FETCH_FRIEND_REQUEST_BY_SENDER_SUCCESS,
     FETCH_STATUS_BETWEEN_USER_BEGIN, FETCH_STATUS_BETWEEN_USER_FAILED, FETCH_STATUS_BETWEEN_USER_SUCCESS, FETCH_SUGGESTION_USER_BEGIN,
@@ -25,7 +28,6 @@ export const acceptMakeFriendRequestAction = (userId: number) => {
                 dispatch({
                     type: ACCEPT_FRIEND_REQUEST_SUCCESS
                 })
-                dispatch(fetchStatusBetweenUserAction(userId))
                 dispatch(fetchAllFriendRequestByReceiverAction())
             } else {
                 dispatch({
@@ -92,13 +94,14 @@ export const createFriendRequestAction = (userId: number) => {
         })
     }
 }
-export const fetchAllFriendRequestBySenderAction = () => {
+export const fetchAllRequestMakeFriendAction = () => {
     return (dispatch: any) => {
         dispatch({
             type: FETCH_FRIEND_REQUEST_BY_SENDER_BEGIN
         })
         friendshipService.getAllMakeFriendRequests().then(res => {
             const data: CommonResult<any> = res.data
+            console.log("requests: ", data.data)
             if (data.code === 200) {
                 dispatch({
                     type: FETCH_FRIEND_REQUEST_BY_SENDER_SUCCESS,
@@ -129,6 +132,47 @@ export const fetchAllFriendRequestBySenderAction = () => {
         })
     }
 }
+
+
+export const fetchAllFriendsAction = (userId: number) => {
+    return (dispatch: any) => {
+        dispatch({
+            type: FETCH_ALL_FRIENDS_BEGIN
+        })
+        friendshipService.getFriends(userId).then(res => {
+            const data: CommonResult<any> = res.data
+            console.log("friends: ", data.data)
+            if (data.code === 200) {
+                dispatch({
+                    type: FETCH_ALL_FRIENDS_SUCCESS,
+                    payload: data.data
+                })
+            } else {
+                dispatch({
+                    type: FETCH_ALL_FRIENDS_FAILED,
+                    payload: {
+                        message: data.message,
+                        status: data.code
+                    }
+                })
+            }
+        }).catch(err => {
+            if (err.status === 401) {
+                localStorage.clear()
+                alert("Your token is expired, please login again");
+                location.href = '/login'
+            }
+            dispatch({
+                type: FETCH_ALL_FRIENDS_FAILED,
+                payload: {
+                    message: err.message,
+                    status: err.code
+                }
+            })
+        })
+    }
+}
+
 export const fetchAllFriendRequestByReceiverAction = () => {
     return (dispatch: any) => {
         dispatch({

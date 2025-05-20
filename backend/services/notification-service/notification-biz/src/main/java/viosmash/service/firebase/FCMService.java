@@ -4,8 +4,6 @@ import com.google.firebase.messaging.Message;
 import com.google.firebase.messaging.Notification;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import viosmash.dal.dataobject.FirebaseMessageToken;
-import viosmash.dal.repo.FirebaseMessageTokenRepository;
 
 @Service
 @RequiredArgsConstructor

@@ -33,6 +33,10 @@
     <file url="file://$PROJECT_DIR$/backend/services/group-service/group-biz/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/group-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/group-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/interaction-service/interaction-api/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/interaction-service/interaction-biz/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/interaction-service/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/interaction-service/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/newfeed-service/newfeed-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/newfeed-service/newfeed-biz/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/newfeed-service/src/main/java" charset="UTF-8" />

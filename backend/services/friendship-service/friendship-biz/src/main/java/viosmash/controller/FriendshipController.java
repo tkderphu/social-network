@@ -2,15 +2,21 @@ package viosmash.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import viosmash.controller.post.vo.UserMakeFriendRequestRespVO;
-import viosmash.controller.post.vo.UserRespVO;
+import viosmash.collection.CollUtils;
+import viosmash.controller.vo.UserMakeFriendRequestRespVO;
+import viosmash.controller.vo.UserRespVO;
 import viosmash.core.utils.SecurityUtils;
 import viosmash.friendship.constant.FriendshipStatus;
+import viosmash.nodes.UserMakesFriendRequest;
+import viosmash.object.BeanUtil;
 import viosmash.pojo.CommonResult;
+import viosmash.profile.api.UserApi;
 import viosmash.service.FriendshipService;
 
 import java.util.List;
+import java.util.Set;
 
+import static viosmash.collection.CollUtils.convertList;
 import static viosmash.pojo.CommonResult.success;
 
 @RequiredArgsConstructor
@@ -18,7 +24,7 @@ import static viosmash.pojo.CommonResult.success;
 @RequestMapping("/api/friendship")
 public class FriendshipController {
     private final FriendshipService friendshipService;
-
+    private final UserApi userApi;
     @PostMapping("/make/{userId}")
     public CommonResult<Boolean> makeFriendRequest(@PathVariable("userId") Long userId) {
         Long currentUserId = SecurityUtils.getLoginUserMemberId();
@@ -58,29 +64,58 @@ public class FriendshipController {
         return success(isOk);
     }
 
-    @GetMapping("/get-friends/{userId}")
-    public CommonResult<List<UserRespVO>> getFriends(@PathVariable("userId") Long userId,
-                                               @RequestParam(value = "limit", required = false) Integer limit) {
-        return null;
+    @GetMapping("/friends/{userId}")
+    public CommonResult<List<UserRespVO>> getFriends(@PathVariable("userId") Long userId) {
+        List<Long> friends = friendshipService.getListFriends(userId);
+        return success(convertList(friends, friendId -> {
+            return BeanUtil.copy(userApi.getUserById(friendId), UserRespVO.class)
+                    .setMutualFriends(convertList(friendshipService.getListMutualFriends(userId, friendId), mutualFriendId -> {
+                        return BeanUtil.copy(userApi.getUserById(mutualFriendId), UserRespVO.class);
+                    }));
+        }));
     }
 
-    @GetMapping("/get-requests")
+    @GetMapping("/requests")
     public CommonResult<List<UserMakeFriendRequestRespVO>> getAllMakeFriendRequests() {
         Long currentUserId = SecurityUtils.getLoginUserMemberId();
-        return null;
+        Set<UserMakesFriendRequest> requests = friendshipService.getListUserFriendRequests(currentUserId);
+
+        return success(convertList(requests, requestUser -> {
+            return (UserMakeFriendRequestRespVO)BeanUtil.copy(userApi.getUserById(requestUser.getUser().getId()), UserMakeFriendRequestRespVO.class)
+                    .setSince(requestUser.getSince())
+                    .setMutualFriends(convertList(friendshipService.getListMutualFriends(requestUser.getUser().getId(), currentUserId), userId -> {
+                        return BeanUtil.copy(userApi.getUserById(userId), UserRespVO.class);
+                    }));
+        }));
     }
 
 
-    @GetMapping("/receive-invitations")
-    public CommonResult<List<UserMakeFriendRequestRespVO>> getAllMakeFriendRequestReceived() {
+    @GetMapping("/invitations")
+    public CommonResult<List<UserMakeFriendRequestRespVO>> getAllInvitation() {
         Long currentUserId = SecurityUtils.getLoginUserMemberId();
-        return null;
+        Set<UserMakesFriendRequest> invitations = friendshipService.getListUserFriendRequestsByReceiver(currentUserId);
+
+        return success(convertList(invitations, userInvite -> {
+            return (UserMakeFriendRequestRespVO)BeanUtil.copy(userApi.getUserById(userInvite.getUser().getId()), UserMakeFriendRequestRespVO.class)
+                    .setSince(userInvite.getSince())
+                    .setMutualFriends(convertList(friendshipService.getListMutualFriends(userInvite.getUser().getId(), currentUserId), userId -> {
+                        return BeanUtil.copy(userApi.getUserById(userId), UserRespVO.class);
+                    }));
+        }));
     }
 
 
-    @GetMapping("/suggestion-users")
+    @GetMapping("/suggestions")
     public CommonResult<List<UserRespVO>> getSuggestionUsers() {
-        Long currentUserId = 1L;
-       return null;
+        Long currentUserId = SecurityUtils.getLoginUserMemberId();
+
+        Set<Long> userIds = friendshipService.getListSuggestionUser(currentUserId);
+
+        return success(convertList(userIds, userId -> {
+            return  BeanUtil.copy(userApi.getUserById(userId), UserRespVO.class)
+                    .setMutualFriends(convertList(friendshipService.getListMutualFriends(userId, currentUserId), mutualId -> {
+                        return BeanUtil.copy(userApi.getUserById(userId), UserRespVO.class);
+                    }));
+        }));
     }
 }

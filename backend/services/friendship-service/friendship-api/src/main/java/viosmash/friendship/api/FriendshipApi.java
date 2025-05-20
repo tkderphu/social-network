@@ -25,5 +25,4 @@ public interface FriendshipApi {
     @GetMapping("/{userId}/recommendation")
     List<Long> getListRecommendUser(@PathVariable("userId") Long userId);
 
-
 }

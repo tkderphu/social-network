@@ -13,7 +13,8 @@ export const loginReducer = (state = {}, action: any) => {
         }
         case ACCOUNT_LOGIN_SUCCESS: {
             return {
-                loading: false
+                loading: false,
+                success: true
             }
         }
         case ACCOUNT_LOGIN_FAIL: {

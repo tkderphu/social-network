@@ -1,28 +1,35 @@
 package viosmash.service.notify;
 
+import viosmash.controller.vo.setting.NotifySettingUpdateReq;
 import viosmash.dal.dataobject.NotifySetting;
 
 public interface NotifySettingService {
 
+
     /**
      * Someone chat to you
      */
-    void updateNotifyChatAction(Long userId, Boolean enable);
+    void updatePostSetting(Long userId, NotifySetting.Setting setting);
+
+    /**
+     * Someone chat to you
+     */
+    void updateCommentSetting(Long userId, NotifySetting.Setting setting);
 
     /**
      * Someone comment, reply comment to you
      */
-    void updateNotifyCommentAction(Long userId, Boolean enable);
+    void updateReactionSetting(Long userId, NotifySetting.Setting setting);
 
     /**
      * Someone reaction about your post, comment, message(chatting)
      */
-    void updateNotifyReactionAction(Long userId, Boolean enable);
+    void updateChatSetting(Long userId, NotifySetting.Setting setting);
 
     /**
      *
      */
-    void updateNotifyFriendAction(Long userId, Boolean enable);
+    void updateFriendSetting(Long userId, NotifySetting.Setting setting);
     
     NotifySetting getSetting(Long userId);
 

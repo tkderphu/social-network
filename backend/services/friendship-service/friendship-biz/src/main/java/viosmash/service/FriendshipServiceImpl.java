@@ -26,9 +26,10 @@ public class FriendshipServiceImpl implements FriendshipService{
 
     @Override
     public List<Long> getListFriends(Long userId) {
-        return getUserById(userId).getFriends().stream()
+        List<Long> userIds = getUserById(userId).getFriends().stream()
                 .map(friend -> friend.getUser().getId())
                 .toList();
+        return userIds;
     }
 
     @Override
