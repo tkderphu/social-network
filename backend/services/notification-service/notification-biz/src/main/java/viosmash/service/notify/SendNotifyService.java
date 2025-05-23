@@ -6,9 +6,10 @@ import viosmash.notification.enums.NotificationType;
 import java.util.Map;
 
 public interface SendNotifyService {
-    void sendNotifyMessage(Long userId, String templateId, Map<String, Object> templateParams);
+
+    void sendNotifyMessage(Long userId, NotificationType type, Map<String, Object> templateParams);
     @Async
-    void notifySingleMessage(Long userId, String templateName, Map<String, Object> templateParams);
+    void notifySingleMessage(Long userId, Map<String, Object> templateParams);
 
     @Async
     void mailNotifySingleMessage(Map<String, Object> properties, NotificationType type, String subject);

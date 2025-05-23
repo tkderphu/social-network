@@ -12,8 +12,7 @@ public enum NotificationType {
     CREATED_REACTION(""),
     CREATED_COMMENT(""),
     CREATED_REPLY_COMMENT(""),
-    FORGOT_PASSWORD("forgot_password.html"),
-    FOLLOW_USER("");
+    FORGOT_PASSWORD("forgot_password.html");
 
     private final String fileNameHtml;
 }

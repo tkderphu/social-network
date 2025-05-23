@@ -3,9 +3,14 @@ package viosmash.service.notify;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import viosmash.collection.CollUtils;
+import viosmash.controller.vo.message.NotifyMessageRespVO;
 import viosmash.dal.dataobject.NotifyMessage;
-import viosmash.dal.dataobject.NotifyTemplate;
 import viosmash.dal.repo.NotifyMessageRepository;
+import viosmash.notification.enums.NotificationType;
+import viosmash.object.BeanUtil;
+import viosmash.profile.api.UserApi;
+import viosmash.profile.api.UserDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -15,21 +20,24 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class NotifyMessageServiceImpl implements NotifyMessageService{
     private final NotifyMessageRepository notifyMessageRepository;
-
+    private final UserApi userApi;
 
     @Override
     public NotifyMessage createNotifyMessage(Long userId,
-                                             NotifyTemplate template,
-                                             Map<String, Object> templateParams) {
+                                             NotificationType type, Map<String, Object> templateParams) {
         NotifyMessage notifyMessage = new NotifyMessage().setCreatedAt(LocalDateTime.now())
-                .setSeen(false).setUserId(userId)
-                .setNotifyTemplate(template).setTemplateParams(templateParams);
+                .setType(type).setSeen(false).setUserId(userId).setTemplateParams(templateParams);
         return this.notifyMessageRepository.save(notifyMessage);
     }
 
     @Override
-    public List<NotifyMessage> getListNotify(Long userId) {
-        return this.notifyMessageRepository.findAllByUserId(userId, Sort.by("id").descending());
+    public List<NotifyMessageRespVO> getListNotify(Long userId) {
+        List<NotifyMessage> notifications = this.notifyMessageRepository.findAllByUserId(userId, Sort.by("id").descending());
+        return CollUtils.convertList(notifications, notification -> {
+           return BeanUtil.copy(notification, NotifyMessageRespVO.class)
+                   .setParams(buildParams(notification))
+                   .setRead(notification.getSeen() == null ? false : notification.getSeen());
+        });
     }
 
     @Override
@@ -50,5 +58,18 @@ public class NotifyMessageServiceImpl implements NotifyMessageService{
     @Override
     public void readNotifyMessage(Long notifyMessageId) {
         this.notifyMessageRepository.updateReadById(true, notifyMessageId);
+    }
+
+
+    private NotifyMessageRespVO.Params buildParams(NotifyMessage message) {
+        Map<String, Object> templates = message.getTemplateParams();
+        NotifyMessageRespVO.Params params = new NotifyMessageRespVO.Params();
+        if(templates.containsKey("fromUserId")) {
+            UserDTO userDTO = userApi.getUserById(Long.parseLong(templates.get("fromUserId") + ""));
+            params.setUserAvatar(userDTO.getAvatar()).setUserId(userDTO.getId())
+                    .setUserFullName(userDTO.getFirstName() + " " + userDTO.getLastName());
+        }
+
+        return params;
     }
 }

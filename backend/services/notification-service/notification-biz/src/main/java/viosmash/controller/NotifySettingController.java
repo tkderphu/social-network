@@ -19,22 +19,22 @@ public class NotifySettingController {
     }
     @PutMapping("/user/friend/{enable}")
     public CommonResult<Boolean> updateEnableFriendAction(@PathVariable("enable") Boolean enable) {
-        notifySettingService.updateNotifyFriendAction(SecurityUtils.getLoginUserMemberId(), enable);
+//        notifySettingService.updateNotifyFriendAction(SecurityUtils.getLoginUserMemberId(), enable);
         return CommonResult.success(true);
     }
     @PutMapping("/user/chat/{enable}")
     public CommonResult<Boolean> updateEnableChatAction(@PathVariable("enable") Boolean enable) {
-        notifySettingService.updateNotifyFriendAction(SecurityUtils.getLoginUserMemberId(), enable);
+//        notifySettingService.updateNotifyFriendAction(SecurityUtils.getLoginUserMemberId(), enable);
         return CommonResult.success(true);
     }
     @PutMapping("/user/comment/{enable}")
     public CommonResult<Boolean> updateEnableCommentAction(@PathVariable("enable") Boolean enable) {
-        notifySettingService.updateNotifyFriendAction(SecurityUtils.getLoginUserMemberId(), enable);
+//        notifySettingService.updateNotifyFriendAction(SecurityUtils.getLoginUserMemberId(), enable);
         return CommonResult.success(true);
     }
     @PutMapping("/user/reaction/{enable}")
     public CommonResult<Boolean> updateEnableReactionAction(@PathVariable("enable") Boolean enable) {
-        notifySettingService.updateNotifyFriendAction(SecurityUtils.getLoginUserMemberId(), enable);
+//        notifySettingService.updateNotifyFriendAction(SecurityUtils.getLoginUserMemberId(), enable);
         return CommonResult.success(true);
     }
 }

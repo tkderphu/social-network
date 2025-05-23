@@ -8,11 +8,12 @@ import viosmash.friendship.constant.FriendshipStatus;
 import viosmash.exception.ServiceException;
 import viosmash.nodes.User;
 import viosmash.nodes.UserMakesFriendRequest;
+import viosmash.notification.api.NotificationApi;
+import viosmash.notification.api.NotificationDto;
+import viosmash.notification.enums.NotificationType;
 import viosmash.repository.UserRepository;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 import static viosmash.exception.utils.ServiceUtils.exception;
 import static viosmash.friendship.constant.FriendshipStatus.*;
@@ -23,7 +24,7 @@ import static viosmash.friendship.constant.FriendshipStatus.*;
 public class FriendshipServiceImpl implements FriendshipService{
 
     private final UserRepository userRepository;
-
+    private final NotificationApi notificationApi;
     @Override
     public List<Long> getListFriends(Long userId) {
         List<Long> userIds = getUserById(userId).getFriends().stream()
@@ -52,6 +53,15 @@ public class FriendshipServiceImpl implements FriendshipService{
         user.makesNewFriendRequest(targetUser);
 
         this.userRepository.save(user);
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("fromUserId", user.getId());
+        params.put("toUserId", targetUserId);
+        NotificationDto notificationDto = new NotificationDto();
+        notificationDto.setProperties(params);
+        notificationDto.setType(NotificationType.CREATED_REQUEST_FRIEND);
+        notificationApi.sendNotification(notificationDto);
+
         return true;
     }
 
@@ -77,6 +87,16 @@ public class FriendshipServiceImpl implements FriendshipService{
         this.userRepository.save(user);
         this.userRepository.save(targetUser);
         this.userRepository.removeMakeFriendRequest(targetUserId, userId);
+
+
+        Map<String, Object> params = new HashMap<>();
+        params.put("fromUserId", user.getId());
+        params.put("toUserId", targetUserId);
+        NotificationDto notificationDto = new NotificationDto();
+        notificationDto.setProperties(params);
+        notificationDto.setType(NotificationType.CREATED_REQUEST_FRIEND);
+        notificationApi.sendNotification(notificationDto);
+
 
         return result;
     }

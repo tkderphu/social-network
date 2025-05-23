@@ -8,6 +8,7 @@ import viosmash.post.enums.PostPrivacy;
 import viosmash.post.enums.PostType;
 
 import java.util.List;
+import java.util.Set;
 
 @Data
 public class PostCreateReqVO {
@@ -15,7 +16,7 @@ public class PostCreateReqVO {
     private String content;
     private Long groupId;
     private List<String> mediaUrls;
-
+    private Set<String> tagNames;
     private PostType postType;
     private PostPrivacy postPrivacy = PostPrivacy.PUBLIC;
 

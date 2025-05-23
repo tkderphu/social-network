@@ -11,9 +11,6 @@ public interface NotificationConvert {
     NotificationConvert INSTANCE = Mappers.getMapper(NotificationConvert.class);
 
     default NotifyMessageRespVO convert(NotifyMessage message) {
-        NotifyMessageRespVO resp = BeanUtil.copy(message, NotifyMessageRespVO.class);
-        resp.setContent(message.getContent());
-        resp.setTemplate(message.getNotifyTemplate().getId());
-        return resp;
+        return null;
     }
 }

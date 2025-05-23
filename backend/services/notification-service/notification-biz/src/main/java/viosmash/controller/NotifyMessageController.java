@@ -18,13 +18,13 @@ import static viosmash.core.utils.SecurityUtils.getLoginUserMemberId;
 @RequiredArgsConstructor
 public class NotifyMessageController {
     private final NotifyMessageService notifyMessageService;
-    @GetMapping("/user")
+    @GetMapping
     public CommonResult<List<NotifyMessageRespVO>> getListNotifyMessage() {
-        List<NotifyMessage> notifyMessages = notifyMessageService.getListNotify(getLoginUserMemberId());
-        return CommonResult.success(CollUtils.convertList(notifyMessages, INSTANCE::convert));
+        List<NotifyMessageRespVO> notifyMessages = notifyMessageService.getListNotify(getLoginUserMemberId());
+        return CommonResult.success(notifyMessages);
     }
 
-    @GetMapping("/user/unread")
+    @GetMapping("/unread")
     public CommonResult<List<NotifyMessageRespVO>> getListUnreadNotifyMessage() {
         List<NotifyMessage> notifyMessages = notifyMessageService.getListUnreadNotify(getLoginUserMemberId());
         return CommonResult.success(CollUtils.convertList(notifyMessages, INSTANCE::convert));

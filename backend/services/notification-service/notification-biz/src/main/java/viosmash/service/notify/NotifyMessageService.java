@@ -1,14 +1,15 @@
 package viosmash.service.notify;
 
+import viosmash.controller.vo.message.NotifyMessageRespVO;
 import viosmash.dal.dataobject.NotifyMessage;
-import viosmash.dal.dataobject.NotifyTemplate;
+import viosmash.notification.enums.NotificationType;
 
 import java.util.List;
 import java.util.Map;
 
 public interface NotifyMessageService {
-    NotifyMessage createNotifyMessage(Long userId, NotifyTemplate template, Map<String, Object> templateParams);
-    List<NotifyMessage> getListNotify(Long userId);
+    NotifyMessage createNotifyMessage(Long userId, NotificationType type, Map<String, Object> templateParams);
+    List<NotifyMessageRespVO> getListNotify(Long userId);
     List<NotifyMessage> getListUnreadNotify(Long userId);
     int countUnreadNotify(Long userId);
     void readAllNotifyMessage(Long userId);

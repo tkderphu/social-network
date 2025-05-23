@@ -7,22 +7,30 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import viosmash.collection.CollUtils;
 import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
 import viosmash.dal.dataobject.Post;
+import viosmash.dal.dataobject.PostTag;
+import viosmash.dal.dataobject.Tag;
 import viosmash.dal.repo.PostRepository;
+import viosmash.dal.repo.PostTagRepository;
+import viosmash.dal.repo.TagRepository;
 import viosmash.exception.Exceptional;
 import viosmash.group.api.GroupApi;
 import viosmash.interaction.api.InteractionApi;
 import viosmash.object.BeanUtil;
+import viosmash.object.ObjectUtils;
 import viosmash.pojo.PageResult;
 import viosmash.profile.api.UserApi;
+import viosmash.string.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.function.Supplier;
 
 import static viosmash.exception.Exceptional.process;
+import static viosmash.exception.utils.ServiceUtils.exception;
 
 @Service
 @RequiredArgsConstructor
@@ -32,11 +40,25 @@ public class PostServiceImpl implements PostService{
     private final UserApi userApi;
     private final GroupApi groupApi;
     private final InteractionApi interactionApi;
+    private final PostTagRepository postTagRepository;
+    private final TagRepository tagRepository;
     @Override
+    @Transactional
     public Post createPost(Long userId, @Valid PostCreateReqVO postCreateReq) {
         Post post = BeanUtil.copy(postCreateReq, Post.class)
                 .setUserId(userId).setCreatedDate(LocalDateTime.now());
         this.postRepository.save(post);
+        CollUtils.convertList(postCreateReq.getTagNames(), tagName -> {
+            Tag tag = tagRepository.findByName(StringUtils.lower(tagName));
+            if(tag == null) {
+                tag = new Tag().setCreatedAt(LocalDateTime.now())
+                        .setName(StringUtils.lower(tagName));
+                this.tagRepository.save(tag);
+            }
+            postTagRepository.save(new PostTag().setPostId(post.getId()))
+                    .setTagName(tag.getName());
+            return null;
+        });
         return post;
     }
 
@@ -68,7 +90,13 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public PostRespVO getPostById(Long postId) {
-         return null;
+        Post post = this.postRepository.findById(postId)
+                .orElseThrow(() -> exception(404, "Post with id " + postId + " not found"));
+        return BeanUtil.copy(post, PostRespVO.class)
+                .setUser(process(post.getUserId(), userApi::getUserById))
+                .setGroup(process(post.getGroupId(), groupApi::getGroup))
+                .setSharePost(getPostById(post.getSharePostId()))
+                .setPostStats(process(post.getId(), interactionApi::countInteraction));
     }
 
     @Override

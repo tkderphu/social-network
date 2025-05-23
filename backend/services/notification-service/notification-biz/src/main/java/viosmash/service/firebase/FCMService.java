@@ -9,12 +9,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FCMService {
 
-    private final FirebaseMessageTokenRepository firebaseMessageTokenRepository;
 
     public void storeFirebaseMessageToken(Long userId, String token) {
-        firebaseMessageTokenRepository.save(new FirebaseMessageToken()
-                .setToken(token)
-                .setUserId(userId));
+//        firebaseMessageTokenRepository.save(new FirebaseMessageToken()
+//                .setToken(token)
+//                .setUserId(userId));
     }
 
     public void sendNotification(String title, String body, String token) {

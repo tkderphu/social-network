@@ -18,16 +18,13 @@ import static viosmash.exception.utils.ServiceUtils.exception;
 @RequiredArgsConstructor
 @Slf4j
 public class SendNotifyServiceImpl implements SendNotifyService{
-    private final NotifyTemplateService notifyTemplateService;
     private final NotifyMessageService notifyMessageService;
     private final MailService mailService;
     private final TemplateEngine templateEngine;
     @Override
-    public void sendNotifyMessage(Long userId, String templateId, Map<String, Object> templateParams) {
-        NotifyTemplate notifyTemplate = this.notifyTemplateService.getNotifyTemplateById(templateId);
-        validTemplateParams(notifyTemplate, templateParams);
-         notifyMessageService.createNotifyMessage(userId, notifyTemplate, templateParams);
-
+    public void sendNotifyMessage(Long userId, NotificationType type, Map<String, Object> templateParams) {
+         notifyMessageService.createNotifyMessage(userId,type, templateParams);
+        System.out.println("----------create message ok--------------");
     }
 
 
@@ -43,10 +40,10 @@ public class SendNotifyServiceImpl implements SendNotifyService{
         });
     }
     @Override
-    public void notifySingleMessage(Long userId, String templateId, Map<String, Object> templateParams) {
-        NotifyTemplate notifyTemplate = this.notifyTemplateService.getNotifyTemplateById(templateId);
-        validTemplateParams(notifyTemplate, templateParams);
-        notifyMessageService.createNotifyMessage(userId, notifyTemplate, templateParams);
+    public void notifySingleMessage(Long userId, Map<String, Object> templateParams) {
+//        NotifyTemplate notifyTemplate = this.notifyTemplateService.getNotifyTemplateById(templateId);
+//        validTemplateParams(notifyTemplate, templateParams);
+//        notifyMessageService.createNotifyMessage(userId, , templateParams);
     }
 
     @Override

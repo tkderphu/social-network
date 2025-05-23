@@ -2,6 +2,7 @@ package viosmash.controller.post.vo;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
+import viosmash.date.DateUtils;
 import viosmash.group.api.GroupDTO;
 import viosmash.interaction.api.dto.PostStats;
 import viosmash.post.enums.PostPrivacy;
@@ -25,4 +26,9 @@ public class PostRespVO {
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
     private PostStats postStats;
+    private String time;
+
+    public String getTime() {
+        return DateUtils.timeAgo(createdDate);
+    }
 }

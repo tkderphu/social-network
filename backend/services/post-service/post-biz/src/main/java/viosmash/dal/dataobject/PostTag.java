@@ -15,5 +15,5 @@ public class PostTag {
     @Column(nullable = false)
     private Long postId;
     @Column(nullable = false)
-    private Long tagId;
+    private String tagName;
 }

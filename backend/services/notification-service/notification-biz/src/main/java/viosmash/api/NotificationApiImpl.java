@@ -26,6 +26,13 @@ public class NotificationApiImpl implements NotificationApi {
                 log.info("begin send");
                 sendNotifyService.mailNotifySingleMessage(req.getProperties(), req.getType(), "Forgot password");
                 log.info("end send");
+                break;
+            }
+            case CREATED_REQUEST_FRIEND -> {
+                log.info("create request friend");
+                Long userId = Long.parseLong( req.getProperties().get("toUserId") + "");
+                req.getProperties().remove("toUserId");
+                sendNotifyService.sendNotifyMessage(userId, req.getType(), req.getProperties());
             }
         }
     }
