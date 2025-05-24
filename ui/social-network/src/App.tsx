@@ -49,6 +49,7 @@ import ForgotPassworCodeScreen from './screens/authen/ForgotPasswordCodeScreen'
 import CreateNewPasswordScreen from './screens/authen/CreateNewPasswordScreen'
 import { useStompClient } from './utils/useStomp'
 import MyFriends from './screens/friend/MyFriends'
+import Notification from './screens/notification/Notification'
 export interface HandleChat {
   handleClickChat: any,
   handleCloseChat: any
@@ -73,10 +74,10 @@ function App() {
           }} />} */}
         <div className='container-fluid'>
           <div className='row'>
-            <div className='col-md-1'>
+            <div className='sidebar'>
               <Sidebar />
             </div>
-            <div className='col-md-11'>
+            <div className='main-content'>
               <Routes location={state?.backgroundLocation || location}>
 
                 <Route path='login' element={<LoginScreen />}></Route>
@@ -106,10 +107,11 @@ function App() {
                   </Route>
 
                   <Route path='profile/:id' element={<ProfileScreen />} >
-                    <Route element={<ProfilePostComponent />} index path='posts' />
-                    <Route element={<ProfilePhotosComponent />} index path='photos' />
-                    <Route element={<ProfileAbouComponent />} index path='about' />
-                    <Route element={<ProfileFriendsComponent />} index path='friends' />
+                    <Route element={<ProfilePostComponent />} index  />
+                    <Route element={<ProfilePostComponent />} path='posts'  />
+                    <Route element={<ProfilePhotosComponent />}  path='photos' />
+                    <Route element={<ProfileAbouComponent />}  path='about' />
+                    <Route element={<ProfileFriendsComponent />}  path='friends' />
 
                   </Route>
 
@@ -142,10 +144,8 @@ function App() {
               {state?.backgroundLocation && (
                 <Routes>
                   <Route path="/posts/:id" element={<PostDetailDialog />} />
-                  <Route path='messages' element={<Messenger />} >
-                    <Route path='group' element={<GroupChatForm />} />
-                    {/* <Route index path=':conversationId' element={<UserChatBox removeThisUserChatboxFn={() => { }} />} /> */}
-                  </Route>
+                  <Route path='notifications' element={<Notification/>} />
+
                 </Routes>
               )}
             </div>

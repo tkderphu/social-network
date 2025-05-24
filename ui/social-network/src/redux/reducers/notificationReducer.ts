@@ -1,6 +1,6 @@
 import {
     COUNT_UNREAD_MESSAGE_BEGIN, COUNT_UNREAD_MESSAGE_FAILED,
-    COUNT_UNREAD_MESSAGE_SUCCESS, FETCH_NOTIFY_MESSAGE_BEGIN, FETCH_NOTIFY_MESSAGE_SUCCESS,
+    COUNT_UNREAD_MESSAGE_SUCCESS, FETCH_NOTIFY_MESSAGE_BEGIN, FETCH_NOTIFY_MESSAGE_FAILED, FETCH_NOTIFY_MESSAGE_SUCCESS,
     FETCH_NOTIFY_SETTING_BEGIN,
     FETCH_NOTIFY_SETTING_FAILED,
     FETCH_NOTIFY_SETTING_SUCCESS,
@@ -29,9 +29,9 @@ export const fetchNotifyMessagesReducer = (state: any = {}, action: any) => {
             return { loading: true }
         }
         case FETCH_NOTIFY_MESSAGE_SUCCESS: {
-            return { loading: false, notifyMessages: action.payload }
+            return { loading: false, notifications: action.payload }
         }
-        case COUNT_UNREAD_MESSAGE_FAILED: {
+        case FETCH_NOTIFY_MESSAGE_FAILED: {
             return { loading: false, hasError: true, error: action.payload.error }
         }
         default: return state

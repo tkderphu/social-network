@@ -46,6 +46,11 @@ spring:
           uri: lb:ws://CHAT-SERVICE
           predicates:
             - Path=/chat/ws/**
+
+        - id: post-service
+          uri: lb://POST-SERVICE
+          predicates:
+              - Path=/api/posts/**
       discovery:
         locator:
           enabled: true

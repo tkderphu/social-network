@@ -3,36 +3,71 @@ import ModalCustome from '../../components/modal/ModalCustom';
 import remarkGfm from 'remark-gfm'
 import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw';
-export default function PostForm() {
-  const [content, setContent] = useState('');
+import { useSelector } from 'react-redux';
+import FullScreenLoader from '../../components/fullSpinner/FullScreenLoader';
+
+const POST_PRIVACY = [
+  {
+    checked: true,
+    scope: "PUBLIC",
+    show: "Public"
+  },
+  {
+    checked: false,
+    scope: "PRIVATE",
+    show: "Private"
+  },
+  {
+    checked: false,
+    scope: "ONLY_FRIENDS",
+    show: "Only friends"
+  }
+]
+interface PostFormProps {
+  content: string,
+  mediaUrls?: string[],
+  postPrivacy: "PUBLIC" | "PRIVATE" | "ONLY_FRIENDS",
+  onChange: any,
+  onSubmit?: any,
+
+}
+export default function PostForm(props: { form?: PostFormProps }) {
   const [file, setFile] = useState(null);
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    // Handle form submission (e.g., send content and file to server)
-    console.log('Content:', content);
-    console.log('File:', file);
-    // Reset form
-    setContent('');
-    setFile(null);
-  };
 
   const handleFileChange = (e: any) => {
     setFile(e.target.files[0]);
   };
+
+  const createPostState: {
+    loading: boolean,
+    post: any,
+    success: boolean
+  } = useSelector((state: any) => {
+    return state.createPost
+  })
+
+  // const updatePostState: {
+  //   loading: boolean,
+  //   post: any,
+  //   success: boolean
+  // } = 
+
+
+
 
   const [showDialog, setShowDialog] = useState(false)
   return (
     <>
       <div className="card mb-3">
         <div className="card-body">
-          <div className="d-flex align-items-center mb-3">
-            <img
+          <div className="d-flex align-items-center text-center mb-3">
+            {/* <img
               src="https://via.placeholder.com/40"
               alt="User avatar"
               className="rounded-circle me-2"
               style={{ width: '40px', height: '40px' }}
-            />
+            /> */}
             <input
               style={{ cursor: "pointer" }}
               onClick={() => {
@@ -49,25 +84,47 @@ export default function PostForm() {
       <ModalCustome
         title='Post form'
         show={showDialog}
-        onSave={() => {
-
-        }}
+        onSave={props.form?.onSubmit}
         onClose={() => setShowDialog(false)}
         children={
           <div className="container">
-            <form onSubmit={handleSubmit}>
-              <div className="mb-3">
-                <label htmlFor="content" className="form-label fw-bold">
-                  Content
+            {createPostState.loading && (<FullScreenLoader />)}
+
+            <form >
+              <div className='mb-3'>
+                <label htmlFor="postType" className="form-label fw-bold">
+                  Post privacy
                 </label>
+                <select name='postPrivacy' onChange={props.form?.onChange} className="form-select" value={props.form?.postPrivacy}>
+                  {POST_PRIVACY.map(privacy => {
+                    return (
+                      <option value={privacy.scope} selected={props.form?.postPrivacy ? (props.form.postPrivacy == privacy.scope) : privacy.checked} >{privacy.show}</option>
+                    )
+                  })}
+                </select>
+              </div>
+              <div className="mb-3">
+                <div className='row'>
+                  <div className='col-7'>
+                    <label htmlFor="content" className="form-label fw-bold">
+                      Content
+                    </label>
+                  </div>
+                  <div className='col-5 text-center'>
+                    <label htmlFor="content-preview" className="form-label fw-bold">
+                      Content preview
+                    </label>
+                  </div>
+                </div>
                 <div className='row'>
                   <div className='col-7'>
                     <textarea
                       className="form-control"
                       id="content"
                       rows={10}
-                      value={content}
-                      onChange={(e) => setContent(e.target.value)}
+                      name="content"
+                      value={props.form?.content}
+                      onChange={props.form?.onChange}
                       placeholder="Write your post content..."
                       required
                     ></textarea>
@@ -77,7 +134,7 @@ export default function PostForm() {
                     overflowY: 'scroll'
                   }}>
                     <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
-                      {content}
+                      {props.form?.content}
                     </Markdown>
                   </div>
                 </div>

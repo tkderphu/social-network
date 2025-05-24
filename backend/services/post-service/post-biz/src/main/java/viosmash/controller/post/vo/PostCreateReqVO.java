@@ -19,6 +19,5 @@ public class PostCreateReqVO {
     private Set<String> tagNames;
     private PostType postType;
     private PostPrivacy postPrivacy = PostPrivacy.PUBLIC;
-
     private Long sharePostId;
 }

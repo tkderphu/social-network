@@ -7,7 +7,7 @@ class NotificationService {
         return api.get(`${PATH}`)
     }
     fetchNotifyMessages() {
-        return api.get(`${PATH}`)
+        return api.get(`${PATH}/messages`)
     }
     updateNotifyFriendEnable(enable: boolean) {
         return api.put(`${PATH}/setting/friend/${enable}`)

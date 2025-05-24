@@ -22,10 +22,11 @@ public class PostController {
     }
 
     @GetMapping("/user/{id}")
-    public PageResult<PostRespVO> getListPostByUser(@PathVariable("id") Long userId,
+    public CommonResult<PageResult<PostRespVO>> getListPostByUser(@PathVariable("id") Long userId,
                                                     @RequestParam(value = "page", defaultValue = "1") int page,
                                                     @RequestParam(value = "limit", defaultValue = "20") int limit) {
-        return postService.getListPostByUserId(userId, page, limit);
+        PageResult<PostRespVO> resp = postService.getListPostByUserId(userId, page, limit);
+        return CommonResult.success(resp);
     }
 
     @GetMapping("/{id}")

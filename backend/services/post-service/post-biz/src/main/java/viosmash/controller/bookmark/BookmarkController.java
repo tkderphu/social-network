@@ -22,6 +22,6 @@ public class BookmarkController {
 
     @GetMapping("/series/{id}")
     public CommonResult<List<Bookmark>> getListBookmark(@PathVariable("id") Long seriesId) {
-        bookmarkService.g
+        return null;
     }
 }

@@ -80,10 +80,10 @@ public class PostServiceImpl implements PostService{
 
         return new PageResult<>(pageNumber, limit, CollUtils.convertList(page.getContent(), post -> {
             return BeanUtil.copy(post, PostRespVO.class)
-                    .setUser(process(post.getUserId(), userApi::getUserById))
-                    .setGroup(process(post.getGroupId(), groupApi::getGroup))
-                    .setSharePost(getPostById(post.getSharePostId()))
-                    .setPostStats(process(post.getId(), interactionApi::countInteraction));
+                    .setUser(process(post.getUserId(), userApi::getUserById));
+//                    .setGroup(process(post.getGroupId(), groupApi::getGroup))
+//                    .setSharePost(getPostById(post.getSharePostId()))
+//                    .setPostStats(process(post.getId(), interactionApi::countInteraction));
         }));
     }
 

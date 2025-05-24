@@ -10,3 +10,8 @@
     display: none; /* Chrome, Safari, Opera */
   }
   
+  body {
+    min-height: 100vh;
+    display: flex;
+    overflow-x: hidden;
+}

@@ -1,0 +1,88 @@
+import { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router";
+import FullScreenLoader from "../../components/fullSpinner/FullScreenLoader";
+import { fetchNotifyMessagesAction } from "../../redux/actions/notificationAction";
+import notificationService from "../../services/notification/notificationService";
+import "./Notification.css"
+import NotificationRequestFriend from "./template/NotificationRequestFriend";
+
+
+export default function Notification() {
+    const [showNotifications, setShowNotifications] = useState(false);
+    const navigate = useNavigate()
+
+    const closeNotifications = () => {
+        navigate(-1)
+        setShowNotifications(false);
+    };
+
+    useEffect(() => {
+
+        setShowNotifications(!showNotifications);
+    }, [])
+
+    // // Close notifications when clicking outside
+    // const handleOutsideClick = (e: any) => {
+    //     if (showNotifications &&
+    //         !e.target.closest('#notificationSidebar') &&
+    //         !e.target.closest('#notificationBtn')) {
+    //         setShowNotifications(false);
+    //     }
+    // };
+
+
+    const dispatch = useDispatch()
+    const fetchNotificationState: {
+        notifications: {
+            time: any,
+            read: boolean,
+            type: "ACCEPTED_REQUEST_FRIEND" | "CREATED_REQUEST_FRIEND",
+            params: any
+        }[],
+        loading: boolean
+    } = useSelector((state: any) => {
+        return state.fetchNotifyMessages
+    })
+    console.log("notification: ", fetchNotificationState.notifications)
+    useEffect(() => {
+        //@ts-ignore
+        dispatch(fetchNotifyMessagesAction())
+    }, [])
+
+    if(fetchNotificationState.loading) {
+        return <FullScreenLoader/>
+    }
+    return (
+        <>
+            <div
+                className={`notification-sidebar ${showNotifications ? 'show' : ''}`}
+                id="notificationSidebar"
+            >
+                <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h5 className="mb-0">Notifications</h5>
+                    <button
+                        type="button"
+                        className="btn-close"
+                        onClick={closeNotifications}
+                    />
+                </div>
+
+                {fetchNotificationState?.notifications?.map(notification => {
+                    if (notification.type === "CREATED_REQUEST_FRIEND") {
+                        return (
+                            <NotificationRequestFriend
+                                read={notification.read}
+                                time={notification.time}
+                                params={notification.params}
+                            />
+                        )
+                    }
+                    return null
+                })}
+
+            </div>
+        </>
+
+    )
+}

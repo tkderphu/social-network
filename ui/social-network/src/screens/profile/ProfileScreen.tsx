@@ -51,19 +51,20 @@ function ProfileScreen(props: { userId?: string }) {
     return (
         <div >
             <>
-                <div className="cover-photo">
+                {/* <div className="cover-photo">
                     <div>
-                        <a href="#photo-cover" data-toggle="modal" data-target=".photo-cover-modal" ><img src="https://freefrontend.com/assets/img/bootstrap-profiles/bootstrap-4-individual-user-profile-on-a-social-network.png"
+                        <a href="#photo-cover" data-toggle="modal" data-target=".photo-cover-modal" >
+                            <img src="https://png.pngtree.com/thumb_back/fh260/background/20210207/pngtree-simple-gray-solid-color-background-image_557027.jpg"
                             alt="Profile Picture" height={"400px"} width={"100%"}
 
                         /></a>
                     </div>
-                </div>
+                </div> */}
                 <div className="d-flex justify-content-between align-items-center mt-3 flex-wrap">
                     <div className="d-flex align-items-center ">
                         <img src={fetchProfile.userProfile?.avatar}
                             alt="Profile Picture" className="img-fluid img-thumbnail rounded-circle" width={"130px"} height={"130px"} />
-                        <div>
+                        <div className='mx-3'>
                             <h3>{fetchProfile.userProfile?.firstName + " " + fetchProfile.userProfile?.lastName}</h3>
                             <div>53 friends</div>
                         </div>

@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { TokenUtils } from "../common";
 
 
 
 export default function Sidebar(){
     const [useLink, setUseLik] = useState<"HOME" | "PROFILE" | "NOTIFICATIONS" | "FRIENDS" | "GROUPS" | "INBOX" | "LOGOUT">("HOME")
+    const location = useLocation()
     return (
         <div className="d-flex flex-column bg-light vh-100 p-3" style={{ position: 'fixed', top: 0, left: 0 }}>
             <ul className="nav nav-pills flex-column">
@@ -35,7 +36,9 @@ export default function Sidebar(){
                     }}><i className="bi bi-collection " style={{fontSize: "24px"}}></i></Link>
                 </li>
                 <li className="nav-item">
-                    <Link to={"/groups"} className={`nav-link ${useLink === 'NOTIFICATIONS' ? "active" : ""}`} onClick={() => {
+                    <Link to={"/notifications"} state={{
+                        backgroundLocation: location
+                    }} className={`nav-link ${useLink === 'NOTIFICATIONS' ? "active" : ""}`} onClick={() => {
                         setUseLik("NOTIFICATIONS")
                     }}><i className="bi bi-bell " style={{fontSize: "24px"}}></i></Link>
                 </li>

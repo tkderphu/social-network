@@ -5,3 +5,10 @@
 } */
 
 
+.main-content {
+  margin-left: 100px;
+  width: calc(100% - 100px);
+}
+.sidebar {
+  width: 75px;
+}
