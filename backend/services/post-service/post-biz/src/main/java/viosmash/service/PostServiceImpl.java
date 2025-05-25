@@ -93,12 +93,12 @@ public class PostServiceImpl implements PostService{
         Post post = this.postRepository.findById(postId)
                 .orElseThrow(() -> exception(404, "Post with id " + postId + " not found"));
         return BeanUtil.copy(post, PostRespVO.class)
-                .setUser(process(post.getUserId(), userApi::getUserById))
-                .setGroup(process(post.getGroupId(), groupApi::getGroup))
-                .setSharePost(getPostById(post.getSharePostId()))
-                .setPostStats(process(post.getId(), interactionApi::countInteraction));
+                .setUser(process(post.getUserId(), userApi::getUserById));
+//                .setGroup(process(post.getGroupId(), groupApi::getGroup))
+//                .setSharePost(getPostById(post.getSharePostId()))
+//                .setPostStats(process(post.getId(), interactionApi::countInteraction));
     }
-
+    
     @Override
     public void deletePost(Long postId) {
         this.postRepository.deleteAllBySharePostId(postId);

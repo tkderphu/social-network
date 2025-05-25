@@ -6,20 +6,12 @@ import FullScreenLoader from "../../components/fullSpinner/FullScreenLoader";
 import { PostResp } from "../../model/postModel";
 import { createPostAction, fetchListPostByUserAction } from "../../redux/actions/postAction";
 import { PostCreateReq } from "../../services/post/postService";
-import { PostCard } from "../home/Home";
+import { PostCard } from "../post/PostCard";
+
+
 import PostForm from "../post/PostForm";
-const posts = [
-    {
-        user: "John Doe",
-        time: "2 hours ago",
-        content: "Enjoying a great day at the park! 🌳",
-    },
-    {
-        user: "Alex Johnson",
-        time: "Yesterday",
-        content: "Check out this amazing recipe I tried! \n # Foodie\n\n### Ingredients\n- Tomatoes\n- Basil\n- Olive oil\n\n[Full recipe here](https://example.com)",
-    },
-];
+import PostFormModal from "../post/PostFormModal";
+
 
 export default function ProfilePostComponent() {
     const { id } = useParams()
@@ -65,8 +57,9 @@ export default function ProfilePostComponent() {
             {/* <div data-toggle="modal" data-target=".your-bulletin" className="form-control rounded" style={{
                         cursor: "pointer"
                     }} aria-label="With textarea"><span>What's on your mind?</span></div> */}
-            <PostForm form={{
+            <PostFormModal form={{
                 ...postReq,
+                disabledBtnWrite:false,
                 onSubmit: handleCreatePost,
                 onChange: (e: any) => {
                     const { name, value } = e.target

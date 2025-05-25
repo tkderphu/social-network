@@ -1,4 +1,4 @@
-import { PostCard } from "../home/Home";
+import PostCard from "../post/Post";
 import PostForm from "../post/PostForm";
 
 const posts = [
@@ -18,14 +18,14 @@ export default function GroupPost() {
         <div className="row mt-3">
             <div className="col-12">
                 <PostForm />
-                {posts.map((post, index) => (
-                    <PostCard
-                        key={index}
-                        user={post.user}
-                        time={post.time}
-                        content={post.content}
-                    />
-                ))}
+                {/* {posts.map((post, index) => (
+                    // <PostCard
+                    //     key={index}
+                    //     user={post.user}
+                    //     time={post.time}
+                    //     content={post.content}
+                    // />
+                ))} */}
             </div>
         </div>
     )

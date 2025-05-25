@@ -16,6 +16,8 @@ class PostService {
     getPagePostByUserId(userId: any) {
         return api.get(`${path}/user/${userId}`)
     }
-    
+    getPostById(postId: any) {
+        return api.get(`${path}/${postId}`)
+    }
 }
 export default new PostService()
