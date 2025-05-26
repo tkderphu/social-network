@@ -22,7 +22,10 @@ public class Comment {
 
     @Column(nullable = false)
     private Long userId;
+
     private Long replyCommentId;
+
+    private Long rootCommentId;
 
     @Column(nullable = false)
     private Long postId;

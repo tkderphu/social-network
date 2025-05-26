@@ -1,71 +1,19 @@
+import { CREATE_COMMENT_BEGIN, CREATE_COMMENT_FAILED, CREATE_COMMENT_SUCCESS, FETCH_PAGE_COMMENT_BY_POST_BEGIN, FETCH_PAGE_COMMENT_BY_POST_FAILED, FETCH_PAGE_COMMENT_BY_POST_SUCCESS, UPDATE_LIKE_BEGIN, UPDATE_LIKE_FAILED, UPDATE_LIKE_SUCCESS } from "../constants/interactionConstant"
 
-import {CREATE_POST_BEGIN, CREATE_POST_FAILED, CREATE_POST_SUCCESS, FETCH_LIST_POST_BY_USER_BEGIN, FETCH_LIST_POST_BY_USER_FAILED, FETCH_LIST_POST_BY_USER_SUCCESS, FETCH_POST_BY_ID_BEGIN, FETCH_POST_BY_ID_FAILED, FETCH_POST_BY_ID_SUCCESS } from "../constants/postConstant";
-
-export const createPostReducer = (state: any = {}, action: any) => {
+export const createCommentReducer = (state: any = {}, action: any) => {
     switch(action.type) {
-        case CREATE_POST_BEGIN: {
+        case CREATE_COMMENT_BEGIN: {
             return {
                 loading: true
             }
         }
-        case CREATE_POST_SUCCESS: {
+        case CREATE_COMMENT_SUCCESS: {
             return {
                 loading: false,
-                success: true,
-                post: action.payload
+                comment: state.payload
             }
         }
-        case CREATE_POST_FAILED: {
-            return {
-                loading: false,
-                hasError: true,
-                message: action.payload.message,
-                status: action.payload.status
-            }
-        }
-        default: return state
-    }
-}
-
-export const fetchPostByIdReducer = (state: any = {}, action: any) => {
-    switch(action.type) {
-        case FETCH_POST_BY_ID_BEGIN: {
-            return {
-                loading: true
-            }
-        }
-        case FETCH_POST_BY_ID_SUCCESS: {
-            return {
-                loading: false,
-                post: action.payload
-            }
-        }
-        case FETCH_POST_BY_ID_FAILED: {
-            return {
-                loading: false,
-                hasError: true,
-                message: action.payload.message,
-                status: action.payload.status
-            }
-        }
-        default: return state
-    }
-}
-
-export const fetchListPostByUserReducer = (state: any = {}, action: any) => {
-    switch(action.type) {
-        case FETCH_LIST_POST_BY_USER_BEGIN: {
-            return {
-                loading: true
-            }
-        }
-        case FETCH_LIST_POST_BY_USER_SUCCESS: {
-            return {
-                loading: false,
-                pageResult: action.payload
-            }
-        }
-        case FETCH_LIST_POST_BY_USER_FAILED: {
+        case CREATE_COMMENT_FAILED: {
             return {
                 loading: false,
                 hasError: true,
@@ -78,3 +26,51 @@ export const fetchListPostByUserReducer = (state: any = {}, action: any) => {
 }
 
 
+export const fetchPageCommentByPostReducer = (state: any = {}, action: any) => {
+    switch(action.type) {
+        case FETCH_PAGE_COMMENT_BY_POST_BEGIN: {
+            return {
+                loading: true
+            }
+        }
+        case FETCH_PAGE_COMMENT_BY_POST_SUCCESS: {
+            return {
+                loading: false,
+                pageResult: state.payload
+            }
+        }
+        case FETCH_PAGE_COMMENT_BY_POST_FAILED: {
+            return {
+                loading: false,
+                hasError: true,
+                message: action.payload.message,
+                status: action.payload.status
+            }
+        }
+        default: return state
+    }
+}
+
+export const updateLikeReducer = (state: any = {}, action: any) => {
+    switch(action.type) {
+        case UPDATE_LIKE_BEGIN: {
+            return {
+                loading: true
+            }
+        }
+        case UPDATE_LIKE_SUCCESS: {
+            return {
+                loading: false
+            }
+        }
+        case UPDATE_LIKE_FAILED: {
+            return {
+                loading: false,
+                hasError: true,
+                message: action.payload.message,
+                status: action.payload.status
+            }
+        }
+        default: return state
+    }
+}

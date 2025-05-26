@@ -1,12 +1,15 @@
 package viosmash.dal.dataobject;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
 import java.time.LocalDateTime;
 
+@Data
+@Accessors(chain = true)
+@Table(name = "tblLike")
+@Entity
 public class Like {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,4 +22,8 @@ public class Like {
     private Long objectId;
     @Column(nullable = false)
     private LocalDateTime createdAt;
+
+    public static enum ObjectType {
+        POST, COMMENT, CHAT_MESSAGE
+    }
 }
