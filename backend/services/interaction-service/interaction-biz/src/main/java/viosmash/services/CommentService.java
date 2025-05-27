@@ -1,10 +1,15 @@
 package viosmash.services;
 
-import org.springframework.data.jpa.repository.JpaRepository;
 import viosmash.controller.comment.vo.CommentCreateReqVO;
 import viosmash.controller.comment.vo.CommentRespVO;
+import viosmash.controller.comment.vo.CommentUpdateReqVO;
 import viosmash.dal.dataobject.Comment;
+import viosmash.pojo.PageResult;
 
 public interface CommentService{
-    Comment createComment(Long userId, CommentCreateReqVO req);
+    CommentRespVO createComment(Long userId, CommentCreateReqVO req);
+    PageResult<CommentRespVO> getPageCommentByPost(Long postId, int page, int limit, int sortDate);
+    PageResult<CommentRespVO> getPageCommentByRootComment(Long rootCommentId, int page, int limit, int sortDate);
+    void deleteComment(Long commentId);
+    Comment updateComment(Long id, CommentUpdateReqVO req);
 }

@@ -3,6 +3,8 @@ package viosmash.dal.dataobject;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import viosmash.converter.JsonListConverter;
+import viosmash.converter.JsonObjectConverter;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,17 +18,16 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String content;
+    @Convert(converter = JsonObjectConverter.class)
     private List<String> mediaUrls;
-    @Column(nullable = false)
     private LocalDateTime createdDate;
 
-    @Column(nullable = false)
     private Long userId;
 
     private Long replyCommentId;
 
     private Long rootCommentId;
 
-    @Column(nullable = false)
     private Long postId;
+
 }

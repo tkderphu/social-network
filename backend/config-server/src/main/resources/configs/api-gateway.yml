@@ -51,6 +51,11 @@ spring:
           uri: lb://POST-SERVICE
           predicates:
               - Path=/api/posts/**
+
+        - id: interaction-service
+          uri: lb://INTERACTION-SERVICE
+          predicates:
+            - Path=/api/interactions/**
       discovery:
         locator:
           enabled: true

@@ -11,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@Accessors(chain = true)
 public class CommentRespVO {
     private Long id;
     private String content;
@@ -24,6 +25,9 @@ public class CommentRespVO {
     private Long replyCommentId;
 
     private Long rootCommentId;
+
+    private int nestedComments;
+    private int likes;
 
     public String getTime() {
         return DateUtils.timeAgo(createdDate);

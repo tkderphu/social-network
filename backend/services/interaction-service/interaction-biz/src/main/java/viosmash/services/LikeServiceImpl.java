@@ -32,4 +32,14 @@ public class LikeServiceImpl implements LikeService{
                 .findByUserIdAndObjectIdAndObjectType(userId, objectId, objectType)
                 .isPresent();
     }
+
+    @Override
+    public int countLike(Long objectId, Like.ObjectType objectType) {
+        return this.likeRepository.countByObjectIdAndObjectType(objectId, objectType);
+    }
+
+    @Override
+    public void deleteAllLike(Long objectId, Like.ObjectType objectType) {
+        this.likeRepository.deleteAllByObjectIdAndObjectType(objectId, objectType);
+    }
 }

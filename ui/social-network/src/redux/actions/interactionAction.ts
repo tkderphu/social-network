@@ -1,7 +1,7 @@
 import { CommonResult } from "../../common"
 import commentService from "../../services/interaction/commentService"
 import likeService from "../../services/interaction/likeService"
-import { CREATE_COMMENT_BEGIN, CREATE_COMMENT_FAILED, CREATE_COMMENT_SUCCESS, UPDATE_LIKE_BEGIN, UPDATE_LIKE_FAILED, UPDATE_LIKE_SUCCESS } from "../constants/interactionConstant"
+import { CREATE_COMMENT_BEGIN, CREATE_COMMENT_FAILED, CREATE_COMMENT_SUCCESS, FETCH_PAGE_COMMENT_BY_POST_BEGIN, FETCH_PAGE_COMMENT_BY_POST_FAILED, FETCH_PAGE_COMMENT_BY_POST_SUCCESS, UPDATE_LIKE_BEGIN, UPDATE_LIKE_FAILED, UPDATE_LIKE_SUCCESS } from "../constants/interactionConstant"
 
 export const createCommentAction = (commentReq: any) => {
     return (dispatch: any) => {
@@ -10,7 +10,7 @@ export const createCommentAction = (commentReq: any) => {
         })
         commentService.createComment(commentReq).then(resp => {
             const data: CommonResult<any> = resp.data
-            console.log("page post: ", data.data)
+            console.log("create post: ", data.data)
             if (data.code === 200) {
                 dispatch({
                     type: CREATE_COMMENT_SUCCESS,
@@ -41,6 +41,48 @@ export const createCommentAction = (commentReq: any) => {
         })
     }
 }
+
+
+
+export const fetchPageCommentByPostAction = (postId: any, page: number = 1, limit: number = 20, sortDate: number = 1) => {
+    return (dispatch: any) => {
+        dispatch({
+            type: FETCH_PAGE_COMMENT_BY_POST_BEGIN
+        })
+        commentService.getPageCommentByPost(postId, page, limit, sortDate).then(resp => {
+            const data: CommonResult<any> = resp.data
+            console.log("page comment: ", data.data)
+            if (data.code === 200) {
+                dispatch({
+                    type: FETCH_PAGE_COMMENT_BY_POST_SUCCESS,
+                    payload: data.data
+                })
+            } else {
+                dispatch({
+                    type: FETCH_PAGE_COMMENT_BY_POST_FAILED,
+                    payload: {
+                        message: data.message,
+                        status: data.code
+                    }
+                })
+            }
+        }).catch(err => {
+            if (err.status === 401) {
+                localStorage.clear()
+                alert("Your token is expired, please login again");
+                location.href = '/login'
+            }
+            dispatch({
+                type: FETCH_PAGE_COMMENT_BY_POST_FAILED,
+                payload: {
+                    message: err.response.data.error || err.response.data.message || err.response.data,
+                    status: err.status
+                }
+            })
+        })
+    }
+}
+
 
 export const updateLikeAction = (likeReq: any) => {
     return (dispatch: any) => {

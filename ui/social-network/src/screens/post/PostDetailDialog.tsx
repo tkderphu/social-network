@@ -10,10 +10,77 @@ import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw';
 import { formatDate } from "../../utils/common";
 import MediaComponent from "../../components/media/MediaComponent";
+import { CommentReq } from "../../services/interaction/commentService";
+import { CommentRespVO } from "../../model/interactionModel";
+import { createCommentAction, fetchPageCommentByPostAction } from "../../redux/actions/interactionAction";
+import { PageResult, TokenUtils } from "../../common";
+import { ADD_NEW_COMMENT_TO_PAGE } from "../../redux/constants/interactionConstant";
+import Spinner from "../../components/Spinner";
 const Post = (props: { post: PostResp }) => {
-  const [commentReq, setCommentReq] = useState<any>({
-    images: []
+  const { id } = useParams()
+  const [commentReq, setCommentReq] = useState<CommentReq>({
+    mediaUrls: [],
+    content: "",
+    postId: id
   })
+  // console.log("postId: ",)
+  const dispatch = useDispatch()
+  const createCommentState: {
+    loading: boolean,
+    comment: CommentRespVO,
+    hasError: boolean,
+    message: any
+  } = useSelector((state: any) => {
+    return state.createComment
+  })
+  const [replyComment, setReplyComment] = useState<CommentRespVO | undefined>(undefined)
+
+  const handleComment = () => {
+    const req: CommentReq = {
+      ...commentReq
+    }
+    if (replyComment) {
+      req.replyCommentId = replyComment.id
+    }
+
+    //@ts-ignore
+    dispatch(createCommentAction(req))
+  }
+
+  useEffect(() => {
+    if (createCommentState.comment) {
+      console.log("vcl new comment has came")
+      dispatch({
+        type: ADD_NEW_COMMENT_TO_PAGE,
+        payload: createCommentState.comment
+      })
+      setCommentReq((prev) => ({
+        ...prev,
+        content: "",
+        mediaUrls: [],
+        replyCommentId: undefined
+      }))
+    }
+  }, [createCommentState])
+
+  const fetchPageCommentByPost: {
+    loading: boolean,
+    pageResult: PageResult<CommentRespVO>
+    hasError: boolean,
+    message: any
+  } = useSelector((state: any) => {
+    return state.fetchPageCommentByPost
+  })
+
+  useEffect(() => {
+    if (id) {
+      //@ts-ignore
+      dispatch(fetchPageCommentByPostAction(id))
+    }
+  }, [])
+
+
+
   return (
     <div className="post-container d-flex flex-column position-relative" style={{ height: '100%' }}>
       {/* Header (Fixed at Top, 10% height) */}
@@ -27,9 +94,9 @@ const Post = (props: { post: PostResp }) => {
             <i className="bi bi-plus-lg"></i>
           </button>
         </div>
-        
+
       </div>
-      
+
       {/* Comments (Scrollable Section, 60% height) */}
       <div className="comments-section p-2" style={{ height: '65%', overflowY: 'auto', overflowX: 'hidden' }}>
         <div className="p-2">
@@ -38,51 +105,55 @@ const Post = (props: { post: PostResp }) => {
               {props.post?.content}
             </Markdown>
           </div>
-          <hr   style={{color: "red"}} />
+          <hr style={{ color: "red" }} />
           {/* <p className="text-truncate">-------------------------------------------------------------------------------------------------------------</p> */}
         </div>
-        <div className="d-flex mb-2">
-          <img src="https://via.placeholder.com/32" alt="User" className="rounded-circle me-2" />
-          <div>
-            <strong>hanin_nie</strong> YOUR ART IS SO PERFECT IM GONNA CRY<br />
-            <small>2w • 19 likes</small>
-          </div>
-        </div>
-        <div className="d-flex mb-2">
-          <img src="https://via.placeholder.com/32" alt="User" className="rounded-circle me-2" />
-          <div>
-            <strong>hanin_nie</strong> YOUR ART IS SO PERFECT IM GONNA CRY<br />
-            <small>2w • 19 likes</small>
-          </div>
-        </div>
-        <div className="d-flex mb-2">
-          <img src="https://via.placeholder.com/32" alt="User" className="rounded-circle me-2" />
-          <div>
-            <strong>hanin_nie</strong> YOUR ART IS SO PERFECT IM GONNA CRY<br />
-            <small>2w • 19 likes</small>
-          </div>
-        </div>
-        <div className="d-flex mb-2">
-          <img src="https://via.placeholder.com/32" alt="User" className="rounded-circle me-2" />
-          <div>
-            <strong>hanin_nie</strong> YOUR ART IS SO PERFECT IM GONNA CRY<br />
-            <small>2w • 19 likes</small>
-          </div>
-        </div>
-        <div className="d-flex mb-2">
-          <img src="https://via.placeholder.com/32" alt="User" className="rounded-circle me-2" />
-          <div>
-            <strong>hanin_nie</strong> YOUR ART IS SO PERFECT IM GONNA CRY<br />
-            <small>2w • 19 likes</small>
-          </div>
-        </div>
-        <div className="d-flex mb-2">
-          <img src="https://via.placeholder.com/32" alt="User" className="rounded-circle me-2" />
-          <div>
-            <strong>hanin_nie</strong> YOUR ART IS SO PERFECT IM GONNA CRY<br />
-            <small>2w • 19 likes</small>
-          </div>
-        </div>
+        <Spinner loading={fetchPageCommentByPost.loading} />
+        {fetchPageCommentByPost.pageResult?.data.map(comment => {
+          return (
+            <div className="d-flex justify-content-between align-items-center">
+              <div className="d-flex mb-2">
+                <img src={comment.user?.avatar} height={50} alt="User" className="rounded-circle me-2" />
+                <div>
+                  <strong>{comment.user?.firstName + " " + comment.user?.lastName}</strong> {comment.content}<br />
+                  <div>
+                  {comment.mediaUrls?.map(imageUrl => {
+                    return <img className="me-2 mb-2" src={imageUrl} height={100} />
+                  })}
+                    </div>
+                  <small>{comment.time} • {comment.likes} {<i title="Like" style={{cursor: "pointer"}} className="fa fa-heart"  aria-hidden="true"></i>}</small>
+                </div>
+              </div>
+              {comment.user.id == TokenUtils.authLogin.userId && (
+                <div className="dropdown">
+
+                  <button className="btn " type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-three-dots-vertical" viewBox="0 0 16 16">
+                      <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                    </svg>
+                  </button>
+                  <ul className="dropdown-menu">
+                    <li><button className="dropdown-item" onClick={() => {
+                      setCommentReq({
+                        content: comment.content,
+                        id: comment.id,
+                        mediaUrls: comment.mediaUrls
+                      })
+                    }}>Edit</button></li>
+                    <li><button className="dropdown-item" onClick={() => {
+
+                    }}>Delete</button></li>
+                  </ul>
+                </div>
+              )}
+            </div>
+          )
+        })}
+        {fetchPageCommentByPost.pageResult?.data.length == 0 && (
+          <h4 className="text-center text-muted">No comments yet</h4>
+        )}
+
+
 
       </div>
 
@@ -90,38 +161,35 @@ const Post = (props: { post: PostResp }) => {
       <div className="comment-input  bg-light border-top position-sticky bottom-0 d-flex flex-column" style={{ height: '25%' }}>
         {/* Post Actions */}
         <div className="post-actions d-flex ">
-          <button className="btn"><span style={{ fontSize: "20px" }} title="Like">
-            <svg width="24" height="24" viewBox="0 0 24 24" fill="black" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 
-           2 5.42 4.42 3 7.5 3c1.74 0 3.41 0.81 
-           4.5 2.09C13.09 3.81 14.76 3 16.5 
-           3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 
-           6.86-8.55 11.54L12 21.35z"/>
-            </svg>
-          </span></button>
+          <button className="btn"><span style={{ fontSize: "20px" }} title="Comment"><i className="fa fa-heart" aria-hidden="true"></i></span></button>
           <button className="btn"><span style={{ fontSize: "20px" }} title="Comment">💬</span></button>
           <button className="btn"><span style={{ fontSize: "20px" }} title="Share">📤</span></button>
 
         </div>
 
         {/* Likes */}
-       <div className="d-flex justify-content-between align-items-center">
-       <div className="ms-2 mb-1 d-flex flex-column">
-          <strong>17,109 likes</strong>
-          <span className="text-muted">{props.post?.time} ago</span>
+        <div className="d-flex justify-content-between align-items-center">
+          <div className="ms-2 mb-1 d-flex flex-column">
+            <strong>17,109 likes</strong>
+            <span className="text-muted">{props.post?.time} ago</span>
+          </div>
+          <div>
+            <MediaComponent images={commentReq.mediaUrls} onChange={(images: any) => setCommentReq((prev: any) => ({
+              ...prev,
+              mediaUrls: images
+            }))} />
+          </div>
         </div>
-        <div>
-          <MediaComponent images={commentReq.images} onChange={(images: any) => setCommentReq((prev: any) => ({
-            ...prev,
-            images: images
-          }))} />
-        </div>
-       </div>
 
         {/* Comment Input */}
         <div className="d-flex align-items-center p-2">
-          <input type="text" className="form-control border-0" placeholder="Add a comment..." />
-          <button className="btn btn-text text-muted text-primary ms-2">
+          <div className="btn btn-text text-muted text-primary ms-2">
+            <strong>{commentReq.id ? "Edit" : "Create"}</strong>
+          </div>
+          <input type="text" className="form-control border-0"
+            onChange={(e) => { setCommentReq((prev) => ({ ...prev, content: e.target.value })) }}
+            placeholder="Add a comment..." value={commentReq.content} />
+          <button onClick={handleComment} className="btn btn-text text-muted text-primary ms-2">
             <strong>Post</strong>
           </button>
         </div>

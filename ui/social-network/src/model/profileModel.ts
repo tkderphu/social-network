@@ -38,7 +38,7 @@ export interface UserAddressResp {
 }
 export interface UserProfileResp {
     avatar: string,
-    id: string,
+    id: any,
     firstName: string,
     lastName: string,
     phoneNumber: string

@@ -16,7 +16,7 @@ const sampleImages = [
     'https://picsum.photos/300/200?random=12'
 ];
 interface MediaProps {
-    images: string[],
+    images?: string[],
     onChange: any
 }
 export default function MediaComponent(props: MediaProps) {
@@ -36,7 +36,7 @@ export default function MediaComponent(props: MediaProps) {
                       
                         <div className="gallery-container">
                             <div className="gallery-header">
-                            <h5>Number images are selected: {props.images.length}</h5>
+                            <h5>Number images are selected: {props.images?.length}</h5>
                                 <p className="gallery-subtitle">
                                     Select an image from your collection or upload a new one
                                 </p>
@@ -49,6 +49,7 @@ export default function MediaComponent(props: MediaProps) {
                                 {sampleImages.map((image, index) => {
                                     return (
                                         <div onClick={() => {
+                                            //@ts-ignore
                                             let c = [...props.images]
                                             if(c.includes(image)) {
                                                 c = c.filter(img => {
@@ -58,7 +59,7 @@ export default function MediaComponent(props: MediaProps) {
                                                 c.push(image)
                                             }
                                             props.onChange(c)
-                                        }} className={"image-card " + (props.images.includes(image) ? "selected" : "")}>
+                                        }} className={"image-card " + (props.images?.includes(image) ? "selected" : "")}>
                                             <img src={image} alt="Gallery Image ${index + 1}" loading="lazy" />
                                             <div className="image-overlay">
                                                 <i className="fas fa-check check-icon"></i>

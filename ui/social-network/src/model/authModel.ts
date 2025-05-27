@@ -3,7 +3,7 @@ export interface AuthLoginReqVO {
     password: string
 }
 export interface AuthLoginRespVO {
-    userId?:number
+    userId:any
     accessToken?: string 
     refreshToken?: string 
     expires: number

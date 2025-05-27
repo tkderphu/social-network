@@ -8,4 +8,6 @@ public interface LikeService {
     void updateLike(Long userId, LikeUpdateReqVO req);
 
     boolean checkLike(Long userId, Long objectId, Like.ObjectType objectType);
+    int countLike(Long objectId, Like.ObjectType objectType);
+    void deleteAllLike(Long objectId, Like.ObjectType objectType);
 }

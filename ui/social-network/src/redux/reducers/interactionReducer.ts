@@ -1,4 +1,4 @@
-import { CREATE_COMMENT_BEGIN, CREATE_COMMENT_FAILED, CREATE_COMMENT_SUCCESS, FETCH_PAGE_COMMENT_BY_POST_BEGIN, FETCH_PAGE_COMMENT_BY_POST_FAILED, FETCH_PAGE_COMMENT_BY_POST_SUCCESS, UPDATE_LIKE_BEGIN, UPDATE_LIKE_FAILED, UPDATE_LIKE_SUCCESS } from "../constants/interactionConstant"
+import { ADD_NEW_COMMENT_TO_PAGE, CREATE_COMMENT_BEGIN, CREATE_COMMENT_FAILED, CREATE_COMMENT_SUCCESS, FETCH_PAGE_COMMENT_BY_POST_BEGIN, FETCH_PAGE_COMMENT_BY_POST_FAILED, FETCH_PAGE_COMMENT_BY_POST_SUCCESS, UPDATE_LIKE_BEGIN, UPDATE_LIKE_FAILED, UPDATE_LIKE_SUCCESS } from "../constants/interactionConstant"
 
 export const createCommentReducer = (state: any = {}, action: any) => {
     switch(action.type) {
@@ -10,7 +10,7 @@ export const createCommentReducer = (state: any = {}, action: any) => {
         case CREATE_COMMENT_SUCCESS: {
             return {
                 loading: false,
-                comment: state.payload
+                comment: action.payload
             }
         }
         case CREATE_COMMENT_FAILED: {
@@ -28,6 +28,15 @@ export const createCommentReducer = (state: any = {}, action: any) => {
 
 export const fetchPageCommentByPostReducer = (state: any = {}, action: any) => {
     switch(action.type) {
+        case ADD_NEW_COMMENT_TO_PAGE: {
+            return {
+                ...state,
+                pageResult: {
+                    ...state.pageResult,
+                    data: [action.payload, ...state.pageResult.data]
+                }
+            }
+        }
         case FETCH_PAGE_COMMENT_BY_POST_BEGIN: {
             return {
                 loading: true
@@ -36,7 +45,7 @@ export const fetchPageCommentByPostReducer = (state: any = {}, action: any) => {
         case FETCH_PAGE_COMMENT_BY_POST_SUCCESS: {
             return {
                 loading: false,
-                pageResult: state.payload
+                pageResult: action.payload
             }
         }
         case FETCH_PAGE_COMMENT_BY_POST_FAILED: {
