@@ -1,10 +1,13 @@
 package viosmash.dal.dataobject;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
+import lombok.Data;
+import lombok.experimental.Accessors;
 
+@Entity
+@Table(name = "tblShare")
+@Data
+@Accessors(chain = true)
 public class Share {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

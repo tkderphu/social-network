@@ -11,5 +11,6 @@ public class CommentCreateReqVO {
 
     private Long replyCommentId;
 
+    private Long authorId;
     private Long postId;
 }

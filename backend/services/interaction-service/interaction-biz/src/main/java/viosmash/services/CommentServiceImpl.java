@@ -13,6 +13,7 @@ import viosmash.controller.comment.vo.CommentUpdateReqVO;
 import viosmash.dal.dataobject.Comment;
 import viosmash.dal.repo.CommentRepository;
 import viosmash.exception.ServiceException;
+import viosmash.interaction.enums.InteractionType;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.PageResult;
 import viosmash.profile.api.UserApi;
@@ -29,6 +30,7 @@ public class CommentServiceImpl implements CommentService{
     private final CommentRepository commentRepository;
     private final UserApi userApi;
     private final LikeService likeService;
+    private final InteractionService interactionService;
     @Override
     public CommentRespVO createComment(Long userId, CommentCreateReqVO req) {
         Comment comment = BeanUtil.copy(req, Comment.class);
@@ -49,6 +51,7 @@ public class CommentServiceImpl implements CommentService{
                 .setUserId(userId);
 
         this.commentRepository.save(comment);
+        interactionService.addNewInteraction(userId, req.getAuthorId(), InteractionType.COMMENT);
         return BeanUtil.copy(comment, CommentRespVO.class)
                 .setUser(userApi.getUserById(userId));
     }

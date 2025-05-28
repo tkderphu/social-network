@@ -2,6 +2,7 @@ import { CommonResult } from "../../common"
 import commentService from "../../services/interaction/commentService"
 import likeService from "../../services/interaction/likeService"
 import { CREATE_COMMENT_BEGIN, CREATE_COMMENT_FAILED, CREATE_COMMENT_SUCCESS, FETCH_PAGE_COMMENT_BY_POST_BEGIN, FETCH_PAGE_COMMENT_BY_POST_FAILED, FETCH_PAGE_COMMENT_BY_POST_SUCCESS, UPDATE_LIKE_BEGIN, UPDATE_LIKE_FAILED, UPDATE_LIKE_SUCCESS } from "../constants/interactionConstant"
+import { fetchPostByIdAction } from "./postAction"
 
 export const createCommentAction = (commentReq: any) => {
     return (dispatch: any) => {
@@ -97,6 +98,11 @@ export const updateLikeAction = (likeReq: any) => {
                     type: UPDATE_LIKE_SUCCESS,
                     payload: data.data
                 })
+                if(likeReq.objectType == "POST") {
+                    dispatch(fetchPostByIdAction(likeReq.objectId))
+                } else if(likeReq.objectType == "COMMENT") {
+                    // dispatch(fetchPageCommentByPostAction)
+                }
             } else {
                 dispatch({
                     type: UPDATE_LIKE_FAILED,

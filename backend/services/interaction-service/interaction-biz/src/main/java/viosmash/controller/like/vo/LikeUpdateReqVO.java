@@ -16,4 +16,6 @@ public class LikeUpdateReqVO {
     @NotNull
     @Schema(description = "Kiểu", defaultValue = "POST")
     private Like.ObjectType objectType;
+
+    private Long authorId;
 }

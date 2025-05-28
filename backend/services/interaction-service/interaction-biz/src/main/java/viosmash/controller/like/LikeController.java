@@ -3,6 +3,7 @@ package viosmash.controller.like;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import viosmash.controller.like.vo.LikeUpdateReqVO;
 import viosmash.core.utils.SecurityUtils;
@@ -11,6 +12,7 @@ import viosmash.interaction.enums.ApiConstant;
 import viosmash.pojo.CommonResult;
 import viosmash.services.LikeService;
 
+@Slf4j
 @RequiredArgsConstructor
 @RequestMapping(ApiConstant.APP_PREFIX + "/likes")
 @RestController
@@ -28,6 +30,8 @@ public class LikeController {
     public CommonResult<Boolean> checkLike(@PathVariable("type")Like.ObjectType objectType,
                                            @PathVariable("id") Long objectId) {
         boolean result = likeService.checkLike(SecurityUtils.getLoginUserMemberId(), objectId, objectType);
+        log.info("check like result: {}", result);
+            
         return CommonResult.success(result);
     }
 }

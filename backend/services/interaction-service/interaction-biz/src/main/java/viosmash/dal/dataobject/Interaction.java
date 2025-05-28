@@ -22,9 +22,9 @@ public class Interaction {
     @Column(nullable = false)
     private Long toUser;
     @Column(nullable = false)
-    private int score;
+    private float score;
 
-    public void plusScore(InteractionType interactionType) {
-        score += interactionType.getScore();
+    public void plusScore(InteractionType interactionType, float rate) {
+        score += interactionType.getScore() * rate;
     }
 }

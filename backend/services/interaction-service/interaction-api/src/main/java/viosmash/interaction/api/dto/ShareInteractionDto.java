@@ -4,6 +4,6 @@ import lombok.Data;
 
 @Data
 public class ShareInteractionDto {
-    private Long userId;
+    private Long authorId;
     private Long postId;
 }

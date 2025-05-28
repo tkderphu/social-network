@@ -6,11 +6,11 @@ import lombok.Getter;
 @AllArgsConstructor
 @Getter
 public enum InteractionType {
-    LIKE_POST(2),
-    LIKE_COMMENT(2),
+    LIKE(1),
+    COMMENT(2),
     SHARE_POST(2),
     CHAT(5),
-    CLICK(1);
-
+    CLICK(1),
+    FRIENDS(10);
     private final int score;
 }

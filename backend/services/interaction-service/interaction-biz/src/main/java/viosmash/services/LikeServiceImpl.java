@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import viosmash.controller.like.vo.LikeUpdateReqVO;
 import viosmash.dal.dataobject.Like;
 import viosmash.dal.repo.LikeRepository;
+import viosmash.interaction.enums.InteractionType;
 
 import java.time.LocalDateTime;
 
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @Service
 public class LikeServiceImpl implements LikeService{
     private final LikeRepository likeRepository;
+    private final InteractionService interactionService;
     @Override
     public void updateLike(Long userId, LikeUpdateReqVO req) {
         Like like = likeRepository
@@ -23,6 +25,7 @@ public class LikeServiceImpl implements LikeService{
             likeRepository.save(new Like().setCreatedAt(LocalDateTime.now())
                     .setObjectId(req.getObjectId()).setObjectType(req.getObjectType())
                     .setUserId(userId));
+            interactionService.addNewInteraction(userId, req.getAuthorId(), InteractionType.LIKE);
         }
     }
 

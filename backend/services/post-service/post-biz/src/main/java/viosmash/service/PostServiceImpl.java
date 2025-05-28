@@ -2,6 +2,7 @@ package viosmash.service;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -32,6 +33,7 @@ import java.util.function.Supplier;
 import static viosmash.exception.Exceptional.process;
 import static viosmash.exception.utils.ServiceUtils.exception;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService{
@@ -80,10 +82,10 @@ public class PostServiceImpl implements PostService{
 
         return new PageResult<>(pageNumber, limit, CollUtils.convertList(page.getContent(), post -> {
             return BeanUtil.copy(post, PostRespVO.class)
-                    .setUser(process(post.getUserId(), userApi::getUserById));
+                    .setUser(process(post.getUserId(), userApi::getUserById))
 //                    .setGroup(process(post.getGroupId(), groupApi::getGroup))
 //                    .setSharePost(getPostById(post.getSharePostId()))
-//                    .setPostStats(process(post.getId(), interactionApi::countInteraction));
+                    .setPostStats(process(post.getId(), interactionApi::countInteraction));
         }));
     }
 
@@ -92,11 +94,13 @@ public class PostServiceImpl implements PostService{
     public PostRespVO getPostById(Long postId) {
         Post post = this.postRepository.findById(postId)
                 .orElseThrow(() -> exception(404, "Post with id " + postId + " not found"));
-        return BeanUtil.copy(post, PostRespVO.class)
-                .setUser(process(post.getUserId(), userApi::getUserById));
+        PostRespVO postRespVO = BeanUtil.copy(post, PostRespVO.class)
+                .setUser(process(post.getUserId(), userApi::getUserById))
 //                .setGroup(process(post.getGroupId(), groupApi::getGroup))
 //                .setSharePost(getPostById(post.getSharePostId()))
-//                .setPostStats(process(post.getId(), interactionApi::countInteraction));
+                .setPostStats(process(post.getId(), interactionApi::countInteraction));
+        log.info("data post detail: {}", postRespVO);
+        return postRespVO;
     }
     
     @Override

@@ -3,10 +3,14 @@ package viosmash.interaction.api;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import viosmash.interaction.api.dto.HistoryInteraction;
 import viosmash.interaction.api.dto.PostStats;
 import viosmash.interaction.api.dto.ShareInteractionDto;
 import viosmash.interaction.enums.ApiConstant;
+
+import java.util.List;
 
 @FeignClient(name = ApiConstant.NAME, path = ApiConstant.RPC_PREFIX)
 public interface InteractionApi {
@@ -14,5 +18,9 @@ public interface InteractionApi {
 
     @GetMapping("/stats/post/{postId}")
     PostStats countInteraction(@PathVariable("postId") Long postId);
+    @PutMapping("/share/post")
+    void updateSharePost(@RequestBody ShareInteractionDto dto);
 
+    @GetMapping("/{userId}")
+    List<HistoryInteraction> getListHistoryInteraction(@PathVariable("userId") Long userId);
 }

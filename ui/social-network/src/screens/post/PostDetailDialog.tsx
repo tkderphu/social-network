@@ -1,5 +1,5 @@
 import { useNavigate, useParams } from "react-router";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import "./Post.css";
 import { PostResp } from "../../model/postModel";
 import { useDispatch, useSelector } from "react-redux";
@@ -12,12 +12,15 @@ import { formatDate } from "../../utils/common";
 import MediaComponent from "../../components/media/MediaComponent";
 import { CommentReq } from "../../services/interaction/commentService";
 import { CommentRespVO } from "../../model/interactionModel";
-import { createCommentAction, fetchPageCommentByPostAction } from "../../redux/actions/interactionAction";
+import { createCommentAction, fetchPageCommentByPostAction, updateLikeAction } from "../../redux/actions/interactionAction";
 import { PageResult, TokenUtils } from "../../common";
 import { ADD_NEW_COMMENT_TO_PAGE } from "../../redux/constants/interactionConstant";
 import Spinner from "../../components/Spinner";
+import likeService from "../../services/interaction/likeService";
+import CommentInput from "./comment/CommentInput";
 const Post = (props: { post: PostResp }) => {
   const { id } = useParams()
+  console.log("post detail: ", props.post)
   const [commentReq, setCommentReq] = useState<CommentReq>({
     mediaUrls: [],
     content: "",
@@ -79,6 +82,31 @@ const Post = (props: { post: PostResp }) => {
     }
   }, [])
 
+  const likeUpdateState: {
+    loading: boolean,
+    success: boolean
+  } = useSelector((state: any) => {
+    return state.updateLike
+  })
+  const [checkLike, setCheckLike] = useState(false)
+
+  useEffect(() => {
+    likeService.checkLike("POST", id).then(resp => {
+      setCheckLike(resp.data.data)
+    }).catch(err => {
+      setCheckLike(false)
+    })
+  }, [likeUpdateState])
+
+  const handleUpdateLikePost = (objectId: any, objectType: "COMMENT" | "POST" | "CHAT_MESSAGE", authorId: any) => {
+    //@ts-ignore
+    dispatch(updateLikeAction({
+      objectId, objectType, authorId
+    }))
+  }
+
+  const [focusComment, setFocusComment] = useState<any>()
+
 
 
   return (
@@ -106,6 +134,7 @@ const Post = (props: { post: PostResp }) => {
             </Markdown>
           </div>
           <hr style={{ color: "red" }} />
+
           {/* <p className="text-truncate">-------------------------------------------------------------------------------------------------------------</p> */}
         </div>
         <Spinner loading={fetchPageCommentByPost.loading} />
@@ -117,11 +146,15 @@ const Post = (props: { post: PostResp }) => {
                 <div>
                   <strong>{comment.user?.firstName + " " + comment.user?.lastName}</strong> {comment.content}<br />
                   <div>
-                  {comment.mediaUrls?.map(imageUrl => {
-                    return <img className="me-2 mb-2" src={imageUrl} height={100} />
-                  })}
-                    </div>
-                  <small>{comment.time} • {comment.likes} {<i title="Like" style={{cursor: "pointer"}} className="fa fa-heart"  aria-hidden="true"></i>}</small>
+                    {comment.mediaUrls?.map(imageUrl => {
+                      return <img className="me-2 mb-2" src={imageUrl} height={100} />
+                    })}
+                  </div>
+                  <small>{comment.time} ago
+                    • {comment.likes} {<i title="Like" style={{ cursor: "pointer" }} className="fa fa-heart" aria-hidden="true"></i>}  • {comment.likes} {<i title="Reply" onClick={() => setFocusComment(comment)} style={{ cursor: "pointer" }} className="fa fa-reply" aria-hidden="true"></i>}
+
+                  </small>
+
                 </div>
               </div>
               {comment.user.id == TokenUtils.authLogin.userId && (
@@ -161,16 +194,18 @@ const Post = (props: { post: PostResp }) => {
       <div className="comment-input  bg-light border-top position-sticky bottom-0 d-flex flex-column" style={{ height: '25%' }}>
         {/* Post Actions */}
         <div className="post-actions d-flex ">
-          <button className="btn"><span style={{ fontSize: "20px" }} title="Comment"><i className="fa fa-heart" aria-hidden="true"></i></span></button>
-          <button className="btn"><span style={{ fontSize: "20px" }} title="Comment">💬</span></button>
-          <button className="btn"><span style={{ fontSize: "20px" }} title="Share">📤</span></button>
+          <button className="btn" onClick={() => {
+            handleUpdateLikePost(props.post?.id, "POST", props.post?.user?.id)
+          }}><span style={{ fontSize: "20px" }} title={`Likes: ${props.post?.postStats?.numberLike || 0}`}><i className="fa fa-heart" style={{ color: (checkLike ? "red" : "black") }} aria-hidden="true"></i></span></button>
+          <button className="btn" onClick={() => setFocusComment(new Date())}><span style={{ fontSize: "20px" }} title={`Comments: ${props.post?.postStats?.numberComment || 0}`}>💬</span></button>
+          <button className="btn"><span style={{ fontSize: "20px" }} title={`Shares: ${props.post?.postStats?.numberShare || 0}`}>📤</span></button>
 
         </div>
 
         {/* Likes */}
         <div className="d-flex justify-content-between align-items-center">
           <div className="ms-2 mb-1 d-flex flex-column">
-            <strong>17,109 likes</strong>
+            <strong>{props.post?.postStats?.numberLike || 0} likes</strong>
             <span className="text-muted">{props.post?.time} ago</span>
           </div>
           <div>
@@ -183,14 +218,14 @@ const Post = (props: { post: PostResp }) => {
 
         {/* Comment Input */}
         <div className="d-flex align-items-center p-2">
-          <div className="btn btn-text text-muted text-primary ms-2">
-            <strong>{commentReq.id ? "Edit" : "Create"}</strong>
-          </div>
-          <input type="text" className="form-control border-0"
+
+          <CommentInput focusComment={focusComment}  replyComment={focusComment} onCancelReply={() => console.log('Reply canceled')} />
+
+          {/* <input type="text" ref={inputCommentRef} className="form-control border-0"
             onChange={(e) => { setCommentReq((prev) => ({ ...prev, content: e.target.value })) }}
-            placeholder="Add a comment..." value={commentReq.content} />
+            placeholder="Add a comment..." value={commentReq.content} /> */}
           <button onClick={handleComment} className="btn btn-text text-muted text-primary ms-2">
-            <strong>Post</strong>
+            <strong>Send</strong>
           </button>
         </div>
       </div>
@@ -261,6 +296,8 @@ const PostDetailDialog = () => {
       dispatch(fetchPostByIdAction(id))
     }
   }, [])
+
+
   return (
     <>
       {fetchPostByIdState.loading && <FullScreenLoader />}
