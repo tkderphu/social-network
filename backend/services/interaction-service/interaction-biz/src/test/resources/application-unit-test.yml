@@ -1,8 +1,25 @@
+#
+#spring:
+#  cloud:
+#    discovery:
+#      enabled: false
+#  datasource:
+#    url: jdbc:h2:mem:testdb;MODE=PostgreSQL;DATABASE_TO_UPPER=false;NON_KEYWORDS=value;
+#    driver-class-name: org.h2.Driver
+
+
+server:
+  port: 8082
 
 spring:
-  cloud:
-    discovery:
-      enabled: false
   datasource:
-    url: jdbc:h2:mem:testdb;MODE=MYSQL;DATABASE_TO_UPPER=false;NON_KEYWORDS=value;
-    driver-class-name: org.h2.Driver
+    url: jdbc:mysql://localhost:3306/social_network_interaction_service_test?createDatabaseIfNotExist=true
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    password: root
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.MySQL8Dialect

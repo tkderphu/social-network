@@ -45,12 +45,12 @@ export const createCommentAction = (commentReq: any) => {
 
 
 
-export const fetchPageCommentByPostAction = (postId: any, page: number = 1, limit: number = 20, sortDate: number = 1) => {
+export const fetchPageCommentByPostAction = (postId: any, page: number = 1, limit: number = 20) => {
     return (dispatch: any) => {
         dispatch({
             type: FETCH_PAGE_COMMENT_BY_POST_BEGIN
         })
-        commentService.getPageCommentByPost(postId, page, limit, sortDate).then(resp => {
+        commentService.getPageCommentByPost(postId, page, limit).then(resp => {
             const data: CommonResult<any> = resp.data
             console.log("page comment: ", data.data)
             if (data.code === 200) {

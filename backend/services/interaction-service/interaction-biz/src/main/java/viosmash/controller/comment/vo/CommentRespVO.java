@@ -26,8 +26,11 @@ public class CommentRespVO {
 
     private Long rootCommentId;
 
-    private int nestedComments;
-    private int likes;
+    private Long nestedComments;
+
+    private Long postId;
+    private int downVote;
+    private int upVote;
 
     public String getTime() {
         return DateUtils.timeAgo(createdDate);

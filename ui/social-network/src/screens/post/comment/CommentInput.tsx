@@ -1,32 +1,26 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { useParams } from 'react-router';
 import { CommentRespVO } from '../../../model/interactionModel';
+import { CommentReq } from '../../../services/interaction/commentService';
 import './CommentInput.css';
 
-interface CommentReq {
-  mediaUrls: string[];
-  content: string;
-  postId: number;
-}
 
 interface CommentInputProps {
   replyComment?: CommentRespVO
   onCancelReply?: () => void;
-  focusComment?: any
+  focusComment?: any,
+  commentReq: CommentReq,
+  setCommentReq: any,
+  success?: boolean
 }
 
-const CommentInput: React.FC<CommentInputProps> = ({ focusComment, replyComment, onCancelReply }) => {
+const CommentInput: React.FC<CommentInputProps> = ({ focusComment, replyComment, success, onCancelReply, setCommentReq }) => {
   const editableRef = useRef<HTMLDivElement>(null);
-
-  const [commentReq, setCommentReq] = useState<CommentReq>({
-    mediaUrls: [],
-    content: '',
-    postId: 1
-  });
-
+  
 
   useEffect(() => {
     setTimeout(() => {
-        editableRef.current?.focus()
+      editableRef.current?.focus()
     }, 0)
   }, [focusComment])
 
@@ -35,7 +29,7 @@ const CommentInput: React.FC<CommentInputProps> = ({ focusComment, replyComment,
   useEffect(() => {
     if (replyComment?.user) {
       const mention = `@${replyComment?.user?.firstName + " " + replyComment?.user?.lastName}`;
-      setCommentReq((prev) => ({ ...prev, content: mention + ' ' }));
+      setCommentReq((prev: any) => ({ ...prev, content: mention + ' ', replyCommentId: replyComment.id }));
       setCurrentReplyTo(replyComment?.user?.firstName + " " + replyComment?.user?.lastName);
 
       // Add mention to contentEditable manually
@@ -59,7 +53,7 @@ const CommentInput: React.FC<CommentInputProps> = ({ focusComment, replyComment,
   const handleInput = () => {
     if (editableRef.current) {
       const text = editableRef.current.innerText;
-      setCommentReq((prev) => ({ ...prev, content: text }));
+      setCommentReq((prev: any) => ({ ...prev, content: text }));
 
       // If mention is removed, exit reply mode
       if (currentReplyTo && !text.includes(`@${currentReplyTo}`)) {
@@ -70,27 +64,42 @@ const CommentInput: React.FC<CommentInputProps> = ({ focusComment, replyComment,
 
   const handleCancelReply = () => {
     setCurrentReplyTo(null);
-    setCommentReq((prev) => ({ ...prev, content: '' }));
+    setCommentReq((prev: any) => ({ ...prev, content: '', replyCommentId: undefined }));
     if (editableRef.current) editableRef.current.innerHTML = '';
     onCancelReply?.();
   };
 
+
+  useEffect(() => {
+    if(success) {
+      if (editableRef.current) editableRef.current.innerHTML = '';
+    }
+  }, [success])
+
   return (
-    <div className="reply-container">
-      {currentReplyTo && (
-        <button className="close-button" onClick={handleCancelReply} title="Cancel reply">
-          <i className="fa fa-close"></i>
-        </button>
-      )}
-      <div
-        ref={editableRef}
-        className="input-box"
-        contentEditable
-        onInput={handleInput}
-        suppressContentEditableWarning={true}
-        role="textbox"
-      ></div>
-    </div>
+    <>
+      <div className="reply-container">
+        {currentReplyTo && (
+          <button className="close-button" onClick={handleCancelReply} title="Cancel reply">
+            <i className="fa fa-close"></i>
+          </button>
+        )}
+        <div
+          ref={editableRef}
+          className="input-box"
+          contentEditable
+          onInput={handleInput}
+          suppressContentEditableWarning={true}
+          role="textbox"
+        ></div>
+      </div>
+      {/* <button onClick={() => {
+        onSubmit()
+        
+      }} className="btn btn-text text-muted text-primary ms-2">
+        <strong>Send</strong>
+      </button> */}
+    </>
   );
 };
 

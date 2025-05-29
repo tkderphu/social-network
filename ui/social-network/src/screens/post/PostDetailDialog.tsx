@@ -20,7 +20,6 @@ import likeService from "../../services/interaction/likeService";
 import CommentInput from "./comment/CommentInput";
 const Post = (props: { post: PostResp }) => {
   const { id } = useParams()
-  console.log("post detail: ", props.post)
   const [commentReq, setCommentReq] = useState<CommentReq>({
     mediaUrls: [],
     content: "",
@@ -32,19 +31,18 @@ const Post = (props: { post: PostResp }) => {
     loading: boolean,
     comment: CommentRespVO,
     hasError: boolean,
-    message: any
+    message: any,
+    success: boolean
   } = useSelector((state: any) => {
     return state.createComment
   })
-  const [replyComment, setReplyComment] = useState<CommentRespVO | undefined>(undefined)
+  // const [replyComment, setReplyComment] = useState<CommentRespVO | undefined>(undefined)
 
   const handleComment = () => {
     const req: CommentReq = {
       ...commentReq
     }
-    if (replyComment) {
-      req.replyCommentId = replyComment.id
-    }
+    console.log("req:", req)
 
     //@ts-ignore
     dispatch(createCommentAction(req))
@@ -76,10 +74,9 @@ const Post = (props: { post: PostResp }) => {
   })
 
   useEffect(() => {
-    if (id) {
-      //@ts-ignore
-      dispatch(fetchPageCommentByPostAction(id))
-    }
+    console.log("fuck")
+    //@ts-ignore
+    dispatch(fetchPageCommentByPostAction(id))
   }, [])
 
   const likeUpdateState: {
@@ -150,10 +147,16 @@ const Post = (props: { post: PostResp }) => {
                       return <img className="me-2 mb-2" src={imageUrl} height={100} />
                     })}
                   </div>
-                  <small>{comment.time} ago
-                    • {comment.likes} {<i title="Like" style={{ cursor: "pointer" }} className="fa fa-heart" aria-hidden="true"></i>}  • {comment.likes} {<i title="Reply" onClick={() => setFocusComment(comment)} style={{ cursor: "pointer" }} className="fa fa-reply" aria-hidden="true"></i>}
-
-                  </small>
+                  <div className="d-flex align-items-center">
+                    <span className="me-2">{comment.time} ago</span>
+                    {comment.nestedComments > 0 && (<button className="btn"><strong className="" title="See repied" style={{ cursor: "pointer", marginLeft: "10px, " }}>See {comment.nestedComments} replied </strong></button>)}
+                    <button className="btn">{<i title="Reply" onClick={() => setFocusComment(comment)} style={{ cursor: "pointer" }} className="fa fa-reply" aria-hidden="true"></i>}</button>
+                    <div className="d-flex align-items-center">
+                      <button className="btn"><i className="bi bi-arrow-down"></i></button>
+                      <div style={{color: "red"}}>0</div>
+                      <button className="btn"><i className="bi bi-arrow-up"></i></button>
+                    </div>
+                  </div>
 
                 </div>
               </div>
@@ -182,7 +185,7 @@ const Post = (props: { post: PostResp }) => {
             </div>
           )
         })}
-        {fetchPageCommentByPost.pageResult?.data.length == 0 && (
+        {(!fetchPageCommentByPost.pageResult?.data || fetchPageCommentByPost.pageResult?.data.length == 0) && (
           <h4 className="text-center text-muted">No comments yet</h4>
         )}
 
@@ -219,7 +222,14 @@ const Post = (props: { post: PostResp }) => {
         {/* Comment Input */}
         <div className="d-flex align-items-center p-2">
 
-          <CommentInput focusComment={focusComment}  replyComment={focusComment} onCancelReply={() => console.log('Reply canceled')} />
+          <CommentInput commentReq={commentReq}
+            setCommentReq={setCommentReq}
+            focusComment={focusComment}
+            replyComment={focusComment}
+            success={createCommentState.success}
+            // onSubmit={handleComment}
+            onCancelReply={() => setFocusComment(undefined)}
+          />
 
           {/* <input type="text" ref={inputCommentRef} className="form-control border-0"
             onChange={(e) => { setCommentReq((prev) => ({ ...prev, content: e.target.value })) }}

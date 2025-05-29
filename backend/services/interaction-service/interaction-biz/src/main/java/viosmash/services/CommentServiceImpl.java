@@ -1,27 +1,25 @@
 package viosmash.services;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import viosmash.collection.CollUtils;
 import viosmash.controller.comment.vo.CommentCreateReqVO;
 import viosmash.controller.comment.vo.CommentRespVO;
 import viosmash.controller.comment.vo.CommentUpdateReqVO;
 import viosmash.dal.dataobject.Comment;
 import viosmash.dal.repo.CommentRepository;
-import viosmash.exception.ServiceException;
 import viosmash.interaction.enums.InteractionType;
+import viosmash.json.JsonUtils;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.PageResult;
 import viosmash.profile.api.UserApi;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static viosmash.dal.dataobject.Like.ObjectType.COMMENT;
 import static viosmash.exception.utils.ServiceUtils.exception;
 
 @Service
@@ -33,83 +31,16 @@ public class CommentServiceImpl implements CommentService{
     private final InteractionService interactionService;
     @Override
     public CommentRespVO createComment(Long userId, CommentCreateReqVO req) {
-        Comment comment = BeanUtil.copy(req, Comment.class);
-        if(req.getReplyCommentId() != null) {
-            Comment replyComment
-                    = this.commentRepository.findById(req.getReplyCommentId()).orElse(null);
-            if(replyComment.getRootCommentId() == null) {
-                comment.setRootCommentId(replyComment.getId())
-                        .setReplyCommentId(replyComment.getId());
-            } else {
-                comment.setRootCommentId(replyComment.getRootCommentId())
-                        .setReplyCommentId(replyComment.getId());
-            }
-        } else {
-            comment.setReplyCommentId(null).setRootCommentId(null);
-        }
-        comment.setCreatedDate(LocalDateTime.now())
+        Comment comment = BeanUtil.copy(req, Comment.class)
+                .setCreatedDate(LocalDateTime.now())
                 .setUserId(userId);
-
         this.commentRepository.save(comment);
-        interactionService.addNewInteraction(userId, req.getAuthorId(), InteractionType.COMMENT);
+//        interactionService.addNewInteraction(userId, req.getAuthorId(), InteractionType.COMMENT);
         return BeanUtil.copy(comment, CommentRespVO.class)
                 .setUser(userApi.getUserById(userId));
     }
 
-    @Override
-    public PageResult<CommentRespVO> getPageCommentByPost(Long postId, int page, int limit, int sortDate) {
-        Page<Comment> pageRe = this.commentRepository.findAllByPostId(
-                postId,
-                PageRequest.of(page - 1, limit)
-                        .withSort((sortDate > 0 ?
-                                Sort.by("id").ascending() :
-                                Sort.by("id").descending()))
-        );
 
-        List<CommentRespVO> comments = CollUtils.convertList(pageRe.getContent(), comment -> {
-            return BeanUtil.copy(comment, CommentRespVO.class)
-                    .setUser(userApi.getUserById(comment.getUserId()))
-                    .setLikes(likeService.countLike(comment.getId(), COMMENT))
-                    .setNestedComments(this.commentRepository.countByRootCommentId(comment.getId()));
-        });
-
-        return new PageResult<>(page, limit, comments, pageRe.getTotalPages());
-    }
-
-    @Override
-    public PageResult<CommentRespVO> getPageCommentByRootComment(Long rootCommentId, int page, int limit, int sortDate) {
-        Page<Comment> pageRe = this.commentRepository.findAllByRootCommentId(
-                rootCommentId,
-                PageRequest.of(page - 1, limit)
-                        .withSort((sortDate > 0 ?
-                                Sort.by("id").ascending() :
-                                Sort.by("id").descending()))
-        );
-        List<CommentRespVO> comments = CollUtils.convertList(pageRe.getContent(), comment -> {
-            return BeanUtil.copy(comment, CommentRespVO.class)
-                    .setUser(userApi.getUserById(comment.getUserId()))
-                    .setLikes(likeService.countLike(comment.getId(), COMMENT));
-        });
-
-        return new PageResult<>(page, limit, comments, pageRe.getTotalPages());
-    }
-
-    @Override
-    @Transactional(rollbackFor = ServiceException.class)
-    public void deleteComment(Long commentId) {
-        Comment comment = this.commentRepository.findById(commentId)
-                .orElseThrow(() -> exception(404, "not found comment"));
-        this.commentRepository.delete(comment);
-        if(comment.getRootCommentId() == null) {
-            CollUtils.convertList(this.commentRepository.findAllByRootCommentId(commentId), cm -> {
-                this.commentRepository.delete(cm);
-                this.likeService.deleteAllLike(cm.getId(), COMMENT);
-                return null;
-            });
-        } else {
-            this.likeService.deleteAllLike(commentId, COMMENT);
-        }
-    }
 
     @Override
     public Comment updateComment(Long id, CommentUpdateReqVO req) {
@@ -119,5 +50,45 @@ public class CommentServiceImpl implements CommentService{
                 .setContent(req.getContent());
         this.commentRepository.save(comment);
         return comment;
+    }
+
+    @Override
+    public PageResult<CommentRespVO> getPageCommentByPost(Long postId, int page, int limit) {
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        List<Object[]> results = this.commentRepository.findAllByPostId(postId, limit, (int) pageable.getOffset());
+        List<CommentRespVO> commentRespVOS = CollUtils.convertList(results, objs -> {
+            return new CommentRespVO()
+                    .setId((Long) objs[0])
+                    .setContent((String) objs[1])
+                    .setMediaUrls(JsonUtils.toObject((String) objs[2], List.class))
+                    .setCreatedDate((objs[3] instanceof Timestamp ts) ? ts.toLocalDateTime() : null)
+                    .setUser(userApi.getUserById((Long) objs[4]))
+                    .setPostId((Long) objs[6])
+                    .setDownVote((int)objs[7])
+                    .setUpVote((int)objs[8])
+                    .setNestedComments((Long) objs[9]);
+        });
+        return new PageResult<>(page, limit, commentRespVOS);
+    }
+
+
+    @Override
+    public PageResult<CommentRespVO> getPageCommentByParentComment(Long parentCommentId, int page, int limit) {
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        List<Object[]> results = this.commentRepository.findAllByParentComment(parentCommentId, limit, (int) pageable.getOffset());
+        List<CommentRespVO> commentRespVOS = CollUtils.convertList(results, objs -> {
+            return new CommentRespVO().setId((Long) objs[0]).setContent((String) objs[1])
+                    .setMediaUrls(JsonUtils.toObject((String) objs[2], List.class))
+                    .setCreatedDate((objs[3] instanceof Timestamp ts) ? ts.toLocalDateTime() : null)
+                    .setUser(userApi.getUserById((Long) objs[4]))
+                    .setPostId((Long) objs[6])
+                    .setNestedComments((Long) objs[7]);
+        });
+        return new PageResult<>(page, limit, commentRespVOS);
+    }
+
+    @Override
+    public int countByPost(Long postId) {
+        return commentRepository.countByPostId(postId);
     }
 }

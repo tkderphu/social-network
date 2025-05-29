@@ -1,7 +1,9 @@
 package viosmash.dal.dataobject;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.experimental.Accessors;
 import viosmash.converter.JsonListConverter;
 import viosmash.converter.JsonObjectConverter;
@@ -13,6 +15,8 @@ import java.util.List;
 @Accessors(chain = true)
 @Table(name = "tblComment")
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,8 +30,10 @@ public class Comment {
 
     private Long replyCommentId;
 
-    private Long rootCommentId;
-
     private Long postId;
+
+    private int downVote;
+    private int upVote;
+
 
 }

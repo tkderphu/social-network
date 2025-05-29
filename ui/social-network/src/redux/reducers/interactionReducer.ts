@@ -10,7 +10,8 @@ export const createCommentReducer = (state: any = {}, action: any) => {
         case CREATE_COMMENT_SUCCESS: {
             return {
                 loading: false,
-                comment: action.payload
+                comment: action.payload,
+                success: true
             }
         }
         case CREATE_COMMENT_FAILED: {

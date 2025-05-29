@@ -9,5 +9,8 @@ export interface CommentRespVO {
     nestedComments: number
     user: UserProfileResp
     rootCommentId?: number
-    replyCommentId?: number
+    replyCommentId?: number,
+    upVote?: number
+    downVote?: number
+    postId?: any
 }

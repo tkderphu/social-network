@@ -12,8 +12,9 @@ class CommentService {
     createComment(req: CommentReq) {
         return api.post(path, req)
     }
-    getPageCommentByPost(postId: any, page: number = 1, limit: number = 20, sortDate: number = -1) {
-        return api.get(`${path}/post/${postId}?page=${page}&limit=${limit}&sortDate=${sortDate}`)
+    getPageCommentByPost(postId: any, page: number = 1, limit: number = 20) {
+        console.log("why not called")
+        return api.get(`${path}/post/${postId}?page=${page}&limit=${limit}  `)
     }
 }
 export default new CommentService()

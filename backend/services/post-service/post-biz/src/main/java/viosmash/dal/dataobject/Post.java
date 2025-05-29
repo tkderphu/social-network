@@ -38,4 +38,9 @@ public class Post {
 
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
+
+
+    private int downVote;
+    private int upVote;
+
 }

@@ -46,11 +46,10 @@ public class CommentController {
     public CommonResult<PageResult<CommentRespVO>> getPageCommentByPost(
             @PathVariable("postId") Long postId,
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "limit", defaultValue = "20") int limit,
-            @RequestParam(value = "sortDate", defaultValue = "1") int sortDate
+            @RequestParam(value = "limit", defaultValue = "20") int limit
     ) {
         PageResult<CommentRespVO> result = commentService.getPageCommentByPost(
-                postId, page, limit, sortDate
+                postId, page, limit
         );
         log.info("fetch ok page comment by post: {}", result);
         return CommonResult.success(result);
@@ -60,11 +59,10 @@ public class CommentController {
     public CommonResult<PageResult<CommentRespVO>> getPageCommentByRootComment(
             @PathVariable("commentId") Long commentId,
             @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "limit", defaultValue = "20") int limit,
-            @RequestParam(value = "sortDate", defaultValue = "1") int sortDate
+            @RequestParam(value = "limit", defaultValue = "20") int limit
     ) {
-        PageResult<CommentRespVO> result = commentService.getPageCommentByRootComment(
-                commentId, page, limit, sortDate
+        PageResult<CommentRespVO> result = commentService.getPageCommentByParentComment(
+                commentId, page, limit
         );
         log.info("fetch ok page comment by root comment: {}", result);
         return CommonResult.success(result);
@@ -72,7 +70,16 @@ public class CommentController {
 
     @DeleteMapping("/{id}")
     public CommonResult<Boolean> deleteComment(@PathVariable("id") Long id) {
-        commentService.deleteComment(id);
+//        commentService.deleteComment(id);
         return CommonResult.success(true);
+    }
+
+    @PutMapping("/{id}/down")
+    public CommonResult<Boolean> downVote() {
+        return null;
+    }
+    @PutMapping("/{id}/up")
+    public CommonResult<Boolean> upVote() {
+        return null;
     }
 }
