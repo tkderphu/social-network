@@ -13,4 +13,5 @@ export interface CommentRespVO {
     upVote?: number
     downVote?: number
     postId?: any
+    childComments: CommentRespVO[]
 }

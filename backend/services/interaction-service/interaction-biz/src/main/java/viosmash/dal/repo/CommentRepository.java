@@ -50,7 +50,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
     @Query(value = """
             WITH RECURSIVE comment_tree AS (
               SELECT\s
-                *,
+                id, content, media_urls, created_date, user_id,
+                reply_comment_id, post_id, down_vote, up_vote,
                 id AS root_id
               FROM tbl_comment
               WHERE  reply_comment_id = :parentCommentId
@@ -58,13 +59,15 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
               UNION ALL
             
               SELECT\s
-                c.*,
+                c.id, c.content, c.media_urls, c.created_date,c.user_id, 
+                c.reply_comment_id, c.post_id,c.down_vote, c.up_vote,
                 ct.root_id
               FROM tbl_comment c
               JOIN comment_tree ct ON c.reply_comment_id = ct.id
             )
             SELECT\s
-              *,
+              id, content, media_urls, created_date, user_id,
+              reply_comment_id, post_id, down_vote, up_vote,
               COUNT(*) - 1 AS reply_count
             FROM comment_tree
             GROUP BY root_id

@@ -77,12 +77,16 @@ public class CommentServiceImpl implements CommentService{
         Pageable pageable = PageRequest.of(page - 1, limit);
         List<Object[]> results = this.commentRepository.findAllByParentComment(parentCommentId, limit, (int) pageable.getOffset());
         List<CommentRespVO> commentRespVOS = CollUtils.convertList(results, objs -> {
-            return new CommentRespVO().setId((Long) objs[0]).setContent((String) objs[1])
+            return new CommentRespVO()
+                    .setId((Long) objs[0])
+                    .setContent((String) objs[1])
                     .setMediaUrls(JsonUtils.toObject((String) objs[2], List.class))
                     .setCreatedDate((objs[3] instanceof Timestamp ts) ? ts.toLocalDateTime() : null)
                     .setUser(userApi.getUserById((Long) objs[4]))
                     .setPostId((Long) objs[6])
-                    .setNestedComments((Long) objs[7]);
+                    .setDownVote((int)objs[7])
+                    .setUpVote((int)objs[8])
+                    .setNestedComments((Long) objs[9]);
         });
         return new PageResult<>(page, limit, commentRespVOS);
     }

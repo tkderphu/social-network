@@ -1,7 +1,7 @@
 import { CommonResult } from "../../common"
 import commentService from "../../services/interaction/commentService"
 import likeService from "../../services/interaction/likeService"
-import { CREATE_COMMENT_BEGIN, CREATE_COMMENT_FAILED, CREATE_COMMENT_SUCCESS, FETCH_PAGE_COMMENT_BY_POST_BEGIN, FETCH_PAGE_COMMENT_BY_POST_FAILED, FETCH_PAGE_COMMENT_BY_POST_SUCCESS, UPDATE_LIKE_BEGIN, UPDATE_LIKE_FAILED, UPDATE_LIKE_SUCCESS } from "../constants/interactionConstant"
+import { CREATE_COMMENT_BEGIN, CREATE_COMMENT_FAILED, CREATE_COMMENT_SUCCESS, FETCH_NESTED_COMMENT, FETCH_PAGE_COMMENT_BEGIN, FETCH_PAGE_COMMENT_FAILED, FETCH_PAGE_COMMENT_SUCCESS, UPDATE_LIKE_BEGIN, UPDATE_LIKE_FAILED, UPDATE_LIKE_SUCCESS } from "../constants/interactionConstant"
 import { fetchPostByIdAction } from "./postAction"
 
 export const createCommentAction = (commentReq: any) => {
@@ -35,7 +35,7 @@ export const createCommentAction = (commentReq: any) => {
             dispatch({
                 type: CREATE_COMMENT_FAILED,
                 payload: {
-                    message: err.response.data.error || err.response.data.message || err.response.data,
+                    message: err.response?.data?.error || err.response?.data?.message || err?.response?.data,
                     status: err.status
                 }
             })
@@ -45,22 +45,33 @@ export const createCommentAction = (commentReq: any) => {
 
 
 
-export const fetchPageCommentByPostAction = (postId: any, page: number = 1, limit: number = 20) => {
+
+
+
+export const fetchPageCommentAction = (typeId: any, type: "parent" | "post", page: number = 1, limit: number = 20) => {
     return (dispatch: any) => {
         dispatch({
-            type: FETCH_PAGE_COMMENT_BY_POST_BEGIN
+            type: FETCH_PAGE_COMMENT_BEGIN
         })
-        commentService.getPageCommentByPost(postId, page, limit).then(resp => {
+        commentService.getPageComment(typeId,type, page, limit).then(resp => {
             const data: CommonResult<any> = resp.data
             console.log("page comment: ", data.data)
             if (data.code === 200) {
-                dispatch({
-                    type: FETCH_PAGE_COMMENT_BY_POST_SUCCESS,
-                    payload: data.data
-                })
+                if(type == "post") {
+                    dispatch({
+                        type: FETCH_PAGE_COMMENT_SUCCESS,
+                        payload: data.data
+                    })
+                } else {
+                    dispatch({
+                        type: FETCH_NESTED_COMMENT,
+                        parentCommentId: typeId,
+                        payload: data.data
+                    })
+                }
             } else {
                 dispatch({
-                    type: FETCH_PAGE_COMMENT_BY_POST_FAILED,
+                    type: FETCH_PAGE_COMMENT_FAILED,
                     payload: {
                         message: data.message,
                         status: data.code
@@ -74,9 +85,9 @@ export const fetchPageCommentByPostAction = (postId: any, page: number = 1, limi
                 location.href = '/login'
             }
             dispatch({
-                type: FETCH_PAGE_COMMENT_BY_POST_FAILED,
+                type: FETCH_PAGE_COMMENT_FAILED,
                 payload: {
-                    message: err.response.data.error || err.response.data.message || err.response.data,
+                    message: err.response?.data?.error || err.response?.data?.message || err?.response?.data,
                     status: err.status
                 }
             })
@@ -121,7 +132,7 @@ export const updateLikeAction = (likeReq: any) => {
             dispatch({
                 type: UPDATE_LIKE_FAILED,
                 payload: {
-                    message: err.response.data.error || err.response.data.message || err.response.data,
+                    message: err.response?.data?.error || err.response?.data?.message || err?.response?.data,
                     status: err.status
                 }
             })

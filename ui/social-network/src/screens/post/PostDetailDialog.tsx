@@ -12,12 +12,13 @@ import { formatDate } from "../../utils/common";
 import MediaComponent from "../../components/media/MediaComponent";
 import { CommentReq } from "../../services/interaction/commentService";
 import { CommentRespVO } from "../../model/interactionModel";
-import { createCommentAction, fetchPageCommentByPostAction, updateLikeAction } from "../../redux/actions/interactionAction";
+import { createCommentAction, fetchPageCommentAction, updateLikeAction } from "../../redux/actions/interactionAction";
 import { PageResult, TokenUtils } from "../../common";
 import { ADD_NEW_COMMENT_TO_PAGE } from "../../redux/constants/interactionConstant";
 import Spinner from "../../components/Spinner";
 import likeService from "../../services/interaction/likeService";
 import CommentInput from "./comment/CommentInput";
+import CommentList from "./comment/CommentList";
 const Post = (props: { post: PostResp }) => {
   const { id } = useParams()
   const [commentReq, setCommentReq] = useState<CommentReq>({
@@ -53,7 +54,8 @@ const Post = (props: { post: PostResp }) => {
       console.log("vcl new comment has came")
       dispatch({
         type: ADD_NEW_COMMENT_TO_PAGE,
-        payload: createCommentState.comment
+        payload: createCommentState.comment,
+        parentCommentId: focusComment?.id
       })
       setCommentReq((prev) => ({
         ...prev,
@@ -70,13 +72,13 @@ const Post = (props: { post: PostResp }) => {
     hasError: boolean,
     message: any
   } = useSelector((state: any) => {
-    return state.fetchPageCommentByPost
+    return state.fetchPageComment
   })
 
   useEffect(() => {
     console.log("fuck")
     //@ts-ignore
-    dispatch(fetchPageCommentByPostAction(id))
+    dispatch(fetchPageCommentAction(id, "post"))
   }, [])
 
   const likeUpdateState: {
@@ -135,59 +137,7 @@ const Post = (props: { post: PostResp }) => {
           {/* <p className="text-truncate">-------------------------------------------------------------------------------------------------------------</p> */}
         </div>
         <Spinner loading={fetchPageCommentByPost.loading} />
-        {fetchPageCommentByPost.pageResult?.data.map(comment => {
-          return (
-            <div className="d-flex justify-content-between align-items-center">
-              <div className="d-flex mb-2">
-                <img src={comment.user?.avatar} height={50} alt="User" className="rounded-circle me-2" />
-                <div>
-                  <strong>{comment.user?.firstName + " " + comment.user?.lastName}</strong> {comment.content}<br />
-                  <div>
-                    {comment.mediaUrls?.map(imageUrl => {
-                      return <img className="me-2 mb-2" src={imageUrl} height={100} />
-                    })}
-                  </div>
-                  <div className="d-flex align-items-center">
-                    <span className="me-2">{comment.time} ago</span>
-                    {comment.nestedComments > 0 && (<button className="btn"><strong className="" title="See repied" style={{ cursor: "pointer", marginLeft: "10px, " }}>See {comment.nestedComments} replied </strong></button>)}
-                    <button className="btn">{<i title="Reply" onClick={() => setFocusComment(comment)} style={{ cursor: "pointer" }} className="fa fa-reply" aria-hidden="true"></i>}</button>
-                    <div className="d-flex align-items-center">
-                      <button className="btn"><i className="bi bi-arrow-down"></i></button>
-                      <div style={{color: "red"}}>0</div>
-                      <button className="btn"><i className="bi bi-arrow-up"></i></button>
-                    </div>
-                  </div>
-
-                </div>
-              </div>
-              {comment.user.id == TokenUtils.authLogin.userId && (
-                <div className="dropdown">
-
-                  <button className="btn " type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" className="bi bi-three-dots-vertical" viewBox="0 0 16 16">
-                      <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0m0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                    </svg>
-                  </button>
-                  <ul className="dropdown-menu">
-                    <li><button className="dropdown-item" onClick={() => {
-                      setCommentReq({
-                        content: comment.content,
-                        id: comment.id,
-                        mediaUrls: comment.mediaUrls
-                      })
-                    }}>Edit</button></li>
-                    <li><button className="dropdown-item" onClick={() => {
-
-                    }}>Delete</button></li>
-                  </ul>
-                </div>
-              )}
-            </div>
-          )
-        })}
-        {(!fetchPageCommentByPost.pageResult?.data || fetchPageCommentByPost.pageResult?.data.length == 0) && (
-          <h4 className="text-center text-muted">No comments yet</h4>
-        )}
+        <CommentList onEdit={setCommentReq} onFocus={setFocusComment} comments={fetchPageCommentByPost.pageResult?.data} />
 
 
 

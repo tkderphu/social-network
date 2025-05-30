@@ -42,31 +42,31 @@ public class CommentController {
         return CommonResult.success(resp);
     }
 
-    @GetMapping("/post/{postId}")
+    @GetMapping("/{type}/{typeId}")
     public CommonResult<PageResult<CommentRespVO>> getPageCommentByPost(
-            @PathVariable("postId") Long postId,
+            @PathVariable("type") String type,
+            @PathVariable("typeId") Long typeId,
             @RequestParam(value = "page", defaultValue = "1") int page,
             @RequestParam(value = "limit", defaultValue = "20") int limit
     ) {
-        PageResult<CommentRespVO> result = commentService.getPageCommentByPost(
-                postId, page, limit
-        );
-        log.info("fetch ok page comment by post: {}", result);
+        PageResult<CommentRespVO> result =  null;
+        if(type.equals("post")) {
+           result = commentService.getPageCommentByPost(
+                    typeId, page, limit
+            );
+            log.info("fetch ok page comment by post: {}", result);
+
+        } else {
+            result = commentService.getPageCommentByParentComment(
+                    typeId, page, limit
+            );
+            log.info("fetch ok page comment by parent: {}", result);
+
+        }
         return CommonResult.success(result);
     }
 
-    @GetMapping("/root/{commentId}")
-    public CommonResult<PageResult<CommentRespVO>> getPageCommentByRootComment(
-            @PathVariable("commentId") Long commentId,
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "limit", defaultValue = "20") int limit
-    ) {
-        PageResult<CommentRespVO> result = commentService.getPageCommentByParentComment(
-                commentId, page, limit
-        );
-        log.info("fetch ok page comment by root comment: {}", result);
-        return CommonResult.success(result);
-    }
+
 
     @DeleteMapping("/{id}")
     public CommonResult<Boolean> deleteComment(@PathVariable("id") Long id) {

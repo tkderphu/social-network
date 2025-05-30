@@ -2,7 +2,7 @@ import {combineReducers} from 'redux'
 import { loginReducer, logoutReducer, redirectReducer } from './authReducer'
 import { createConversationReducer, fetchListConversationReducer, fetchListMessageReducer } from './chatReducer'
 import { acceptMakeFriendRequestReducer, cancelFriendReducer, cancelMakeFriendRequestReducer, createFriendRequestReducer, fetchAllFriendsReducer, fetchAllRequestFriendInvitationReducer, fetchAllRequestMakeFriendReducer, fetchStatusBetweenUserReducer, fetchSuggestionFriendsReducer, rejectMakeFriendRequestReducer } from './friendshipReducer'
-import { createCommentReducer, fetchPageCommentByPostReducer, updateLikeReducer } from './interactionReducer'
+import { createCommentReducer, fetchPageCommentReducer, updateLikeReducer } from './interactionReducer'
 import { countUnreadMessageReducer, fetchNotifyMessagesReducer, fetchNotifySettingReducer, updateNotifyChatReducer, updateNotifyCommentReducer, updateNotifyFriendReducer, updateNotifyReactionReducer } from './notificationReducer'
 import { createPostReducer, fetchListPostByUserReducer, fetchPostByIdReducer } from './postReducer'
 import { checkForgotPasswordCodeReducer, createNewPasswordReducer, createUserReducer, fetchProfileReducer, forgotPasswordReducer, updateAddressReducer, updateEducationReducer, updateInfoReducer, uploadPersonalImageReducer } from './profileReducer'
@@ -46,7 +46,7 @@ const rootReducer = combineReducers({
     fetchListPostByUser: fetchListPostByUserReducer,
     fetchPostById: fetchPostByIdReducer,
     createComment: createCommentReducer,
-    fetchPageCommentByPost: fetchPageCommentByPostReducer,
+    fetchPageComment: fetchPageCommentReducer,
     updateLike: updateLikeReducer
 
 })
