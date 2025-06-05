@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import viosmash.newfeed.enums.ApiConstant;
 import viosmash.pojo.CommonResult;
-import viosmash.post.api.PostDTO;
+import viosmash.pojo.api.post.PostDTO;
 
 import java.util.Collection;
 

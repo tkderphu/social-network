@@ -5,7 +5,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import viosmash.collection.CollUtils;
 import viosmash.json.JsonUtils;
-import viosmash.post.api.PostDTO;
+import viosmash.pojo.api.post.PostDTO;
 
 import java.util.List;
 import java.util.Set;

@@ -1,4 +1,4 @@
-package viosmash.group.api;
+package viosmash.pojo.api.group;
 
 public class GroupSettingDTO {
     private Long groupId;

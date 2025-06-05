@@ -3,7 +3,7 @@ package viosmash.api;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import viosmash.post.api.PostApi;
-import viosmash.post.api.PostDTO;
+import viosmash.pojo.api.post.PostDTO;
 
 import java.util.Collection;
 import java.util.List;
@@ -19,5 +19,10 @@ public class PostApiImpl implements PostApi {
     @Override
     public List<PostDTO> getListPostByIds(Collection<Long> postIds) {
         return List.of();
+    }
+
+    @Override
+    public PostDTO getPostById(Long id) {
+        return null;
     }
 }

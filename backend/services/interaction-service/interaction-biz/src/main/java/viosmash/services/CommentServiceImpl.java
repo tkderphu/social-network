@@ -1,6 +1,7 @@
 package viosmash.services;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationContext;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,10 @@ import viosmash.interaction.enums.InteractionType;
 import viosmash.json.JsonUtils;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.PageResult;
+import viosmash.pojo.api.notification.NotificationDto;
+import viosmash.pojo.api.notification.NotificationType;
+import viosmash.pojo.api.post.PostDTO;
+import viosmash.post.api.PostApi;
 import viosmash.profile.api.UserApi;
 
 import java.sql.Timestamp;
@@ -29,12 +34,28 @@ public class CommentServiceImpl implements CommentService{
     private final UserApi userApi;
     private final LikeService likeService;
     private final InteractionService interactionService;
+    private final ApplicationContext applicationContext;
+    private final PostApi postApi;
     @Override
     public CommentRespVO createComment(Long userId, CommentCreateReqVO req) {
+
         Comment comment = BeanUtil.copy(req, Comment.class)
                 .setCreatedDate(LocalDateTime.now())
                 .setUserId(userId);
         this.commentRepository.save(comment);
+        NotificationDto notificationDto = new NotificationDto()
+                .setCommentId(req.getReplyCommentId())
+                .setFromUserId(userId).setType(NotificationType.CREATED_COMMENT)
+                .setPostId(req.getPostId());
+        if(req.getReplyCommentId() == null) {
+            PostDTO post = postApi.getPostById(req.getPostId());
+            notificationDto.setToUserId(post.getUser().getId());
+        } else {
+            Comment replyComment = this.commentRepository.findById(req.getReplyCommentId())
+                    .orElse(null);
+            notificationDto.setToUserId(replyComment.getUserId());
+        }
+        applicationContext.publishEvent(notificationDto);
 //        interactionService.addNewInteraction(userId, req.getAuthorId(), InteractionType.COMMENT);
         return BeanUtil.copy(comment, CommentRespVO.class)
                 .setUser(userApi.getUserById(userId));

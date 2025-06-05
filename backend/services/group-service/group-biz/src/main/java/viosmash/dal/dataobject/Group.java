@@ -8,7 +8,7 @@ import viosmash.group.enums.GroupType;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "tbl_groups")
+@Table(name = "tblGroup")
 @Data
 @Accessors(chain = true)
 public class Group {
@@ -23,4 +23,6 @@ public class Group {
     private Long ownerId;
     private Boolean enableAutoAcceptMember;
     private Boolean enableAutoReviewPost;
+    private Boolean enableNotificationWhenUserRequest;
+    private String coverPhoto;
 }

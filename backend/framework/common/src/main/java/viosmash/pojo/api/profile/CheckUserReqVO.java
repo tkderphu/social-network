@@ -1,4 +1,4 @@
-package viosmash.profile.api;
+package viosmash.pojo.api.profile;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

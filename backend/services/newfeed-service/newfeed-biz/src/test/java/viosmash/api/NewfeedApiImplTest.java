@@ -8,10 +8,10 @@ import viosmash.collection.CollUtils;
 import viosmash.friendship.api.FriendshipApi;
 import viosmash.friendship.api.UserDTO;
 import viosmash.group.api.GroupApi;
-import viosmash.group.api.GroupDTO;
+import viosmash.pojo.api.group.GroupDTO;
 import viosmash.object.BeanUtil;
 import viosmash.post.api.PostApi;
-import viosmash.post.api.PostDTO;
+import viosmash.pojo.api.post.PostDTO;
 import viosmash.random.RandomUtils;
 
 import java.util.ArrayList;
@@ -35,9 +35,9 @@ class NewfeedApiImplTest extends BaseTest {
             GroupDTO groupDTO = RandomUtils.randomObject(GroupDTO.class);
             UserDTO userDTO = RandomUtils.randomObject(UserDTO.class);
             if(userDTO.getId() % 2 == 0) {
-                posts.add(new PostDTO().setUser(BeanUtil.copy(userDTO, viosmash.profile.api.UserDTO.class)));
+                posts.add(new PostDTO().setUser(BeanUtil.copy(userDTO, viosmash.pojo.api.profile.UserDTO.class)));
             } else if(userDTO.getId() % 3 == 0) {
-                posts.add(new PostDTO().setUser(BeanUtil.copy(userDTO, viosmash.profile.api.UserDTO.class))
+                posts.add(new PostDTO().setUser(BeanUtil.copy(userDTO, viosmash.pojo.api.profile.UserDTO.class))
                         .setGroup(groupDTO));
             } 
         }

@@ -3,7 +3,6 @@ package viosmash.controller.comment;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import viosmash.controller.comment.vo.CommentCreateReqVO;
 import viosmash.controller.comment.vo.CommentRespVO;
@@ -14,7 +13,7 @@ import viosmash.interaction.enums.ApiConstant;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.CommonResult;
 import viosmash.pojo.PageResult;
-import viosmash.profile.api.UserDTO;
+import viosmash.pojo.api.profile.UserDTO;
 import viosmash.services.CommentService;
 
 @RequiredArgsConstructor

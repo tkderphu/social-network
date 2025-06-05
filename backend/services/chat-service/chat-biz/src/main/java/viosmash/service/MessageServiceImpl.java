@@ -13,7 +13,7 @@ import viosmash.dal.repo.ConversationRepository;
 import viosmash.dal.repo.MessageRepository;
 import viosmash.object.BeanUtil;
 import viosmash.profile.api.UserApi;
-import viosmash.profile.api.UserDTO;
+import viosmash.pojo.api.profile.UserDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;

@@ -3,7 +3,7 @@ package viosmash.controller.group.vo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 import lombok.experimental.Accessors;
-import viosmash.profile.api.UserDTO;
+import viosmash.pojo.api.profile.UserDTO;
 import viosmash.group.enums.GroupType;
 
 import java.time.LocalDateTime;

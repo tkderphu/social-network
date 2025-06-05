@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,7 +20,7 @@ import viosmash.group.api.GroupApi;
 import viosmash.newfeed.api.NewfeedApi;
 import viosmash.pojo.CommonResult;
 import viosmash.post.api.PostApi;
-import viosmash.post.api.PostDTO;
+import viosmash.pojo.api.post.PostDTO;
 
 import java.util.Collection;
 import java.util.Date;

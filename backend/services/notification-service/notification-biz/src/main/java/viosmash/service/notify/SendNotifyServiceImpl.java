@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import viosmash.dal.dataobject.NotifyTemplate;
-import viosmash.notification.enums.NotificationType;
+import viosmash.pojo.api.notification.NotificationType;
 import viosmash.service.mail.MailService;
 
 import java.util.List;

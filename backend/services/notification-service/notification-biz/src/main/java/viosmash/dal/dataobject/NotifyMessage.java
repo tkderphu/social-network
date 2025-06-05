@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import viosmash.converter.JsonObjectConverter;
-import viosmash.notification.enums.NotificationType;
+import viosmash.pojo.api.notification.NotificationType;
 
 import java.time.LocalDateTime;
 import java.util.Map;

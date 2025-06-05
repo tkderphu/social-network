@@ -1,7 +1,6 @@
-package viosmash.profile.api;
+package viosmash.pojo.api.profile;
 
 import lombok.Data;
-import lombok.ToString;
 
 @Data
 public class UserDTO {

@@ -5,7 +5,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 import viosmash.json.JsonUtils;
-import viosmash.post.api.PostDTO;
+import viosmash.pojo.api.post.PostDTO;
 import viosmash.string.StringUtils;
 
 import java.util.concurrent.TimeUnit;

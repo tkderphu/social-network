@@ -4,9 +4,7 @@ import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import viosmash.group.enums.ApiConstant;
-import viosmash.pojo.CommonResult;
-
-import java.util.List;
+import viosmash.pojo.api.group.GroupDTO;
 
 @FeignClient(name = ApiConstant.NAME)
 public interface GroupApi {

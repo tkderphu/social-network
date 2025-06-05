@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 import java.time.LocalDateTime;
 
 @Data
-@Table(name = "tbl_member_waiting_review")
+@Table(name = "tblMemberWaitingReview")
 @Entity
 @Accessors(chain = true)
 public class MemberWaitingReview {

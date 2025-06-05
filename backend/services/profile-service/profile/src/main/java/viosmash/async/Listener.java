@@ -5,7 +5,7 @@ import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import viosmash.notification.api.NotificationApi;
-import viosmash.notification.api.NotificationDto;
+import viosmash.pojo.api.notification.NotificationDto;
 
 @Service
 @RequiredArgsConstructor

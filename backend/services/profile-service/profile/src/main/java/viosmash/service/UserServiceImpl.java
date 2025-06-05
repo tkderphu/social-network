@@ -9,8 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import viosmash.dal.redis.ForgotCodeRedis;
 import viosmash.date.DateUtils;
 import viosmash.friendship.api.FriendshipApi;
-import viosmash.notification.api.NotificationDto;
-import viosmash.notification.enums.NotificationType;
+import viosmash.pojo.api.notification.NotificationDto;
+import viosmash.pojo.api.notification.NotificationType;
 import viosmash.object.BeanUtil;
 import viosmash.profile.constant.AddressEnum;
 import viosmash.profile.constant.PolicyEnum;
@@ -134,7 +134,7 @@ public class UserServiceImpl implements UserService {
 
         NotificationDto dto = new NotificationDto();
         dto.setType(NotificationType.FORGOT_PASSWORD);
-        dto.setProperties(map);
+
 
         applicationContext.publishEvent(dto);
         log.info("forgot password code sent to user");

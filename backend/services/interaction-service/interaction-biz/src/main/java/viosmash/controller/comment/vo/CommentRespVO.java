@@ -1,11 +1,9 @@
 package viosmash.controller.comment.vo;
 
-import jakarta.persistence.Access;
-import jakarta.persistence.Column;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import viosmash.date.DateUtils;
-import viosmash.profile.api.UserDTO;
+import viosmash.pojo.api.profile.UserDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;

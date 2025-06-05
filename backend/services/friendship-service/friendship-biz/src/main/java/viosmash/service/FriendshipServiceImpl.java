@@ -9,8 +9,8 @@ import viosmash.exception.ServiceException;
 import viosmash.nodes.User;
 import viosmash.nodes.UserMakesFriendRequest;
 import viosmash.notification.api.NotificationApi;
-import viosmash.notification.api.NotificationDto;
-import viosmash.notification.enums.NotificationType;
+import viosmash.pojo.api.notification.NotificationDto;
+import viosmash.pojo.api.notification.NotificationType;
 import viosmash.repository.UserRepository;
 
 import java.util.*;

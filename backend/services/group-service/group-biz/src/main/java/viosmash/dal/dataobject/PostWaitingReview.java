@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 @Data
 @Entity
 @Accessors(chain = true)
-@Table(name = "tbl_post_waiting_review")
+@Table(name = "tblPostWaitingReview")
 public class PostWaitingReview {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

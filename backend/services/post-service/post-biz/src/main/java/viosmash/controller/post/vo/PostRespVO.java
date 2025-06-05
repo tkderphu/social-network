@@ -3,11 +3,11 @@ package viosmash.controller.post.vo;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import viosmash.date.DateUtils;
-import viosmash.group.api.GroupDTO;
+import viosmash.pojo.api.group.GroupDTO;
 import viosmash.interaction.api.dto.PostStats;
 import viosmash.post.enums.PostPrivacy;
 import viosmash.post.enums.PostType;
-import viosmash.profile.api.UserDTO;
+import viosmash.pojo.api.profile.UserDTO;
 
 import java.time.LocalDateTime;
 import java.util.List;

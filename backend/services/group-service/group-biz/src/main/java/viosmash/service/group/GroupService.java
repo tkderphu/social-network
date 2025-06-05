@@ -10,7 +10,6 @@ public interface GroupService {
 
 
 
-
     Group getGroup(Long id);
 
     Boolean deleteGroup(Long groupId);
@@ -20,5 +19,8 @@ public interface GroupService {
 
     List<Group> getListGroupByOwner(Long ownerId);
 
+    void updateDescription(Long groupId, String description);
+
+    void updateNotification(Long groupId, Boolean notification);
 
 }

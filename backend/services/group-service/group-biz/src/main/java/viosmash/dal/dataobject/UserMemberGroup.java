@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @Entity
 @Accessors(chain = true)
-@Table(name = "tbl_user_member_group")
+@Table(name = "tblUserMemberGroup")
 public class UserMemberGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

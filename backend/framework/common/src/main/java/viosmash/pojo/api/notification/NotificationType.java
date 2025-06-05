@@ -1,4 +1,4 @@
-package viosmash.notification.enums;
+package viosmash.pojo.api.notification;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

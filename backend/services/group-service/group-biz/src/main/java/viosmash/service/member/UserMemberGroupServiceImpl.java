@@ -84,6 +84,21 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
         return true;
     }
 
+    @Override
+    public void requestJoinGroup(Long groupId) {
+
+    }
+
+    @Override
+    public Boolean checkMemberRequestedGroup(Long groupId, Long userId) {
+        return null;
+    }
+
+    @Override
+    public Boolean checkMemberJoinedGroup(Long groupId, Long userId) {
+        return null;
+    }
+
     @GroupPermission
     @Override
     public List<MemberWaitingReview> getListRequestAttendGroup(Long groupId) {

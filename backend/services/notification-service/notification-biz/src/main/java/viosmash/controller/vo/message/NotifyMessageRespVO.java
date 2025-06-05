@@ -3,10 +3,9 @@ package viosmash.controller.vo.message;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import viosmash.date.DateUtils;
-import viosmash.notification.enums.NotificationType;
+import viosmash.pojo.api.notification.NotificationType;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 @Data
 @Accessors(chain = true)

@@ -1,10 +1,9 @@
-package viosmash.post.api;
+package viosmash.pojo.api.post;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import viosmash.group.api.GroupDTO;
-import viosmash.post.enums.PostType;
-import viosmash.profile.api.UserDTO;
+import viosmash.pojo.api.group.GroupDTO;
+import viosmash.pojo.api.profile.UserDTO;
 
 import java.util.List;
 
@@ -15,7 +14,7 @@ public class PostDTO {
     private String content;
     private UserDTO user;
     private PostDTO sharePost;
-    private PostType postType;
+    private String postType;
     private GroupDTO group;
     private List<String> imageUrls;
     private List<String> fileUrls;

@@ -2,7 +2,7 @@ package viosmash.service.notify;
 
 import viosmash.controller.vo.message.NotifyMessageRespVO;
 import viosmash.dal.dataobject.NotifyMessage;
-import viosmash.notification.enums.NotificationType;
+import viosmash.pojo.api.notification.NotificationType;
 
 import java.util.List;
 import java.util.Map;

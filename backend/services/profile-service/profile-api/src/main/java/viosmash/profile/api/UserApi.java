@@ -2,6 +2,8 @@ package viosmash.profile.api;
 
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
+import viosmash.pojo.api.profile.CheckUserReqVO;
+import viosmash.pojo.api.profile.UserDTO;
 import viosmash.profile.constant.ApiConstant;
 import viosmash.pojo.CommonResult;
 

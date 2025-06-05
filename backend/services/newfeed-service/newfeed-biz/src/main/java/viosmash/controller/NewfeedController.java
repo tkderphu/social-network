@@ -15,7 +15,7 @@ import viosmash.dal.repo.NewfeedItemRepository;
 import viosmash.newfeed.enums.ApiConstant;
 import viosmash.pojo.CommonResult;
 import viosmash.post.api.PostApi;
-import viosmash.post.api.PostDTO;
+import viosmash.pojo.api.post.PostDTO;
 
 import java.util.List;
 

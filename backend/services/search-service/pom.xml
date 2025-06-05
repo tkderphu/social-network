@@ -8,9 +8,13 @@
         <relativePath>../../pom.xml</relativePath>
     </parent>
     <artifactId>search-service</artifactId>
-    <packaging>war</packaging>
+    <packaging>pom</packaging>
     <name>search-service Maven Webapp</name>
     <url>http://maven.apache.org</url>
+    <modules>
+        <module>search-biz</module>
+        <module>search-api</module>
+    </modules>
     <dependencies>
         <dependency>
             <groupId>com.viosmash</groupId>

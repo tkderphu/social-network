@@ -15,9 +15,7 @@ public class GroupCreateReqVO {
     private String name;
     @NotNull(message = "group type can't null")
     private GroupType groupType;
-    @NotEmpty
-    @Length(min = 20, message = "at least 20 character")
-    private String description;
-    @Size(min = 3, message = "number of users must greater equal than 3")
+
+
     private Set<Long> userIds;
 }

@@ -1,7 +1,7 @@
 package viosmash.service.notify;
 
 import org.springframework.scheduling.annotation.Async;
-import viosmash.notification.enums.NotificationType;
+import viosmash.pojo.api.notification.NotificationType;
 
 import java.util.Map;
 
