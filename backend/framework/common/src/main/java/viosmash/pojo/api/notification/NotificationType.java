@@ -12,7 +12,7 @@ public enum NotificationType {
     CREATED_REACTION(""),
     CREATED_COMMENT(""),
     CREATED_REPLY_COMMENT(""),
-    FORGOT_PASSWORD("forgot_password.html");
-
+    FORGOT_PASSWORD("forgot_password.html"),
+    NEW_POST("");
     private final String fileNameHtml;
 }

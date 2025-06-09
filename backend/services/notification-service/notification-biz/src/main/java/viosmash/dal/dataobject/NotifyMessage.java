@@ -27,10 +27,8 @@ public class NotifyMessage {
     private NotificationType type;
 
 
-
     @Convert(converter = JsonObjectConverter.class)
     @Column(nullable = false)
     private Map<String, Object> templateParams;
-
 
 }

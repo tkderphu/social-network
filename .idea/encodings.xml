@@ -56,6 +56,7 @@
     <file url="file://$PROJECT_DIR$/backend/services/reaction-service/reaction-biz/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/reaction-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/reaction-service/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/services/search-service/search-api/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/search-service/search-biz/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/search-service/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/services/search-service/src/main/resources" charset="UTF-8" />

@@ -6,8 +6,12 @@ import rehypeRaw from 'rehype-raw';
 import { PostResp } from '../../model/postModel';
 import ModalCustome from '../../components/modal/ModalCustom';
 import PostForm from './PostForm';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { PostCreateReq } from '../../services/post/postService';
+import { useDispatch, useSelector } from 'react-redux';
+import { updateVote } from '../../redux/actions/interaction/voteAction';
+import voteService from '../../services/interaction/voteService';
+import FullScreenLoader from '../../components/fullSpinner/FullScreenLoader';
 interface PostCardProps {
     post: PostResp
 }
@@ -18,10 +22,61 @@ export const PostCard = (props: PostCardProps) => {
     const [postReq, setPostReq] = useState<PostCreateReq>({
         ...props.post
     })
+    const dispatch = useDispatch()
+    const updateVoteState: {
+        loading: boolean
+    } = useSelector((state: any) => {
+        return state.updateVote
+    })
+    const [postStats, setPostStats] = useState<{
+        comments: number,
+        scores: number
+        shares: number,
+        checkUser: number
+    }>({
+        comments: 0,
+        scores: 0,
+        shares: 0,
+        checkUser: 0
+    })
+
+    useEffect(() => {
+        fetchComments()
+        fetchShares()
+    }, [])
+
+    useEffect(() => {
+        fetchScores()
+        checkUser()
+    }, [updateVoteState])
+
+
+    const fetchComments = () => {
+
+    }
+
+    const checkUser = () => {
+        voteService.checkVote(props.post.id, "POST").then((res) => {
+            setPostStats((prev) => ({ ...prev, "checkUser": res.data.data }))
+        })
+    }
+
+    const fetchScores = () => {
+        voteService.count(props.post.id, "POST").then(resp => {
+            setPostStats((prev) => ({ ...prev, "scores": resp.data.data || 0 }))
+        })
+    }
+
+    const fetchShares = () => {
+
+    }
+
+
     const [openModal, setOpenModal] = useState(false)
     return (
+        <>
+       {updateVoteState.loading &&  <FullScreenLoader/>}
         <div className="card mb-3">
-
             <div className="card-body">
                 <div className='d-flex flex-column'>
                     <div className='text-muted'><strong>{props.post?.postPrivacy}</strong></div>
@@ -90,8 +145,27 @@ export const PostCard = (props: PostCardProps) => {
                         {props.post?.content}
                     </Markdown>                        {/* <p className="card-text">{content}</p> */}
                 </div>
+
                 <div className="d-flex justify-content-between border-top pt-2">
-                    <button className="btn btn-sm btn-outline-primary">Like: {props.post?.postStats?.numberLike || 0}</button>
+                    <div className="d-flex align-items-center">
+                        <button className={`btn btn-sm ${postStats.checkUser == -1 ? "btn-danger" : "btn-outline-primary"}`} onClick={() => {
+                            //@ts-ignore
+                            dispatch(updateVote({
+                                objectId: props.post.id,
+                                objectType: "POST",
+                                voteType: "DOWN"
+                            }))
+                        }}><i className="bi bi-arrow-down"></i></button>
+                        <div style={{ color: "red" }} className={"me-2 mx-2"}>{postStats.scores}</div>
+                        <button className={`btn btn-sm ${postStats.checkUser == 1 ? "btn-danger" : "btn-outline-primary"}`} onClick={() => {
+                            //@ts-ignore
+                            dispatch(updateVote({
+                                objectId: props.post.id,
+                                objectType: "POST",
+                                voteType: "UP"
+                            }))
+                        }}><i className="bi bi-arrow-up"></i></button>
+                    </div>
                     <button className="btn btn-sm btn-outline-secondary" onClick={() => {
                         navigate(`/posts/${props.post?.id}`, {
                             state: {
@@ -103,5 +177,6 @@ export const PostCard = (props: PostCardProps) => {
                 </div>
             </div>
         </div>
+        </>
     );
 };

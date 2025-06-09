@@ -32,8 +32,4 @@ public class Comment {
 
     private Long postId;
 
-    private int downVote;
-    private int upVote;
-
-
 }

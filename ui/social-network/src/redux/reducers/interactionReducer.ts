@@ -1,4 +1,4 @@
-import { ADD_NEW_COMMENT_TO_PAGE, CREATE_COMMENT_BEGIN, CREATE_COMMENT_FAILED, CREATE_COMMENT_SUCCESS, FETCH_NESTED_COMMENT, FETCH_PAGE_COMMENT_BEGIN, FETCH_PAGE_COMMENT_FAILED, FETCH_PAGE_COMMENT_SUCCESS, UPDATE_LIKE_BEGIN, UPDATE_LIKE_FAILED, UPDATE_LIKE_SUCCESS } from "../constants/interactionConstant"
+import { ADD_NEW_COMMENT_TO_PAGE, CREATE_COMMENT_BEGIN, CREATE_COMMENT_FAILED, CREATE_COMMENT_SUCCESS, FETCH_NESTED_COMMENT, FETCH_PAGE_COMMENT_BEGIN, FETCH_PAGE_COMMENT_FAILED, FETCH_PAGE_COMMENT_SUCCESS, UPDATE_LIKE_BEGIN, UPDATE_LIKE_FAILED, UPDATE_LIKE_SUCCESS, UPDATE_VOTE_BEGIN, UPDATE_VOTE_FAILED, UPDATE_VOTE_SUCCESS } from "../constants/interactionConstant"
 
 export const createCommentReducer = (state: any = {}, action: any) => {
     switch(action.type) {
@@ -127,6 +127,30 @@ export const updateLikeReducer = (state: any = {}, action: any) => {
             }
         }
         case UPDATE_LIKE_FAILED: {
+            return {
+                loading: false,
+                hasError: true,
+                message: action.payload.message,
+                status: action.payload.status
+            }
+        }
+        default: return state
+    }
+}
+
+export const updateVoteReducer = (state: any = {}, action: any) => {
+    switch(action.type) {
+        case UPDATE_VOTE_BEGIN: {
+            return {
+                loading: true
+            }
+        }
+        case UPDATE_VOTE_SUCCESS: {
+            return {
+                loading: false
+            }
+        }
+        case UPDATE_VOTE_FAILED: {
             return {
                 loading: false,
                 hasError: true,

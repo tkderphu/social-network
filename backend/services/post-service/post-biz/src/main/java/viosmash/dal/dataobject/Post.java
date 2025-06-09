@@ -8,6 +8,7 @@ import viosmash.post.enums.PostPrivacy;
 import viosmash.post.enums.PostType;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 
 @Data
@@ -40,7 +41,20 @@ public class Post {
     private LocalDateTime modifiedDate;
 
 
-    private int downVote;
-    private int upVote;
+    @Transient
+    public double score(int vote) {
+        int score = vote;
+        int sign = Integer.compare(score, 0); // -1, 0, or 1
 
+        // Avoid log(0) by ensuring abs(score) >= 1
+        double order = Math.log10(Math.max(Math.abs(score), 1));
+
+        // Epoch timestamp of the post (in seconds)
+        long epochSeconds = createdDate.toEpochSecond(ZoneOffset.UTC);
+
+        // Reference time: 1134028003 is the epoch for Dec 8, 2005
+        long secondsSinceEpoch = epochSeconds - 1134028003;
+
+        return sign * order + secondsSinceEpoch / 45000.0;
+    }
 }

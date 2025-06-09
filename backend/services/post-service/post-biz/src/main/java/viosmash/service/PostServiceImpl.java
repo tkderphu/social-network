@@ -18,17 +18,14 @@ import viosmash.dal.dataobject.Tag;
 import viosmash.dal.repo.PostRepository;
 import viosmash.dal.repo.PostTagRepository;
 import viosmash.dal.repo.TagRepository;
-import viosmash.exception.Exceptional;
 import viosmash.group.api.GroupApi;
-import viosmash.interaction.api.InteractionApi;
 import viosmash.object.BeanUtil;
-import viosmash.object.ObjectUtils;
 import viosmash.pojo.PageResult;
 import viosmash.profile.api.UserApi;
 import viosmash.string.StringUtils;
 
 import java.time.LocalDateTime;
-import java.util.function.Supplier;
+import java.util.List;
 
 import static viosmash.exception.Exceptional.process;
 import static viosmash.exception.utils.ServiceUtils.exception;
@@ -41,7 +38,6 @@ public class PostServiceImpl implements PostService{
     private final PostRepository postRepository;
     private final UserApi userApi;
     private final GroupApi groupApi;
-    private final InteractionApi interactionApi;
     private final PostTagRepository postTagRepository;
     private final TagRepository tagRepository;
     @Override
@@ -85,7 +81,7 @@ public class PostServiceImpl implements PostService{
                     .setUser(process(post.getUserId(), userApi::getUserById))
 //                    .setGroup(process(post.getGroupId(), groupApi::getGroup))
 //                    .setSharePost(getPostById(post.getSharePostId()))
-                    .setPostStats(process(post.getId(), interactionApi::countInteraction));
+                    .setVotes(0).setShares(0).setComments(0);
         }));
     }
 
@@ -98,14 +94,23 @@ public class PostServiceImpl implements PostService{
                 .setUser(process(post.getUserId(), userApi::getUserById))
 //                .setGroup(process(post.getGroupId(), groupApi::getGroup))
 //                .setSharePost(getPostById(post.getSharePostId()))
-                .setPostStats(process(post.getId(), interactionApi::countInteraction));
+                .setVotes(0).setShares(0).setComments(0);
         log.info("data post detail: {}", postRespVO);
         return postRespVO;
     }
-    
+
+
+
+
+
     @Override
     public void deletePost(Long postId) {
         this.postRepository.deleteAllBySharePostId(postId);
         this.postRepository.deleteById(postId);
+    }
+
+    @Override
+    public List<Post> getNewFeeds(Long userId) {
+        return List.of();
     }
 }

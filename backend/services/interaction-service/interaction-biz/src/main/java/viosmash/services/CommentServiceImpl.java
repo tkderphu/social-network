@@ -11,13 +11,9 @@ import viosmash.controller.comment.vo.CommentRespVO;
 import viosmash.controller.comment.vo.CommentUpdateReqVO;
 import viosmash.dal.dataobject.Comment;
 import viosmash.dal.repo.CommentRepository;
-import viosmash.interaction.enums.InteractionType;
 import viosmash.json.JsonUtils;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.PageResult;
-import viosmash.pojo.api.notification.NotificationDto;
-import viosmash.pojo.api.notification.NotificationType;
-import viosmash.pojo.api.post.PostDTO;
 import viosmash.post.api.PostApi;
 import viosmash.profile.api.UserApi;
 
@@ -32,8 +28,7 @@ import static viosmash.exception.utils.ServiceUtils.exception;
 public class CommentServiceImpl implements CommentService{
     private final CommentRepository commentRepository;
     private final UserApi userApi;
-    private final LikeService likeService;
-    private final InteractionService interactionService;
+    private final VoteService voteService;
     private final ApplicationContext applicationContext;
     private final PostApi postApi;
     @Override
@@ -43,20 +38,6 @@ public class CommentServiceImpl implements CommentService{
                 .setCreatedDate(LocalDateTime.now())
                 .setUserId(userId);
         this.commentRepository.save(comment);
-        NotificationDto notificationDto = new NotificationDto()
-                .setCommentId(req.getReplyCommentId())
-                .setFromUserId(userId).setType(NotificationType.CREATED_COMMENT)
-                .setPostId(req.getPostId());
-        if(req.getReplyCommentId() == null) {
-            PostDTO post = postApi.getPostById(req.getPostId());
-            notificationDto.setToUserId(post.getUser().getId());
-        } else {
-            Comment replyComment = this.commentRepository.findById(req.getReplyCommentId())
-                    .orElse(null);
-            notificationDto.setToUserId(replyComment.getUserId());
-        }
-        applicationContext.publishEvent(notificationDto);
-//        interactionService.addNewInteraction(userId, req.getAuthorId(), InteractionType.COMMENT);
         return BeanUtil.copy(comment, CommentRespVO.class)
                 .setUser(userApi.getUserById(userId));
     }
@@ -85,9 +66,9 @@ public class CommentServiceImpl implements CommentService{
                     .setCreatedDate((objs[3] instanceof Timestamp ts) ? ts.toLocalDateTime() : null)
                     .setUser(userApi.getUserById((Long) objs[4]))
                     .setPostId((Long) objs[6])
-                    .setDownVote((int)objs[7])
-                    .setUpVote((int)objs[8])
-                    .setNestedComments((Long) objs[9]);
+                    .setDownVote(0)
+                    .setUpVote(0)
+                    .setNestedComments((Long) objs[7]);
         });
         return new PageResult<>(page, limit, commentRespVOS);
     }
@@ -105,9 +86,9 @@ public class CommentServiceImpl implements CommentService{
                     .setCreatedDate((objs[3] instanceof Timestamp ts) ? ts.toLocalDateTime() : null)
                     .setUser(userApi.getUserById((Long) objs[4]))
                     .setPostId((Long) objs[6])
-                    .setDownVote((int)objs[7])
-                    .setUpVote((int)objs[8])
-                    .setNestedComments((Long) objs[9]);
+                    .setDownVote(0)
+                    .setUpVote(0)
+                    .setNestedComments((Long) objs[7]);
         });
         return new PageResult<>(page, limit, commentRespVOS);
     }

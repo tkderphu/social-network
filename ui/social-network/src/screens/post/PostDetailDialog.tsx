@@ -12,7 +12,7 @@ import { formatDate } from "../../utils/common";
 import MediaComponent from "../../components/media/MediaComponent";
 import { CommentReq } from "../../services/interaction/commentService";
 import { CommentRespVO } from "../../model/interactionModel";
-import { createCommentAction, fetchPageCommentAction, updateLikeAction } from "../../redux/actions/interactionAction";
+import { createCommentAction, fetchPageCommentAction, updateLikeAction } from "../../redux/actions/interaction/interactionAction";
 import { PageResult, TokenUtils } from "../../common";
 import { ADD_NEW_COMMENT_TO_PAGE } from "../../redux/constants/interactionConstant";
 import Spinner from "../../components/Spinner";
@@ -136,7 +136,7 @@ const Post = (props: { post: PostResp }) => {
 
           {/* <p className="text-truncate">-------------------------------------------------------------------------------------------------------------</p> */}
         </div>
-        <Spinner loading={fetchPageCommentByPost.loading} />
+        {/* <Spinner loading={fetchPageCommentByPost.loading} /> */}
         <CommentList onEdit={setCommentReq} onFocus={setFocusComment} comments={fetchPageCommentByPost.pageResult?.data} />
 
 

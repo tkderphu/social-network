@@ -27,49 +27,211 @@
           <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-context/4.0.3.RELEASE/spring-context-4.0.3.RELEASE.jar" />
           <entry name="$MAVEN_REPOSITORY$/joda-time/joda-time/2.9/joda-time-2.9.jar" />
           <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.3.1.Final/mapstruct-processor-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/jolira/hickory/1.0.0/hickory-1.0.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.3.1.Final/mapstruct-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/assertj/assertj-core/3.11.1/assertj-core-3.11.1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/google/guava/guava/19.0/guava-19.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/puppycrawl/tools/checkstyle/8.14/checkstyle-8.14.jar" />
+          <entry name="$MAVEN_REPOSITORY$/javax/inject/javax.inject/1/javax.inject-1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-container-default/1.6/plexus-container-default-1.6.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-test/4.0.3.RELEASE/spring-test-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-beans/4.0.3.RELEASE/spring-beans-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-context/4.0.3.RELEASE/spring-context-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/joda-time/joda-time/2.9/joda-time-2.9.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
         </processorPath>
-        <module name="newfeed-api" />
+        <module name="discovery-services" />
+        <module name="rpc" />
+        <module name="test" />
         <module name="notification-api" />
-        <module name="group-api" />
         <module name="chat-biz" />
-        <module name="group-biz" />
-        <module name="notification-biz" />
+        <module name="profile" />
+        <module name="profile-service" />
         <module name="redis" />
-        <module name="newfeed-biz" />
+        <module name="dependencies" />
+        <module name="config-server" />
         <module name="security" />
         <module name="friendship-api" />
+        <module name="profile-api" />
         <module name="common" />
         <module name="friendship-biz" />
         <module name="web" />
         <module name="websocket" />
-        <module name="search-service" />
-        <module name="api" />
-        <module name="authentication" />
-        <module name="post-api" />
-        <module name="discovery-services" />
-        <module name="rpc" />
-        <module name="test" />
-        <module name="profile" />
-        <module name="profile-service" />
-        <module name="post-biz" />
-        <module name="dependencies" />
-        <module name="config-server" />
-        <module name="profile-api" />
         <module name="upload-biz" />
         <module name="interaction-api" />
+        <module name="api" />
         <module name="chat-api" />
         <module name="db" />
         <module name="gateway" />
+      </profile>
+      <profile name="Annotation profile for group-biz Maven Webapp" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.3.1.Final/mapstruct-processor-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/jolira/hickory/1.0.0/hickory-1.0.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.3.1.Final/mapstruct-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/assertj/assertj-core/3.11.1/assertj-core-3.11.1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/google/guava/guava/19.0/guava-19.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/puppycrawl/tools/checkstyle/8.14/checkstyle-8.14.jar" />
+          <entry name="$MAVEN_REPOSITORY$/javax/inject/javax.inject/1/javax.inject-1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-container-default/1.6/plexus-container-default-1.6.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-test/4.0.3.RELEASE/spring-test-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-beans/4.0.3.RELEASE/spring-beans-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-context/4.0.3.RELEASE/spring-context-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/joda-time/joda-time/2.9/joda-time-2.9.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
+        </processorPath>
+        <module name="group-api" />
+        <module name="group-biz" />
+        <module name="authentication" />
+      </profile>
+      <profile name="Annotation profile for interaction-biz" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.3.1.Final/mapstruct-processor-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/jolira/hickory/1.0.0/hickory-1.0.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.3.1.Final/mapstruct-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/assertj/assertj-core/3.11.1/assertj-core-3.11.1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/google/guava/guava/19.0/guava-19.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/puppycrawl/tools/checkstyle/8.14/checkstyle-8.14.jar" />
+          <entry name="$MAVEN_REPOSITORY$/javax/inject/javax.inject/1/javax.inject-1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-container-default/1.6/plexus-container-default-1.6.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-test/4.0.3.RELEASE/spring-test-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-beans/4.0.3.RELEASE/spring-beans-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-context/4.0.3.RELEASE/spring-context-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/joda-time/joda-time/2.9/joda-time-2.9.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
+        </processorPath>
         <module name="interaction-biz" />
+      </profile>
+      <profile name="Annotation profile for notification-biz" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.3.1.Final/mapstruct-processor-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/jolira/hickory/1.0.0/hickory-1.0.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.3.1.Final/mapstruct-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/assertj/assertj-core/3.11.1/assertj-core-3.11.1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/google/guava/guava/19.0/guava-19.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/puppycrawl/tools/checkstyle/8.14/checkstyle-8.14.jar" />
+          <entry name="$MAVEN_REPOSITORY$/javax/inject/javax.inject/1/javax.inject-1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-container-default/1.6/plexus-container-default-1.6.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-test/4.0.3.RELEASE/spring-test-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-beans/4.0.3.RELEASE/spring-beans-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-context/4.0.3.RELEASE/spring-context-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/joda-time/joda-time/2.9/joda-time-2.9.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
+        </processorPath>
+        <module name="notification-biz" />
+      </profile>
+      <profile name="Annotation profile for post-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.3.1.Final/mapstruct-processor-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/jolira/hickory/1.0.0/hickory-1.0.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.3.1.Final/mapstruct-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/assertj/assertj-core/3.11.1/assertj-core-3.11.1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/google/guava/guava/19.0/guava-19.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/puppycrawl/tools/checkstyle/8.14/checkstyle-8.14.jar" />
+          <entry name="$MAVEN_REPOSITORY$/javax/inject/javax.inject/1/javax.inject-1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-container-default/1.6/plexus-container-default-1.6.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-test/4.0.3.RELEASE/spring-test-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-beans/4.0.3.RELEASE/spring-beans-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-context/4.0.3.RELEASE/spring-context-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/joda-time/joda-time/2.9/joda-time-2.9.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
+        </processorPath>
+        <module name="post-api" />
+      </profile>
+      <profile name="Annotation profile for post-biz" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.3.1.Final/mapstruct-processor-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/jolira/hickory/1.0.0/hickory-1.0.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.3.1.Final/mapstruct-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/assertj/assertj-core/3.11.1/assertj-core-3.11.1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/google/guava/guava/19.0/guava-19.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/puppycrawl/tools/checkstyle/8.14/checkstyle-8.14.jar" />
+          <entry name="$MAVEN_REPOSITORY$/javax/inject/javax.inject/1/javax.inject-1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-container-default/1.6/plexus-container-default-1.6.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-test/4.0.3.RELEASE/spring-test-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-beans/4.0.3.RELEASE/spring-beans-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-context/4.0.3.RELEASE/spring-context-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/joda-time/joda-time/2.9/joda-time-2.9.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
+        </processorPath>
+        <module name="post-biz" />
+      </profile>
+      <profile name="Annotation profile for search-api" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.3.1.Final/mapstruct-processor-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/jolira/hickory/1.0.0/hickory-1.0.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.3.1.Final/mapstruct-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/assertj/assertj-core/3.11.1/assertj-core-3.11.1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/google/guava/guava/19.0/guava-19.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/puppycrawl/tools/checkstyle/8.14/checkstyle-8.14.jar" />
+          <entry name="$MAVEN_REPOSITORY$/javax/inject/javax.inject/1/javax.inject-1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-container-default/1.6/plexus-container-default-1.6.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-test/4.0.3.RELEASE/spring-test-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-beans/4.0.3.RELEASE/spring-beans-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-context/4.0.3.RELEASE/spring-context-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/joda-time/joda-time/2.9/joda-time-2.9.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
+        </processorPath>
+        <module name="search-api" />
+      </profile>
+      <profile name="Annotation profile for search-biz" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <processorPath useClasspath="false">
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct-processor/1.3.1.Final/mapstruct-processor-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/jolira/hickory/1.0.0/hickory-1.0.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/mapstruct/mapstruct/1.3.1.Final/mapstruct-1.3.1.Final.jar" />
+          <entry name="$MAVEN_REPOSITORY$/junit/junit/4.12/junit-4.12.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/assertj/assertj-core/3.11.1/assertj-core-3.11.1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/google/guava/guava/19.0/guava-19.0.jar" />
+          <entry name="$MAVEN_REPOSITORY$/com/puppycrawl/tools/checkstyle/8.14/checkstyle-8.14.jar" />
+          <entry name="$MAVEN_REPOSITORY$/javax/inject/javax.inject/1/javax.inject-1.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/codehaus/plexus/plexus-container-default/1.6/plexus-container-default-1.6.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-test/4.0.3.RELEASE/spring-test-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-beans/4.0.3.RELEASE/spring-beans-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/springframework/spring-context/4.0.3.RELEASE/spring-context-4.0.3.RELEASE.jar" />
+          <entry name="$MAVEN_REPOSITORY$/joda-time/joda-time/2.9/joda-time-2.9.jar" />
+          <entry name="$MAVEN_REPOSITORY$/org/projectlombok/lombok/1.18.12/lombok-1.18.12.jar" />
+        </processorPath>
+        <module name="search-biz" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
       <module name="comment-service" target="17" />
       <module name="mq" target="17" />
+      <module name="newfeed-api" target="17" />
+      <module name="newfeed-biz" target="17" />
+      <module name="newfeed-service" target="17" />
       <module name="reaction-api" target="17" />
       <module name="reaction-biz" target="17" />
       <module name="reaction-service" target="17" />
-      <module name="search-biz" target="17" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
@@ -115,6 +277,7 @@
       <module name="reaction-service" options="-parameters" />
       <module name="redis" options="-parameters" />
       <module name="rpc" options="-parameters" />
+      <module name="search-api" options="-parameters" />
       <module name="search-biz" options="-parameters" />
       <module name="search-service" options="-parameters" />
       <module name="security" options="-parameters" />

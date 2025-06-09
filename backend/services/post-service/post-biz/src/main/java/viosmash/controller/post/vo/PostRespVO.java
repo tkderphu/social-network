@@ -4,7 +4,6 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import viosmash.date.DateUtils;
 import viosmash.pojo.api.group.GroupDTO;
-import viosmash.interaction.api.dto.PostStats;
 import viosmash.post.enums.PostPrivacy;
 import viosmash.post.enums.PostType;
 import viosmash.pojo.api.profile.UserDTO;
@@ -25,7 +24,9 @@ public class PostRespVO {
     private PostRespVO sharePost;
     private LocalDateTime createdDate;
     private LocalDateTime modifiedDate;
-    private PostStats postStats;
+    private int votes;
+    private int comments;
+    private int shares;
     private String time;
 
     public String getTime() {

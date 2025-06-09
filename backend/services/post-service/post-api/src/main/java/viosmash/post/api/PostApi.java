@@ -1,10 +1,9 @@
 package viosmash.post.api;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import viosmash.pojo.api.post.PostDTO;
+import viosmash.pojo.api.post.PostUpdateVote;
 import viosmash.post.enums.ApiConstant;
 
 import java.util.Collection;
@@ -22,4 +21,7 @@ public interface PostApi {
 
     @GetMapping("/detail/:id")
     PostDTO getPostById(@PathVariable("id") Long id);
+
+//    void saveSharePost();
+
 }

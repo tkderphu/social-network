@@ -7,16 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import viosmash.BaseTest;
 import viosmash.controller.comment.vo.CommentCreateReqVO;
 import viosmash.controller.comment.vo.CommentRespVO;
-import viosmash.controller.like.vo.LikeUpdateReqVO;
+import viosmash.controller.vote.vo.VoteUpdateReqVO;
 import viosmash.dal.dataobject.Comment;
-import viosmash.dal.dataobject.Like;
+import viosmash.dal.dataobject.Vote;
 import viosmash.dal.repo.CommentRepository;
-import viosmash.pojo.PageResult;
+import viosmash.interaction.enums.ObjectType;
 import viosmash.random.RandomUtils;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @Slf4j
 class CommentServiceImplTest extends BaseTest {
@@ -26,7 +24,7 @@ class CommentServiceImplTest extends BaseTest {
     @Autowired
     private CommentRepository commentRepository;
     @Autowired
-    private LikeService likeService;
+    private VoteService voteService;
 
     @Test
     void createComment() {
@@ -75,10 +73,10 @@ class CommentServiceImplTest extends BaseTest {
         new2.setReplyCommentId(comment.getId());
 
         this.commentRepository.save(new2);
-        LikeUpdateReqVO reqVO = new LikeUpdateReqVO();
+        VoteUpdateReqVO reqVO = new VoteUpdateReqVO();
         reqVO.setObjectId(new2.getId());
-        reqVO.setObjectType(Like.ObjectType.COMMENT);
-        this.likeService.updateLike(2l, reqVO);
+        reqVO.setObjectType(ObjectType.COMMENT);
+        this.voteService.updateVote(2l, reqVO);
 
         CommentCreateReqVO req = RandomUtils.randomObject(CommentCreateReqVO.class, c -> {
             c.setReplyCommentId(new2.getId());
@@ -87,7 +85,7 @@ class CommentServiceImplTest extends BaseTest {
 
 //        this.commentService.deleteComment(comment.getId());
 
-        boolean b = likeService.checkLike(2l, new2.getId(), Like.ObjectType.COMMENT);
+        boolean b = voteService.checkVote(2l, new2.getId(), ObjectType.COMMENT);
 //        PageResult<CommentRespVO> pageCommentByRootComment = this.commentService.getPageCommentByRootComment(comment.getId(), 1, 10, -1);
 //        Assertions.assertEquals(b, false);
 //        Assertions.assertEquals(pageCommentByRootComment.getData().size(), 0);

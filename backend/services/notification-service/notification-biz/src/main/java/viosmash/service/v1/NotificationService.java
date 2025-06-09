@@ -1,5 +1,6 @@
 package viosmash.service.v1;
 
+import org.springframework.scheduling.annotation.Async;
 import viosmash.controller.v1.vo.NotificationRespVO;
 import viosmash.dal.dataobject.v1.FriendNotification;
 import viosmash.dal.dataobject.v1.Notification;
@@ -14,5 +15,9 @@ public interface NotificationService {
 
     void updateReadAll(Long userId);
 
+    @Async
     void saveNotification(Notification notification);
+
+    @Async
+    void deleteNotification(Notification notification);
 }

@@ -4,7 +4,7 @@ import { useParams } from "react-router"
 import { PageResult, TokenUtils } from "../../../common"
 import Spinner from "../../../components/Spinner"
 import { CommentRespVO } from "../../../model/interactionModel"
-import { fetchPageCommentAction } from "../../../redux/actions/interactionAction"
+import { fetchPageCommentAction } from "../../../redux/actions/interaction/interactionAction"
 interface CommentProps {
     onEdit: any,
     onFocus: any,

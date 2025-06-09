@@ -16,5 +16,4 @@ public class Share {
     private Long postId;
     @Column(nullable = false)
     private Long userId;
-
 }
