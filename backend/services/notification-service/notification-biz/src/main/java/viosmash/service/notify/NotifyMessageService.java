@@ -13,6 +13,6 @@ public interface NotifyMessageService {
     List<NotifyMessage> getListUnreadNotify(Long userId);
     int countUnreadNotify(Long userId);
     void readAllNotifyMessage(Long userId);
-
     void readNotifyMessage(Long notifyMessageId);
+
 }

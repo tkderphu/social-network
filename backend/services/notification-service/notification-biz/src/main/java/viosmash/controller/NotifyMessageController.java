@@ -46,6 +46,4 @@ public class NotifyMessageController {
         return CommonResult.success(true);
     }
 
-
-
 }

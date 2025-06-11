@@ -1,7 +1,9 @@
 package viosmash.notification.api;
 
 
+import org.apache.tomcat.util.modeler.NoDescriptorRegistry;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import viosmash.notification.enums.ApiConstant;
@@ -15,5 +17,6 @@ public interface NotificationApi {
     @PostMapping("/send")
     void sendNotification(@RequestBody NotificationDto req);
 
-
+    @DeleteMapping("/remove")
+    void deleteNotification(@RequestBody NotificationDto req);
 }

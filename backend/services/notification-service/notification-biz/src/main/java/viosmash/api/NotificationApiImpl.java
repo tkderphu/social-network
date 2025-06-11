@@ -11,7 +11,6 @@ import viosmash.friendship.api.FriendshipApi;
 import viosmash.notification.api.NotificationApi;
 import viosmash.pojo.api.notification.NotificationDto;
 import viosmash.service.notify.SendNotifyService;
-import viosmash.service.v1.NotificationService;
 
 import java.util.List;
 
@@ -52,6 +51,16 @@ public class NotificationApiImpl implements NotificationApi {
                 Long toUserId = req.getValueFromProperties(NotificationDto.KeyParams.TO_USER_ID);
                 sendNotifyService.sendNotifyMessage(toUserId, req.getType(), req.getProperties());
             }
+            case CREATED_REPLY_COMMENT -> {
+                log.info("new reply comment coming");
+                Long toUserId = req.getValueFromProperties(NotificationDto.KeyParams.TO_USER_ID);
+                sendNotifyService.sendNotifyMessage(toUserId, req.getType(), req.getProperties());
+            }
         }
+    }
+
+    @Override
+    public void deleteNotification(NotificationDto req) {
+
     }
 }
