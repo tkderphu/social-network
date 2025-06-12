@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import viosmash.core.utils.SecurityUtils;
 import viosmash.interaction.api.vote.VoteApi;
+import viosmash.interaction.api.vote.VoteDTO;
 import viosmash.interaction.enums.ObjectType;
 import viosmash.services.VoteService;
 
@@ -26,5 +27,10 @@ public class VoteApiImpl implements VoteApi {
     @GetMapping("/check/{objType}/{objId}")
     public int checkVote(@PathVariable("objId") Long objId, @PathVariable("objType")ObjectType objType){
         return voteService.checkVote(SecurityUtils.getLoginUserMemberId(), objId, objType);
+    }
+
+    @Override
+    public VoteDTO getById(Long id) {
+        return null;
     }
 }

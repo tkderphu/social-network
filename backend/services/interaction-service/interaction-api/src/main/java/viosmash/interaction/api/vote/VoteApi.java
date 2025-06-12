@@ -16,4 +16,6 @@ public interface VoteApi {
     @GetMapping("/check/{objType}/{objId}")
     int checkVote(@PathVariable("objId") Long objId, @PathVariable("objType")ObjectType objType);
 
+    @GetMapping("/{id}")
+    VoteDTO getById(@PathVariable("id") Long id);
 }

@@ -8,7 +8,7 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 import viosmash.BaseTest;
 import viosmash.collection.CollUtils;
-import viosmash.controller.vo.message.NotificationMessageRespVO;
+import viosmash.controller.v1.vo.NotificationMessageRespVO;
 import viosmash.dal.dataobject.v1.NotificationMessage;
 import viosmash.dal.dataobject.v1.NotificationSetting;
 import viosmash.dal.repo.v1.NotificationMessageRepository;
@@ -73,7 +73,7 @@ public class NotificationMessageRepoTest extends BaseTest {
 
         this.notificationMessageRepository.saveAll(notificationMessages);
 
-        List<Object[]> allByUserId = this.notificationMessageRepository.findAllByUserId(userId);
+        List<Object[]> allByUserId = this.notificationMessageRepository.findAllByUserId(userId, 10, 0);
         List<NotificationMessageRespVO> resp = CollUtils.convertList(allByUserId, objs -> {
             return convert(objs);
         });
@@ -97,7 +97,7 @@ public class NotificationMessageRepoTest extends BaseTest {
         Assertions.assertEquals(unread, 1);
 
 
-        List<Object[]> allByUserIdAndSeen = this.notificationMessageRepository.findAllByUserIdAndSeen(userId, false);
+        List<Object[]> allByUserIdAndSeen = this.notificationMessageRepository.findAllByUserIdAndSeen(userId, false, 10, 0);
 
         Assertions.assertEquals(allByUserIdAndSeen.size(), 1);
 

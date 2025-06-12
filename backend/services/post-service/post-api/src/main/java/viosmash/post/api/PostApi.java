@@ -1,9 +1,10 @@
 package viosmash.post.api;
 
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
 import viosmash.pojo.api.post.PostDTO;
-import viosmash.pojo.api.post.PostUpdateVote;
 import viosmash.post.enums.ApiConstant;
 
 import java.util.Collection;

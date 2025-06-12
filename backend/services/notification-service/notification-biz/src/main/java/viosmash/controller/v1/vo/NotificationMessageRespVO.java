@@ -1,9 +1,9 @@
-package viosmash.controller.vo.message;
+package viosmash.controller.v1.vo;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
 import viosmash.dal.dataobject.v1.NotificationMessage;
-import viosmash.friendship.api.UserDTO;
+import viosmash.pojo.api.profile.UserDTO;
 
 import java.time.LocalDateTime;
 

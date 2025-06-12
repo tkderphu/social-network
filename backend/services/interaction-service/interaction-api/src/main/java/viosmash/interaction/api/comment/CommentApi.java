@@ -13,4 +13,7 @@ public interface CommentApi {
 
     @GetMapping("/count/{postId}")
     int count(@PathVariable("postId") Long objId);
+
+    @GetMapping("/{id}")
+    CommentDTO getById(@PathVariable("id") Long id);
 }

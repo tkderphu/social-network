@@ -26,8 +26,11 @@ public interface NotificationMessageRepository extends JpaRepository<Notificatio
             WHERE n.user_id = :userId
             GROUP BY  n.target_type, n.target_id, n.notification_type
         ) as gn ON nf.id = gn.max_id
+        LIMIT :offset, :limit
         """, nativeQuery = true)
-    List<Object[]> findAllByUserId(@Param("userId") Long userId);
+    List<Object[]> findAllByUserId(@Param("userId") Long userId,
+                                   @Param("limit") int limit,
+                                   @Param("offset") int offset);
 
     @Query(value = """
         SELECT nf.id, nf.target_type, nf.target_id,
@@ -45,8 +48,12 @@ public interface NotificationMessageRepository extends JpaRepository<Notificatio
             GROUP BY  n.target_type, n.target_id, n.notification_type
         ) as gn ON nf.id = gn.max_id
         WHERE nf.seen = :seen
+        LIMIT :offset, :limit
         """, nativeQuery = true)
-    List<Object[]> findAllByUserIdAndSeen(@Param("userId") Long userId, @Param("seen") Boolean seen);
+    List<Object[]> findAllByUserIdAndSeen(@Param("userId") Long userId,
+                                          @Param("seen") Boolean seen,
+                                          @Param("limit") int limit,
+                                          @Param("offset") int offset);
 
     @Query(value = """
         SELECT COUNT(nf.id)
@@ -80,4 +87,7 @@ public interface NotificationMessageRepository extends JpaRepository<Notificatio
         """)
     @Modifying
     void updateAllSeenNotification(@Param("ids")Collection<Long> ids);
+
+    @Modifying
+    void deleteAllByTargetIdAndTargetTypeAndNotificationType(Long targetId, NotificationMessage.TargetType targetType, NotificationMessage.NotificationType notificationType);
 }

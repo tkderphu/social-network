@@ -9,13 +9,9 @@ import java.util.List;
 
 @Data
 @Accessors(chain = true)
-public class PostDTO {
-    private Long id;
-    private String content;
-    private UserDTO user;
+public class PostDTO extends PostSimpleDTO{
     private PostDTO sharePost;
     private String postType;
-    private GroupDTO group;
     private List<String> imageUrls;
     private List<String> fileUrls;
     private Integer numberOfShare;

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import viosmash.interaction.api.comment.CommentApi;
+import viosmash.interaction.api.comment.CommentDTO;
 import viosmash.services.CommentService;
 
 
@@ -20,5 +21,10 @@ public class CommentApiImpl implements CommentApi {
     @GetMapping("/count/{postId}")
     public int count(@PathVariable("postId") Long objId){
         return commentService.countByPost(objId);
+    }
+
+    @Override
+    public CommentDTO getById(Long id) {
+        return null;
     }
 }
