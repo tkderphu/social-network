@@ -1,7 +1,7 @@
-package viosmash.dal.repo.v1;
+package viosmash.dal.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import viosmash.dal.dataobject.v1.NotificationSetting;
+import viosmash.dal.dataobject.NotificationSetting;
 
 public interface NotificationSettingRepository extends JpaRepository<NotificationSetting, Long> {
 }

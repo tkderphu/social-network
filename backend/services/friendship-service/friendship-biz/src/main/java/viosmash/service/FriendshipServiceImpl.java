@@ -8,7 +8,6 @@ import viosmash.friendship.constant.FriendshipStatus;
 import viosmash.exception.ServiceException;
 import viosmash.nodes.User;
 import viosmash.nodes.UserMakesFriendRequest;
-import viosmash.notification.api.NotificationApi;
 import viosmash.pojo.api.notification.NotificationDto;
 import viosmash.pojo.api.notification.NotificationType;
 import viosmash.repository.UserRepository;

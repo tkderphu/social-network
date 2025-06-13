@@ -12,6 +12,9 @@ import viosmash.controller.comment.vo.CommentUpdateReqVO;
 import viosmash.dal.dataobject.Comment;
 import viosmash.dal.repo.CommentRepository;
 import viosmash.json.JsonUtils;
+import viosmash.notification.api.NotificationDto;
+import viosmash.notification.enums.NotificationType;
+import viosmash.notification.enums.TargetType;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.PageResult;
 import viosmash.post.api.PostApi;
@@ -33,11 +36,29 @@ public class CommentServiceImpl implements CommentService{
     private final PostApi postApi;
     @Override
     public CommentRespVO createComment(Long userId, CommentCreateReqVO req) {
-
         Comment comment = BeanUtil.copy(req, Comment.class)
                 .setCreatedDate(LocalDateTime.now())
                 .setUserId(userId);
+
+        if(comment.getReplyCommentId() != null) {
+            NotificationDto reqVO = new NotificationDto()
+                    .setCreatedAt(LocalDateTime.now())
+                    .setTargetId(comment.getReplyCommentId())
+                    .setTargetType(TargetType.COMMENT)
+                    .setNotificationType(NotificationType.NEW_COMMENT)
+                    .setActorId(userId);
+            applicationContext.publishEvent(reqVO);
+        } else {
+            NotificationDto reqVO = new NotificationDto()
+                    .setCreatedAt(LocalDateTime.now())
+                    .setTargetId(comment.getPostId())
+                    .setTargetType(TargetType.POST)
+                    .setNotificationType(NotificationType.NEW_COMMENT)
+                    .setActorId(userId);
+            applicationContext.publishEvent(reqVO);
+        }
         this.commentRepository.save(comment);
+
         return BeanUtil.copy(comment, CommentRespVO.class)
                 .setUser(userApi.getUserById(userId));
     }
@@ -96,5 +117,11 @@ public class CommentServiceImpl implements CommentService{
     @Override
     public int countByPost(Long postId) {
         return commentRepository.countByPostId(postId);
+    }
+
+    @Override
+    public Comment getById(Long id) {
+        return this.commentRepository.findById(id)
+                .orElseThrow(() -> exception(404, "not found"));
     }
 }

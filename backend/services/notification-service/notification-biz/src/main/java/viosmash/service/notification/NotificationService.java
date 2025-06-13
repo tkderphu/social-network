@@ -1,14 +1,16 @@
 package viosmash.service.notification;
 
-import viosmash.controller.v1.vo.NotificationMessageRespVO;
-import viosmash.dal.dataobject.v1.NotificationMessage.NotificationType;
-import viosmash.dal.dataobject.v1.NotificationMessage.TargetType;
+import viosmash.controller.vo.NotificationMessageRespVO;
+import viosmash.dal.dataobject.NotificationMessage;
+import viosmash.notification.enums.NotificationType;
+import viosmash.notification.enums.TargetType;
 
 import java.util.Collection;
 import java.util.List;
 
 public interface NotificationService {
 
+    NotificationMessageRespVO saveNotification(NotificationMessage message);
     List<NotificationMessageRespVO> getListNotification(Long userId, int page, int limit);
 
     List<NotificationMessageRespVO> getListUnreadNotification(Long userId, int page, int limit);

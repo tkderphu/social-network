@@ -1,10 +1,12 @@
-package viosmash.dal.repo.v1;
+package viosmash.dal.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import viosmash.dal.dataobject.v1.NotificationMessage;
+import viosmash.dal.dataobject.NotificationMessage;
+import viosmash.notification.enums.NotificationType;
+import viosmash.notification.enums.TargetType;
 
 import java.util.Collection;
 import java.util.List;
@@ -89,5 +91,5 @@ public interface NotificationMessageRepository extends JpaRepository<Notificatio
     void updateAllSeenNotification(@Param("ids")Collection<Long> ids);
 
     @Modifying
-    void deleteAllByTargetIdAndTargetTypeAndNotificationType(Long targetId, NotificationMessage.TargetType targetType, NotificationMessage.NotificationType notificationType);
+    void deleteAllByTargetIdAndTargetTypeAndNotificationType(Long targetId, TargetType targetType, NotificationType notificationType);
 }

@@ -1,8 +1,9 @@
-package viosmash.controller.v1.vo;
+package viosmash.controller.vo;
 
 import lombok.Data;
 import lombok.experimental.Accessors;
-import viosmash.dal.dataobject.v1.NotificationMessage;
+import viosmash.notification.enums.NotificationType;
+import viosmash.notification.enums.TargetType;
 import viosmash.pojo.api.profile.UserDTO;
 
 import java.time.LocalDateTime;
@@ -12,11 +13,11 @@ import java.time.LocalDateTime;
 public class NotificationMessageRespVO {
     private Long id;
 
-    private NotificationMessage.TargetType targetType;
+    private TargetType targetType;
 
     private Object target;
 
-    private NotificationMessage.NotificationType notificationType;
+    private NotificationType notificationType;
 
     private LocalDateTime createdAt;
 

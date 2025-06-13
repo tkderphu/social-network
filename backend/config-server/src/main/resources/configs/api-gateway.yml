@@ -32,6 +32,10 @@ spring:
           uri: lb://NOTIFICATION-SERVICE
           predicates:
             - Path=/api/notifications/**
+        - id: notification-websocket-service
+          uri: lb://CHAT-SERVICE
+          predicates:
+            - Path=/notification/ws/info/**
 
         - id: chat-service
           uri: lb://CHAT-SERVICE

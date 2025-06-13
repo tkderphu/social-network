@@ -15,4 +15,5 @@ public interface CommentService{
     PageResult<CommentRespVO> getPageCommentByPost(Long postId, int page, int limit);
     PageResult<CommentRespVO> getPageCommentByParentComment(Long parentCommentId, int page, int limit);
     int countByPost(Long postId);
+    Comment getById(Long id);
 }

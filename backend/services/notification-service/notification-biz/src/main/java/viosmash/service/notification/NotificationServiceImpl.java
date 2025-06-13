@@ -6,13 +6,15 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import viosmash.collection.CollUtils;
-import viosmash.controller.v1.vo.NotificationMessageRespVO;
-import viosmash.dal.dataobject.v1.NotificationMessage;
-import viosmash.dal.dataobject.v1.NotificationMessage.TargetType;
-import viosmash.dal.repo.v1.NotificationMessageRepository;
+import viosmash.controller.vo.NotificationMessageRespVO;
+import viosmash.dal.dataobject.NotificationMessage;
+import viosmash.dal.repo.NotificationMessageRepository;
 import viosmash.exception.ServiceException;
 import viosmash.interaction.api.comment.CommentApi;
 import viosmash.interaction.api.vote.VoteApi;
+import viosmash.notification.enums.NotificationType;
+import viosmash.notification.enums.TargetType;
+import viosmash.object.BeanUtil;
 import viosmash.pojo.api.profile.UserDTO;
 import viosmash.post.api.PostApi;
 import viosmash.profile.api.UserApi;
@@ -21,7 +23,6 @@ import java.sql.Timestamp;
 import java.util.Collection;
 import java.util.List;
 
-import static viosmash.dal.dataobject.v1.NotificationMessage.NotificationType;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +32,25 @@ public class NotificationServiceImpl implements NotificationService{
     private final PostApi postApi;
     private final CommentApi commentApi;
     private final VoteApi voteApi;
+
+    @Override
+    public NotificationMessageRespVO saveNotification(NotificationMessage message) {
+        NotificationMessage save = this.notificationMessageRepository.save(message);
+        Long actorId = message.getActorId();
+        Long targetId = message.getTargetId();
+        TargetType targetType = message.getTargetType();
+        Object target = switch (targetType) {
+            case POST -> postApi.getPostById(targetId);
+            case COMMENT -> commentApi.getById(targetId);
+            case USER -> userApi.getUserById(targetId);
+            case VOTE -> voteApi.getById(targetId);
+        };
+        UserDTO user = userApi.getUserById(actorId);
+        NotificationMessageRespVO copy = BeanUtil.copy(save, NotificationMessageRespVO.class)
+                .setTarget(target).setActor(user);
+        return copy;
+    }
+
     @Override
     public List<NotificationMessageRespVO> getListNotification(Long userId, int page, int limit) {
         Pageable pageable = PageRequest.of(page - 1, limit);

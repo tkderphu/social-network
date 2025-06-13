@@ -8,11 +8,13 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.transaction.annotation.Transactional;
 import viosmash.BaseTest;
 import viosmash.collection.CollUtils;
-import viosmash.controller.v1.vo.NotificationMessageRespVO;
-import viosmash.dal.dataobject.v1.NotificationMessage;
-import viosmash.dal.dataobject.v1.NotificationSetting;
-import viosmash.dal.repo.v1.NotificationMessageRepository;
-import viosmash.dal.repo.v1.NotificationSettingRepository;
+import viosmash.controller.vo.NotificationMessageRespVO;
+import viosmash.dal.dataobject.NotificationMessage;
+import viosmash.dal.dataobject.NotificationSetting;
+import viosmash.dal.repo.NotificationMessageRepository;
+import viosmash.dal.repo.NotificationSettingRepository;
+import viosmash.notification.enums.NotificationType;
+import viosmash.notification.enums.TargetType;
 import viosmash.post.api.PostApi;
 import viosmash.profile.api.UserApi;
 import viosmash.random.RandomUtils;
@@ -20,9 +22,9 @@ import viosmash.random.RandomUtils;
 import java.sql.Timestamp;
 import java.util.List;
 
-import static viosmash.dal.dataobject.v1.NotificationMessage.NotificationType.NEW_COMMENT;
-import static viosmash.dal.dataobject.v1.NotificationMessage.TargetType.COMMENT;
-import static viosmash.dal.dataobject.v1.NotificationMessage.TargetType.POST;
+import static viosmash.notification.enums.NotificationType.NEW_COMMENT;
+import static viosmash.notification.enums.TargetType.COMMENT;
+import static viosmash.notification.enums.TargetType.POST;
 
 @Slf4j
 public class NotificationMessageRepoTest extends BaseTest {
@@ -136,8 +138,8 @@ public class NotificationMessageRepoTest extends BaseTest {
 
     public NotificationMessageRespVO convert(Object[] obj) {
         NotificationMessageRespVO res = new NotificationMessageRespVO();
-        res.setId((Long) obj[0]).setTargetType(NotificationMessage.TargetType.valueOf((String) obj[1]))
-                .setTarget(null).setNotificationType(NotificationMessage.NotificationType.valueOf((String) obj[3]))
+        res.setId((Long) obj[0]).setTargetType(TargetType.valueOf((String) obj[1]))
+                .setTarget(null).setNotificationType(NotificationType.valueOf((String) obj[3]))
                 .setCreatedAt(((Timestamp) obj[4]).toLocalDateTime())
                 .setActor(null).setSeen((Boolean) obj[7])
                 .setOthers((Long) obj[8]);

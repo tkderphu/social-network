@@ -1,8 +1,10 @@
-package viosmash.dal.dataobject.v1;
+package viosmash.dal.dataobject;
 
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import viosmash.notification.enums.NotificationType;
+import viosmash.notification.enums.TargetType;
 
 import java.time.LocalDateTime;
 
@@ -29,14 +31,5 @@ public class NotificationMessage {
     private Long userId;
     private Boolean seen;
 
-
-
-    public static enum TargetType {
-        POST,COMMENT, USER, VOTE
-    }
-
-    public static enum NotificationType {
-        NEW_VOTE, NEW_COMMENT, NEW_FRIEND_REQUEST, NEW_ACCEPT_REQUEST, NEW_POST
-    }
 
 }

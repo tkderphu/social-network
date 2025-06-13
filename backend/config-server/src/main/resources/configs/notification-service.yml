@@ -1,3 +1,9 @@
+viosmash:
+  websocket:
+    endpoint: /notification/ws
+    appPrefix: /app
+    destinationPrefix: /topic
+
 server:
   port: 8085
 spring:

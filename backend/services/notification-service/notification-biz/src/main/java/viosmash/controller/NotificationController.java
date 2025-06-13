@@ -1,9 +1,8 @@
-package viosmash.controller.v1;
+package viosmash.controller;
 
-import jakarta.ws.rs.PUT;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import viosmash.controller.v1.vo.NotificationMessageRespVO;
+import viosmash.controller.vo.NotificationMessageRespVO;
 import viosmash.core.utils.SecurityUtils;
 import viosmash.pojo.CommonResult;
 import viosmash.service.notification.NotificationService;

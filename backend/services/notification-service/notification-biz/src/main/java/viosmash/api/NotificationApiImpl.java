@@ -1,66 +1,76 @@
 package viosmash.api;
 
+
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import viosmash.collection.CollUtils;
-import viosmash.friendship.api.FriendshipApi;
+import viosmash.controller.vo.NotificationMessageRespVO;
+import viosmash.dal.dataobject.NotificationMessage;
+import viosmash.dal.dataobject.NotificationSetting;
+import viosmash.notification.api.MailNotificationDto;
 import viosmash.notification.api.NotificationApi;
-import viosmash.pojo.api.notification.NotificationDto;
-import viosmash.service.notify.SendNotifyService;
-
-import java.util.List;
-
+import viosmash.notification.api.NotificationDto;
+import viosmash.object.BeanUtil;
+import viosmash.service.notification.NotificationService;
+import viosmash.service.notification.NotificationSettingService;
 
 @RestController
-@RequiredArgsConstructor
 @RequestMapping(NotificationApi.PREFIX)
-@Slf4j
+@RequiredArgsConstructor
 public class NotificationApiImpl implements NotificationApi {
-
-    private final SendNotifyService sendNotifyService;
-    private final FriendshipApi friendshipApi;
+    private final NotificationService notificationService;
+    private final NotificationSettingService notificationSettingService;
+    private final SimpMessagingTemplate simpMessagingTemplate;
     @Override
-    @PostMapping("/send")
-    public void sendNotification(@RequestBody NotificationDto req) {
-        switch (req.getType()) {
-            case FORGOT_PASSWORD -> {
-                log.info("begin send");
-                sendNotifyService.mailNotifySingleMessage(req.getProperties(), req.getType(), "Forgot password");
-                log.info("end send");
+    public void sendAppNotification(NotificationDto req) {
+        NotificationMessage message = BeanUtil.copy(req, NotificationMessage.class)
+                .setSeen(false);
+        NotificationSetting notificationSetting = this.notificationSettingService.getNotificationSetting(message.getUserId());
+        switch (req.getNotificationType()) {
+            case NEW_VOTE -> {
+                if(notificationSetting.getEnableVoteNotification()) {
+                    saveAndSend(message);
+                }
             }
-            case CREATED_REQUEST_FRIEND -> {
-                log.info("create request friend");
-                Long userId = Long.parseLong(req.getProperties().get("toUserId") + "");
-                sendNotifyService.sendNotifyMessage(userId, req.getType(), req.getProperties());
+            case NEW_COMMENT -> {
+                if(notificationSetting.getEnableCommentNotification()) {
+                    saveAndSend(message);
+                }
             }
-            case NEW_POST -> {
-                log.info("new post coming");
-                Long fromUserId = req.getValueFromProperties(NotificationDto.KeyParams.FROM_USER_ID);
-                List<Long> friends = friendshipApi.getListFriends(fromUserId);
-                CollUtils.convertList(friends, friend -> {
-                    sendNotifyService.sendNotifyMessage(friend, req.getType(), req.getProperties());
-                    return null;
-                });
+            case NEW_FRIEND_REQUEST -> {
+                if(notificationSetting.getEnableFriendsRequestNotification()) {
+                    saveAndSend(message);
+                }
             }
-            case CREATED_COMMENT -> {
-                log.info("new comment coming");
-                Long toUserId = req.getValueFromProperties(NotificationDto.KeyParams.TO_USER_ID);
-                sendNotifyService.sendNotifyMessage(toUserId, req.getType(), req.getProperties());
+            case NEW_ACCEPT_REQUEST -> {
+                if(notificationSetting.getEnableAcceptRequestNotification()) {
+                    saveAndSend(message);
+                }
             }
-            case CREATED_REPLY_COMMENT -> {
-                log.info("new reply comment coming");
-                Long toUserId = req.getValueFromProperties(NotificationDto.KeyParams.TO_USER_ID);
-                sendNotifyService.sendNotifyMessage(toUserId, req.getType(), req.getProperties());
+            case NEW_POST_FRIENDS -> {
+                if(notificationSetting.getEnablePostFriendsNotification()) {
+                    saveAndSend(message);
+                }
+            }
+            case NEW_POST_GROUPS -> {
+                if(notificationSetting.getEnablePostGroupsNotification()) {
+                    saveAndSend(message);
+                }
             }
         }
     }
 
+    private void saveAndSend(NotificationMessage message) {
+        NotificationMessageRespVO resp = notificationService.saveNotification(message);
+        simpMessagingTemplate.convertAndSend(
+                String.format("/topic/notifications/user/%d", message.getUserId()),
+                resp
+        );
+    }
+
     @Override
-    public void deleteNotification(NotificationDto req) {
+    public void sendMail(MailNotificationDto req) {
 
     }
 }
