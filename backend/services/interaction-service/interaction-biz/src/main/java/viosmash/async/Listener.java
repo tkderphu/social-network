@@ -30,6 +30,9 @@ public class Listener {
             PostDTO postDTO = postApi.getPostById(dto.getTargetId());
             dto.setUserId(postDTO.getUser().getId());
         }
+        if(dto.getActorId().equals(dto.getUserId())) {
+            return;
+        }
         notificationApi.sendAppNotification(dto);
     }
 

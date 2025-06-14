@@ -1,35 +1,31 @@
 package viosmash.api;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.*;
 import viosmash.dal.repo.PostRepository;
+import viosmash.object.BeanUtil;
 import viosmash.pojo.api.post.PostDTO;
 import viosmash.post.api.PostApi;
+import viosmash.service.PostServiceImpl;
 
 import java.util.Collection;
 import java.util.List;
 
+@Slf4j
 @RequestMapping(PostApi.PREFIX)
 @RestController
 @RequiredArgsConstructor
 public class PostApiImpl implements PostApi {
 
     private final PostRepository postRepository;
+    private final PostServiceImpl postService;
 
-    @Override
-    public List<PostDTO> getListPostByAuthors(Collection<Long> userIds) {
-        return List.of();
-    }
-
-    @Override
-    public List<PostDTO> getListPostByIds(Collection<Long> postIds) {
-        return List.of();
-    }
 
     @Override
     public PostDTO getPostById(Long id) {
-        return null;
+        log.info("fetch detail post: {}", id);
+        return BeanUtil.copy(postService.getPostById(id), PostDTO.class);
     }
 
 }

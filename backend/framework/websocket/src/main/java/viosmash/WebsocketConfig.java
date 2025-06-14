@@ -37,15 +37,16 @@ public class WebsocketConfig implements WebSocketMessageBrokerConfigurer {
     private TokenApi tokenApi;
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
-        registry.addEndpoint("/chat/ws")
+        log.info("WEBSOCKET PROPERTIES: {}", websocketProperties);
+        registry.addEndpoint(websocketProperties.getEndpoint())
                 .setAllowedOrigins("*");
 //                .withSockJS();
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/topic", "/queue");
-        registry.setApplicationDestinationPrefixes("/app");
+        registry.enableSimpleBroker(websocketProperties.getDestinationPrefix());
+        registry.setApplicationDestinationPrefixes(websocketProperties.getAppPrefix());
     }
 
     @Override

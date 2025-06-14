@@ -6,12 +6,15 @@ import { TokenUtils } from "../common";
 const stompClientMap = new Map<string, Client>();
 const subscribedTopic = new Map<string, boolean>()
 type UseStompClientProps = {
-  path: "chat/ws";
-  topic?: []
+  path: "chat/ws" | "notification/ws";
+  handles?: {
+    topic: string,
+    callback: any
+  }[]
 };
 
 
-export const useStompClient = ({ path, topic }: UseStompClientProps): Client | null => {
+export const useStompClient = ({ path, handles }: UseStompClientProps): Client | null => {
   const clientRef = useRef<Client | null>(null);
 
   useEffect(() => {
@@ -29,6 +32,9 @@ export const useStompClient = ({ path, topic }: UseStompClientProps): Client | n
       },
       onConnect: () => {
         console.log(`[STOMP] Connected to ${path}`);
+        handles?.forEach(handler => {
+          client.subscribe(handler.topic, handler.callback)
+        })
       },
       onStompError: (frame) => {
         console.error("[STOMP ERROR]", frame.headers["message"], frame.body);
@@ -42,7 +48,7 @@ export const useStompClient = ({ path, topic }: UseStompClientProps): Client | n
 
     stompClientMap.set(path, client);
     clientRef.current = client;
-
+    console.log('vcl connected: ', client)
     return () => {
       console.log("clear")
       // Optional: leave client active for reuse or uncomment to clean up on unmount

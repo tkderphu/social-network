@@ -2,11 +2,21 @@ import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import FullScreenLoader from "../../components/fullSpinner/FullScreenLoader";
+import { ProfileSimpleResp } from "../../model/profileModel";
 import { fetchNotifyMessagesAction } from "../../redux/actions/notificationAction";
 import notificationService from "../../services/notification/notificationService";
 import "./Notification.css"
 import NotificationRequestFriend from "./template/NotificationRequestFriend";
 
+export interface NotificationRespVO {
+    id: any,
+    targetType: "POST" | "COMMENT" | "USER" | "VOTE",
+    notificationType: "NEW_VOTE"| "NEW_COMMENT"| "NEW_FRIEND_REQUEST"| "NEW_ACCEPT_REQUEST"|"NEW_POST_FRIENDS"| "NEW_POST_GROUPS"
+    timeAgo: string,
+    seen: boolean,
+    actor: ProfileSimpleResp,
+    others: number
+}
 
 export default function Notification() {
     const [showNotifications, setShowNotifications] = useState(false);
@@ -37,14 +47,13 @@ export default function Notification() {
         notifications: {
             time: any,
             read: boolean,
-            type: "ACCEPTED_REQUEST_FRIEND" | "CREATED_REQUEST_FRIEND",
+            type: "ACCEPTED_REQUEST_FRIEND" | "CREATED_REQUEST_FRIEND" | "COMMENT",
             params: any
         }[],
         loading: boolean
     } = useSelector((state: any) => {
         return state.fetchNotifyMessages
     })
-    console.log("notification: ", fetchNotificationState.notifications)
     useEffect(() => {
         //@ts-ignore
         dispatch(fetchNotifyMessagesAction())

@@ -50,15 +50,20 @@ import CreateNewPasswordScreen from './screens/authen/CreateNewPasswordScreen'
 import { useStompClient } from './utils/useStomp'
 import MyFriends from './screens/friend/MyFriends'
 import Notification from './screens/notification/Notification'
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 export interface HandleChat {
   handleClickChat: any,
   handleCloseChat: any
 }
 function App() {
-  useStompClient({ path: "chat/ws" });
 
+  
   useEffect(() => {
+
   }, [])
+
+
 
 
   const location = useLocation();
@@ -82,15 +87,15 @@ function App() {
 
                 <Route path='login' element={<LoginScreen />}></Route>
                 <Route path='register' element={<RegisterScreen />}></Route>
-                <Route path='forgot-password' element={<ForgotPassworScreen />}/>
-                <Route path='forgot-password-code' element={<ForgotPassworCodeScreen/>}/>
-                <Route path='new-password' element={<CreateNewPasswordScreen/>}/>
+                <Route path='forgot-password' element={<ForgotPassworScreen />} />
+                <Route path='forgot-password-code' element={<ForgotPassworCodeScreen />} />
+                <Route path='new-password' element={<CreateNewPasswordScreen />} />
 
                 <Route element={<ProtectedRoute />}>
                   <Route path='/' element={<Home />} />
-                  <Route path='logout' element={<LogoutScreen/>} />
+                  <Route path='logout' element={<LogoutScreen />} />
                   <Route path='friends' element={<Friend />}>
-                    <Route element={<MyFriends/>} index />
+                    <Route element={<MyFriends />} index />
 
                     <Route path='suggestions' element={<Suggestion />} >
                     </Route>
@@ -107,11 +112,11 @@ function App() {
                   </Route>
 
                   <Route path='profile/:id' element={<ProfileScreen />} >
-                    <Route element={<ProfilePostComponent />} index  />
-                    <Route element={<ProfilePostComponent />} path='posts'  />
-                    <Route element={<ProfilePhotosComponent />}  path='photos' />
-                    <Route element={<ProfileAbouComponent />}  path='about' />
-                    <Route element={<ProfileFriendsComponent />}  path='friends' />
+                    <Route element={<ProfilePostComponent />} index />
+                    <Route element={<ProfilePostComponent />} path='posts' />
+                    <Route element={<ProfilePhotosComponent />} path='photos' />
+                    <Route element={<ProfileAbouComponent />} path='about' />
+                    <Route element={<ProfileFriendsComponent />} path='friends' />
 
                   </Route>
 
@@ -123,7 +128,7 @@ function App() {
                   <Route element={<Messenger1 />} path='inbox' >
 
                     <Route element={<ChatArea />} path="c/:id" />
-                    <Route element={<ChatArea/>}  path="c/u/:id"/>
+                    <Route element={<ChatArea />} path="c/u/:id" />
                     {/* <Route elemen /> */}
                   </Route>
 
@@ -144,14 +149,14 @@ function App() {
               {state?.backgroundLocation && (
                 <Routes>
                   <Route path="/posts/:id" element={<PostDetailDialog />} />
-                  <Route path='notifications' element={<Notification/>} />
+                  <Route path='notifications' element={<Notification />} />
 
                 </Routes>
               )}
             </div>
           </div>
 
-
+          <ToastContainer />
         </div>
       </Provider>
     </>

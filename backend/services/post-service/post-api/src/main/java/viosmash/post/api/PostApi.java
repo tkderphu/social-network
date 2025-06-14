@@ -15,12 +15,7 @@ public interface PostApi {
 
     String PREFIX = ApiConstant.RPC_PREFIX;
 
-    @GetMapping("/authors")
-    List<PostDTO> getListPostByAuthors(@RequestParam("authorIds") Collection<Long> userIds);
-    @GetMapping
-    List<PostDTO> getListPostByIds(@RequestParam("postIds") Collection<Long> postIds);
-
-    @GetMapping("/detail/:id")
+    @GetMapping("/{id}")
     PostDTO getPostById(@PathVariable("id") Long id);
 
 //    void saveSharePost();

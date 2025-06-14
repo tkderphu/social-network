@@ -2,6 +2,7 @@ package viosmash.api;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,6 +16,7 @@ import viosmash.object.BeanUtil;
 import viosmash.service.notification.NotificationService;
 import viosmash.service.notification.NotificationSettingService;
 
+@Slf4j
 @RestController
 @RequestMapping(NotificationApi.PREFIX)
 @RequiredArgsConstructor
@@ -24,6 +26,7 @@ public class NotificationApiImpl implements NotificationApi {
     private final SimpMessagingTemplate simpMessagingTemplate;
     @Override
     public void sendAppNotification(NotificationDto req) {
+        log.info("Notification coming: {}", req);
         NotificationMessage message = BeanUtil.copy(req, NotificationMessage.class)
                 .setSeen(false);
         NotificationSetting notificationSetting = this.notificationSettingService.getNotificationSetting(message.getUserId());
@@ -63,10 +66,13 @@ public class NotificationApiImpl implements NotificationApi {
 
     private void saveAndSend(NotificationMessage message) {
         NotificationMessageRespVO resp = notificationService.saveNotification(message);
+        log.info("data notification to user: {}", resp);
         simpMessagingTemplate.convertAndSend(
                 String.format("/topic/notifications/user/%d", message.getUserId()),
                 resp
         );
+
+        log.warn("why not send to user");
     }
 
     @Override
