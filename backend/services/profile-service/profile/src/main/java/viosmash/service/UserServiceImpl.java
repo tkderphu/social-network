@@ -6,26 +6,28 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
+import viosmash.collection.CollUtils;
+import viosmash.controller.vo.UserCreateReqVO;
+import viosmash.controller.vo.UserRespVO;
+import viosmash.controller.vo.UserUpdateInfoReqVO;
+import viosmash.core.utils.SecurityUtils;
+import viosmash.dal.dataobject.User;
 import viosmash.dal.redis.ForgotCodeRedis;
+import viosmash.dal.repository.UserRepository;
 import viosmash.date.DateUtils;
+import viosmash.exception.Exceptional;
 import viosmash.friendship.api.FriendshipApi;
+import viosmash.object.BeanUtil;
 import viosmash.pojo.api.notification.NotificationDto;
 import viosmash.pojo.api.notification.NotificationType;
-import viosmash.object.BeanUtil;
 import viosmash.profile.constant.AddressEnum;
 import viosmash.profile.constant.PolicyEnum;
 import viosmash.profile.constant.SchoolEnum;
-import viosmash.controller.post.vo.UserCreateReqVO;
-import viosmash.controller.post.vo.UserRespVO;
-import viosmash.controller.post.vo.UserUpdateInfoReqVO;
-import viosmash.dal.dataobject.User;
-import viosmash.dal.repository.UserRepository;
 import viosmash.random.RandomUtils;
 import viosmash.string.StringUtils;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static viosmash.exception.utils.ServiceUtils.exception;
 
@@ -158,6 +160,28 @@ public class UserServiceImpl implements UserService {
             throw exception(404, "Password not match");
         }
         user.setPassword(encoder.encode(newPassword));
+    }
+
+    @Override
+    public List<UserRespVO> searchUser(String name) {
+        Long currentId = SecurityUtils.getLoginUserMemberId();
+        List<User> users = userRepository.searchByName(name);
+        List<Long> friends = Exceptional.process(currentId, (userId) -> {
+            return friendshipApi.getListFriends(userId);
+        }, Collections.emptyList());
+
+        //current user interact other user will be top list
+        List<Object[]> objects = CollUtils.convertList(users, user -> {
+            Set<Long> recommendations = Exceptional.process(user.getId(), userId -> {
+                return friendshipApi.getListCommonFriends(user.getId(), currentId);
+            }, Collections.emptySet());
+            Object[] objs = new Object[2];
+            objs[0] = user;
+            objs[1] = friends.contains(user.getId()) ? 10 : (CollectionUtils.isEmpty(recommendations) ? 0 : 5);
+            return objs;
+        }, (user1, user2) -> (int) user2[1] - (int) user1[1]);
+
+        return CollUtils.convertList(objects, obj -> BeanUtil.copy(obj[0], UserRespVO.class));
     }
 
 }

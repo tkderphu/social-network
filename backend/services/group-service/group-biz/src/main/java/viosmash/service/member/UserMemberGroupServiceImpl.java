@@ -30,6 +30,13 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
     }
 
     @Override
+    public UserMemberGroup getOwner(Long groupId) {
+        return userMemberGroupRepository.findByGroupIdAndGroupRole(
+                groupId, GroupRole.OWNER
+        ).orElseThrow(() -> exception(404, "not found group or not found owner group"));
+    }
+
+    @Override
     public List<UserMemberGroup> getListReviewer(Long groupId) {
         return userMemberGroupRepository.getAllMember(groupId, GroupRole.MEMBER);
     }
@@ -84,10 +91,6 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
         return true;
     }
 
-    @Override
-    public void requestJoinGroup(Long groupId) {
-
-    }
 
     @Override
     public Boolean checkMemberRequestedGroup(Long groupId, Long userId) {
@@ -130,7 +133,7 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
         } else {
             MemberWaitingReview memberWaitingReview = new MemberWaitingReview()
                     .setGroupId(groupId).setUserId(userId)
-                    .setRequestDate(LocalDateTime.now());
+                    .setRequestedDate(LocalDateTime.now());
             this.memberWaitingReviewRepository.save(memberWaitingReview);
         }
         return true;

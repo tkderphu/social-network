@@ -3,16 +3,17 @@ package viosmash.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import viosmash.controller.post.vo.*;
+import viosmash.controller.vo.*;
+import viosmash.core.utils.SecurityUtils;
 import viosmash.dal.redis.ForgotCodeRedis;
+import viosmash.pojo.CommonResult;
 import viosmash.profile.constant.AddressEnum;
 import viosmash.profile.constant.PolicyEnum;
 import viosmash.profile.constant.SchoolEnum;
-import viosmash.core.utils.SecurityUtils;
-import viosmash.pojo.CommonResult;
 import viosmash.service.UserService;
 import viosmash.string.StringUtils;
 
+import java.util.List;
 import java.util.Map;
 
 @RequiredArgsConstructor
@@ -21,6 +22,14 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final ForgotCodeRedis forgotCodeRedis;
+
+
+    @GetMapping("/search")
+    public CommonResult<List<UserRespVO>> search(@RequestParam("name") String name) {
+        List<UserRespVO> userRespVOS = userService.searchUser(name);
+        return CommonResult.success(userRespVOS);
+    }
+
     @GetMapping("/{userId}")
     public CommonResult<UserRespVO> getProfile(@PathVariable("userId") Long userId) {
         return CommonResult.success(userService.getProfile(userId));

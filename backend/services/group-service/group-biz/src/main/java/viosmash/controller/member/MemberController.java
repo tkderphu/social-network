@@ -11,7 +11,7 @@ import static viosmash.pojo.CommonResult.success;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/members")
+@RequestMapping("/api/groups/members")
 public class MemberController {
     private final UserMemberGroupService userMemberGroupService;
 

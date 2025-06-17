@@ -4,11 +4,12 @@ package viosmash.service;
 import viosmash.profile.constant.AddressEnum;
 import viosmash.profile.constant.PolicyEnum;
 import viosmash.profile.constant.SchoolEnum;
-import viosmash.controller.post.vo.UserCreateReqVO;
-import viosmash.controller.post.vo.UserRespVO;
-import viosmash.controller.post.vo.UserUpdateInfoReqVO;
+import viosmash.controller.vo.UserCreateReqVO;
+import viosmash.controller.vo.UserRespVO;
+import viosmash.controller.vo.UserUpdateInfoReqVO;
 import viosmash.dal.dataobject.User;
 
+import java.util.List;
 import java.util.Map;
 
 public interface UserService {
@@ -28,4 +29,6 @@ public interface UserService {
     void updateNewPassword(String email, String newPassword);
 
     void changePassword(Long userId, String oldPassword, String oldPassword1);
+
+    List<UserRespVO> searchUser(String name);
 }

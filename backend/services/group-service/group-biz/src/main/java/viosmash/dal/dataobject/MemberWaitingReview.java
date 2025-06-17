@@ -18,5 +18,5 @@ public class MemberWaitingReview {
     private Long userId;
     private Long groupId;
 
-    private LocalDateTime requestDate;
+    private LocalDateTime requestedDate;
 }

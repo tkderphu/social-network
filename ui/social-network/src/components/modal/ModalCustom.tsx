@@ -39,17 +39,18 @@ const ModalCustome: React.FC<CustomModalProps> = ({
       <div className="custom-modal">
         <div className="custom-modal-header">
           <h2>{title}</h2>
-          {closable && (
-            <button className="custom-modal-close" onClick={onClose}>
-              &times;
-            </button>
-          )}
+          
+          <button className="custom-modal-close" onClick={onClose}>
+            &times;
+          </button>
+          
         </div>
         <div className="custom-modal-body">{children}</div>
         <div className="custom-modal-footer">
-          <button onClick={onClose} className="custom-button secondary">
+          {closable && (<button onClick={onClose} className="custom-button secondary">
             Close
-          </button>
+          </button>)
+          }
           {onSave && (
             <button onClick={onSave} className="custom-button primary">
               Save

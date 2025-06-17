@@ -1,4 +1,4 @@
-package viosmash.controller.post.vo;
+package viosmash.controller.vo;
 
 import lombok.Data;
 import lombok.experimental.Accessors;

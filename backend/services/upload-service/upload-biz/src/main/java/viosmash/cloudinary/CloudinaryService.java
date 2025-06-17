@@ -13,14 +13,14 @@ import java.util.Map;
 
 @Service
 public class CloudinaryService {
-    private final Cloudinary cloudinary;
+    private final Cloudinary cloudinary = null;
 
 //    @Value("${cloudinary.url}")
 //    private String cloudinaryUrl;
 
     public CloudinaryService() {
 //        System.out.println(cloudinaryUrl);
-        cloudinary = new Cloudinary("");
+//        cloudinary = new Cloudinary("");
     }
 
     public Mono<List<String>> uploads(Flux<FilePart> filePartFlux) {
@@ -49,6 +49,13 @@ public class CloudinaryService {
             } catch (Exception e) {
                 throw new RuntimeException(e);
             }
+        });
+    }
+
+    public Mono<List<String>> test() throws InterruptedException {
+        return Mono.fromCallable(() -> {
+            Thread.sleep(5000);
+            return List.of("test", "test");
         });
     }
 }

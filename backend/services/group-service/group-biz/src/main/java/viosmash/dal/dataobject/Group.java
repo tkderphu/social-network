@@ -24,5 +24,6 @@ public class Group {
     private Boolean enableAutoAcceptMember;
     private Boolean enableAutoReviewPost;
     private Boolean enableNotificationWhenUserRequest;
+    private Boolean enableNotificationWhenNewPostComing;
     private String coverPhoto;
 }

@@ -13,4 +13,13 @@ public class Exceptional  {
             return null;
         }
     }
+
+    public static <T, U> U process(T applied, Function<T, U> func, U defaultValue) {
+        try {
+            return func.apply(applied);
+        } catch (Exception ex) {
+//            log.warn("exceptional[process({ex})]", ex);
+            return defaultValue;
+        }
+    }
 }

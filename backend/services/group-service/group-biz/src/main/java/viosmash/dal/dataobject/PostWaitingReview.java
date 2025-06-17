@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
 
+import java.time.LocalDateTime;
+
 @Data
 @Entity
 @Accessors(chain = true)
@@ -15,6 +17,4 @@ public class PostWaitingReview {
 
     private Long postId;
     private Long groupId;
-
-
 }

@@ -1,5 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, Outlet, useParams } from "react-router";
+import { GroupResp } from "../../model/groupModel";
+import groupService from "../../services/group/groupService";
+import InviteUser from "./InviteUser";
 
 
 
@@ -19,25 +22,40 @@ const NAV = [
   {
     name: "Media",
     path: "media"
+  },
+  {
+    name: "Setting",
+    path: "setting"
+  },
+  {
+    name: "Management",
+    path: "management"
   }
 ]
 
 export default function GroupDetails() {
   const { name } = useParams()
+  const [group, setGroup] = useState<GroupResp>()
+  useEffect(() => {
+    groupService.getDetailGroup(name).then(resp => {
+      console.log("group: ", resp.data)
+      setGroup(resp.data.data)
+    })
+  }, [])
   const [useNav, setUseNav] = useState<any>("posts");
   return (
     <div className="min-vh-100">
       {/* Cover Photo */}
       <div className="">
         <img
-          src="https://plus.unsplash.com/premium_photo-1664474619075-644dd191935f?fm=jpg&q=60&w=3000&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8aW1hZ2V8ZW58MHx8MHx8fDA%3D"
+          src={group?.coverPhoto}
           alt="Cover"
           className="w-100"
           style={{ height: "300px", objectFit: "cover" }}
         />
         {/* <div className="d-flex justify-content-between mt-2"> */}
         <div className="bottom-0 start-0  bg-primary px-3 py-1">
-          Group by Mạnh Tuấn
+          Group by <strong>{group?.owner?.firstName + " " + group?.owner?.lastName}</strong>
         </div>
         {/* <button className="btn btn-secondary me-2">Joined</button> */}
         {/* </div> */}
@@ -46,12 +64,14 @@ export default function GroupDetails() {
 
       {/* Group Info */}
       <div className="container mt-3">
-      <div className="d-flex justify-content-between">
-      <h3>J2TEAM Community</h3>
+        <div className="d-flex justify-content-between">
+          <h3>{group?.name}</h3>
+         <div>
+          <InviteUser/>
           <button className="btn btn-secondary me-2">Joined</button>
-
-      </div>
-        <p className="text-muted">Public group · 660.5K members</p>
+         </div>
+        </div>
+        <p className="text-muted">{group?.groupType} group · {group?.numberOfMembers} members</p>
 
         {/* Avatars */}
         <div className="d-flex mb-3">
@@ -92,7 +112,7 @@ export default function GroupDetails() {
             )
           })}
         </ul>
-        <Outlet/>
+        <Outlet />
 
         {/* Post Input */}
         {/* <div className="bg-secondary rounded p-3 mt-3">

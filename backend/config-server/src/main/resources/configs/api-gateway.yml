@@ -64,6 +64,11 @@ spring:
           uri: lb://INTERACTION-SERVICE
           predicates:
             - Path=/api/interactions/**
+
+        - id: group-service
+          uri: lb://GROUP-SERVICE
+          predicates:
+            - Path=/api/groups/**
       discovery:
         locator:
           enabled: true

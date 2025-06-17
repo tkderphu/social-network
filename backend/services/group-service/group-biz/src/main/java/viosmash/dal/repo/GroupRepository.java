@@ -1,11 +1,17 @@
 package viosmash.dal.repo;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import viosmash.dal.dataobject.Group;
+import viosmash.group.enums.GroupRole;
 
 import java.util.List;
 
 public interface GroupRepository extends JpaRepository<Group, Long> {
-    List<Group> findAllByOwnerId(Long ownerId);
 
+    @Query("SELECT g FROM Group g INNER JOIN UserMemberGroup u ON g.id = u.groupId \n" +
+            "WHERE u.memberId = :memberId AND u.groupRole = :groupRole")
+    List<Group> findAllGroupJoined(@Param("memberId") Long memberId,
+                                   @Param("groupRole")GroupRole groupRole);
 }

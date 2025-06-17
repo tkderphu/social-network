@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface UserMemberGroupService {
     UserMemberGroup getMember(Long memberId, Long groupId);
-
+    UserMemberGroup getOwner(Long groupId);
     List<UserMemberGroup> getListReviewer(Long groupId);
     int countMember(Long groupId);
 
@@ -25,7 +25,6 @@ public interface UserMemberGroupService {
 
     Boolean acceptMemberJoinGroup(Long groupId,
                                   Long memberId);
-    void requestJoinGroup(Long groupId);
 
     Boolean checkMemberRequestedGroup(Long groupId, Long userId);
     Boolean checkMemberJoinedGroup(Long groupId, Long userId);

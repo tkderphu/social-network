@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.web.multipart.MultipartFile;
 import viosmash.aop.GroupPermission;
 import viosmash.collection.CollUtils;
 import viosmash.controller.group.vo.GroupCreateReqVO;
@@ -14,10 +15,12 @@ import viosmash.dal.repo.UserMemberGroupRepository;
 import viosmash.exception.ServiceException;
 import viosmash.group.enums.GroupRole;
 import viosmash.group.enums.GroupType;
+import viosmash.object.BeanUtil;
 import viosmash.string.StringUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 
 import static viosmash.exception.utils.ServiceUtils.exception;
 
@@ -26,7 +29,6 @@ import static viosmash.exception.utils.ServiceUtils.exception;
 public class GroupServiceImpl implements GroupService{
     private final GroupRepository groupRepository;
     private final UserMemberGroupRepository userMemberGroupRepository;
-
     @Override
     public Group getGroup(Long id) {
         return this.groupRepository.findById(id)
@@ -43,24 +45,27 @@ public class GroupServiceImpl implements GroupService{
     @Override
     @Transactional
     public Long createGroup(Long ownerId, GroupCreateReqVO reqVO) {
-        Group group = new Group().setGroupType(reqVO.getGroupType())
+        Group group = BeanUtil.copy(reqVO, Group.class)
                 .setCreatedAt(LocalDateTime.now())
-                .setOwnerId(ownerId)
                 .setEnableAutoAcceptMember(true)
                 .setEnableNotificationWhenUserRequest(true)
                 .setEnableAutoReviewPost(true)
-                .setName(reqVO.getName());
+                .setEnableNotificationWhenNewPostComing(true);
         groupRepository.save(group);
-        if(!CollectionUtils.isEmpty(reqVO.getUserIds())) {
-            CollUtils.convertList(reqVO.getUserIds(), userId -> {
-                this.userMemberGroupRepository.save(new UserMemberGroup()
-                        .setGroupRole(userId.equals(ownerId) ? GroupRole.OWNER : GroupRole.MEMBER)
-                        .setJoined(LocalDateTime.now())
-                        .setGroupId(group.getId())
-                        .setMemberId(userId));
-                return null;
-            });
+
+        Set<Long> userIds = reqVO.getUserIds();
+        if(CollectionUtils.isEmpty(reqVO.getUserIds())) {
+            userIds.add(ownerId);
         }
+        CollUtils.convertList(reqVO.getUserIds(), userId -> {
+            this.userMemberGroupRepository.save(new UserMemberGroup()
+                    .setGroupRole(userId.equals(ownerId) ? GroupRole.OWNER : GroupRole.MEMBER)
+                    .setJoined(LocalDateTime.now())
+                    .setGroupId(group.getId())
+                    .setMemberId(userId));
+            return null;
+        });
+
         return group.getId();
     }
 
@@ -83,22 +88,32 @@ public class GroupServiceImpl implements GroupService{
 
     @Override
     public List<Group> getListGroupByOwner(Long ownerId) {
-        return this.groupRepository.findAllByOwnerId(ownerId);
+        List<Group> groups = this.groupRepository
+                .findAllGroupJoined(ownerId, GroupRole.OWNER);
+        return groups;
     }
 
     @Override
     @Transactional(rollbackFor = ServiceException.class)
+    @GroupPermission(specificRole = GroupRole.OWNER)
     public void updateDescription(Long groupId, String description) {
-        Group group = this.groupRepository.findById(groupId).get().setDescription(description);
+        Group group = this.groupRepository.findById(groupId).get()
+                .setDescription(description);
         this.groupRepository.save(group);
     }
 
     @Override
     @Transactional(rollbackFor = ServiceException.class)
+    @GroupPermission(specificRole = GroupRole.OWNER)
     public void updateNotification(Long groupId, Boolean notification) {
         Group group = this.groupRepository.findById(groupId).get()
                 .setEnableNotificationWhenUserRequest(notification);
         this.groupRepository.save(group);
+    }
+
+    @Override
+    public void updateGroupCoverPhoto(Long groupId, String description, MultipartFile file) {
+        //
     }
 
 

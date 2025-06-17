@@ -21,6 +21,7 @@
         <option value="$PROJECT_DIR$/backend/services/comment-service/pom.xml" />
         <option value="$PROJECT_DIR$/backend/services/newfeed-service/pom.xml" />
         <option value="$PROJECT_DIR$/backend/services/reaction-service/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/services/search-service/pom.xml" />
         <option value="$PROJECT_DIR$/backend/services/untitled/pom.xml" />
         <option value="$PROJECT_DIR$/backend/upload-service/pom.xml" />
       </set>

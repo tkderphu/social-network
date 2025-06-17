@@ -15,7 +15,9 @@ public class GroupCreateReqVO {
     private String name;
     @NotNull(message = "group type can't null")
     private GroupType groupType;
-
+    private String description;
 
     private Set<Long> userIds;
+
+
 }

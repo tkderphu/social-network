@@ -1,5 +1,6 @@
 package viosmash.service.group;
 
+import org.springframework.web.multipart.MultipartFile;
 import viosmash.controller.group.vo.GroupCreateReqVO;
 import viosmash.dal.dataobject.Group;
 import viosmash.group.enums.GroupType;
@@ -22,5 +23,7 @@ public interface GroupService {
     void updateDescription(Long groupId, String description);
 
     void updateNotification(Long groupId, Boolean notification);
+
+    void updateGroupCoverPhoto(Long groupId, String description, MultipartFile file);
 
 }

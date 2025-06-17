@@ -22,9 +22,12 @@ User want to create a group allow his friends, family and others join for togeth
 ## Database
 As i written all service will be used mysql for storage data except ```friendship-service``` using ```neo4j```.
 ### Schema
-- tbl_group: ```id, name, groupType('PUBLIC', 'PRIVATE'), createdAt, enableAutoAcceptMember(default = true), enableAutoReviewPost(default = true), enableNotificationWhenUserRequest(default = true), enableNotificationWhenNewPostComing(default = true)```.
+- tbl_group: ```id, name, description, groupType('PUBLIC', 'PRIVATE'), createdAt, enableAutoAcceptMember(default = true), enableAutoReviewPost(default = true), enableNotificationWhenUserRequest(default = true), enableNotificationWhenNewPostComing(default = true)```.
     - Explain: 
         - enableAutoAcceptMember: auto accept users when they requested to join group
         - enableAutoReviewPost: auto accept posts in group
         - enableNotificationWhenUserRequest: always notify to inspectors of groups when a new user requested to join group(only work when ```enableAutoAcceptMember``` is ```false```)
         - enableNotificationWhenNewPostComing: always notify to inspectors of groups when a new post is created then they need to accept/reject(only work when ```enableAutoReviewPost``` is ```false```)
+- tbl_user_member_group: ```id, memberId, groupId, joined, groupRole('OWNER', 'REVIEWER', 'MEMBER')```
+- tbl_post_waiting_review: ```id, postId, groupId, createdDate```
+- tbl_member_waiting_review: ```id, userId, groupId, requestedDate```

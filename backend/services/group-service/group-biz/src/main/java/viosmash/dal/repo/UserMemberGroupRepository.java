@@ -7,6 +7,7 @@ import viosmash.dal.dataobject.UserMemberGroup;
 import viosmash.group.enums.GroupRole;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UserMemberGroupRepository extends JpaRepository<UserMemberGroup, Long> {
     @Modifying
@@ -41,4 +42,6 @@ public interface UserMemberGroupRepository extends JpaRepository<UserMemberGroup
 
     @Query("SELECT u.groupId FROM UserMemberGroup u WHERE u.memberId = :memberId")
     List<Long> getAllGroup(Long memberId);
+
+    Optional<UserMemberGroup> findByGroupIdAndGroupRole(Long groupId, GroupRole groupRole);
 }

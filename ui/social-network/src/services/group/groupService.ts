@@ -1,13 +1,21 @@
 import api from "../../axios/interceptor"
-import { GroupCreateReq } from "../../model/groupModel"
 
 
+
+const path = "/groups"
 
 class GroupService {
-    path: string = "/groups"
 
-    createGroup(req: GroupCreateReq) {
-        return api.post(this.path, req)
+    createGroup(req: any) {
+        return api.post(path, req)
+    }
+
+    getListGroupByOwner() {
+        return api.get(`${path}/owner`)
+    }
+
+    getDetailGroup(id: any)  {
+        return api.get(`${path}/detail/${id}`)
     }
 
 }

@@ -40,6 +40,9 @@ class ProfileService {
     checkforgotPasswordCode(code: string) {
         return api.get(`${PATH}/forgot-password/code/${code}`)
     }
+    search(keyword: string) {
+        return api.get(`${PATH}/search?name=${keyword}`)
+    }
 }
 export interface UserUpdateNewPassword {
     newPassword: string,

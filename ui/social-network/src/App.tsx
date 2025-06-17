@@ -52,13 +52,16 @@ import MyFriends from './screens/friend/MyFriends'
 import Notification from './screens/notification/Notification'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import MyListGroup from './screens/group/MyListGroup'
+import GroupManagement, { PendingPost, PendingUser } from './screens/group/GroupManagement'
+import GroupSetting from './screens/group/GroupSetting'
 export interface HandleChat {
   handleClickChat: any,
   handleCloseChat: any
 }
 function App() {
 
-  
+
   useEffect(() => {
 
   }, [])
@@ -140,8 +143,14 @@ function App() {
                       <Route path='posts' element={<GroupPost />} />
                       <Route index element={<GroupPost />} />
                       <Route path='members' element={<GroupMember />} />
+                      <Route path='management' element={<GroupManagement/>}>
+                        <Route path='pending/post' element={<PendingPost/>} />
+                        <Route path='pending/user' element={<PendingUser/>} />
+                        <Route index element={<PendingUser/>} />
+                      </Route>
+                      <Route path='setting' element={<GroupSetting/>} />
                     </Route>
-
+                    <Route path='my' element={<MyListGroup/>}/>
                   </Route>
                 </Route>
 

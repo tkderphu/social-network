@@ -38,6 +38,17 @@ public class CollUtils {
 
     public static <T, U> List<T> convertList(Collection<U> collection,
                                              Function<U, T> func,
+                                             Comparator<T> comparator) {
+        if(CollectionUtils.isEmpty(collection)) {
+            return Collections.emptyList();
+        }
+        return collection.stream().map(func)
+                .sorted(comparator)
+                .toList();
+    }
+
+    public static <T, U> List<T> convertList(Collection<U> collection,
+                                             Function<U, T> func,
                                              Predicate<U> filterBeforeMap) {
         if(CollectionUtils.isEmpty(collection)) {
             return Collections.emptyList();

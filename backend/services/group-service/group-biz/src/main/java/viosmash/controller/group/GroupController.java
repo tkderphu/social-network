@@ -1,9 +1,13 @@
 package viosmash.controller.group;
 
 import jakarta.validation.Valid;
+import jakarta.ws.rs.Path;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import viosmash.dal.dataobject.UserMemberGroup;
+import viosmash.pojo.api.profile.UserDTO;
 import viosmash.profile.api.UserApi;
 import viosmash.controller.group.vo.GroupCreateReqVO;
 import viosmash.controller.group.vo.GroupRespVO;
@@ -20,10 +24,10 @@ import static viosmash.collection.CollUtils.convertList;
 import static viosmash.core.utils.SecurityUtils.getLoginUserMemberId;
 import static viosmash.pojo.CommonResult.success;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/groups")
-@Validated
 public class GroupController {
 
     private final GroupService groupService;
@@ -41,6 +45,17 @@ public class GroupController {
         return success(true);
     }
 
+    @GetMapping("/detail/{id}")
+    public CommonResult<GroupRespVO> getDetailGroup(@PathVariable("id") Long groupId) {
+        Group group = groupService.getGroup(groupId);
+        UserDTO user = userApi.getUserById(group.getOwnerId());
+        GroupRespVO groupRespVO = BeanUtil.copy(group, GroupRespVO.class)
+                .setNumberOfMembers(userMemberGroupService.countMember(group.getId()))
+                .setOwner(user);
+        log.info("group detail: {}",groupRespVO);
+        return success(groupRespVO);
+    }
+
     @GetMapping("/owner")
     public CommonResult<List<GroupRespVO>> getListGroupByOwner() {
         List<GroupRespVO> groupResp = convertList(groupService.getListGroupByOwner(getLoginUserMemberId()), group -> {
@@ -55,7 +70,6 @@ public class GroupController {
         return success(convertList(userMemberGroupService.getListGroup(getLoginUserMemberId()), groupId -> {
             Group group = groupService.getGroup(groupId);
             return BeanUtil.copy(group, GroupRespVO.class)
-                    .setOwner(userApi.getUserById(group.getOwnerId()))
                     .setNumberOfMembers(userMemberGroupService.countMember(groupId));
         }));
     }
