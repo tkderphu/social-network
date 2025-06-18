@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import viosmash.aop.GroupPermission;
+import viosmash.collection.CollUtils;
+import viosmash.core.utils.SecurityUtils;
 import viosmash.dal.dataobject.Group;
 import viosmash.dal.dataobject.MemberWaitingReview;
 import viosmash.dal.dataobject.UserMemberGroup;
@@ -11,8 +13,13 @@ import viosmash.dal.repo.GroupRepository;
 import viosmash.dal.repo.MemberWaitingReviewRepository;
 import viosmash.dal.repo.UserMemberGroupRepository;
 import viosmash.group.enums.GroupRole;
+import viosmash.notification.api.NotificationApi;
+import viosmash.notification.api.NotificationDto;
+import viosmash.notification.enums.NotificationType;
+import viosmash.notification.enums.TargetType;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 import static viosmash.exception.utils.ServiceUtils.exception;
@@ -23,7 +30,7 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
     private final UserMemberGroupRepository userMemberGroupRepository;
     private final MemberWaitingReviewRepository memberWaitingReviewRepository;
     private final GroupRepository groupRepository;
-
+    private final NotificationApi notificationApi;
     @Override
     public UserMemberGroup getMember(Long memberId, Long groupId) {
         return userMemberGroupRepository.findByGroupIdAndMemberId(groupId, memberId);
@@ -97,15 +104,42 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
         return null;
     }
 
-    @Override
-    public Boolean checkMemberJoinedGroup(Long groupId, Long userId) {
-        return null;
-    }
+
 
     @GroupPermission
     @Override
     public List<MemberWaitingReview> getListRequestAttendGroup(Long groupId) {
         return this.memberWaitingReviewRepository.findAllByGroupId(groupId);
+    }
+
+    @Override
+    public Boolean inviteUserToGroup(Long groupId, Collection<Long> userIds) {
+        List<UserMemberGroup> memberGroups = CollUtils.convertList(userIds, userId -> {
+            Boolean check = checkUserJoinedGroup(userId, groupId);
+            if(check) {
+                return null;
+            }
+            return new UserMemberGroup().setGroupId(groupId)
+                    .setGroupRole(GroupRole.MEMBER)
+                    .setJoined(LocalDateTime.now())
+                    .setMemberId(userId);
+        }, s -> s != null);
+
+        this.userMemberGroupRepository.saveAll(memberGroups);
+
+        CollUtils.convertList(memberGroups, memberGroup -> {
+            NotificationDto notificationDto = new NotificationDto()
+                    .setTargetId(memberGroup.getGroupId())
+                    .setCreatedAt(LocalDateTime.now())
+                    .setActorId(SecurityUtils.getLoginUserMemberId())
+                    .setNotificationType(NotificationType.JOIN_GROUP_BY_INVITED)
+                    .setTargetType(TargetType.GROUP)
+                    .setUserId(memberGroup.getMemberId());
+            this.notificationApi.sendAppNotification(notificationDto);
+            return null;
+        });
+
+        return true;
     }
 
     @Override
@@ -138,4 +172,7 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
         }
         return true;
     }
+
+
+
 }

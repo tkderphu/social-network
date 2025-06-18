@@ -4,6 +4,7 @@ import viosmash.dal.dataobject.MemberWaitingReview;
 import viosmash.dal.dataobject.UserMemberGroup;
 import viosmash.group.enums.GroupRole;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface UserMemberGroupService {
@@ -27,9 +28,10 @@ public interface UserMemberGroupService {
                                   Long memberId);
 
     Boolean checkMemberRequestedGroup(Long groupId, Long userId);
-    Boolean checkMemberJoinedGroup(Long groupId, Long userId);
 
     List<MemberWaitingReview> getListRequestAttendGroup(Long groupId);
+
+    Boolean inviteUserToGroup(Long groupId, Collection<Long> userIds);
 
     Boolean checkUserJoinedGroup(Long userId, Long groupId);
 

@@ -18,6 +18,7 @@ import viosmash.pojo.CommonResult;
 import viosmash.service.group.GroupService;
 import viosmash.service.member.UserMemberGroupService;
 
+import java.util.Collection;
 import java.util.List;
 
 import static viosmash.collection.CollUtils.convertList;
@@ -38,6 +39,8 @@ public class GroupController {
         Long groupId = groupService.createGroup(getLoginUserMemberId(), req);
         return success(groupId);
     }
+
+
 
     @PutMapping
     public CommonResult<Boolean> updateGroup(@Valid @RequestBody GroupUpdateReqVO req) {

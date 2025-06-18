@@ -67,7 +67,7 @@ export default function GroupDetails() {
         <div className="d-flex justify-content-between">
           <h3>{group?.name}</h3>
          <div>
-          <InviteUser/>
+          <InviteUser groupId={name}/>
           <button className="btn btn-secondary me-2">Joined</button>
          </div>
         </div>

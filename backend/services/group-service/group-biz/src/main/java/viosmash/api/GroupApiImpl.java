@@ -1,22 +1,31 @@
 package viosmash.api;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+import org.springframework.web.bind.annotation.*;
+import viosmash.dal.dataobject.Group;
 import viosmash.group.api.GroupApi;
+import viosmash.notification.api.NotificationApi;
+import viosmash.object.BeanUtil;
 import viosmash.pojo.api.group.GroupDTO;
+import viosmash.service.group.GroupService;
 
+@Slf4j
+@RestController
+@RequestMapping(GroupApi.PREFIX)
+@RequiredArgsConstructor
 public class GroupApiImpl implements GroupApi {
 
+    private final GroupService groupService;
 
     @Override
-    @GetMapping
     public GroupDTO getGroup(Long groupId) {
-        return null;
+        log.info("get group from rpc: {}", groupId);
+        return BeanUtil.copy(groupService.getGroup(groupId), GroupDTO.class);
     }
 
     @Override
-    @GetMapping
     public Boolean existsInGroup(Long groupId, Long userId) {
         return null;
     }

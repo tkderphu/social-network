@@ -22,58 +22,12 @@ import viosmash.service.notification.NotificationSettingService;
 @RequiredArgsConstructor
 public class NotificationApiImpl implements NotificationApi {
     private final NotificationService notificationService;
-    private final NotificationSettingService notificationSettingService;
-    private final SimpMessagingTemplate simpMessagingTemplate;
     @Override
     public void sendAppNotification(NotificationDto req) {
         log.info("Notification coming: {}", req);
-        NotificationMessage message = BeanUtil.copy(req, NotificationMessage.class)
-                .setSeen(false);
-        NotificationSetting notificationSetting = this.notificationSettingService.getNotificationSetting(message.getUserId());
-        switch (req.getNotificationType()) {
-            case NEW_VOTE -> {
-                if(notificationSetting.getEnableVoteNotification()) {
-                    saveAndSend(message);
-                }
-            }
-            case NEW_COMMENT -> {
-                if(notificationSetting.getEnableCommentNotification()) {
-                    saveAndSend(message);
-                }
-            }
-            case NEW_FRIEND_REQUEST -> {
-                if(notificationSetting.getEnableFriendsRequestNotification()) {
-                    saveAndSend(message);
-                }
-            }
-            case NEW_ACCEPT_REQUEST -> {
-                if(notificationSetting.getEnableAcceptRequestNotification()) {
-                    saveAndSend(message);
-                }
-            }
-            case NEW_POST_FRIENDS -> {
-                if(notificationSetting.getEnablePostFriendsNotification()) {
-                    saveAndSend(message);
-                }
-            }
-            case NEW_POST_GROUPS -> {
-                if(notificationSetting.getEnablePostGroupsNotification()) {
-                    saveAndSend(message);
-                }
-            }
-        }
+        notificationService.sendNotification(req);
     }
 
-    private void saveAndSend(NotificationMessage message) {
-        NotificationMessageRespVO resp = notificationService.saveNotification(message);
-        log.info("data notification to user: {}", resp);
-        simpMessagingTemplate.convertAndSend(
-                String.format("/topic/notifications/user/%d", message.getUserId()),
-                resp
-        );
-
-        log.warn("why not send to user");
-    }
 
     @Override
     public void sendMail(MailNotificationDto req) {

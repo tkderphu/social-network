@@ -1,7 +1,9 @@
 package viosmash.service.notification;
 
+import org.springframework.scheduling.annotation.Async;
 import viosmash.controller.vo.NotificationMessageRespVO;
 import viosmash.dal.dataobject.NotificationMessage;
+import viosmash.notification.api.NotificationDto;
 import viosmash.notification.enums.NotificationType;
 import viosmash.notification.enums.TargetType;
 
@@ -24,4 +26,7 @@ public interface NotificationService {
     void deleteNotification(Long targetId, TargetType targetType, NotificationType notificationType);
 
     void deleteNotification(Long id);
+
+    @Async
+    void sendNotification(NotificationDto req);
 }

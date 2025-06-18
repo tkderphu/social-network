@@ -26,8 +26,8 @@ public class NotificationSetting {
     private Boolean enableSoundNotification;
     private Boolean enableFriendsRequestNotification;
     private Boolean enableAcceptRequestNotification;
-
-
+    private Boolean enableRequestJoinGroupNotification;
+    private Boolean enableJoinedGroupNotification;
     public NotificationSetting(Long userId) {
         this.userId = userId;
         this.enableVoteNotification = true;
@@ -36,7 +36,9 @@ public class NotificationSetting {
         this.enableCommentNotification = true;
         this.enableFriendsRequestNotification = true;
         this.enableAcceptRequestNotification = true;
-        enableSoundNotification = true;
-        enablePushNotification = true;
+        this.enableSoundNotification = true;
+        this.enablePushNotification = true;
+        this.enableRequestJoinGroupNotification = true;
+        this.enableJoinedGroupNotification = true;
     }
 }

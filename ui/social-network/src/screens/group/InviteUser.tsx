@@ -4,10 +4,11 @@ import CustomSelect from "../../components/select/CustomSelect"
 import { ProfileSimpleResp } from "../../model/profileModel"
 import profileService from "../../services/profile/profileService"
 import { components } from 'react-select'
-export default function InviteUser() {
+import groupMemberService from "../../services/group/groupMemberService"
+export default function InviteUser(props: {groupId: any}) {
     const [keyword, setKeyword] = useState("")
     const [users, setUsers] = useState<ProfileSimpleResp[]>([])
-
+    
 
     useEffect(() => {
         profileService.search(keyword).then(resp => {
@@ -19,6 +20,16 @@ export default function InviteUser() {
     }, [keyword])
 
     const [showModal, setShowModal] = useState(false)
+
+    const [selectUsers, setSelectUsers]= useState<any>([])
+
+    const handleSubmitInvitation = () => {
+        groupMemberService.inviteUsers(props.groupId, selectUsers).then(resp => {
+            alert("invite user success fully")
+        }).catch(err => {
+            alert("error when invited users")
+        })
+    }
 
     return (
         <>
@@ -46,6 +57,9 @@ export default function InviteUser() {
                                             </components.Option>
                                         )
                                     }}
+                                    select={{
+                                        set: setSelectUsers
+                                    }}
                                     data={users.map(user => {
                                         return {
                                             label: user.firstName + " " + user.lastName,
@@ -62,7 +76,7 @@ export default function InviteUser() {
 
                             </div>
                             <div className="col-1" style={{padding: 0}}>
-                                <button style={{padding: 0, margin: 0}} className="btn btn-primary w-100 h-100">Submit</button>
+                                <button onClick={handleSubmitInvitation} style={{padding: 0, margin: 0}} className="btn btn-primary w-100 h-100">Submit</button>
                             </div>
                         </div>
 

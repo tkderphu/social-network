@@ -10,8 +10,10 @@ import NotificationRequestFriend from "./template/NotificationRequestFriend";
 
 export interface NotificationRespVO {
     id: any,
-    targetType: "POST" | "COMMENT" | "USER" | "VOTE",
-    notificationType: "NEW_VOTE"| "NEW_COMMENT"| "NEW_FRIEND_REQUEST"| "NEW_ACCEPT_REQUEST"|"NEW_POST_FRIENDS"| "NEW_POST_GROUPS"
+    targetType: "POST" | "COMMENT" | "USER" | "VOTE" | "GROUP",
+    notificationType: "NEW_VOTE"| "NEW_COMMENT"| "NEW_FRIEND_REQUEST"
+    | "NEW_ACCEPT_REQUEST"|"NEW_POST_FRIENDS"| "NEW_POST_GROUPS"
+    | "JOINED_GROUP" | "REQUEST_JOINED_GROUP" | "JOIN_GROUP_BY_INVITED"
     timeAgo: string,
     seen: boolean,
     actor: ProfileSimpleResp,

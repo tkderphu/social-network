@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.*;
 import viosmash.pojo.CommonResult;
 import viosmash.service.member.UserMemberGroupService;
 
+import java.util.Collection;
+
 import static viosmash.collection.CollUtils.convertList;
 import static viosmash.core.utils.SecurityUtils.getLoginUserMemberId;
 import static viosmash.pojo.CommonResult.success;
@@ -22,6 +24,13 @@ public class MemberController {
         return success(true);
     }
 
+
+    @PutMapping("/{groupId}/invite")
+    public CommonResult<Boolean> inviteUsers(@PathVariable("groupId") Long groupId,
+                                             @RequestBody Collection<Long> userIds) {
+        Boolean result = userMemberGroupService.inviteUserToGroup(groupId, userIds);
+        return success(result);
+    }
 
     @DeleteMapping("/kick/{memberId}")
     public CommonResult<Boolean> kickMember(@PathVariable("groupId") Long groupId,

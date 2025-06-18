@@ -15,7 +15,10 @@ interface SelectProps {
     setValue: any,
     value: any
   },
-  customOption?: any
+  customOption?: any,
+  select?: {
+    set: any
+  }
 }
 
 const customStyles = {
@@ -64,6 +67,7 @@ export default function CustomSelect(props: SelectProps) {
       placeholder={"Search your friends..."}
       inputValue={props.input?.value}
       onChange={(e) => {
+        props.select?.set(e.map(option => option.value))
         // alert("value: " + e)
       }}
       onInputChange={(e, actionMeta) => {
