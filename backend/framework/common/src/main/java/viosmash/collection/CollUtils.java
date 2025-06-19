@@ -12,8 +12,16 @@ public class CollUtils {
         if(CollectionUtils.isEmpty(collection)) {
             return Collections.emptyList();
         }
-        return collection.stream().map(func).toList();
+        List<T> list = new ArrayList<>();
+        for(U data : collection) {
+            if(data != null) {
+                list.add(func.apply(data));
+            }
+        }
+        return list;
     }
+
+
 
     public static <T, U> List<T> convertList(Collection<U> collection,
                                              Function<U, T> func,

@@ -53,8 +53,7 @@ import Notification from './screens/notification/Notification'
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MyListGroup from './screens/group/MyListGroup'
-import GroupManagement, { PendingPost, PendingUser } from './screens/group/GroupManagement'
-import GroupSetting from './screens/group/GroupSetting'
+import GroupManagement, { GroupSetting, PendingPost, PendingUser } from './screens/group/GroupManagement'
 export interface HandleChat {
   handleClickChat: any,
   handleCloseChat: any
@@ -147,8 +146,8 @@ function App() {
                         <Route path='pending/post' element={<PendingPost/>} />
                         <Route path='pending/user' element={<PendingUser/>} />
                         <Route index element={<PendingUser/>} />
+                        <Route path='setting' element={<GroupSetting/>}/>
                       </Route>
-                      <Route path='setting' element={<GroupSetting/>} />
                     </Route>
                     <Route path='my' element={<MyListGroup/>}/>
                   </Route>

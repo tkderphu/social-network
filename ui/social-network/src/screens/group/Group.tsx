@@ -2,6 +2,8 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, Outlet, replace, useLocation, useNavigate } from 'react-router'
 import Modal from '../../components/Modal';
 import ModalCustome from '../../components/modal/ModalCustom';
+import { GroupResp } from '../../model/groupModel';
+import groupService from '../../services/group/groupService';
 import NewFeed from '../feed/NewFeed'
 import './Group.css'
 import GroupForm from './GroupForm';
@@ -67,6 +69,8 @@ function Group() {
     const [useLink, setUseLink] = useState<any>("Your feed")
     const [openCreateModal, setOpenCreateModal] = useState(false)
     const [selectedGroup, setSelectedGroup] = useState<any>()
+    const [groupsJoined, setGroupsJoined] = useState<GroupResp[]>([])
+
     useEffect(() => {
         if (location.pathname.includes("feed")) {
             if (!hasRedirected.current) {
@@ -75,6 +79,16 @@ function Group() {
             }
         }
     }, []);
+
+
+    useEffect(() => {
+        groupService.getListJoined().then(resp => {
+            setGroupsJoined(resp.data.data)
+        }).catch(err => {
+            alert("err when fetch list joined")
+            console.error("err: ", err)
+        })
+    }, [])
 
     return (
         <>
@@ -116,22 +130,22 @@ function Group() {
                     <hr style={{ backgroundColor: "red" }} />
                     <h4>Groups you've joined</h4>
                     <div className='sticky-sidebar hide-scrollbar'>
-                        {GROUP_FAKE.map(fake => {
+                        {groupsJoined && groupsJoined.map(fake => {
                             return (
                                 <Link onClick={() => {
                                     setSelectedGroup(fake.name)
-                                }} style={{ textDecoration: "none" }} to={fake.slug} className={'btn short-cut-group d-flex align-items-center mb-3 ' + (fake.name == selectedGroup ? "btn-secondary" : "")}>
-                                    <img src={fake.imageUrl}
+                                }} style={{ textDecoration: "none" }} to={"/groups/" + fake.id} className={'btn short-cut-group d-flex align-items-center mb-3 ' + (fake.name == selectedGroup ? "btn-secondary" : "")}>
+                                    <img src={fake.coverPhoto}
                                         width={"60px"}
                                     />
-                                    <div className='mx-3' style={{ fontSize: "23px" }}>{fake.name}</div>
+                                    <div className='mx-2 text-start' style={{ fontSize: "20px" }}><span>{fake.name}</span></div>
                                 </Link>
                             )
                         })}
                     </div>
                 </div>
                 {/* <div className='col-1'></div> */}
-                <div className="col-9">
+                <div className="col-9 vertical-line">
                     <Outlet />
                 </div>
             </div>

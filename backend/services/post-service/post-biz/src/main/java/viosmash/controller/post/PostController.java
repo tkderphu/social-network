@@ -6,8 +6,9 @@ import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
 import viosmash.core.utils.SecurityUtils;
 import viosmash.pojo.CommonResult;
-import viosmash.pojo.PageResult;
 import viosmash.service.PostService;
+
+import java.util.List;
 
 @RequestMapping("/api/posts")
 @RestController
@@ -21,12 +22,24 @@ public class PostController {
         return CommonResult.success(true);
     }
 
-    @GetMapping("/user/{id}")
-    public CommonResult<PageResult<PostRespVO>> getListPostByUser(@PathVariable("id") Long userId,
-                                                    @RequestParam(value = "page", defaultValue = "1") int page,
-                                                    @RequestParam(value = "limit", defaultValue = "20") int limit) {
-        PageResult<PostRespVO> resp = postService.getListPostByUserId(userId, page, limit);
-        return CommonResult.success(resp);
+    @GetMapping("/{type}/{id}")
+    public CommonResult<List<PostRespVO>> getListPostByUser(@PathVariable("id") Long id,
+                                                            @PathVariable("type") String type,
+                                                            @RequestParam(value = "page", defaultValue = "1") int page,
+                                                            @RequestParam(value = "limit", defaultValue = "20") int limit) {
+        if(type.equals("user")) {
+            List<PostRespVO> resp = postService.getListPostByUserId(id, page, limit);
+            return CommonResult.success(resp);
+        } else {
+            List<PostRespVO> resp= postService.getListPostByGroupId(id, page, limit, 1);
+            return CommonResult.success(resp);
+        }
+    }
+
+    @GetMapping
+    public CommonResult<List<PostRespVO>> getNewfeeds( @RequestParam(value = "page", defaultValue = "1") int page,
+                                                       @RequestParam(value = "limit", defaultValue = "20") int limit) {
+        return null;
     }
 
     @GetMapping("/{id}")

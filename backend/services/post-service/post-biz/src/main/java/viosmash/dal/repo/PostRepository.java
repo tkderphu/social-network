@@ -11,4 +11,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findAllByUserId(Long userId, Pageable pageable);
     void deleteAllBySharePostId(Long postId);
+
+    Page<Post> findAllByGroupId(Long id, Pageable pageable);
 }

@@ -17,6 +17,9 @@ class GroupService {
     getDetailGroup(id: any)  {
         return api.get(`${path}/detail/${id}`)
     }
+    getListJoined() {
+        return api.get(`${path}/joined`)
+    }
 
 }
 export default new GroupService()

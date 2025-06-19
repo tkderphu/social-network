@@ -29,7 +29,8 @@ interface PostFormProps {
   postPrivacy: "PUBLIC" | "PRIVATE" | "ONLY_FRIENDS",
   onChange: any,
   onSubmit?: any,
-  disabledBtnWrite: boolean
+  disabledBtnWrite: boolean,
+  fromGroup?: boolean
 }
 export default function PostForm(props: { form?: PostFormProps }) {
   const [file, setFile] = useState(null);
@@ -63,7 +64,8 @@ export default function PostForm(props: { form?: PostFormProps }) {
         {createPostState.loading && (<FullScreenLoader />)}
 
         <form >
-          <div className='mb-3'>
+          {props.form?.fromGroup && (
+            <div className='mb-3'>
             <label htmlFor="postType" className="form-label fw-bold">
               Post privacy
             </label>
@@ -75,6 +77,7 @@ export default function PostForm(props: { form?: PostFormProps }) {
               })}
             </select>
           </div>
+          )}
           <div className="mb-3">
             <div className='row'>
               <div className='col-7'>

@@ -7,6 +7,11 @@ async function fetchImageAsDataURL(url: any) {
     reader.readAsDataURL(blob);
   });
 }
+
+export function convertToHeader(word: string) {
+  return word.substring(0, 1).toUpperCase() + word.substring(1).toLocaleLowerCase()
+}
+
 export async function generateGroupAvatar(avatars: any, size = 200) {
 
   const dataURLs = await Promise.all(avatars.map(fetchImageAsDataURL));

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link, Outlet, useParams } from "react-router";
 import { GroupResp } from "../../model/groupModel";
 import groupService from "../../services/group/groupService";
+import { convertToHeader } from "../../utils/utils";
 import InviteUser from "./InviteUser";
 
 
@@ -36,6 +37,8 @@ const NAV = [
 export default function GroupDetails() {
   const { name } = useParams()
   const [group, setGroup] = useState<GroupResp>()
+  const [checkJoinedGroup, setCheckJoinedGroup] = useState(false)
+
   useEffect(() => {
     groupService.getDetailGroup(name).then(resp => {
       console.log("group: ", resp.data)
@@ -71,7 +74,7 @@ export default function GroupDetails() {
           <button className="btn btn-secondary me-2">Joined</button>
          </div>
         </div>
-        <p className="text-muted">{group?.groupType} group · {group?.numberOfMembers} members</p>
+        <p className="text-muted">{convertToHeader(group?.groupType || "")} group · {group?.numberOfMembers} members</p>
 
         {/* Avatars */}
         <div className="d-flex mb-3">

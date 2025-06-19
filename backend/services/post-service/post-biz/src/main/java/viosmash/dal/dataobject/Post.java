@@ -41,6 +41,8 @@ public class Post {
     private LocalDateTime modifiedDate;
 
 
+    private Boolean visible;
+
     @Transient
     public double score(int vote) {
         int score = vote;

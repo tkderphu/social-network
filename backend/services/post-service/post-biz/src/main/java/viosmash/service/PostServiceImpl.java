@@ -18,9 +18,10 @@ import viosmash.dal.dataobject.Tag;
 import viosmash.dal.repo.PostRepository;
 import viosmash.dal.repo.PostTagRepository;
 import viosmash.dal.repo.TagRepository;
+import viosmash.exception.ServiceException;
 import viosmash.group.api.GroupApi;
 import viosmash.object.BeanUtil;
-import viosmash.pojo.PageResult;
+import viosmash.pojo.api.group.GroupDTO;
 import viosmash.profile.api.UserApi;
 import viosmash.string.StringUtils;
 
@@ -41,10 +42,21 @@ public class PostServiceImpl implements PostService{
     private final PostTagRepository postTagRepository;
     private final TagRepository tagRepository;
     @Override
-    @Transactional
+    @Transactional(rollbackFor = ServiceException.class)
     public Post createPost(Long userId, @Valid PostCreateReqVO postCreateReq) {
         Post post = BeanUtil.copy(postCreateReq, Post.class)
-                .setUserId(userId).setCreatedDate(LocalDateTime.now());
+                .setUserId(userId).setCreatedDate(LocalDateTime.now())
+                .setVisible(true);
+
+        if(post.getGroupId() != null) {
+            GroupDTO group = groupApi.getGroup(post.getGroupId());
+            if(group.getEnableAutoReviewPost()) {
+                post.setVisible(true);
+            } else {
+                post.setVisible(false);
+            }
+        }
+
         this.postRepository.save(post);
         CollUtils.convertList(postCreateReq.getTagNames(), tagName -> {
             Tag tag = tagRepository.findByName(StringUtils.lower(tagName));
@@ -67,7 +79,7 @@ public class PostServiceImpl implements PostService{
 
 
     @Override
-    public PageResult<PostRespVO> getListPostByUserId(Long userId, int pageNumber, int limit) {
+    public List<PostRespVO> getListPostByUserId(Long userId, int pageNumber, int limit) {
         Pageable pageable = PageRequest.of(
                 pageNumber - 1,
                 limit,
@@ -76,13 +88,14 @@ public class PostServiceImpl implements PostService{
 
         Page<Post> page = postRepository.findAllByUserId(userId, pageable);
 
-        return new PageResult<>(pageNumber, limit, CollUtils.convertList(page.getContent(), post -> {
+        return CollUtils.convertList(page.getContent(), post -> {
+            if(post.getVisible() == null || !post.getVisible()) return null;
             return BeanUtil.copy(post, PostRespVO.class)
                     .setUser(process(post.getUserId(), userApi::getUserById))
-//                    .setGroup(process(post.getGroupId(), groupApi::getGroup))
+                    .setGroup(process(post.getGroupId(), groupApi::getGroup))
 //                    .setSharePost(getPostById(post.getSharePostId()))
                     .setVotes(0).setShares(0).setComments(0);
-        }));
+        });
     }
 
 
@@ -112,5 +125,25 @@ public class PostServiceImpl implements PostService{
     @Override
     public List<Post> getNewFeeds(Long userId) {
         return List.of();
+    }
+
+    @Override
+    public List<PostRespVO> getListPostByGroupId(Long id, int pageNumber, int limit, int sort) {
+        Pageable pageable = PageRequest.of(
+                pageNumber - 1,
+                limit,
+                Sort.by("createdDate").descending()
+        );
+
+        Page<Post> page = postRepository.findAllByGroupId(id, pageable);
+
+        return CollUtils.convertList(page.getContent(),post -> {
+            if(post.getVisible() == null || !post.getVisible()) return null;
+            return BeanUtil.copy(post, PostRespVO.class)
+                    .setUser(process(post.getUserId(), userApi::getUserById))
+                    .setGroup(process(post.getGroupId(), groupApi::getGroup))
+//                    .setSharePost(getPostById(post.getSharePostId()))
+                    .setVotes(0).setShares(0).setComments(0);
+        });
     }
 }

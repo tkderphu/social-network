@@ -1,4 +1,11 @@
-import PostCard from "../post/Post";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router";
+import { TokenUtils } from "../../common";
+import ModalCustome from "../../components/modal/ModalCustom";
+import Spinner from "../../components/Spinner";
+import { PostResp } from "../../model/postModel";
+import postService, { PostCreateReq } from "../../services/post/postService";
+import { PostCard } from "../post/PostCard";
 import PostForm from "../post/PostForm";
 
 const posts = [
@@ -14,19 +21,109 @@ const posts = [
     },
 ];
 export default function GroupPost() {
+    const { name } = useParams()
+    const [openModal, setOpenModal] = useState(false)
+    const [postFilter, setPostFilter] = useState<string>("hot")
+    const [fetchPosts, setFetchPosts] = useState<{
+        posts: PostResp[],
+        loading: boolean,
+        page: number,
+        limit: number
+    }>({
+        posts: [],
+        loading: true,
+        page: 1,
+        limit: 30
+    })
+    const [req, setReq] = useState<PostCreateReq>({
+        postPrivacy: "PUBLIC",
+        content: "",
+        groupId: name,
+        mediaUrls: []
+    })
+    const handleCreatePost = () => {
+        console.log("req: ", req)
+        postService.createPost(req).then(resp => {
+            setReq({
+                ...req,
+                content: "",
+                mediaUrls: []
+            })
+        }).catch(err => {
+            alert("create post failed")
+            console.log("err: ", err)
+        })
+    }
+
+    useEffect(() => {
+        if(postFilter == "hot") {
+            console.log("vc")
+        } else {
+            postService.getListPostByGroup(name, fetchPosts.page, fetchPosts.limit).then(resp => {
+                console.log("data: ", resp)
+                setFetchPosts((prev) => ({
+                    ...prev,
+                    loading: false,
+                    page: prev.page + 1,
+                    posts: [...prev.posts, ...resp.data.data]
+                }))
+            }).catch(err => {
+            
+                console.log("err fetch group posts: ", err)
+            })
+        }
+    }, [postFilter])
+
     return (
-        <div className="row mt-3">
-            <div className="col-12">
-                <PostForm />
-                {/* {posts.map((post, index) => (
-                    // <PostCard
-                    //     key={index}
-                    //     user={post.user}
-                    //     time={post.time}
-                    //     content={post.content}
-                    // />
-                ))} */}
+        <div className="row mt-3 ">
+            <div className=" mb-3" style={{}}>
+                <div className="card-body">
+                    <div className="d-flex align-items-center text-center mb-3">
+                        {/* <img
+                            // src
+                            alt="User avatar"
+                            className="rounded-circle me-2"
+                            style={{ width: '40px', height: '40px' }}
+                        /> */}
+                        <input
+                            style={{ cursor: "pointer" }}
+                            onClick={() => {
+                                console.log("vcl")
+                                setOpenModal(true)
+                            }}
+                            className="form-control"
+                            placeholder="What's on your mind?"
+                        // disabled
+                        ></input>
+                    </div>
+                    <div>
+                        <select className="form-select" value={postFilter} onChange={(e) => setPostFilter(e.target.value) }>
+                            <option value={'hot'}>Hot</option>
+                            <option value={'newest'}>New posts</option>
+                        </select>
+                    </div>
+                </div>
             </div>
+            <ModalCustome onClose={() => setOpenModal(false)}
+                show={openModal}
+                title="Create group"
+                closable={false}
+                onSave={handleCreatePost}
+            >
+                <PostForm form={{
+                    content: req.content,
+                    disabledBtnWrite: true,
+                    onChange: (e: any) => setReq((prev) => ({ ...prev, [e.target.name]: e.target.value })),
+                    postPrivacy: req.postPrivacy,
+                    fromGroup: true,
+                    mediaUrls: req.mediaUrls,
+
+                }} />
+            </ModalCustome>
+            {fetchPosts.posts.map(post => {
+                return <PostCard post={post} />
+            })}
+            <Spinner loading={fetchPosts.loading} />
         </div>
     )
 }

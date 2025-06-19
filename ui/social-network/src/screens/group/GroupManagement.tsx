@@ -2,6 +2,7 @@ import { useState } from "react"
 import { Link, Outlet } from "react-router"
 
 const GROUP_MANAGEMENT = [
+
     {
         name: "User pending",
         path: "pending/user"
@@ -9,10 +10,14 @@ const GROUP_MANAGEMENT = [
     {
         name: "Post pending",
         path: "pending/post"
-    }
+    },
+    {
+        name: "Setting",
+        path: "setting"
+    },
 ]
 
-export  function PendingUser() {
+export function PendingUser() {
     return (
         <div className="d-flex flex-wrap mt-3">
 
@@ -172,7 +177,27 @@ export  function PendingUser() {
 }
 
 export function PendingPost() {
-    
+
+}
+
+const setting = {
+    "autoAcceptMember": "Auto accept members",
+    "autoReviewPost": "Auto accept posts",
+}
+
+export function GroupSetting() {
+    return (
+        <>
+            <div className="form-check form-switch mb-2" style={{fontSize: "18px"}}>
+                <label className="form-check-label" htmlFor="member">Enable auto accept members</label>
+                <input className="form-check-input" type="checkbox" id="member" />
+            </div>
+            <div className="form-check form-switch mb-2" style={{fontSize: "18px"}}>
+                <label className="form-check-label" htmlFor="post">Enable auto accept posts</label>
+                <input className="form-check-input" type="checkbox" id="post" />
+            </div>
+        </>
+    )
 }
 
 export default function GroupManagement() {
@@ -185,7 +210,7 @@ export default function GroupManagement() {
                         {GROUP_MANAGEMENT.map(fake => {
                             return (
                                 <Link onClick={() => {
-                                    setSelectedGroup(fake.name)
+                                    setSelectedGroup(fake.path)
                                 }} style={{ textDecoration: "none" }} to={fake.path} className={'btn  d-flex align-items-center ' + (fake.path == selectedGroup ? "btn-secondary" : "")}>
 
                                     <div className='mx-3' style={{ fontSize: "23px" }}>{fake.name}</div>
