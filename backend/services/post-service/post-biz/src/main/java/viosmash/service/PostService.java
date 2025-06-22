@@ -14,7 +14,7 @@ public interface PostService {
     void deletePost(Long postId);
 
 
-    List<Post> getNewFeeds(Long userId);
+    List<PostRespVO> getNewFeeds(Long userId, int page, int limit);
 
     /**
      *

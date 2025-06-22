@@ -1,13 +1,17 @@
 import { Link } from "react-router";
+import SearchComponent from "../../components/searchInput/SearchComponent";
 
 export default function GroupMember() {
     return (
         <>
             <div className="form-input mt-3">
-                <input className=" w-100 rounded " style={{
-                    fontSize: "20px",
-                    
-                }} placeholder={"Search user"} />
+                <SearchComponent
+                    handleSearch={(query: string) => {
+
+                    }}
+                    placeholder={"Search members"}
+
+                />
             </div>
             <div className="d-flex flex-wrap mt-3">
 

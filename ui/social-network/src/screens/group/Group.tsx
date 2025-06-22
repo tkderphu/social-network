@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { Link, Outlet, replace, useLocation, useNavigate } from 'react-router'
 import Modal from '../../components/Modal';
 import ModalCustome from '../../components/modal/ModalCustom';
+import SearchComponent from '../../components/searchInput/SearchComponent';
 import { GroupResp } from '../../model/groupModel';
 import groupService from '../../services/group/groupService';
 import NewFeed from '../feed/NewFeed'
@@ -96,8 +97,14 @@ function Group() {
 
                 <div className="col-3 sticky-sidebar hide-scrollbar">
                     <div>
-                        <h4>Groups</h4>
-                        <input type={'search'} className='w-100 p-2 mb-2' style={{ borderRadius: "20px", fontSize: "18px" }} />
+                        
+                        <div className='mt-2 mb-2'>
+                        <SearchComponent
+                            placeholder='Search groups'
+                            handleSearch={(query: string) => {
+                            console.log("query search: ", query)
+                        }} />
+                        </div>
                         {LINK.map(link => {
                             if (link.path) {
                                 return <Link to={link.path} className={`btn ${link.name === useLink ? "btn-secondary" : "btn-light"} w-100`}

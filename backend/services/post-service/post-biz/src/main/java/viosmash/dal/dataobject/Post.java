@@ -43,9 +43,17 @@ public class Post {
 
     private Boolean visible;
 
-    @Transient
-    public double score(int vote) {
-        int score = vote;
+
+
+    //store directly instead of fetch from other services and calculate for improving performance
+    private Double hotScore;
+    private int votes;
+    private int comments;
+    private int shares;
+
+
+    public void calculateHotScore() {
+        int score = votes;
         int sign = Integer.compare(score, 0); // -1, 0, or 1
 
         // Avoid log(0) by ensuring abs(score) >= 1
@@ -57,6 +65,6 @@ public class Post {
         // Reference time: 1134028003 is the epoch for Dec 8, 2005
         long secondsSinceEpoch = epochSeconds - 1134028003;
 
-        return sign * order + secondsSinceEpoch / 45000.0;
+        this.hotScore = sign * order + secondsSinceEpoch / 45000.0;
     }
 }

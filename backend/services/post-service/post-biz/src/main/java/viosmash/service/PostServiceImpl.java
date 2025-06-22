@@ -18,7 +18,9 @@ import viosmash.dal.dataobject.Tag;
 import viosmash.dal.repo.PostRepository;
 import viosmash.dal.repo.PostTagRepository;
 import viosmash.dal.repo.TagRepository;
+import viosmash.exception.Exceptional;
 import viosmash.exception.ServiceException;
+import viosmash.friendship.api.FriendshipApi;
 import viosmash.group.api.GroupApi;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.api.group.GroupDTO;
@@ -41,6 +43,7 @@ public class PostServiceImpl implements PostService{
     private final GroupApi groupApi;
     private final PostTagRepository postTagRepository;
     private final TagRepository tagRepository;
+    private final FriendshipApi friendshipApi;
     @Override
     @Transactional(rollbackFor = ServiceException.class)
     public Post createPost(Long userId, @Valid PostCreateReqVO postCreateReq) {
@@ -123,8 +126,18 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<Post> getNewFeeds(Long userId) {
-        return List.of();
+    public List<PostRespVO> getNewFeeds(Long userId, int page, int limit) {
+        List<Long> recommends = friendshipApi.getListRecommendUser(userId);
+        List<Long> groups = groupApi.getListGroup(userId);
+        Pageable pageable = PageRequest.of(page - 1, limit);
+        Page<Post> postPage = postRepository.findAll(recommends, groups, pageable);
+
+        return CollUtils.convertList(postPage.getContent(), post -> {
+            PostRespVO postResp = BeanUtil.copy(post, PostRespVO.class)
+                    .setUser(Exceptional.process(post.getUserId(), userApi::getUserById))
+                    .setGroup(Exceptional.process(post.getGroupId(), groupApi::getGroup));
+            return postResp;
+        });
     }
 
     @Override

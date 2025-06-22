@@ -19,9 +19,14 @@ function Comment(props: CommentProps) {
         dispatch(fetchPageCommentAction(parentCommentId, "parent"))
     }
     return (
-        <div className="d-flex justify-content-between align-items-center">
+        <div className={`d-flex justify-content-between align-items-center ${props.comment.nestedComments > 0 && "vertical-line"}`}>
             <div className="d-flex mb-2">
-                <img src={props.comment?.user?.avatar} height={50} alt="User" className="rounded-circle me-2" />
+                <div className="d-flex align-items-start">
+                    {props.comment.nestedComments > 0 &&  <button className="btn"> <i className="bi bi-plus-circle"></i></button>}
+                    {props.comment.nestedComments <= 0 &&  <button className="btn"> <i className="bi bi-dash-circle"></i></button>}
+                    <img src={props.comment?.user?.avatar} height={50} alt="User" className="rounded-circle me-2" />
+                </div>
+                
                 <div>
                     <strong>{props.comment?.user?.firstName + " " + props.comment?.user?.lastName}</strong> {props.comment?.content}<br />
                     <div>
@@ -38,11 +43,11 @@ function Comment(props: CommentProps) {
                             <div style={{ color: "red" }}>0</div>
                             <button className="btn"><i className="bi bi-arrow-up"></i></button>
                             <button className="btn"><i className="fas fa-edit"></i></button>
-                            <button className="btn"><i className="fa fa-trash" style={{color :"red"}} aria-hidden="true"></i></button>
+                            <button className="btn"><i className="fa fa-trash" style={{ color: "red" }} aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div>
-                        <CommentList onEdit={props.onEdit} onFocus={props.onFocus} comments={props.comment.childComments} fromReply={true}/>
+                        <CommentList onEdit={props.onEdit} onFocus={props.onFocus} comments={props.comment.childComments} fromReply={true} />
                     </div>
                 </div>
             </div>
@@ -83,11 +88,15 @@ export default function CommentList(props: CommentListProps) {
     console.log("comment list: ", props.comments)
     return (
         <>
-            {props.comments?.map(comment => {
-                return (
-                    <Comment comment={comment} onEdit={props.onEdit} onFocus={props.onFocus} />
-                )
-            })}
+            <div style={{overflowX: "auto"}}>
+                {props.comments?.map(comment => {
+                    return (
+                        <>
+                            <Comment comment={comment} onEdit={props.onEdit} onFocus={props.onFocus} />
+                        </>
+                    )
+                })}
+            </div>
             {(!props.fromReply && (!props.comments || props.comments?.length == 0)) && (
                 <h4 className="text-center text-muted">No comments yet</h4>
             )}

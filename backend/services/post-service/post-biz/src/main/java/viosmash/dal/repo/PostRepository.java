@@ -7,10 +7,19 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import viosmash.dal.dataobject.Post;
 
+import java.util.List;
+import java.util.Objects;
+
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     Page<Post> findAllByUserId(Long userId, Pageable pageable);
     void deleteAllBySharePostId(Long postId);
 
     Page<Post> findAllByGroupId(Long id, Pageable pageable);
+
+    @Query("SELECT p " +
+            "FROM Post p \n" +
+            "WHERE (p.userId IN (:recommends) AND p.groupId IS NULL) OR p.groupId IN (:groups)\n" +
+            "ORDER BY p.hotScore desc")
+    Page<Post> findAll(List<Long> recommends, List<Long> groups, Pageable pageable);
 }

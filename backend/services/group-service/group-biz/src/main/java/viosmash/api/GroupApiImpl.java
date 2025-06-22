@@ -11,6 +11,8 @@ import viosmash.object.BeanUtil;
 import viosmash.pojo.api.group.GroupDTO;
 import viosmash.service.group.GroupService;
 
+import java.util.List;
+
 @Slf4j
 @RestController
 @RequestMapping(GroupApi.PREFIX)
@@ -28,6 +30,11 @@ public class GroupApiImpl implements GroupApi {
     @Override
     public Boolean existsInGroup(Long groupId, Long userId) {
         return null;
+    }
+
+    @Override
+    public List<Long> getListGroup(Long userId) {
+        return List.of();
     }
 
 
