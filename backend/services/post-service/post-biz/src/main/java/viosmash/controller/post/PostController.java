@@ -26,20 +26,22 @@ public class PostController {
     public CommonResult<List<PostRespVO>> getListPostByUser(@PathVariable("id") Long id,
                                                             @PathVariable("type") String type,
                                                             @RequestParam(value = "page", defaultValue = "1") int page,
-                                                            @RequestParam(value = "limit", defaultValue = "20") int limit) {
+                                                            @RequestParam(value = "limit", defaultValue = "20") int limit,
+                                                            @RequestParam(value = "type", defaultValue = "0") int typeId) {
         if(type.equals("user")) {
             List<PostRespVO> resp = postService.getListPostByUserId(id, page, limit);
             return CommonResult.success(resp);
         } else {
-            List<PostRespVO> resp= postService.getListPostByGroupId(id, page, limit, 1);
+            List<PostRespVO> resp= postService.getListPostByGroupId(id, page, limit, typeId);
             return CommonResult.success(resp);
         }
     }
 
-    @GetMapping
+    @GetMapping("/newfeeds")
     public CommonResult<List<PostRespVO>> getNewfeeds( @RequestParam(value = "page", defaultValue = "1") int page,
                                                        @RequestParam(value = "limit", defaultValue = "20") int limit) {
-        return null;
+        List<PostRespVO> newFeeds = postService.getNewFeeds(SecurityUtils.getLoginUserMemberId(), page, limit);
+        return CommonResult.success(newFeeds);
     }
 
     @GetMapping("/{id}")

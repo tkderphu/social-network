@@ -1,8 +1,10 @@
 package viosmash.service.member;
 
+import viosmash.controller.member.vo.UserMemberGroupResp;
 import viosmash.dal.dataobject.MemberWaitingReview;
 import viosmash.dal.dataobject.UserMemberGroup;
 import viosmash.group.enums.GroupRole;
+import viosmash.pojo.PageResult;
 
 import java.util.Collection;
 import java.util.List;
@@ -13,7 +15,7 @@ public interface UserMemberGroupService {
     List<UserMemberGroup> getListReviewer(Long groupId);
     int countMember(Long groupId);
 
-    List<Long> getListMember(Long groupId);
+    PageResult<UserMemberGroupResp> getListMember(Long groupId, int page, int limit);
     List<Long> getListGroup(Long memberId);
 
     Boolean kickMember(Long groupId, Long userMemberId);

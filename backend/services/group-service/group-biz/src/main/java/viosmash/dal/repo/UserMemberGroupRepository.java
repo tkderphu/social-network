@@ -1,5 +1,7 @@
 package viosmash.dal.repo;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,8 +23,8 @@ public interface UserMemberGroupRepository extends JpaRepository<UserMemberGroup
 
 
 
-    @Query("SELECT u.memberId FROM UserMemberGroup u WHERE u.groupId = :groupId")
-    List<Long> getAllMember(Long groupId);
+    @Query("SELECT u FROM UserMemberGroup u WHERE u.groupId = :groupId")
+    Page<UserMemberGroup> getAllMember(Long groupId, Pageable pageable);
 
 
 

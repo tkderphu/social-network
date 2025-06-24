@@ -1,5 +1,7 @@
 package viosmash.dal.repo;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -14,4 +16,7 @@ public interface GroupRepository extends JpaRepository<Group, Long> {
             "WHERE u.memberId = :memberId AND u.groupRole = :groupRole")
     List<Group> findAllGroupJoined(@Param("memberId") Long memberId,
                                    @Param("groupRole")GroupRole groupRole);
+
+    @Query("SELECT g FROM Group g WHERE LOWER(g.name) LIKE CONCAT('%', :keyword, '%')")
+    Page<Group> searchByName(@Param("keyword") String keyword, Pageable pageable);
 }

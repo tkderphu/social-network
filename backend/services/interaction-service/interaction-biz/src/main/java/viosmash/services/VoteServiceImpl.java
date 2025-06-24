@@ -10,17 +10,22 @@ import viosmash.dal.repo.VoteRepository;
 import viosmash.interaction.enums.ObjectType;
 import viosmash.interaction.enums.VoteType;
 import viosmash.object.BeanUtil;
+import viosmash.post.api.PostApi;
+import viosmash.profile.api.UserApi;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @RequiredArgsConstructor
 @Service
 public class VoteServiceImpl implements VoteService {
     private final VoteRepository voteRepository;
-
+    private final PostApi postApi;
     @Override
     public void updateVote(Long userId, VoteUpdateReqVO req) {
+
+
         var isExists = this.voteRepository.findByUserIdAndObjectIdAndObjectType(
                 userId,
                 req.getObjectId(),
@@ -39,6 +44,11 @@ public class VoteServiceImpl implements VoteService {
                     .setUserId(userId).setCreatedAt(LocalDateTime.now());
             this.voteRepository.save(isExists);
         }
+
+        if(req.getObjectType() == ObjectType.POST) {
+            postApi.updateVote(req.getObjectId(), count(req.getObjectId(), req.getObjectType()));
+        }
+
     }
 
     @Override

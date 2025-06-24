@@ -1,10 +1,13 @@
 package viosmash.service.member;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import viosmash.aop.GroupPermission;
 import viosmash.collection.CollUtils;
+import viosmash.controller.member.vo.UserMemberGroupResp;
 import viosmash.core.utils.SecurityUtils;
 import viosmash.dal.dataobject.Group;
 import viosmash.dal.dataobject.MemberWaitingReview;
@@ -17,6 +20,9 @@ import viosmash.notification.api.NotificationApi;
 import viosmash.notification.api.NotificationDto;
 import viosmash.notification.enums.NotificationType;
 import viosmash.notification.enums.TargetType;
+import viosmash.object.BeanUtil;
+import viosmash.pojo.PageResult;
+import viosmash.profile.api.UserApi;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -31,6 +37,8 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
     private final MemberWaitingReviewRepository memberWaitingReviewRepository;
     private final GroupRepository groupRepository;
     private final NotificationApi notificationApi;
+    private final UserApi userApi;
+
     @Override
     public UserMemberGroup getMember(Long memberId, Long groupId) {
         return userMemberGroupRepository.findByGroupIdAndMemberId(groupId, memberId);
@@ -56,8 +64,18 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
 
 
     @Override
-    public List<Long> getListMember(Long groupId) {
-        return userMemberGroupRepository.getAllMember(groupId);
+    public PageResult<UserMemberGroupResp> getListMember(Long groupId, int page, int limit) {
+        Page<UserMemberGroup> userMemberGroups = userMemberGroupRepository.getAllMember(
+                groupId,
+                PageRequest.of(page - 1, limit)
+        );
+        List<UserMemberGroupResp> resp = CollUtils.convertList(userMemberGroups.getContent(), userMemberGroup -> {
+            UserMemberGroupResp copy = BeanUtil.copy(userMemberGroup, UserMemberGroupResp.class);
+            copy.setUser(userApi.getUserById(userMemberGroup.getMemberId()));
+            return copy;
+        });
+
+        return new PageResult<>(page, limit, resp, userMemberGroups.getTotalPages());
     }
 
     @Override

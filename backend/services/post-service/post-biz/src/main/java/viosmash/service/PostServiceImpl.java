@@ -28,6 +28,7 @@ import viosmash.profile.api.UserApi;
 import viosmash.string.StringUtils;
 
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 
 import static viosmash.exception.Exceptional.process;
@@ -49,6 +50,8 @@ public class PostServiceImpl implements PostService{
     public Post createPost(Long userId, @Valid PostCreateReqVO postCreateReq) {
         Post post = BeanUtil.copy(postCreateReq, Post.class)
                 .setUserId(userId).setCreatedDate(LocalDateTime.now())
+                .setVotes(0)
+                .setHotScore(0d)
                 .setVisible(true);
 
         if(post.getGroupId() != null) {
@@ -126,11 +129,20 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
+    public void updateVote(Long postId, int votes) {
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> exception(404, "not found post"));
+        post.setVotes(votes);
+        post.calculateHotScore();
+        this.postRepository.save(post);
+    }
+
+    @Override
     public List<PostRespVO> getNewFeeds(Long userId, int page, int limit) {
-        List<Long> recommends = friendshipApi.getListRecommendUser(userId);
-        List<Long> groups = groupApi.getListGroup(userId);
+        List<Long> recommends = Exceptional.process(userId, friendshipApi::getListRecommendUser, Collections.emptyList());
+        List<Long> groups = Exceptional.process(userId, groupApi::getListGroup, Collections.emptyList());
         Pageable pageable = PageRequest.of(page - 1, limit);
-        Page<Post> postPage = postRepository.findAll(recommends, groups, pageable);
+        Page<Post> postPage = postRepository.findAll(userId, recommends, groups, pageable);
 
         return CollUtils.convertList(postPage.getContent(), post -> {
             PostRespVO postResp = BeanUtil.copy(post, PostRespVO.class)
@@ -141,11 +153,11 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<PostRespVO> getListPostByGroupId(Long id, int pageNumber, int limit, int sort) {
+    public List<PostRespVO> getListPostByGroupId(Long id, int pageNumber, int limit, int type) {
         Pageable pageable = PageRequest.of(
                 pageNumber - 1,
                 limit,
-                Sort.by("createdDate").descending()
+                type == 0 ? Sort.by("hotScore").descending() : Sort.by("createdDate").ascending()
         );
 
         Page<Post> page = postRepository.findAllByGroupId(id, pageable);

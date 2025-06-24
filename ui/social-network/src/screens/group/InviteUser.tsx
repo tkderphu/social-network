@@ -4,7 +4,8 @@ import CustomSelect from "../../components/select/CustomSelect"
 import { ProfileSimpleResp } from "../../model/profileModel"
 import profileService from "../../services/profile/profileService"
 import { components } from 'react-select'
-import groupMemberService from "../../services/group/groupMemberService"
+import groupMemberService from "../../services/group/userMemberGroupService"
+import userMemberGroupService from "../../services/group/userMemberGroupService"
 export default function InviteUser(props: {groupId: any}) {
     const [keyword, setKeyword] = useState("")
     const [users, setUsers] = useState<ProfileSimpleResp[]>([])
@@ -24,7 +25,7 @@ export default function InviteUser(props: {groupId: any}) {
     const [selectUsers, setSelectUsers]= useState<any>([])
 
     const handleSubmitInvitation = () => {
-        groupMemberService.inviteUsers(props.groupId, selectUsers).then(resp => {
+        userMemberGroupService.inviteUsers(props.groupId, selectUsers).then(resp => {
             alert("invite user success fully")
         }).catch(err => {
             alert("error when invited users")

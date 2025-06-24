@@ -13,12 +13,11 @@ import java.util.Collection;
 import java.util.List;
 
 @Slf4j
-@RequestMapping(PostApi.PREFIX)
 @RestController
+@RequestMapping(PostApi.PREFIX)
 @RequiredArgsConstructor
 public class PostApiImpl implements PostApi {
 
-    private final PostRepository postRepository;
     private final PostServiceImpl postService;
 
 
@@ -26,6 +25,12 @@ public class PostApiImpl implements PostApi {
     public PostDTO getPostById(Long id) {
         log.info("fetch detail post: {}", id);
         return BeanUtil.copy(postService.getPostById(id), PostDTO.class);
+    }
+
+    @Override
+    public void updateVote(Long id, Integer votes) {
+        log.info("updateVote(post, votes)::({}, {})", id, votes);
+        postService.updateVote(id, votes);
     }
 
 }

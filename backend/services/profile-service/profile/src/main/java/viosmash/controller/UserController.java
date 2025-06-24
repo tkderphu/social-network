@@ -30,6 +30,8 @@ public class UserController {
         return CommonResult.success(userRespVOS);
     }
 
+
+
     @GetMapping("/{userId}")
     public CommonResult<UserRespVO> getProfile(@PathVariable("userId") Long userId) {
         return CommonResult.success(userService.getProfile(userId));

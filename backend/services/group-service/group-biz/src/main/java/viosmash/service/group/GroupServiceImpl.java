@@ -1,6 +1,8 @@
 package viosmash.service.group;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
@@ -8,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 import viosmash.aop.GroupPermission;
 import viosmash.collection.CollUtils;
 import viosmash.controller.group.vo.GroupCreateReqVO;
+import viosmash.controller.group.vo.GroupRespVO;
 import viosmash.dal.dataobject.Group;
 import viosmash.dal.dataobject.UserMemberGroup;
 import viosmash.dal.repo.GroupRepository;
@@ -16,6 +19,7 @@ import viosmash.exception.ServiceException;
 import viosmash.group.enums.GroupRole;
 import viosmash.group.enums.GroupType;
 import viosmash.object.BeanUtil;
+import viosmash.pojo.PageResult;
 import viosmash.string.StringUtils;
 
 import java.time.LocalDateTime;
@@ -114,6 +118,19 @@ public class GroupServiceImpl implements GroupService{
     @Override
     public void updateGroupCoverPhoto(Long groupId, String description, MultipartFile file) {
         //
+    }
+
+    @Override
+    public PageResult<GroupRespVO> search(String keyword, int page, int limit) {
+        Page<Group> groupPage = groupRepository.searchByName(
+                keyword.toLowerCase(),
+                PageRequest.of(page - 1, limit));
+
+        List<GroupRespVO> resp = CollUtils.convertList(groupPage.getContent(), group -> {
+            return BeanUtil.copy(group, GroupRespVO.class)
+                    .setNumberOfMembers(userMemberGroupRepository.countMember(group.getId()));
+        });
+        return new PageResult<>(page, limit, resp, groupPage.getTotalPages());
     }
 
 

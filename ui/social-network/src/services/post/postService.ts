@@ -19,8 +19,8 @@ class PostService {
     getPostById(postId: any) {
         return api.get(`${path}/${postId}`)
     }
-    getListPostByGroup(groupId: any, page: number, limit: number) {
-        return api.get(`${path}/group/${groupId}?page=${page}&limit=${limit}`)
+    getListPostByGroup(groupId: any, page: number, limit: number, type: number) {
+        return api.get(`${path}/group/${groupId}?page=${page}&limit=${limit}&type=${type}`)
     }
 }
 export default new PostService()

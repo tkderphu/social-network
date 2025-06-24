@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import { Link, Outlet, replace, useLocation, useNavigate } from 'react-router'
+import { PageResult } from '../../common';
 import Modal from '../../components/Modal';
 import ModalCustome from '../../components/modal/ModalCustom';
 import SearchComponent from '../../components/searchInput/SearchComponent';
@@ -91,19 +92,48 @@ function Group() {
         })
     }, [])
 
+
     return (
         <>
             <div className="row mt-3 m-1">
 
                 <div className="col-3 sticky-sidebar hide-scrollbar">
                     <div>
-                        
+
                         <div className='mt-2 mb-2'>
-                        <SearchComponent
-                            placeholder='Search groups'
-                            handleSearch={(query: string) => {
-                            console.log("query search: ", query)
-                        }} />
+                            <SearchComponent
+                                path='/groups'
+                                placeholder={'Search groups'}
+                                data={[]}
+                                handleSearch={(query: string, page: number, limit: number, 
+                                                setPageResult: (p: any) => void, setState: () => void) => {
+                                    groupService.search(query, page, limit)
+                                        .then(resp => {
+                                            const pageResultResp: PageResult<GroupResp> = resp.data.data
+                                            const searchItem = pageResultResp.data.map((group: any) => {
+                                                console.log("group: ", group)
+                                                return {
+                                                    id: group.id,
+                                                    title: group.name,
+                                                    category: group.groupType,
+                                                    thumbnail: group.coverPhoto,
+                                                }
+                                            })
+                                            const pageResult: PageResult<any> = {
+                                                ...pageResultResp,
+                                                data: searchItem
+                                            }
+
+                                            setPageResult(pageResult)
+                                        }).catch(err => {
+                                            console.log("err search group")
+                                        })
+                                        .finally(() => {
+                                            setState()
+                                        })
+                                    // console.log("query searc fuch: ", query)
+                                    // alert("fuck you " + query)
+                                }} />
                         </div>
                         {LINK.map(link => {
                             if (link.path) {

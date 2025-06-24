@@ -44,7 +44,7 @@ export default function GroupDetails() {
       console.log("group: ", resp.data)
       setGroup(resp.data.data)
     })
-  }, [])
+  }, [name])
   const [useNav, setUseNav] = useState<any>("posts");
   return (
     <div className="min-vh-100">

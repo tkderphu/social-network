@@ -1,5 +1,6 @@
 package viosmash.service;
 
+import org.springframework.scheduling.annotation.Async;
 import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
 import viosmash.dal.dataobject.Post;
@@ -13,6 +14,8 @@ public interface PostService {
     PostRespVO getPostById(Long postId);
     void deletePost(Long postId);
 
+    @Async
+    void updateVote(Long postId, int votes);
 
     List<PostRespVO> getNewFeeds(Long userId, int page, int limit);
 
@@ -21,8 +24,8 @@ public interface PostService {
      * @param id: groupId
      * @param page
      * @param limit
-     * @param sort: 0 -> hot, 1 -> newest
+     * @param type: 0 -> hot, 1 -> newest
      * @return
      */
-    List<PostRespVO> getListPostByGroupId(Long id, int page, int limit, int sort);
+    List<PostRespVO> getListPostByGroupId(Long id, int page, int limit, int type);
 }

@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import viosmash.dal.dataobject.UserMemberGroup;
+import viosmash.pojo.PageResult;
 import viosmash.pojo.api.profile.UserDTO;
 import viosmash.profile.api.UserApi;
 import viosmash.controller.group.vo.GroupCreateReqVO;
@@ -75,6 +76,14 @@ public class GroupController {
             return BeanUtil.copy(group, GroupRespVO.class)
                     .setNumberOfMembers(userMemberGroupService.countMember(groupId));
         }));
+    }
+
+
+    @GetMapping("/search")
+    public CommonResult<PageResult<GroupRespVO>> search(@RequestParam("keyword") String keyword,
+                                                        @RequestParam(value = "page", defaultValue = "1") int page,
+                                                        @RequestParam(value = "limit", defaultValue = "20") int limit) {
+       return success( groupService.search(keyword, page, limit));
     }
 
 }

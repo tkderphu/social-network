@@ -10,6 +10,7 @@ export interface PageResult<T> {
     page: number
     limit: number
     data: Array<T>
+    totalPage: number
 }
 
 export const setState = (event: any, fn: any) => {

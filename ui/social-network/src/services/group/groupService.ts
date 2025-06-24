@@ -1,3 +1,4 @@
+import { l } from "react-router/dist/development/fog-of-war-Cm1iXIp7"
 import api from "../../axios/interceptor"
 
 
@@ -19,6 +20,9 @@ class GroupService {
     }
     getListJoined() {
         return api.get(`${path}/joined`)
+    }
+    search(keyword: string, page: number, limit: number) {
+        return api.get(`${path}/search?keyword=${keyword}&page=${page}&limit=${limit}`)
     }
 
 }

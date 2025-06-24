@@ -2,8 +2,10 @@ package viosmash.service.group;
 
 import org.springframework.web.multipart.MultipartFile;
 import viosmash.controller.group.vo.GroupCreateReqVO;
+import viosmash.controller.group.vo.GroupRespVO;
 import viosmash.dal.dataobject.Group;
 import viosmash.group.enums.GroupType;
+import viosmash.pojo.PageResult;
 
 import java.util.List;
 
@@ -26,4 +28,5 @@ public interface GroupService {
 
     void updateGroupCoverPhoto(Long groupId, String description, MultipartFile file);
 
+    PageResult<GroupRespVO> search(String keyword, int page, int limit);
 }

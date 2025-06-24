@@ -2,7 +2,9 @@ package viosmash.controller.member;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import viosmash.controller.member.vo.UserMemberGroupResp;
 import viosmash.pojo.CommonResult;
+import viosmash.pojo.PageResult;
 import viosmash.service.member.UserMemberGroupService;
 
 import java.util.Collection;
@@ -13,17 +15,23 @@ import static viosmash.pojo.CommonResult.success;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/groups/members")
-public class MemberController {
+@RequestMapping("/api/members/group")
+public class UserMemberGroupController {
     private final UserMemberGroupService userMemberGroupService;
 
 
-    @PostMapping("/join/groups/{groupId}")
+    @PostMapping("/{groupId}/join")
     public CommonResult<Boolean> requestJoinGroup(@PathVariable("groupId") Long groupId) {
         userMemberGroupService.requestJoinGroup(groupId, getLoginUserMemberId());
         return success(true);
     }
 
+    @GetMapping("/{groupId}")
+    public CommonResult<PageResult<UserMemberGroupResp>> getListMembers(@PathVariable("groupId") Long groupId,
+                                                                        @RequestParam(value = "page", defaultValue = "1") int page,
+                                                                        @RequestParam(value = "limit", defaultValue = "20")int limit) {
+        return success(userMemberGroupService.getListMember(groupId, page , limit));
+    }
 
     @PutMapping("/{groupId}/invite")
     public CommonResult<Boolean> inviteUsers(@PathVariable("groupId") Long groupId,

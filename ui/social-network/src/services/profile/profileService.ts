@@ -43,6 +43,7 @@ class ProfileService {
     search(keyword: string) {
         return api.get(`${PATH}/search?name=${keyword}`)
     }
+  
 }
 export interface UserUpdateNewPassword {
     newPassword: string,

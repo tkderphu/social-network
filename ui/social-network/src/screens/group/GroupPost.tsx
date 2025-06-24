@@ -57,22 +57,32 @@ export default function GroupPost() {
 
     useEffect(() => {
         if(postFilter == "hot") {
-            console.log("vc")
-        } else {
-            postService.getListPostByGroup(name, fetchPosts.page, fetchPosts.limit).then(resp => {
-                console.log("data: ", resp)
+            console.log("fetch hot posts")
+            postService.getListPostByGroup(name, fetchPosts.page, fetchPosts.limit, 0).then(resp => {
+                console.log("data fuck: ", resp)
                 setFetchPosts((prev) => ({
                     ...prev,
                     loading: false,
-                    page: prev.page + 1,
-                    posts: [...prev.posts, ...resp.data.data]
+                    posts: [...resp.data.data]
+                }))
+            }).catch(err => {
+            
+                console.log("err fetch group posts: ", err)
+            })
+        } else {
+            postService.getListPostByGroup(name, fetchPosts.page, fetchPosts.limit, 1).then(resp => {
+                console.log("data fuck: ", resp)
+                setFetchPosts((prev) => ({
+                    ...prev,
+                    loading: false,
+                    posts: [...resp.data.data]
                 }))
             }).catch(err => {
             
                 console.log("err fetch group posts: ", err)
             })
         }
-    }, [postFilter])
+    }, [postFilter && name])
 
     return (
         <div className="row mt-3 ">

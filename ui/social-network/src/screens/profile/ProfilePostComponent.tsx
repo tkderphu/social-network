@@ -21,7 +21,7 @@ export default function ProfilePostComponent() {
         loading: boolean,
         hasError: boolean,
         message: any,
-        pageResult: PageResult<PostResp>
+        pageResult: PostResp[]
     } = useSelector((state: any) => {
         return state.fetchListPostByUser
     })
@@ -72,7 +72,7 @@ export default function ProfilePostComponent() {
             }} />
             {/* </div> */}
             {/* </div> */}
-            {fetchListPostByUserState.pageResult?.data.map((post, index) => (
+            {fetchListPostByUserState.pageResult?.map((post, index) => (
                 <PostCard
                     key={index}
                     post={post}

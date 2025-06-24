@@ -22,10 +22,14 @@ spring:
           predicates:
             - Path=/api/friendship/**
 
-        - id: group-service
+        - id: group-service-groups
           uri: lb://GROUP-SERVICE
           predicates:
             - Path=/api/groups/**
+
+        - id: group-service-members
+          uri: lb://GROUP-SERVICE
+          predicates:
             - Path=/api/members/**
 
         - id: notification-service
