@@ -3,6 +3,8 @@ package viosmash.controller.member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import viosmash.controller.member.vo.UserMemberGroupResp;
+import viosmash.controller.member.vo.UserMemberGroupRoleUpdateReq;
+import viosmash.group.enums.GroupRole;
 import viosmash.pojo.CommonResult;
 import viosmash.pojo.PageResult;
 import viosmash.service.member.UserMemberGroupService;
@@ -24,6 +26,12 @@ public class UserMemberGroupController {
     public CommonResult<Boolean> requestJoinGroup(@PathVariable("groupId") Long groupId) {
         userMemberGroupService.requestJoinGroup(groupId, getLoginUserMemberId());
         return success(true);
+    }
+
+    @PutMapping("/{groupId}/role")
+    public CommonResult<Boolean> updateRoleMember(@PathVariable("groupId") Long groupId,
+                                                  @RequestBody UserMemberGroupRoleUpdateReq req) {
+        return success(userMemberGroupService.updatePermissionToUser(groupId, req.getMemberId(), req.getGroupRole()));
     }
 
     @GetMapping("/{groupId}")
