@@ -16,5 +16,11 @@ class UserMemberGroupService {
     requestJoinGroup(groupId: any) {
         return api.post(`${path}/${groupId}/join`)
     }
+    updatePermissionToUser(groupId: any, memberId: any, role: any) {
+        return api.put(`${path}/${groupId}/role`, {
+            memberId: memberId,
+            groupRole: role
+        })
+    }
 }
 export default new UserMemberGroupService()
