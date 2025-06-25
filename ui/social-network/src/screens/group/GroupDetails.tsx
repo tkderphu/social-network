@@ -56,6 +56,7 @@ export default function GroupDetails() {
 
   }, [name])
 
+
   useEffect(() => {
     if (!joinLeaveState.loading) {
       userMemberGroupService.checkJoinedGroup(name).then(res => { setCheckJoinedGroup(res.data.data) })
@@ -89,6 +90,7 @@ export default function GroupDetails() {
       })
     }
   }
+
   return (
     <GroupContext.Provider value={group}>
       <div className="min-vh-100">
@@ -115,6 +117,7 @@ export default function GroupDetails() {
             <h3>{group?.name}</h3>
             <div className="d-flex">
               <InviteUser groupId={name} />
+
               <div className={`d-flex align-items-center btn btn-${checkJoinedGroup ? "danger" : "secondary"} `} onClick={() => {
                 handleJoinLeave()
               }}><Spinner loading={joinLeaveState.loading}/><span style={{fontSize: "18px", marginLeft: `${joinLeaveState.loading ? "5px" : "0"}`}}>{checkJoinedGroup ? "Left" : "Join"}</span></div>
@@ -144,9 +147,6 @@ export default function GroupDetails() {
             /> */}
             {/* <i className="bi bi-plus rounded-circle me-1" style={{height: "32px", width: "32px", fontSize: "18px"}} ></i> */}
           </div>
-
-          {/* Action Buttons */}
-
           {/* Navigation Tabs */}
           <ul className="nav nav-tabs">
             {NAV.map(nav => {

@@ -11,6 +11,7 @@ import viosmash.aop.GroupPermission;
 import viosmash.collection.CollUtils;
 import viosmash.controller.group.vo.GroupCreateReqVO;
 import viosmash.controller.group.vo.GroupRespVO;
+import viosmash.controller.group.vo.GroupUpdateSettingReqVO;
 import viosmash.dal.dataobject.Group;
 import viosmash.dal.dataobject.UserMemberGroup;
 import viosmash.dal.repo.GroupRepository;
@@ -131,6 +132,18 @@ public class GroupServiceImpl implements GroupService{
                     .setNumberOfMembers(userMemberGroupRepository.countMember(group.getId()));
         });
         return new PageResult<>(page, limit, resp, groupPage.getTotalPages());
+    }
+
+    @Override
+    public void updateGroupSetting(Long groupId, GroupUpdateSettingReqVO req) {
+        Group group = this.groupRepository.findById(groupId)
+                .orElseThrow(() -> exception(404, "not found group"));
+        group.setEnableAutoReviewPost(req.getEnableAutoReviewPost())
+                .setEnableAutoAcceptMember(req.getEnableAutoAcceptMember())
+                .setEnableNotificationWhenUserRequest(req.getEnableNotificationWhenUserRequest())
+                .setEnableNotificationWhenNewPostComing(req.getEnableNotificationWhenNewPostComing());
+
+        this.groupRepository.save(group);
     }
 
 

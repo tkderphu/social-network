@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import viosmash.controller.group.vo.GroupUpdateSettingReqVO;
 import viosmash.dal.dataobject.UserMemberGroup;
 import viosmash.pojo.PageResult;
 import viosmash.pojo.api.profile.UserDTO;
@@ -43,9 +44,17 @@ public class GroupController {
 
 
 
-    @PutMapping
+    @PutMapping("/info")
     public CommonResult<Boolean> updateGroup(@Valid @RequestBody GroupUpdateReqVO req) {
         groupService.updateGroup(req.getId(), req.getName(), req.getGroupType(), req.getDescription());
+        return success(true);
+    }
+
+
+    @PutMapping("/{groupId}/setting")
+    public CommonResult<Boolean> updateSetting(@PathVariable("groupId") Long groupId,
+                                               @RequestBody GroupUpdateSettingReqVO req) {
+        groupService.updateGroupSetting(groupId, req);
         return success(true);
     }
 
