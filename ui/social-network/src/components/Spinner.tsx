@@ -3,7 +3,7 @@ function Spinner(props: { loading?: boolean }) {
         <>
             {props.loading && (
                 <div className="d-flex justify-content-center">
-                    <div className="spinner-border mt-2 mb-2" role="status">
+                    <div className="spinner-border spinner-border-sm "  style={{fontSize: "10px"}} role="status">
                     </div>
                 </div>
             )}

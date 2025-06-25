@@ -186,6 +186,7 @@ export function PendingPost() {
 
 export function GroupSetting() {
     const group: GroupResp = useContext(GroupContext)
+
     const [req, setReq] = useState<{
         enableAutoAcceptMember?: boolean,
         enableAutoReviewPost?: boolean,
@@ -207,6 +208,7 @@ export function GroupSetting() {
     }, [group])
     const onChangeChecked = (e: any) => {
         const { name, checked } = e.target
+
         setReq((prev: any) => ({
             ...prev,
             [name]: checked
@@ -220,6 +222,7 @@ export function GroupSetting() {
         })
     }
 
+
     return (
         <>
             <div className="form-check form-switch mb-2" style={{ fontSize: "18px" }}>
@@ -229,11 +232,13 @@ export function GroupSetting() {
                     checked={req?.enableAutoAcceptMember}
                     onChange={onChangeChecked}
                 />
+
                 <div className="text-muted">Description: Auto accept users when they request to join group</div>
             </div>
             <div className="form-check form-switch mb-2" style={{ fontSize: "18px" }}>
                 <label className="form-check-label" htmlFor="post">Enable auto accept posts</label>
                 <input className="form-check-input" type="checkbox" id="post"
+
                     checked={req?.enableAutoReviewPost}
                     onChange={onChangeChecked}
                     name={"enableAutoReviewPost"}

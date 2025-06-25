@@ -92,6 +92,7 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
     }
 
     @Override
+    @Transactional
     public Boolean leaveGroup(Long groupId, Long userMemberId) {
         userMemberGroupRepository.deleteByGroupIdAndMemberId(groupId, userMemberId);
         return true;
@@ -99,10 +100,15 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
 
     @Override
     @GroupPermission(specificRole = GroupRole.OWNER)
+    @Transactional
     public Boolean updatePermissionToUser(Long groupId,
                                           Long memberId,
                                           GroupRole groupRole) {
         userMemberGroupRepository.updateRoleMember(groupId, memberId, groupRole);
+        if(groupRole == GroupRole.OWNER) {
+            groupRepository.updateOwnerId(groupId, memberId);
+            userMemberGroupRepository.updateRoleMember(groupId, SecurityUtils.getLoginUserMemberId(), GroupRole.MEMBER);
+        }
         return true;
     }
 
