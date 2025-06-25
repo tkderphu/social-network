@@ -92,6 +92,7 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
     }
 
     @Override
+    @Transactional
     public Boolean leaveGroup(Long groupId, Long userMemberId) {
         userMemberGroupRepository.deleteByGroupIdAndMemberId(groupId, userMemberId);
         return true;

@@ -19,6 +19,7 @@ public interface UserMemberGroupRepository extends JpaRepository<UserMemberGroup
 
     UserMemberGroup findByGroupIdAndMemberId(Long groupId, Long memberId);
 
+    @Modifying
     void deleteByGroupIdAndMemberId(Long groupId, Long userMemberId);
 
 
