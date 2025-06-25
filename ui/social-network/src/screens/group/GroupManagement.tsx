@@ -1,5 +1,8 @@
-import { useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { Link, Outlet } from "react-router"
+import { GroupResp } from "../../model/groupModel"
+import groupService from "../../services/group/groupService"
+import { GroupContext } from "./GroupDetails"
 
 const GROUP_MANAGEMENT = [
 
@@ -180,22 +183,82 @@ export function PendingPost() {
 
 }
 
-const setting = {
-    "autoAcceptMember": "Auto accept members",
-    "autoReviewPost": "Auto accept posts",
-}
 
 export function GroupSetting() {
+    const group: GroupResp = useContext(GroupContext)
+    const [req, setReq] = useState<{
+        enableAutoAcceptMember?: boolean,
+        enableAutoReviewPost?: boolean,
+        enableNotificationWhenUserRequest?: boolean,
+        enableNotificationWhenNewPostComing?: boolean
+    }>({
+
+    })
+
+    useEffect(() => {
+        if (group) {
+            setReq({
+                enableAutoAcceptMember: group.enableAutoAcceptMember,
+                enableAutoReviewPost: group.enableAutoReviewPost,
+                enableNotificationWhenNewPostComing: group.enableNotificationWhenNewPostComing,
+                enableNotificationWhenUserRequest: group.enableNotificationWhenUserRequest
+            })
+        }
+    }, [group])
+    const onChangeChecked = (e: any) => {
+        const { name, checked } = e.target
+        setReq((prev: any) => ({
+            ...prev,
+            [name]: checked
+        }))
+    }
+
+    const handleSubmit = () => {
+        console.log("data req: ", req)
+        groupService.updateGroupSetting(group.id, req).then(() => {}).catch(err => {
+            console.log('err: update setting: ', err)
+        })
+    }
+
     return (
         <>
-            <div className="form-check form-switch mb-2" style={{fontSize: "18px"}}>
+            <div className="form-check form-switch mb-2" style={{ fontSize: "18px" }}>
                 <label className="form-check-label" htmlFor="member">Enable auto accept members</label>
-                <input className="form-check-input" type="checkbox" id="member" />
+                <input className="form-check-input" type="checkbox" id="member"
+                    name="enableAutoAcceptMember"
+                    checked={req?.enableAutoAcceptMember}
+                    onChange={onChangeChecked}
+                />
+                <div className="text-muted">Description: Auto accept users when they request to join group</div>
             </div>
-            <div className="form-check form-switch mb-2" style={{fontSize: "18px"}}>
+            <div className="form-check form-switch mb-2" style={{ fontSize: "18px" }}>
                 <label className="form-check-label" htmlFor="post">Enable auto accept posts</label>
-                <input className="form-check-input" type="checkbox" id="post" />
+                <input className="form-check-input" type="checkbox" id="post"
+                    checked={req?.enableAutoReviewPost}
+                    onChange={onChangeChecked}
+                    name={"enableAutoReviewPost"}
+                />
+                <div className="text-muted">Description: Auto accept posts when they are created in group</div>
+
             </div>
+            <div className="form-check form-switch mb-2" style={{ fontSize: "18px" }}>
+                <label className="form-check-label" htmlFor="user-notify">Enable notification when new user request join group</label>
+                <input className="form-check-input" type="checkbox" id="user-notify"
+                    checked={req?.enableNotificationWhenUserRequest}
+                    name="enableNotificationWhenUserRequest"
+                    onChange={onChangeChecked} />
+                <div className="text-muted">Description: Notify to administrator of group when users request to join group</div>
+
+            </div>
+            <div className="form-check form-switch mb-2" style={{ fontSize: "18px" }}>
+                <label className="form-check-label" htmlFor="post-notify">Enable notification when new post is created in group</label>
+                <input className="form-check-input" type="checkbox" id="post-notify"
+                    checked={req?.enableNotificationWhenNewPostComing}
+                    name="enableNotificationWhenNewPostComing"
+                    onChange={onChangeChecked} />
+                <div className="text-muted">Description: Notify to administrator of group when new post is created in group</div>
+            </div>
+            <button className="btn btn-secondary w-50" onClick={handleSubmit}>Submit</button>
         </>
     )
 }

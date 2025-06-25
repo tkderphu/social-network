@@ -3,6 +3,7 @@ package viosmash.service.group;
 import org.springframework.web.multipart.MultipartFile;
 import viosmash.controller.group.vo.GroupCreateReqVO;
 import viosmash.controller.group.vo.GroupRespVO;
+import viosmash.controller.group.vo.GroupUpdateSettingReqVO;
 import viosmash.dal.dataobject.Group;
 import viosmash.group.enums.GroupType;
 import viosmash.pojo.PageResult;
@@ -29,4 +30,6 @@ public interface GroupService {
     void updateGroupCoverPhoto(Long groupId, String description, MultipartFile file);
 
     PageResult<GroupRespVO> search(String keyword, int page, int limit);
+
+    void updateGroupSetting(Long groupId, GroupUpdateSettingReqVO req);
 }

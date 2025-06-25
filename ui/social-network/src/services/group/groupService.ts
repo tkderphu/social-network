@@ -24,6 +24,9 @@ class GroupService {
     search(keyword: string, page: number, limit: number) {
         return api.get(`${path}/search?keyword=${keyword}&page=${page}&limit=${limit}`)
     }
+    updateGroupSetting(groupId: any, req: any) {
+        return api.put(`${path}/${groupId}/setting`, req)
+    }
 
 }
 export default new GroupService()
