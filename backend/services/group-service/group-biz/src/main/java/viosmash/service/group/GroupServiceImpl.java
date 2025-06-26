@@ -6,7 +6,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.multipart.MultipartFile;
 import viosmash.aop.GroupPermission;
 import viosmash.collection.CollUtils;
 import viosmash.controller.group.vo.GroupCreateReqVO;
@@ -117,8 +116,9 @@ public class GroupServiceImpl implements GroupService{
     }
 
     @Override
-    public void updateGroupCoverPhoto(Long groupId, String description, MultipartFile file) {
-        //
+    public void updateGroupCoverPhoto(Long groupId, String url) {
+        Group group = this.groupRepository.findById(groupId).get().setCoverPhoto(url);
+        this.groupRepository.save(group);
     }
 
     @Override

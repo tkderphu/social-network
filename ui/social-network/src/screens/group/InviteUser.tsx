@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import ModalCustome from "../../components/modal/ModalCustom"
 import CustomSelect from "../../components/select/CustomSelect"
 import { ProfileSimpleResp } from "../../model/profileModel"
@@ -6,10 +6,12 @@ import profileService from "../../services/profile/profileService"
 import { components } from 'react-select'
 import groupMemberService from "../../services/group/userMemberGroupService"
 import userMemberGroupService from "../../services/group/userMemberGroupService"
-export default function InviteUser(props: {groupId: any}) {
+import { GroupContext } from "./GroupDetails"
+import { GroupResp } from "../../model/groupModel"
+export default function InviteUser() {
     const [keyword, setKeyword] = useState("")
     const [users, setUsers] = useState<ProfileSimpleResp[]>([])
-    
+    const group: GroupResp = useContext(GroupContext)    
 
     useEffect(() => {
         profileService.search(keyword).then(resp => {
@@ -25,7 +27,7 @@ export default function InviteUser(props: {groupId: any}) {
     const [selectUsers, setSelectUsers]= useState<any>([])
 
     const handleSubmitInvitation = () => {
-        userMemberGroupService.inviteUsers(props.groupId, selectUsers).then(resp => {
+        userMemberGroupService.inviteUsers(group.id, selectUsers).then(resp => {
             alert("invite user success fully")
         }).catch(err => {
             alert("error when invited users")

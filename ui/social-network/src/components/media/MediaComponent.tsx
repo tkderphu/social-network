@@ -16,8 +16,9 @@ const sampleImages = [
     'https://picsum.photos/300/200?random=12'
 ];
 interface MediaProps {
-    images?: string[],
-    onChange: any
+    images?: any
+    onChange: any,
+    multipleImage: boolean
 }
 export default function MediaComponent(props: MediaProps) {
     const uploadImages = () => {
@@ -33,10 +34,10 @@ export default function MediaComponent(props: MediaProps) {
                 title={"My images"}
                 children={
                     <div className="">
-                      
+
                         <div className="gallery-container">
                             <div className="gallery-header">
-                            <h5>Number images are selected: {props.images?.length}</h5>
+                               {props.multipleImage && ( <h5>Number images are selected: {props.images?.length}</h5>)}
                                 <p className="gallery-subtitle">
                                     Select an image from your collection or upload a new one
                                 </p>
@@ -50,16 +51,24 @@ export default function MediaComponent(props: MediaProps) {
                                     return (
                                         <div onClick={() => {
                                             //@ts-ignore
-                                            let c = [...props.images]
-                                            if(c.includes(image)) {
-                                                c = c.filter(img => {
-                                                    return image != img
-                                                })
+                                            if (props.multipleImage) {
+                                                let c = [...props.images]
+                                                if (c.includes(image)) {
+                                                    c = c.filter(img => {
+                                                        return image != img
+                                                    })
+                                                } else {
+                                                    c.push(image)
+                                                }
+                                                props.onChange(c)
                                             } else {
-                                                c.push(image)
+                                                if(props.images == image) {
+                                                    props.onChange("")
+                                                } else {
+                                                    props.onChange(image)
+                                                }
                                             }
-                                            props.onChange(c)
-                                        }} className={"image-card " + (props.images?.includes(image) ? "selected" : "")}>
+                                        }} className={"image-card " + (props.multipleImage ? (props.images?.includes(image) ? "selected" : "") : (props.images == image ? "selected" : ""))}>
                                             <img src={image} alt="Gallery Image ${index + 1}" loading="lazy" />
                                             <div className="image-overlay">
                                                 <i className="fas fa-check check-icon"></i>

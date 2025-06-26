@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import viosmash.dal.dataobject.Post;
+import viosmash.post.enums.PostType;
 
 import java.util.List;
 import java.util.Objects;
@@ -29,4 +30,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("UPDATE Post p SET p.votes = :votes WHERE p.id = :postId")
     @Modifying
     void updateVoteByPostId(@Param("postId") Long postId, @Param("votes") int votes);
+
+
+
+    @Query("SELECT p from Post p WHERE p.userId = :userId AND p.postType = :postType AND p.groupId IS NULL \n" +
+            "ORDER BY p.createdDate DESC")
+    List<Post> findAllByUserIdAndPostType(@Param("userId") Long userId,
+                                          @Param("postType")PostType postType);
+
+    List<Post> findAllByGroupIdAndPostType(Long groupId, PostType postType);
 }

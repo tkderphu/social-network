@@ -3,10 +3,13 @@ import { Link, Outlet, useParams } from "react-router";
 import Alert from "../../components/Alert";
 import Spinner from "../../components/Spinner";
 import { GroupResp } from "../../model/groupModel";
+import { PostResp } from "../../model/postModel";
 import groupService from "../../services/group/groupService";
 import userMemberGroupService from "../../services/group/userMemberGroupService";
+import postService from "../../services/post/postService";
 import { convertToHeader } from "../../utils/utils";
 import InviteUser from "./InviteUser";
+import UploadThumbnail from "./UploadThumbnail";
 
 
 
@@ -48,6 +51,18 @@ export default function GroupDetails() {
     error: "",
   })
 
+  const [listPostConverPhoto, setListPostCoverPhoto] = useState<PostResp[]>([])
+
+
+  useEffect(() => {
+    postService.getListPost("group", name, 1, 1, "COVER_PHOTO_UPDATE").then(resp => {
+        setListPostCoverPhoto(resp.data.data)
+    }).catch(err => {
+      alert("err when fetch cover photo group")
+      console.log("err: ", err)
+    })
+  }, [])
+
   useEffect(() => {
     groupService.getDetailGroup(name).then(resp => {
       console.log("group: ", resp.data)
@@ -58,11 +73,9 @@ export default function GroupDetails() {
 
 
   useEffect(() => {
-    if (!joinLeaveState.loading) {
-      userMemberGroupService.checkJoinedGroup(name).then(res => { setCheckJoinedGroup(res.data.data) })
-        .catch(err => console.log("err when fetch checkjoingroup: ", err))
-    }
-  }, [name && joinLeaveState])
+    userMemberGroupService.checkJoinedGroup(name).then(res => { setCheckJoinedGroup(res.data.data) })
+    .catch(err => console.log("err when fetch checkjoingroup: ", err))
+  }, [name,joinLeaveState])
 
 
 
@@ -116,7 +129,8 @@ export default function GroupDetails() {
           <div className="d-flex justify-content-between">
             <h3>{group?.name}</h3>
             <div className="d-flex">
-              <InviteUser groupId={name} />
+              <UploadThumbnail />
+              <InviteUser />
 
               <div className={`d-flex align-items-center btn btn-${checkJoinedGroup ? "danger" : "secondary"} `} onClick={() => {
                 handleJoinLeave()

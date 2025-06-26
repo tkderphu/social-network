@@ -1,6 +1,6 @@
 package viosmash.service.group;
 
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.scheduling.annotation.Async;
 import viosmash.controller.group.vo.GroupCreateReqVO;
 import viosmash.controller.group.vo.GroupRespVO;
 import viosmash.controller.group.vo.GroupUpdateSettingReqVO;
@@ -27,7 +27,8 @@ public interface GroupService {
 
     void updateNotification(Long groupId, Boolean notification);
 
-    void updateGroupCoverPhoto(Long groupId, String description, MultipartFile file);
+    @Async
+    void updateGroupCoverPhoto(Long groupId, String url);
 
     PageResult<GroupRespVO> search(String keyword, int page, int limit);
 

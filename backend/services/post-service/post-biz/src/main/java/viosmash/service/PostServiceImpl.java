@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import viosmash.collection.CollUtils;
 import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
@@ -24,6 +25,7 @@ import viosmash.friendship.api.FriendshipApi;
 import viosmash.group.api.GroupApi;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.api.group.GroupDTO;
+import viosmash.post.enums.PostType;
 import viosmash.profile.api.UserApi;
 import viosmash.string.StringUtils;
 
@@ -56,10 +58,12 @@ public class PostServiceImpl implements PostService{
 
         if(post.getGroupId() != null) {
             GroupDTO group = groupApi.getGroup(post.getGroupId());
-            if(group.getEnableAutoReviewPost()) {
-                post.setVisible(true);
+            if(post.getPostType() == PostType.COVER_PHOTO_UPDATE && !CollectionUtils.isEmpty(post.getMediaUrls())) {
+                groupApi.updateCoverPhoto(post.getGroupId(), post.getMediaUrls().get(0));
             } else {
-                post.setVisible(false);
+                if(!group.getEnableAutoReviewPost()) {
+                    post.setVisible(false);
+                }
             }
         }
 
@@ -96,11 +100,7 @@ public class PostServiceImpl implements PostService{
 
         return CollUtils.convertList(page.getContent(), post -> {
             if(post.getVisible() == null || !post.getVisible()) return null;
-            return BeanUtil.copy(post, PostRespVO.class)
-                    .setUser(process(post.getUserId(), userApi::getUserById))
-                    .setGroup(process(post.getGroupId(), groupApi::getGroup))
-//                    .setSharePost(getPostById(post.getSharePostId()))
-                    .setVotes(0).setShares(0).setComments(0);
+            return convertToResp(post);
         });
     }
 
@@ -164,11 +164,26 @@ public class PostServiceImpl implements PostService{
 
         return CollUtils.convertList(page.getContent(),post -> {
             if(post.getVisible() == null || !post.getVisible()) return null;
-            return BeanUtil.copy(post, PostRespVO.class)
-                    .setUser(process(post.getUserId(), userApi::getUserById))
-                    .setGroup(process(post.getGroupId(), groupApi::getGroup))
-//                    .setSharePost(getPostById(post.getSharePostId()))
-                    .setVotes(0).setShares(0).setComments(0);
+            return convertToResp(post);
         });
+    }
+
+    private PostRespVO convertToResp(Post post) {
+        return BeanUtil.copy(post, PostRespVO.class)
+                .setUser(process(post.getUserId(), userApi::getUserById))
+                .setGroup(process(post.getGroupId(), groupApi::getGroup))
+//                    .setSharePost(getPostById(post.getSharePostId()))
+                .setVotes(0).setShares(0).setComments(0);
+    }
+
+    @Override
+    public List<PostRespVO> getListPost(Long typeId, Boolean type, PostType postType) {
+        List<Post> posts;
+        if(type) {
+            posts = this.postRepository.findAllByUserIdAndPostType(typeId, postType);
+        } else {
+            posts = this.postRepository.findAllByGroupIdAndPostType(typeId, postType);
+        }
+        return CollUtils.convertList(posts, this::convertToResp);
     }
 }
