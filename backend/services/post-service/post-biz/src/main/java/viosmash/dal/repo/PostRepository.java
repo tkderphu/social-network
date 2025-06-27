@@ -1,6 +1,7 @@
 package viosmash.dal.repo;
 
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -29,4 +30,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("UPDATE Post p SET p.votes = :votes WHERE p.id = :postId")
     @Modifying
     void updateVoteByPostId(@Param("postId") Long postId, @Param("votes") int votes);
+
+    Page<Post> findAllByUserIdAndGroupId(Long userId, Long groupId, PageRequest createdDate);
 }

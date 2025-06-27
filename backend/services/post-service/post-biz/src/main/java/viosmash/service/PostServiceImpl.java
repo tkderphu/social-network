@@ -96,11 +96,7 @@ public class PostServiceImpl implements PostService{
 
         return CollUtils.convertList(page.getContent(), post -> {
             if(post.getVisible() == null || !post.getVisible()) return null;
-            return BeanUtil.copy(post, PostRespVO.class)
-                    .setUser(process(post.getUserId(), userApi::getUserById))
-                    .setGroup(process(post.getGroupId(), groupApi::getGroup))
-//                    .setSharePost(getPostById(post.getSharePostId()))
-                    .setVotes(0).setShares(0).setComments(0);
+            return mapToResp(post);
         });
     }
 
@@ -109,11 +105,7 @@ public class PostServiceImpl implements PostService{
     public PostRespVO getPostById(Long postId) {
         Post post = this.postRepository.findById(postId)
                 .orElseThrow(() -> exception(404, "Post with id " + postId + " not found"));
-        PostRespVO postRespVO = BeanUtil.copy(post, PostRespVO.class)
-                .setUser(process(post.getUserId(), userApi::getUserById))
-//                .setGroup(process(post.getGroupId(), groupApi::getGroup))
-//                .setSharePost(getPostById(post.getSharePostId()))
-                .setVotes(0).setShares(0).setComments(0);
+        PostRespVO postRespVO = mapToResp(post);
         log.info("data post detail: {}", postRespVO);
         return postRespVO;
     }
@@ -145,11 +137,16 @@ public class PostServiceImpl implements PostService{
         Page<Post> postPage = postRepository.findAll(userId, recommends, groups, pageable);
 
         return CollUtils.convertList(postPage.getContent(), post -> {
-            PostRespVO postResp = BeanUtil.copy(post, PostRespVO.class)
-                    .setUser(Exceptional.process(post.getUserId(), userApi::getUserById))
-                    .setGroup(Exceptional.process(post.getGroupId(), groupApi::getGroup));
+            PostRespVO postResp = mapToResp(post);
             return postResp;
         });
+    }
+
+    private PostRespVO mapToResp(Post post) {
+        return BeanUtil.copy(post, PostRespVO.class)
+                .setUser(Exceptional.process(post.getUserId(), userApi::getUserById))
+                .setGroup(Exceptional.process(post.getGroupId(), groupApi::getGroup))
+                .setVotes(0).setShares(0).setComments(0);
     }
 
     @Override
@@ -164,11 +161,20 @@ public class PostServiceImpl implements PostService{
 
         return CollUtils.convertList(page.getContent(),post -> {
             if(post.getVisible() == null || !post.getVisible()) return null;
-            return BeanUtil.copy(post, PostRespVO.class)
-                    .setUser(process(post.getUserId(), userApi::getUserById))
-                    .setGroup(process(post.getGroupId(), groupApi::getGroup))
-//                    .setSharePost(getPostById(post.getSharePostId()))
-                    .setVotes(0).setShares(0).setComments(0);
+            return mapToResp(post);
+        });
+    }
+
+    @Override
+    public List<PostRespVO> getListPostByUserIdAndGroupId(Long userId, Long groupId, int page, int limit) {
+        Page<Post> pagePost = postRepository.findAllByUserIdAndGroupId(
+                userId,
+                groupId,
+                PageRequest.of(page - 1, limit).withSort(Sort.by("createdDate").descending())
+        );
+
+        return CollUtils.convertList(pagePost.getContent(), post -> {
+            return mapToResp(post);
         });
     }
 }

@@ -9,7 +9,7 @@ import groupService from "../../services/group/groupService";
 import userMemberGroupService from "../../services/group/userMemberGroupService";
 import profileService from "../../services/profile/profileService";
 import { convertToHeader } from "../../utils/utils";
-import { GroupContext } from "./GroupDetails";
+import { useGroup } from "./GroupProvider";
 
 export default function GroupMember() {
     const [pageResult, setPageResult] = useState<PageResult<{
@@ -23,19 +23,19 @@ export default function GroupMember() {
         data: [],
         totalPage: 0
     })
-    const group: GroupResp = useContext(GroupContext)
+    const {group}: any  = useGroup()
     const [memberRoles, setMemberRoles] = useState<any>({})
-    const { name } = useParams()
+    const { groupId } = useParams()
     useEffect(() => {
         console.log("start search members......................")
-        userMemberGroupService.getListMemberByGroup(name, pageResult.page, pageResult.limit).then(resp => {
+        userMemberGroupService.getListMemberByGroup(groupId, pageResult.page, pageResult.limit).then(resp => {
             const pageResultResp: PageResult<any> = resp.data.data;
             setPageResult((prev) => ({
                 ...pageResultResp,
                 data: [...prev.data, ...pageResultResp.data]
             }))
         }).catch(err => {
-            console.log("get members from group: " + name + " orrcured error: ", err)
+            console.log("get members from group: " + groupId + " orrcured error: ", err)
         })
     }, [pageResult.page])
     return (
@@ -61,7 +61,7 @@ export default function GroupMember() {
                                 />
                             </div>
                             <div className="text-center mt-1">
-                                <Link to={`profile/${1}`} style={{ textDecoration: "none" }} >{convertToHeader(member.user.firstName + " " + member.user.lastName)}</Link>
+                                <Link to={`/groups/${group.id}/profile/${member.user.id}`} style={{ textDecoration: "none" }} >{convertToHeader(member.user.firstName + " " + member.user.lastName)}</Link>
                             </div>
                             {group.owner?.id === TokenUtils.authLogin.userId? (
                                 <select className="form-select mt-3" value={memberRoles[member.id] || member.groupRole}  onChange={(e) => {

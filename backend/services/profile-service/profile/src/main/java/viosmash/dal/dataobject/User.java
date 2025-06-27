@@ -43,11 +43,21 @@ public class User {
 
     private Boolean isOnline;
     private String avatar;
+    private String coverPhoto;
 
+    @Transient
     public String getAvatar() {
         if(StringUtils.isEmpty(avatar)) {
             return "https://icons.veryicon.com/png/o/miscellaneous/commonly-used-icon-1/personal-25.png";
         }
         return avatar;
+    }
+
+    @Transient
+    public String getCoverPhoto() {
+        if(StringUtils.isEmpty(coverPhoto)) {
+            return "https://tokystorage.s3.amazonaws.com/images/default-cover.png";
+        }
+        return coverPhoto;
     }
 }

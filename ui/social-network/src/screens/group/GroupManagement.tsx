@@ -3,6 +3,7 @@ import { Link, Outlet } from "react-router"
 import { GroupResp } from "../../model/groupModel"
 import groupService from "../../services/group/groupService"
 import { GroupContext } from "./GroupDetails"
+import { useGroup } from "./GroupProvider"
 
 const GROUP_MANAGEMENT = [
 
@@ -185,7 +186,7 @@ export function PendingPost() {
 
 
 export function GroupSetting() {
-    const group: GroupResp = useContext(GroupContext)
+    const {group}: any  = useGroup()
 
     const [req, setReq] = useState<{
         enableAutoAcceptMember?: boolean,

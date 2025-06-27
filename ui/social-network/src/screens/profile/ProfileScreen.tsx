@@ -10,6 +10,7 @@ import { Link, Outlet, useParams } from "react-router"
 import ChatButton from '../chat/ChatButton'
 import FriendActionButton from '../friend/FriendActionButton'
 import FullScreenLoader from '../../components/fullSpinner/FullScreenLoader'
+import ProfileHeader from './ProfileHeader'
 
 const nav = [
     "Posts",
@@ -19,9 +20,9 @@ const nav = [
 ]
 
 function ProfileScreen(props: { userId?: string }) {
-    let { id } = useParams()
+    let { userId } = useParams()
     if (props.userId) {
-        id = props.userId
+        userId = props.userId
     }
     const fetchProfile: {
         userProfile: UserProfileResp,
@@ -40,7 +41,7 @@ function ProfileScreen(props: { userId?: string }) {
 
     useEffect(() => {
         //@ts-ignore
-        dispatch(fetchProfileAction(id))
+        dispatch(fetchProfileAction(userId))
       
     }, [])
 
@@ -60,32 +61,7 @@ function ProfileScreen(props: { userId?: string }) {
                         /></a>
                     </div>
                 </div> */}
-                <div className="d-flex justify-content-between align-items-center mt-3 flex-wrap">
-                    <div className="d-flex align-items-center ">
-                        <img src={fetchProfile.userProfile?.avatar}
-                            alt="Profile Picture" className="img-fluid img-thumbnail rounded-circle" width={"130px"} height={"130px"} />
-                        <div className='mx-3'>
-                            <h3>{fetchProfile.userProfile?.firstName + " " + fetchProfile.userProfile?.lastName}</h3>
-                            <div>53 friends</div>
-                        </div>
-                    </div>
-                    <div>
-                        {id == TokenUtils.authLogin.userId ? (
-                            <>
-                                <button className="btn btn-primary ">Add to story</button>
-                                <button className="btn btn-secondary m-3" data-toggle="modal" data-target=".edit-profile">Edit profile</button>
-                                <button className="btn btn-primary" data-toggle="modal" data-target=".settings-privacy">Settings</button>
-                            </>
-                        ) : (
-                            <>
-                                <FriendActionButton/>
-                                <ChatButton userId={id} />
-
-                            </>
-                        )}
-
-                    </div>
-                </div>
+                <ProfileHeader userProfile={fetchProfile.userProfile}/>
                 <ul className="nav nav-tabs mt-3">
                     {nav.map(nv => {
                         return (

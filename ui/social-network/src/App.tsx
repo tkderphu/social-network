@@ -54,6 +54,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import MyListGroup from './screens/group/MyListGroup'
 import GroupManagement, { GroupSetting, PendingPost, PendingUser } from './screens/group/GroupManagement'
+import GroupUserProfile from './screens/group/GroupUserProfile'
+import GroupProvider from './screens/group/GroupProvider'
 export interface HandleChat {
   handleClickChat: any,
   handleCloseChat: any
@@ -113,7 +115,7 @@ function App() {
 
                   </Route>
 
-                  <Route path='profile/:id' element={<ProfileScreen />} >
+                  <Route path='profile/:userId' element={<ProfileScreen />} >
                     <Route element={<ProfilePostComponent />} index />
                     <Route element={<ProfilePostComponent />} path='posts' />
                     <Route element={<ProfilePhotosComponent />} path='photos' />
@@ -134,26 +136,36 @@ function App() {
                     {/* <Route elemen /> */}
                   </Route>
 
-                  <Route path='groups' element={<Group />}>
-                    {/* <Route path='joined' element={<GroupPage/>} /> */}
-                    <Route path='feed' element={<NewFeed />} />
-                    <Route path=':name' element={<GroupDetails />} >
-                      <Route path='about' element={<GroupAbout />} />
-                      <Route path='posts' element={<GroupPost />} />
-                      <Route index element={<GroupPost />} />
-                      <Route path='members' element={<GroupMember />} />
-                      <Route path='management' element={<GroupManagement/>}>
-                        <Route path='pending/post' element={<PendingPost/>} />
-                        <Route path='pending/user' element={<PendingUser/>} />
-                        <Route index element={<PendingUser/>} />
-                        <Route path='setting' element={<GroupSetting/>}/>
-                      </Route>
-                    </Route>
-                    <Route path='my' element={<MyListGroup/>}/>
-                  </Route>
+
                 </Route>
 
               </Routes>
+              {/**group route */}
+              <GroupProvider>
+                <Routes>
+                  <Route path='groups' element={<Group />}>
+                    {/* <Route path='joined' element={<GroupPage/>} /> */}
+                    <Route path='feed' element={<NewFeed />} />
+                    <Route path=':groupId' element={<GroupDetails />} >
+                      <Route path='about' element={<GroupAbout />} />
+                      <Route path='posts' element={<GroupPost />} />
+                      <Route index element={<GroupPost />} />
+                      <Route path='members' element={<GroupMember />} >
+                      </Route>
+
+                      <Route path='management' element={<GroupManagement />}>
+                        <Route path='pending/post' element={<PendingPost />} />
+                        <Route path='pending/user' element={<PendingUser />} />
+                        <Route index element={<PendingUser />} />
+                        <Route path='setting' element={<GroupSetting />} />
+                      </Route>
+                    </Route>
+                    <Route path=':groupId/profile/:userId' element={<GroupUserProfile />} />
+
+                    <Route path='my' element={<MyListGroup />} />
+                  </Route>
+                </Routes>
+              </GroupProvider>
               {state?.backgroundLocation && (
                 <Routes>
                   <Route path="/posts/:id" element={<PostDetailDialog />} />

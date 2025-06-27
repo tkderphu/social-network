@@ -22,6 +22,20 @@ public class PostController {
         return CommonResult.success(true);
     }
 
+    @GetMapping("/user/{userId}/group/{groupId}")
+    public CommonResult<List<PostRespVO>> getListPostByUserAndGroup(
+            @PathVariable("userId") Long userId,
+            @PathVariable("groupId") Long groupId,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "limit", defaultValue = "100") int limit
+    ) {
+        return CommonResult.success(postService.getListPostByUserIdAndGroupId(
+                userId, groupId, page, limit
+        ));
+    }
+
+
+
     @GetMapping("/{type}/{id}")
     public CommonResult<List<PostRespVO>> getListPostByUser(@PathVariable("id") Long id,
                                                             @PathVariable("type") String type,

@@ -4,14 +4,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import viosmash.controller.member.vo.UserMemberGroupResp;
 import viosmash.controller.member.vo.UserMemberGroupRoleUpdateReq;
-import viosmash.group.enums.GroupRole;
 import viosmash.pojo.CommonResult;
 import viosmash.pojo.PageResult;
 import viosmash.service.member.UserMemberGroupService;
 
 import java.util.Collection;
 
-import static viosmash.collection.CollUtils.convertList;
 import static viosmash.core.utils.SecurityUtils.getLoginUserMemberId;
 import static viosmash.pojo.CommonResult.success;
 

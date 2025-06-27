@@ -21,7 +21,7 @@ const posts = [
     },
 ];
 export default function GroupPost() {
-    const { name } = useParams()
+    const { groupId } = useParams()
     const [openModal, setOpenModal] = useState(false)
     const [postFilter, setPostFilter] = useState<string>("hot")
     const [fetchPosts, setFetchPosts] = useState<{
@@ -38,7 +38,7 @@ export default function GroupPost() {
     const [req, setReq] = useState<PostCreateReq>({
         postPrivacy: "PUBLIC",
         content: "",
-        groupId: name,
+        groupId: groupId,
         mediaUrls: []
     })
     const handleCreatePost = () => {
@@ -58,7 +58,7 @@ export default function GroupPost() {
     useEffect(() => {
         if(postFilter == "hot") {
             console.log("fetch hot posts")
-            postService.getListPostByGroup(name, fetchPosts.page, fetchPosts.limit, 0).then(resp => {
+            postService.getListPostByGroup(groupId, fetchPosts.page, fetchPosts.limit, 0).then(resp => {
                 console.log("data fuck: ", resp)
                 setFetchPosts((prev) => ({
                     ...prev,
@@ -70,19 +70,19 @@ export default function GroupPost() {
                 console.log("err fetch group posts: ", err)
             })
         } else {
-            postService.getListPostByGroup(name, fetchPosts.page, fetchPosts.limit, 1).then(resp => {
+            postService.getListPostByGroup(groupId, fetchPosts.page, fetchPosts.limit, 1).then(resp => {
                 console.log("data fuck: ", resp)
                 setFetchPosts((prev) => ({
                     ...prev,
                     loading: false,
-                    posts: [...resp.data.data]
+                    posts: [...resp.data?.data]
                 }))
             }).catch(err => {
             
                 console.log("err fetch group posts: ", err)
             })
         }
-    }, [postFilter && name])
+    }, [postFilter && groupId])
 
     return (
         <div className="row mt-3 ">
@@ -131,7 +131,7 @@ export default function GroupPost() {
                 }} />
             </ModalCustome>
             {fetchPosts.posts.map(post => {
-                return <PostCard post={post} />
+                return <PostCard ref={`/groups/${groupId}/profile/${post.user.id}`}  post={post} />
             })}
             <Spinner loading={fetchPosts.loading} />
         </div>

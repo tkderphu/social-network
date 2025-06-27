@@ -6,6 +6,7 @@ import { GroupResp } from "../../model/groupModel";
 import groupService from "../../services/group/groupService";
 import userMemberGroupService from "../../services/group/userMemberGroupService";
 import { convertToHeader } from "../../utils/utils";
+import { useGroup } from "./GroupProvider";
 import InviteUser from "./InviteUser";
 
 
@@ -37,11 +38,10 @@ const NAV = [
   }
 ]
 
-export const GroupContext = createContext(undefined)
 
 export default function GroupDetails() {
-  const { name } = useParams()
-  const [group, setGroup] = useState<GroupResp>()
+  const { groupId } = useParams()
+  const { group, setGroup } = useGroup()
   const [checkJoinedGroup, setCheckJoinedGroup] = useState(false)
   const [joinLeaveState, setJoinLeaveState] = useState({
     loading: false,
@@ -49,95 +49,94 @@ export default function GroupDetails() {
   })
 
   useEffect(() => {
-    groupService.getDetailGroup(name).then(resp => {
+    groupService.getDetailGroup(groupId).then(resp => {
       console.log("group: ", resp.data)
       setGroup(resp.data.data)
     })
 
-  }, [name])
+  }, [groupId])
 
 
   useEffect(() => {
     if (!joinLeaveState.loading) {
-      userMemberGroupService.checkJoinedGroup(name).then(res => { setCheckJoinedGroup(res.data.data) })
+      userMemberGroupService.checkJoinedGroup(groupId).then(res => { setCheckJoinedGroup(res.data.data) })
         .catch(err => console.log("err when fetch checkjoingroup: ", err))
     }
-  }, [name && joinLeaveState])
+  }, [groupId && joinLeaveState])
 
 
 
   const [useNav, setUseNav] = useState<any>("posts");
   const handleJoinLeave = () => {
-    setJoinLeaveState((prev) => ({...prev, loading: true}))
+    setJoinLeaveState((prev) => ({ ...prev, loading: true }))
     if (checkJoinedGroup) {
       //leave
-      userMemberGroupService.leaveGroup(name).then((resp) => {
+      userMemberGroupService.leaveGroup(groupId).then((resp) => {
         console.log('data after leave: ', resp.data)
       })
-      .catch(err => {console.log("leave error: ", err)})
-      .finally(() => {
-        setJoinLeaveState((prev) => ({...prev, loading: false}))
-      })
+        .catch(err => { console.log("leave error: ", err) })
+        .finally(() => {
+          setJoinLeaveState((prev) => ({ ...prev, loading: false }))
+        })
     } else {
       //join
       //leave
-      userMemberGroupService.requestJoinGroup(name).then((res) => {
+      userMemberGroupService.requestJoinGroup(groupId).then((res) => {
         console.log('data after join: ', res.data)
       })
-      .catch(err => {console.log("join error: ", err)})
-      .finally(() => {
-        setJoinLeaveState((prev) => ({...prev, loading: false}))
-      })
+        .catch(err => { console.log("join error: ", err) })
+        .finally(() => {
+          setJoinLeaveState((prev) => ({ ...prev, loading: false }))
+        })
     }
   }
 
   return (
-    <GroupContext.Provider value={group}>
-      <div className="min-vh-100">
-        {/* Cover Photo */}
-        <div className="">
-          <img
-            src={group?.coverPhoto}
-            alt="Cover"
-            className="w-100"
-            style={{ height: "300px", objectFit: "cover" }}
-          />
-          {/* <div className="d-flex justify-content-between mt-2"> */}
-          <div className="bottom-0 start-0  bg-primary px-3 py-1">
-            Group by <strong>{group?.owner?.firstName + " " + group?.owner?.lastName}</strong>
-          </div>
-          {/* <button className="btn btn-secondary me-2">Joined</button> */}
-          {/* </div> */}
-
+    <div className="min-vh-100">
+      {/* Cover Photo */}
+      <div className="">
+        <img
+          src={group?.coverPhoto}
+          alt="Cover"
+          className="w-100"
+          style={{ height: "300px", objectFit: "cover" }}
+        />
+        {/* <div className="d-flex justify-content-between mt-2"> */}
+        <div className="bottom-0 start-0  bg-primary px-3 py-1">
+          Group by <strong>{group?.owner?.firstName + " " + group?.owner?.lastName}</strong>
         </div>
+        {/* <button className="btn btn-secondary me-2">Joined</button> */}
+        {/* </div> */}
 
-        {/* Group Info */}
-        <div className="container mt-3">
-          <div className="d-flex justify-content-between">
-            <h3>{group?.name}</h3>
-            <div className="d-flex">
-              <InviteUser groupId={name} />
+      </div>
 
-              <div className={`d-flex align-items-center btn btn-${checkJoinedGroup ? "danger" : "secondary"} `} onClick={() => {
-                handleJoinLeave()
-              }}><Spinner loading={joinLeaveState.loading}/><span style={{fontSize: "18px", marginLeft: `${joinLeaveState.loading ? "5px" : "0"}`}}>{checkJoinedGroup ? "Left" : "Join"}</span></div>
-            </div>
+      {/* Group Info */}
+      <div className="container mt-3">
+        <div className="d-flex justify-content-between">
+          <h3>{group?.name}</h3>
+          <div className="d-flex">
+            <InviteUser groupId={name} />
+
+            <div className={`d-flex align-items-center btn btn-${checkJoinedGroup ? "danger" : "secondary"} `} onClick={() => {
+              handleJoinLeave()
+            }}><Spinner loading={joinLeaveState.loading} /><span style={{ fontSize: "18px", marginLeft: `${joinLeaveState.loading ? "5px" : "0"}` }}>{checkJoinedGroup ? "Left" : "Join"}</span></div>
           </div>
-          <p className="text-muted">{convertToHeader(group?.groupType || "")} group · {group?.numberOfMembers} members</p>
+        </div>
+        <p className="text-muted">{convertToHeader(group?.groupType || "")} group · {group?.numberOfMembers} members</p>
 
-          {/* Avatars */}
-          <div className="d-flex mb-3">
-            {[...Array(10)].map((_, i) => (
-              <img
-                key={i}
-                src={`https://i.pravatar.cc/40?img=${i + 1}`}
-                alt="avatar"
-                className="rounded-circle me-1"
-                width={32}
-                height={32}
-              />
-            ))}
-            {/* <img
+        {/* Avatars */}
+        <div className="d-flex mb-3">
+          {[...Array(10)].map((_, i) => (
+            <img
+              key={i}
+              src={`https://i.pravatar.cc/40?img=${i + 1}`}
+              alt="avatar"
+              className="rounded-circle me-1"
+              width={32}
+              height={32}
+            />
+          ))}
+          {/* <img
               key={i}
               src={`https://i.pravatar.cc/40?img=${i + 1}`}
               alt="avatar"
@@ -145,26 +144,26 @@ export default function GroupDetails() {
               width={32}
               height={32}
             /> */}
-            {/* <i className="bi bi-plus rounded-circle me-1" style={{height: "32px", width: "32px", fontSize: "18px"}} ></i> */}
-          </div>
-          {/* Navigation Tabs */}
-          <ul className="nav nav-tabs">
-            {NAV.map(nav => {
-              return (
-                <li className="nav-item" onClick={() => {
-                  setUseNav(nav.path)
-                }}>
-                  <Link className={"nav-link " + (nav.path === useNav ? "active" : "")} to={nav.path}>
-                    {nav.name}
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
-          <Outlet />
+          {/* <i className="bi bi-plus rounded-circle me-1" style={{height: "32px", width: "32px", fontSize: "18px"}} ></i> */}
+        </div>
+        {/* Navigation Tabs */}
+        <ul className="nav nav-tabs">
+          {NAV.map(nav => {
+            return (
+              <li className="nav-item" onClick={() => {
+                setUseNav(nav.path)
+              }}>
+                <Link className={"nav-link " + (nav.path === useNav ? "active" : "")} to={nav.path}>
+                  {nav.name}
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
+        <Outlet />
 
-          {/* Post Input */}
-          {/* <div className="bg-secondary rounded p-3 mt-3">
+        {/* Post Input */}
+        {/* <div className="bg-secondary rounded p-3 mt-3">
           <input
             className="form-control mb-2"
             placeholder="Write something..."
@@ -174,8 +173,7 @@ export default function GroupDetails() {
           </div>
         </div> */}
 
-        </div>
       </div>
-    </GroupContext.Provider>
+    </div>
   );
 }

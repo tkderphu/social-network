@@ -13,7 +13,8 @@ import { updateVote } from '../../redux/actions/interaction/voteAction';
 import voteService from '../../services/interaction/voteService';
 import FullScreenLoader from '../../components/fullSpinner/FullScreenLoader';
 interface PostCardProps {
-    post: PostResp
+    post: PostResp,
+    ref?: ""
 }
 export const PostCard = (props: PostCardProps) => {
     const navigate = useNavigate()
@@ -89,7 +90,7 @@ export const PostCard = (props: PostCardProps) => {
                                 style={{ width: '40px', height: '40px' }}
                             />
                             <div>
-                                <Link to={"/profile/" + props.post?.user?.id}><h6 className="mb-0">{props.post?.user?.firstName + " " + props.post?.user?.lastName}</h6></Link>
+                                <Link to={props.ref ? props.ref : "/profile/" + props.post?.user?.id}><h6 className="mb-0">{props.post?.user?.firstName + " " + props.post?.user?.lastName}</h6></Link>
                                 <small className="text-muted">{props.post.time} ago</small>
                             </div>
 

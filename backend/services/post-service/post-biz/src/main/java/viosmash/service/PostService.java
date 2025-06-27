@@ -28,4 +28,6 @@ public interface PostService {
      * @return
      */
     List<PostRespVO> getListPostByGroupId(Long id, int page, int limit, int type);
+
+    List<PostRespVO> getListPostByUserIdAndGroupId(Long userId, Long groupId, int page, int limit);
 }
