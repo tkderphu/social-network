@@ -26,11 +26,12 @@ export default function NotificationGroup(props: {
             <div className="flex-grow-1">
                 {props.obj.notificationType == "JOINED_GROUP" ?
                     (
+
                         <div className="">
-                            {/* <p className={`p-0 m-0 ${!props.obj.seen ? '' : "text-muted"}`} style={{ textDecoration: "none", color: "black" }}>
-                                <strong>{props.obj.actor.firstName + " " + props.obj.actor.lastName}</strong>
-                                đã bình luận về bài viết <strong>{props.obj.target.content}</strong> của bạn.
-                            </p> */}
+                            <p className={`p-0 m-0 ${!props.obj.seen ? '' : "text-muted"}`} style={{ textDecoration: "none", color: "black" }}>
+                                <strong>{props.obj.actor.firstName + " " + props.obj.actor.lastName} </strong>
+                                 accepted you to their group <strong>{props.obj.target?.name}</strong>.
+                            </p>
                         </div>
                     )
                     :

@@ -3,10 +3,12 @@ package viosmash.service.member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import viosmash.aop.GroupPermission;
 import viosmash.collection.CollUtils;
+import viosmash.controller.member.vo.MemberWaitingReviewRespVO;
 import viosmash.controller.member.vo.UserMemberGroupResp;
 import viosmash.core.utils.SecurityUtils;
 import viosmash.dal.dataobject.Group;
@@ -16,6 +18,7 @@ import viosmash.dal.repo.GroupRepository;
 import viosmash.dal.repo.MemberWaitingReviewRepository;
 import viosmash.dal.repo.UserMemberGroupRepository;
 import viosmash.group.enums.GroupRole;
+import viosmash.group.enums.UserGroupStatus;
 import viosmash.notification.api.NotificationApi;
 import viosmash.notification.api.NotificationDto;
 import viosmash.notification.enums.NotificationType;
@@ -119,6 +122,13 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
         userMemberGroupRepository.save(new UserMemberGroup()
                 .setGroupId(groupId).setMemberId(memberId).setGroupRole(GroupRole.MEMBER));
         memberWaitingReviewRepository.deleteAllByUserIdAndGroupId(memberId, groupId);
+        notificationApi.sendAppNotification(new NotificationDto()
+                .setUserId(memberId)
+                .setActorId(SecurityUtils.getLoginUserMemberId())
+                .setTargetId(groupId)
+                .setTargetType(TargetType.GROUP)
+                .setNotificationType(NotificationType.JOINED_GROUP)
+                .setCreatedAt(LocalDateTime.now()));
         return true;
     }
 
@@ -132,15 +142,24 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
 
     @GroupPermission
     @Override
-    public List<MemberWaitingReview> getListRequestAttendGroup(Long groupId) {
-        return this.memberWaitingReviewRepository.findAllByGroupId(groupId);
+    public List<MemberWaitingReviewRespVO> getListRequestAttendGroup(Long groupId, int page, int limit) {
+        Page<MemberWaitingReview> pageWaiting = this.memberWaitingReviewRepository.findAllByGroupId(
+                groupId,
+                PageRequest.of(page - 1, limit).withSort(Sort.by("requestedDate").descending())
+        );
+
+         return CollUtils.convertList(pageWaiting.getContent(), waiting -> {
+             MemberWaitingReviewRespVO resp = BeanUtil.copy(waiting, MemberWaitingReviewRespVO.class);
+             resp.setUser(userApi.getUserById(waiting.getUserId()));
+             return resp;
+         });
     }
 
     @Override
     public Boolean inviteUserToGroup(Long groupId, Collection<Long> userIds) {
         List<UserMemberGroup> memberGroups = CollUtils.convertList(userIds, userId -> {
-            Boolean check = checkUserJoinedGroup(userId, groupId);
-            if(check) {
+            UserGroupStatus status = checkUserJoinedGroup(userId, groupId, true);
+            if(status == UserGroupStatus.NONE) {
                 return null;
             }
             return new UserMemberGroup().setGroupId(groupId)
@@ -167,16 +186,24 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
     }
 
     @Override
-    public Boolean checkUserJoinedGroup(Long userId, Long groupId) {
-        return this.userMemberGroupRepository.findByGroupIdAndMemberId(groupId, userId) != null;
+    public UserGroupStatus checkUserJoinedGroup(Long userId, Long groupId, boolean forced) {
+        UserMemberGroup userMember = this.userMemberGroupRepository.findByGroupIdAndMemberId(groupId, userId);
+        if(userMember != null) return UserGroupStatus.JOINED;
+        if(forced) return UserGroupStatus.NONE;
+        MemberWaitingReview memberWaitingReview = this.memberWaitingReviewRepository.findByUserIdAndGroupId(userId, groupId);
+        if(memberWaitingReview != null) {
+            return UserGroupStatus.REQUESTED;
+        }
+        return UserGroupStatus.NONE;
     }
 
     @Override
-    @GroupPermission
+    @Transactional
     public Boolean cancelMemberJoinGroup(Long groupId, Long userId) {
         this.memberWaitingReviewRepository.deleteAllByUserIdAndGroupId(userId, groupId);
         return true;
     }
+
 
     @Override
     public Boolean requestJoinGroup(Long groupId, Long userId) {

@@ -1,8 +1,10 @@
 import { useContext, useEffect, useState } from "react"
-import { Link, Outlet } from "react-router"
+import { Link, Outlet, useParams } from "react-router"
+import { toast } from "react-toastify"
 import { GroupResp } from "../../model/groupModel"
+import { UserProfileResp } from "../../model/profileModel"
 import groupService from "../../services/group/groupService"
-import { GroupContext } from "./GroupDetails"
+import userMemberGroupService from "../../services/group/userMemberGroupService"
 import { useGroup } from "./GroupProvider"
 
 const GROUP_MANAGEMENT = [
@@ -22,160 +24,67 @@ const GROUP_MANAGEMENT = [
 ]
 
 export function PendingUser() {
+    const [userWaitings, setUserWaitings] = useState<{
+        user: UserProfileResp,
+        id: any,
+        timeAgo: any
+    }[]>([])
+
+    const { groupId } = useParams()
+
+    useEffect(() => {
+        userMemberGroupService.getListPendingUser(groupId, 1, 100).then(resp => {
+            setUserWaitings(resp.data.data)
+        }).catch(err => {
+            console.log("err: ", err)
+        })
+    }, [location.href])
+
+    const filterUserWaiting = (userId: any) => {
+        setUserWaitings(userWaitings.filter(waiting => {
+            return waiting.user.id != userId
+        }))
+    } 
+
+    const handleReject = (userId: any) => {
+        userMemberGroupService.rejectUser(groupId, userId).then(resp => {
+            filterUserWaiting(userId)
+        }).catch(err => {
+            alert("err delete")
+        })
+    }
+
+    const handleAccept = (userId: any) => {
+        userMemberGroupService.acceptUser(groupId, userId).then(resp => {
+            filterUserWaiting(userId)
+        }).catch(err => {
+            alert('err accept')
+        })
+    }
+
     return (
         <div className="d-flex flex-wrap mt-3">
+            {userWaitings?.map(userWaiting => {
+                return (
 
-            <div className="card mb-3 d-flex align-item-center" style={{ marginRight: "20px" }}>
-                <div>
-                    <img src="https://wibu.com.vn/wp-content/uploads/2024/05/songoku.jpg"
-                        className="rounded" alt="..."
-                        height={"150px"} width={"150px"}
-                    />
-                </div>
-                <div className="text-center mt-1">
-                    <Link to={`/friends/profile/${1}`} style={{ textDecoration: "none" }} >Phu Quang</Link>
-                </div>
-                <button className="mt-2 btn btn-primary">Add Friend</button>
-            </div>
-            <div className="card mb-3 d-flex align-item-center" style={{ marginRight: "20px" }}>
-                <div>
-                    <img src="https://wibu.com.vn/wp-content/uploads/2024/05/songoku.jpg"
-                        className="rounded" alt="..."
-                        height={"150px"} width={"150px"}
-                    />
-                </div>
-                <div className="text-center mt-1">
-                    <Link to={`/friends/profile/${1}`} style={{ textDecoration: "none" }} >Phu Quang</Link>
-                </div>
-                <button className="mt-2 btn btn-primary">Add Friend</button>
-            </div>
-            <div className="card mb-3 d-flex align-item-center" style={{ marginRight: "20px" }}>
-                <div>
-                    <img src="https://wibu.com.vn/wp-content/uploads/2024/05/songoku.jpg"
-                        className="rounded" alt="..."
-                        height={"150px"} width={"150px"}
-                    />
-                </div>
-                <div className="text-center mt-1">
-                    <Link to={`/friends/profile/${1}`} style={{ textDecoration: "none" }} >Phu Quang</Link>
-                </div>
-                <button className="mt-2 btn btn-primary">Add Friend</button>
-            </div>
-            <div className="card mb-3 d-flex align-item-center" style={{ marginRight: "20px" }}>
-                <div>
-                    <img src="https://wibu.com.vn/wp-content/uploads/2024/05/songoku.jpg"
-                        className="rounded" alt="..."
-                        height={"150px"} width={"150px"}
-                    />
-                </div>
-                <div className="text-center mt-1">
-                    <Link to={`/friends/profile/${1}`} style={{ textDecoration: "none" }} >Phu Quang</Link>
-                </div>
-                <button className="mt-2 btn btn-primary">Add Friend</button>
-            </div>
-            <div className="card mb-3 d-flex align-item-center" style={{ marginRight: "20px" }}>
-                <div>
-                    <img src="https://wibu.com.vn/wp-content/uploads/2024/05/songoku.jpg"
-                        className="rounded" alt="..."
-                        height={"150px"} width={"150px"}
-                    />
-                </div>
-                <div className="text-center mt-1">
-                    <Link to={`/friends/profile/${1}`} style={{ textDecoration: "none" }} >Phu Quang</Link>
-                </div>
-                <button className="mt-2 btn btn-primary">Add Friend</button>
-            </div>
-            <div className="card mb-3 d-flex align-item-center" style={{ marginRight: "20px" }}>
-                <div>
-                    <img src="https://wibu.com.vn/wp-content/uploads/2024/05/songoku.jpg"
-                        className="rounded" alt="..."
-                        height={"150px"} width={"150px"}
-                    />
-                </div>
-                <div className="text-center mt-1">
-                    <Link to={`/
-                                friends/profile/${1}`} style={{ textDecoration: "none" }} >Phu Quang</Link>
-                </div>
-                <button className="mt-2 btn btn-primary">Add Friend</button>
-            </div>
-            <div className="card mb-3 d-flex align-item-center" style={{ marginRight: "20px" }}>
-                <div>
-                    <img src="https://wibu.com.vn/wp-content/uploads/2024/05/songoku.jpg"
-                        className="rounded" alt="..."
-                        height={"150px"} width={"150px"}
-                    />
-                </div>
-                <div className="text-center mt-1">
-                    <Link to={`/
-                                friends/profile/${1}`} style={{ textDecoration: "none" }} >Phu Quang</Link>
-                </div>
-                <button className="mt-2 btn btn-primary">Add Friend</button>
-            </div>
-            <div className="card mb-3 d-flex align-item-center" style={{ marginRight: "20px" }}>
-                <div>
-                    <img src="https://wibu.com.vn/wp-content/uploads/2024/05/songoku.jpg"
-                        className="rounded" alt="..."
-                        height={"150px"} width={"150px"}
-                    />
-                </div>
-                <div className="text-center mt-1">
-                    <Link to={`/
-                                friends/profile/${1}`} style={{ textDecoration: "none" }} >Phu Quang</Link>
-                </div>
-                <button className="mt-2 btn btn-primary">Add Friend</button>
-            </div>
-            <div className="card mb-3 d-flex align-item-center" style={{ marginRight: "20px" }}>
-                <div>
-                    <img src="https://wibu.com.vn/wp-content/uploads/2024/05/songoku.jpg"
-                        className="rounded" alt="..."
-                        height={"150px"} width={"150px"}
-                    />
-                </div>
-                <div className="text-center mt-1">
-                    <Link to={`/
-                                friends/profile/${1}`} style={{ textDecoration: "none" }} >Phu Quang</Link>
-                </div>
-                <button className="mt-2 btn btn-primary">Add Friend</button>
-            </div>
-            <div className="card mb-3 d-flex align-item-center" style={{ marginRight: "20px" }}>
-                <div>
-                    <img src="https://wibu.com.vn/wp-content/uploads/2024/05/songoku.jpg"
-                        className="rounded" alt="..."
-                        height={"150px"} width={"150px"}
-                    />
-                </div>
-                <div className="text-center mt-1">
-                    <Link to={`/
-                                friends/profile/${1}`} style={{ textDecoration: "none" }} >Phu Quang</Link>
-                </div>
-                <button className="mt-2 btn btn-primary">Add Friend</button>
-            </div>
-            <div className="card mb-3 d-flex align-item-center" style={{ marginRight: "20px" }}>
-                <div>
-                    <img src="https://wibu.com.vn/wp-content/uploads/2024/05/songoku.jpg"
-                        className="rounded" alt="..."
-                        height={"150px"} width={"150px"}
-                    />
-                </div>
-                <div className="text-center mt-1">
-                    <Link to={`/
-                                friends/profile/${1}`} style={{ textDecoration: "none" }} >Phu Quang</Link>
-                </div>
-                <button className="mt-2 btn btn-primary">Add Friend</button>
-            </div>
-            <div className="card mb-3 d-flex align-item-center" style={{ marginRight: "20px" }}>
-                <div>
-                    <img src="https://wibu.com.vn/wp-content/uploads/2024/05/songoku.jpg"
-                        className="rounded" alt="..."
-                        height={"150px"} width={"150px"}
-                    />
-                </div>
-                <div className="text-center mt-1">
-                    <Link to={`/
-                                friends/profile/${1}`} style={{ textDecoration: "none" }} >Phu Quang</Link>
-                </div>
-                <button className="mt-2 btn btn-primary">Add Friend</button>
-            </div>
+                    <div className="card mb-3 d-flex align-item-center" style={{ marginRight: "20px" }}>
+                        <div  className="d-flex flex-column text-center">
+                            <img src={userWaiting.user.avatar}
+                                className="rounded" alt="..."
+                                height={"150px"} width={"150px"}
+                            />
+                            <span>Requested: {userWaiting.timeAgo} ago</span>
+                        </div>
+                        <div className="text-center mt-1">
+                            <Link to={`/friends/profile/${userWaiting.user.id}`} style={{ textDecoration: "none" }} >{userWaiting.user.firstName + " " + userWaiting.user.lastName}</Link>
+                        </div>
+                       <div className="d-flex mt-2 ">
+                         <button className="btn btn-primary rounded-0 w-100" onClick={() => handleAccept(userWaiting.user.id)}>Accept</button>
+                         <button className="btn btn-danger rounded-0 w-100" onClick={() => handleReject(userWaiting.user.id)}>Reject</button>
+                         </div>
+                    </div>
+                )
+            })}
         </div>
     )
 }
@@ -186,7 +95,7 @@ export function PendingPost() {
 
 
 export function GroupSetting() {
-    const {group}: any  = useGroup()
+    const { group }: any = useGroup()
 
     const [req, setReq] = useState<{
         enableAutoAcceptMember?: boolean,
@@ -218,7 +127,9 @@ export function GroupSetting() {
 
     const handleSubmit = () => {
         console.log("data req: ", req)
-        groupService.updateGroupSetting(group.id, req).then(() => {}).catch(err => {
+        groupService.updateGroupSetting(group.id, req).then(() => {
+            toast.info("Update setting succesfully")
+        }).catch(err => {
             console.log('err: update setting: ', err)
         })
     }

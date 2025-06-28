@@ -164,6 +164,7 @@ public class NotificationServiceImpl implements NotificationService{
                     saveAndSend(message);
                 }
             }
+
         }
     }
 
