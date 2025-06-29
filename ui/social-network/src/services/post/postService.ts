@@ -25,5 +25,8 @@ class PostService {
     getListPostByUserAndGroup(userId: any, groupId: any) {
         return api.get(`${path}/user/${userId}/group/${groupId}`)
     }
+    getListPostPendingInGroup(groupId: any, page: any, limit: any) {
+        return api.get(`${path}/waiting/group/${groupId}?page=${page}&limit=${limit}`)
+    } 
 }
 export default new PostService()

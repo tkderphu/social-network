@@ -5,16 +5,17 @@ import org.springframework.web.bind.annotation.*;
 import viosmash.pojo.api.post.PostDTO;
 import viosmash.post.enums.ApiConstant;
 
-import java.util.Collection;
-import java.util.List;
-
 @FeignClient(name = ApiConstant.NAME, path = ApiConstant.RPC_PREFIX)
 public interface PostApi {
 
     String PREFIX = ApiConstant.RPC_PREFIX;
 
-    @GetMapping("/{id}")
+    @GetMapping("/search/{id}")
     PostDTO getPostById(@PathVariable("id") Long id);
+
+
+    @PutMapping("/{id}/status")
+    void updateVisiblePost(@PathVariable("id") Long id, @RequestBody Boolean visible);
 
     @PutMapping("/{id}/votes")
     void updateVote(@PathVariable("id") Long id, @RequestBody Integer votes);

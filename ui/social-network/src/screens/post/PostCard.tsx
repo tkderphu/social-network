@@ -13,7 +13,7 @@ import { updateVote } from '../../redux/actions/interaction/voteAction';
 import voteService from '../../services/interaction/voteService';
 import FullScreenLoader from '../../components/fullSpinner/FullScreenLoader';
 interface PostCardProps {
-    post: PostResp,
+    post?: PostResp,
     ref?: ""
 }
 export const PostCard = (props: PostCardProps) => {
@@ -57,13 +57,13 @@ export const PostCard = (props: PostCardProps) => {
     }
 
     const checkUser = () => {
-        voteService.checkVote(props.post.id, "POST").then((res) => {
+        voteService.checkVote(props?.post?.id, "POST").then((res) => {
             setPostStats((prev) => ({ ...prev, "checkUser": res.data.data }))
         })
     }
 
     const fetchScores = () => {
-        voteService.count(props.post.id, "POST").then(resp => {
+        voteService.count(props?.post?.id, "POST").then(resp => {
             setPostStats((prev) => ({ ...prev, "scores": resp.data.data || 0 }))
         })
     }
@@ -91,7 +91,7 @@ export const PostCard = (props: PostCardProps) => {
                             />
                             <div>
                                 <Link to={props.ref ? props.ref : "/profile/" + props.post?.user?.id}><h6 className="mb-0">{props.post?.user?.firstName + " " + props.post?.user?.lastName}</h6></Link>
-                                <small className="text-muted">{props.post.time} ago</small>
+                                <small className="text-muted">{props.post?.time} ago</small>
                             </div>
 
                         </div>
@@ -152,7 +152,7 @@ export const PostCard = (props: PostCardProps) => {
                         <button className={`btn btn-sm ${postStats.checkUser == -1 ? "btn-danger" : "btn-outline-primary"}`} onClick={() => {
                             //@ts-ignore
                             dispatch(updateVote({
-                                objectId: props.post.id,
+                                objectId: props?.post?.id,
                                 objectType: "POST",
                                 voteType: "DOWN"
                             }))
@@ -161,7 +161,7 @@ export const PostCard = (props: PostCardProps) => {
                         <button className={`btn btn-sm ${postStats.checkUser == 1 ? "btn-danger" : "btn-outline-primary"}`} onClick={() => {
                             //@ts-ignore
                             dispatch(updateVote({
-                                objectId: props.post.id,
+                                objectId: props?.post?.id,
                                 objectType: "POST",
                                 voteType: "UP"
                             }))

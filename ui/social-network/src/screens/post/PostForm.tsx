@@ -71,6 +71,9 @@ export default function PostForm(props: { form?: PostFormProps }) {
             </label>
             <select name='postPrivacy' onChange={props.form?.onChange} className="form-select" value={props.form?.postPrivacy}>
               {POST_PRIVACY.map(privacy => {
+                if(props.form?.fromGroup && privacy.scope != "PUBLIC") {
+                  return null
+                }
                 return (
                   <option value={privacy.scope} selected={props.form?.postPrivacy ? (props.form.postPrivacy == privacy.scope) : privacy.checked} >{privacy.show}</option>
                 )

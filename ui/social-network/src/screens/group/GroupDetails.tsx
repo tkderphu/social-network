@@ -30,10 +30,7 @@ const NAV = [
     name: "Media",
     path: "media"
   },
-  {
-    name: "Setting",
-    path: "setting"
-  },
+
   {
     name: "Management",
     path: "management"

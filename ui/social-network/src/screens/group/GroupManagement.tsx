@@ -1,10 +1,15 @@
 import { useContext, useEffect, useState } from "react"
 import { Link, Outlet, useParams } from "react-router"
 import { toast } from "react-toastify"
+import { CommonResult, TokenUtils } from "../../common"
+import Spinner from "../../components/Spinner"
 import { GroupResp } from "../../model/groupModel"
+import { PostResp } from "../../model/postModel"
 import { UserProfileResp } from "../../model/profileModel"
 import groupService from "../../services/group/groupService"
 import userMemberGroupService from "../../services/group/userMemberGroupService"
+import postService from "../../services/post/postService"
+import { PostCard } from "../post/PostCard"
 import { useGroup } from "./GroupProvider"
 
 const GROUP_MANAGEMENT = [
@@ -44,7 +49,7 @@ export function PendingUser() {
         setUserWaitings(userWaitings.filter(waiting => {
             return waiting.user.id != userId
         }))
-    } 
+    }
 
     const handleReject = (userId: any) => {
         userMemberGroupService.rejectUser(groupId, userId).then(resp => {
@@ -68,7 +73,7 @@ export function PendingUser() {
                 return (
 
                     <div className="card mb-3 d-flex align-item-center" style={{ marginRight: "20px" }}>
-                        <div  className="d-flex flex-column text-center">
+                        <div className="d-flex flex-column text-center">
                             <img src={userWaiting.user.avatar}
                                 className="rounded" alt="..."
                                 height={"150px"} width={"150px"}
@@ -78,10 +83,10 @@ export function PendingUser() {
                         <div className="text-center mt-1">
                             <Link to={`/friends/profile/${userWaiting.user.id}`} style={{ textDecoration: "none" }} >{userWaiting.user.firstName + " " + userWaiting.user.lastName}</Link>
                         </div>
-                       <div className="d-flex mt-2 ">
-                         <button className="btn btn-primary rounded-0 w-100" onClick={() => handleAccept(userWaiting.user.id)}>Accept</button>
-                         <button className="btn btn-danger rounded-0 w-100" onClick={() => handleReject(userWaiting.user.id)}>Reject</button>
-                         </div>
+                        <div className="d-flex mt-2 ">
+                            <button className="btn btn-primary rounded-0 w-100" onClick={() => handleAccept(userWaiting.user.id)}>Accept</button>
+                            <button className="btn btn-danger rounded-0 w-100" onClick={() => handleReject(userWaiting.user.id)}>Reject</button>
+                        </div>
                     </div>
                 )
             })}
@@ -90,12 +95,88 @@ export function PendingUser() {
 }
 
 export function PendingPost() {
+    const { groupId } = useParams()
+
+    const [fetchPostState, setFetchPostState] = useState<{
+        posts: PostResp[],
+        loading: boolean,
+        message: string,
+        error: boolean,
+        page: number,
+        limit: number
+    }>({
+        error: false,
+        loading: true,
+        message: "",
+        posts: [],
+        page: 1,
+        limit: 100
+    })
+
+
+    useEffect(() => {
+        postService.getListPostPendingInGroup(groupId, fetchPostState.page, fetchPostState.limit)
+            .then(resp => {
+                console.log("data: ", resp)
+                const result: CommonResult<any> = resp.data
+                if (result.code == 200) {
+                    setFetchPostState((prev) => ({
+                        ...prev,
+                        loading: false,
+                        posts: result.data
+                    }))
+
+                } else {
+                    setFetchPostState((prev) => ({
+                        ...prev,
+                        loading: false,
+                        error: true,
+                        message: result.message
+                    }))
+                }
+            }).catch(err => {
+                setFetchPostState((prev) => ({
+                    ...prev,
+                    loading: false,
+                    error: true,
+                    message: "Please see console"
+                }))
+                console.log("err: ", err)
+            })
+    }, [])
+
+
+    if (fetchPostState?.error) {
+        toast.error(fetchPostState.message)
+        return
+    }
+
+    console.log("fuck: ", fetchPostState)
+
+    if (fetchPostState.loading) {
+        return <Spinner loading={fetchPostState.loading} />
+    }
+
+    return (
+        <>
+            {fetchPostState.posts.map(post => {
+                return <div className="card mb-4">
+                    <PostCard post={post} ref={`/groups/${groupId}/user/${post?.user?.id}`} />
+                    <div className="d-flex">
+                        <button className="btn rounded-0 btn-primary w-100">Accept</button>
+                        <button className="btn btn-danger rounded-0 w-100">Reject</button>
+                    </div>
+                </div>
+            })}
+        </>
+    )
 
 }
 
 
 export function GroupSetting() {
-    const { group }: any = useGroup()
+    const group: GroupResp = useGroup().group
+
 
     const [req, setReq] = useState<{
         enableAutoAcceptMember?: boolean,

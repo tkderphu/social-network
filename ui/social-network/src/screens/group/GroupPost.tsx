@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { toast } from "react-toastify";
 import { TokenUtils } from "../../common";
 import ModalCustome from "../../components/modal/ModalCustom";
 import Spinner from "../../components/Spinner";
+import { GroupResp } from "../../model/groupModel";
 import { PostResp } from "../../model/postModel";
 import postService, { PostCreateReq } from "../../services/post/postService";
 import { PostCard } from "../post/PostCard";
 import PostForm from "../post/PostForm";
+import { useGroup } from "./GroupProvider";
 
 const posts = [
     {
@@ -22,6 +25,7 @@ const posts = [
 ];
 export default function GroupPost() {
     const { groupId } = useParams()
+    const group: GroupResp = useGroup().group
     const [openModal, setOpenModal] = useState(false)
     const [postFilter, setPostFilter] = useState<string>("hot")
     const [fetchPosts, setFetchPosts] = useState<{
@@ -44,6 +48,12 @@ export default function GroupPost() {
     const handleCreatePost = () => {
         console.log("req: ", req)
         postService.createPost(req).then(resp => {
+            if(!group.enableAutoReviewPost) {
+                toast.info("Post is created successfully, your post will be displayed in group newfeed soon")
+            } else {
+                toast.info("Post is created successfully")
+            }
+            setOpenModal(false)
             setReq({
                 ...req,
                 content: "",
@@ -127,11 +137,11 @@ export default function GroupPost() {
                     postPrivacy: req.postPrivacy,
                     fromGroup: true,
                     mediaUrls: req.mediaUrls,
-
+                    
                 }} />
             </ModalCustome>
-            {fetchPosts.posts.map(post => {
-                return <PostCard ref={`/groups/${groupId}/profile/${post.user.id}`}  post={post} />
+            {fetchPosts.posts.length > 0 && fetchPosts.posts.map(post => {
+                return <PostCard ref={`/groups/${groupId}/profile/${post?.user?.id}`}  post={post} />
             })}
             <Spinner loading={fetchPosts.loading} />
         </div>

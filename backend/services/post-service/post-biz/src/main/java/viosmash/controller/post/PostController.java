@@ -1,21 +1,25 @@
 package viosmash.controller.post;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
 import viosmash.core.utils.SecurityUtils;
+import viosmash.group.api.GroupApi;
+import viosmash.group.enums.GroupRole;
 import viosmash.pojo.CommonResult;
 import viosmash.service.PostService;
 
 import java.util.List;
 
+@Slf4j
 @RequestMapping("/api/posts")
 @RestController
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-
+    private final GroupApi groupApi;
     @PostMapping
     public CommonResult<Boolean> createPost(@RequestBody PostCreateReqVO req) {
         postService.createPost(SecurityUtils.getLoginUserMemberId(), req);
@@ -35,6 +39,22 @@ public class PostController {
     }
 
 
+    /**
+     * Get list post is waiting in group has @groupId
+     * @return
+     */
+    @GetMapping("/waiting/group/{groupId}")
+    public CommonResult<List<PostRespVO>> getListPostWaitingInGroup(
+            @PathVariable("groupId") Long groupId,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "limit", defaultValue = "100") int limit
+    ) {
+        GroupRole roleUserInGroup = groupApi.getUserRole(groupId, SecurityUtils.getLoginUserMemberId());
+        if(roleUserInGroup == null || roleUserInGroup == GroupRole.MEMBER) {
+            return CommonResult.error("Access denied", 401);
+        }
+        return CommonResult.success(postService.getListPostPendingInGroup(groupId, page, limit));
+    }
 
     @GetMapping("/{type}/{id}")
     public CommonResult<List<PostRespVO>> getListPostByUser(@PathVariable("id") Long id,
@@ -47,6 +67,7 @@ public class PostController {
             return CommonResult.success(resp);
         } else {
             List<PostRespVO> resp= postService.getListPostByGroupId(id, page, limit, typeId);
+            log.info("posts from group: {}", resp);
             return CommonResult.success(resp);
         }
     }

@@ -2,13 +2,18 @@ package viosmash.api;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import viosmash.collection.CollUtils;
+import viosmash.controller.post.vo.PostRespVO;
 import viosmash.dal.repo.PostRepository;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.api.post.PostDTO;
 import viosmash.post.api.PostApi;
+import viosmash.service.PostService;
 import viosmash.service.PostServiceImpl;
 
+import java.awt.print.Pageable;
 import java.util.Collection;
 import java.util.List;
 
@@ -18,13 +23,19 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostApiImpl implements PostApi {
 
-    private final PostServiceImpl postService;
-
+    private final PostService postService;
+    private final PostRepository postRepository;
 
     @Override
     public PostDTO getPostById(Long id) {
         log.info("fetch detail post: {}", id);
         return BeanUtil.copy(postService.getPostById(id), PostDTO.class);
+    }
+
+    @Override
+    @Transactional
+    public void updateVisiblePost(Long id, Boolean enable) {
+        this.postRepository.updateVisibleById(id, enable);
     }
 
     @Override
