@@ -4,6 +4,7 @@ import org.springframework.scheduling.annotation.Async;
 import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
 import viosmash.dal.dataobject.Post;
+import viosmash.pojo.api.post.PostDTO;
 
 import java.util.List;
 
@@ -30,4 +31,6 @@ public interface PostService {
     List<PostRespVO> getListPostByGroupId(Long id, int page, int limit, int type);
 
     List<PostRespVO> getListPostByUserIdAndGroupId(Long userId, Long groupId, int page, int limit);
+
+    List<PostRespVO> getListPostPendingInGroup(Long groupId, int page, int limit);
 }

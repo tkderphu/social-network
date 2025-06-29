@@ -18,7 +18,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAllByUserId(@Param("userId") Long userId, Pageable pageable);
     void deleteAllBySharePostId(Long postId);
 
-    Page<Post> findAllByGroupId(Long id, Pageable pageable);
 
     @Query("SELECT p " +
             "FROM Post p \n" +
@@ -31,5 +30,15 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Modifying
     void updateVoteByPostId(@Param("postId") Long postId, @Param("votes") int votes);
 
-    Page<Post> findAllByUserIdAndGroupId(Long userId, Long groupId, PageRequest createdDate);
+    Page<Post> findAllByUserIdAndGroupId(Long userId, Long groupId, Pageable createdDate);
+
+
+    @Query("SELECT p FROM Post p WHERE p.id IN (:ids)")
+    Page<Post> findAllByListId(@Param("ids") List<Long> collectionIds, Pageable pageable);
+
+    @Query("UPDATE Post p SET p.visible = :visible WHERE p.id = :id")
+    @Modifying
+    void updateVisibleById(@Param("id") Long id, @Param("visible") Boolean visible);
+
+    Page<Post> findAllByGroupIdAndVisible(Long groupId, boolean b, Pageable pageable);
 }

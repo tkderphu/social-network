@@ -22,48 +22,7 @@ const LINK = [
         name: "Create group"
     }
 ]
-const GROUP_FAKE = [
-    {
-        slug: "hang-mu",
-        name: "hang mu",
-        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Aespa_KARINA_Airport_Departure_on_20250226_02_%28cropped%29.png/250px-Aespa_KARINA_Airport_Departure_on_20250226_02_%28cropped%29.png"
-    },
-    {
-        slug: "hoc-tieng-nhat-ban-nihongo",
-        name: "Hoc tieng nhat ban nihongo",
-        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Aespa_KARINA_Airport_Departure_on_20250226_02_%28cropped%29.png/250px-Aespa_KARINA_Airport_Departure_on_20250226_02_%28cropped%29.png"
-    },
-    {
-        slug: "hoc-tieng-nhat-ban-nihongo",
-        name: "Hoc tieng nhat ban nihongo",
-        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Aespa_KARINA_Airport_Departure_on_20250226_02_%28cropped%29.png/250px-Aespa_KARINA_Airport_Departure_on_20250226_02_%28cropped%29.png"
-    },
-    {
-        slug: "hoc-tieng-nhat-ban-nihongo",
-        name: "Hoc tieng nhat ban nihongo",
-        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Aespa_KARINA_Airport_Departure_on_20250226_02_%28cropped%29.png/250px-Aespa_KARINA_Airport_Departure_on_20250226_02_%28cropped%29.png"
-    },
-    {
-        slug: "hoc-tieng-nhat-ban-nihongo",
-        name: "Hoc tieng nhat ban nihongo",
-        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Aespa_KARINA_Airport_Departure_on_20250226_02_%28cropped%29.png/250px-Aespa_KARINA_Airport_Departure_on_20250226_02_%28cropped%29.png"
-    },
-    {
-        slug: "hoc-tieng-nhat-ban-nihongo",
-        name: "Hoc tieng nhat ban nihongo",
-        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Aespa_KARINA_Airport_Departure_on_20250226_02_%28cropped%29.png/250px-Aespa_KARINA_Airport_Departure_on_20250226_02_%28cropped%29.png"
-    },
-    {
-        slug: "hoc-tieng-nhat-ban-nihongo",
-        name: "Hoc tieng nhat ban nihongo",
-        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Aespa_KARINA_Airport_Departure_on_20250226_02_%28cropped%29.png/250px-Aespa_KARINA_Airport_Departure_on_20250226_02_%28cropped%29.png"
-    },
-    {
-        slug: "hoc-tieng-nhat-ban-nihongo",
-        name: "Hoc tieng nhat ban nihongo",
-        imageUrl: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Aespa_KARINA_Airport_Departure_on_20250226_02_%28cropped%29.png/250px-Aespa_KARINA_Airport_Departure_on_20250226_02_%28cropped%29.png"
-    }
-]
+
 function Group() {
     const navigate = useNavigate();
     const hasRedirected = useRef(false); // ✅ only redirect once

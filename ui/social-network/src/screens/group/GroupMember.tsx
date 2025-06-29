@@ -30,8 +30,9 @@ export default function GroupMember() {
         console.log("start search members......................")
         userMemberGroupService.getListMemberByGroup(groupId, pageResult.page, pageResult.limit).then(resp => {
             const pageResultResp: PageResult<any> = resp.data.data;
+            console.log("data resp: ", pageResultResp)
             setPageResult((prev) => ({
-                ...pageResultResp,
+                ...prev,
                 data: [...prev.data, ...pageResultResp.data]
             }))
         }).catch(err => {

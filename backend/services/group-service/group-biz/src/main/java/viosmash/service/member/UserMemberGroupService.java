@@ -1,9 +1,10 @@
 package viosmash.service.member;
 
+import viosmash.controller.member.vo.MemberWaitingReviewRespVO;
 import viosmash.controller.member.vo.UserMemberGroupResp;
-import viosmash.dal.dataobject.MemberWaitingReview;
 import viosmash.dal.dataobject.UserMemberGroup;
 import viosmash.group.enums.GroupRole;
+import viosmash.group.enums.UserGroupStatus;
 import viosmash.pojo.PageResult;
 
 import java.util.Collection;
@@ -31,13 +32,15 @@ public interface UserMemberGroupService {
 
     Boolean checkMemberRequestedGroup(Long groupId, Long userId);
 
-    List<MemberWaitingReview> getListRequestAttendGroup(Long groupId);
+    List<MemberWaitingReviewRespVO> getListRequestAttendGroup(Long groupId, int page, int limit);
 
     Boolean inviteUserToGroup(Long groupId, Collection<Long> userIds);
 
-    Boolean checkUserJoinedGroup(Long userId, Long groupId);
+    UserGroupStatus checkUserJoinedGroup(Long userId, Long groupId, boolean forced);
 
     Boolean cancelMemberJoinGroup(Long groupId, Long userId);
+
+
 
     Boolean requestJoinGroup(Long groupId, Long userId);
 }

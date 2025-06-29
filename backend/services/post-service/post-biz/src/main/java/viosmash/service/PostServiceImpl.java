@@ -24,6 +24,7 @@ import viosmash.friendship.api.FriendshipApi;
 import viosmash.group.api.GroupApi;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.api.group.GroupDTO;
+import viosmash.pojo.api.post.PostDTO;
 import viosmash.profile.api.UserApi;
 import viosmash.string.StringUtils;
 
@@ -142,25 +143,19 @@ public class PostServiceImpl implements PostService{
         });
     }
 
-    private PostRespVO mapToResp(Post post) {
-        return BeanUtil.copy(post, PostRespVO.class)
-                .setUser(Exceptional.process(post.getUserId(), userApi::getUserById))
-                .setGroup(Exceptional.process(post.getGroupId(), groupApi::getGroup))
-                .setVotes(0).setShares(0).setComments(0);
-    }
+
 
     @Override
     public List<PostRespVO> getListPostByGroupId(Long id, int pageNumber, int limit, int type) {
         Pageable pageable = PageRequest.of(
                 pageNumber - 1,
                 limit,
-                type == 0 ? Sort.by("hotScore").descending() : Sort.by("createdDate").ascending()
+                type == 0 ? Sort.by("hotScore").descending() : Sort.by("createdDate").descending()
         );
 
-        Page<Post> page = postRepository.findAllByGroupId(id, pageable);
+        Page<Post> page = postRepository.findAllByGroupIdAndVisible(id, true, pageable);
 
         return CollUtils.convertList(page.getContent(),post -> {
-            if(post.getVisible() == null || !post.getVisible()) return null;
             return mapToResp(post);
         });
     }
@@ -176,5 +171,22 @@ public class PostServiceImpl implements PostService{
         return CollUtils.convertList(pagePost.getContent(), post -> {
             return mapToResp(post);
         });
+    }
+
+    @Override
+    public List<PostRespVO> getListPostPendingInGroup(Long groupId, int page, int limit) {
+        Page<Post> postPage = this.postRepository.findAllByGroupIdAndVisible(
+                groupId,
+                false,
+                PageRequest.of(page - 1, limit).withSort(Sort.by("createdDate").descending()));
+        return CollUtils.convertList(postPage.getContent(), this::mapToResp);
+    }
+
+
+    private PostRespVO mapToResp(Post post) {
+        return BeanUtil.copy(post, PostRespVO.class)
+                .setUser(Exceptional.process(post.getUserId(), userApi::getUserById))
+                .setGroup(Exceptional.process(post.getGroupId(), groupApi::getGroup))
+                .setVotes(0).setShares(0).setComments(0);
     }
 }

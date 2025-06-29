@@ -15,7 +15,6 @@ import java.util.List;
 @Accessors(chain = true)
 public class PostRespVO {
 
-
     private Long id;
     private String content;
     private UserDTO user;
