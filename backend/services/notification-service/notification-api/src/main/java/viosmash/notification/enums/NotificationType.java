@@ -7,4 +7,6 @@ public enum NotificationType {
     JOINED_GROUP,
     REQUEST_JOINED_GROUP,
     JOIN_GROUP_BY_INVITED,
+        ACCEPT_POST_IN_GROUP,
+    REJECT_POST_IN_GROUP
 }

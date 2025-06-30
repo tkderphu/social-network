@@ -124,15 +124,9 @@ public class NotificationServiceImpl implements NotificationService{
                 .setSeen(false);
         NotificationSetting notificationSetting = this.notificationSettingService.getNotificationSetting(message.getUserId());
         switch (req.getNotificationType()) {
-            case JOINED_GROUP, JOIN_GROUP_BY_INVITED -> {
-                if(notificationSetting.getEnableJoinedGroupNotification()) {
-                    saveAndSend(message);
-                }
-            }
-            case REQUEST_JOINED_GROUP -> {
-                if(notificationSetting.getEnableRequestJoinGroupNotification()) {
-                    saveAndSend(message);
-                }
+            case JOINED_GROUP, JOIN_GROUP_BY_INVITED, REQUEST_JOINED_GROUP,
+                 ACCEPT_POST_IN_GROUP, REJECT_POST_IN_GROUP-> {
+                saveAndSend(message);
             }
             case NEW_VOTE -> {
                 if(notificationSetting.getEnableVoteNotification()) {
@@ -176,7 +170,7 @@ public class NotificationServiceImpl implements NotificationService{
                 resp
         );
 
-        log.warn("why not send to user");
+        log.warn("send notification to user");
     }
 
 

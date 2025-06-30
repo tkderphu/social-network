@@ -1,10 +1,11 @@
+import { GroupResp } from "./groupModel"
 import { UserProfileResp } from "./profileModel"
 
 export interface PostResp {
     id: number
     content: string
     user: UserProfileResp,
-    group: any
+    group: GroupResp
     mediaUrls: string[],
     postPrivacy: string
     sharePost: PostResp,

@@ -142,7 +142,7 @@ function App() {
               </Routes>
               {/**group route */}
               <GroupProvider>
-                <Routes>
+                <Routes location={state?.backgroundLocation || location}>
                   <Route element={<ProtectedRoute />}>
                     <Route path='groups' element={<Group />}>
                       {/* <Route path='joined' element={<GroupPage/>} /> */}

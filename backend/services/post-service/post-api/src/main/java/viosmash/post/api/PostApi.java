@@ -14,12 +14,9 @@ public interface PostApi {
     PostDTO getPostById(@PathVariable("id") Long id);
 
 
-    @PutMapping("/{id}/status")
-    void updateVisiblePost(@PathVariable("id") Long id, @RequestBody Boolean visible);
 
     @PutMapping("/{id}/votes")
     void updateVote(@PathVariable("id") Long id, @RequestBody Integer votes);
 
-//    void saveSharePost();
 
 }

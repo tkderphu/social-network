@@ -32,11 +32,7 @@ public class PostApiImpl implements PostApi {
         return BeanUtil.copy(postService.getPostById(id), PostDTO.class);
     }
 
-    @Override
-    @Transactional
-    public void updateVisiblePost(Long id, Boolean enable) {
-        this.postRepository.updateVisibleById(id, enable);
-    }
+
 
     @Override
     public void updateVote(Long id, Integer votes) {

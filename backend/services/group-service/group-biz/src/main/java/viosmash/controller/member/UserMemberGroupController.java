@@ -2,10 +2,10 @@ package viosmash.controller.member;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import viosmash.controller.member.vo.BanUserReqVO;
 import viosmash.controller.member.vo.MemberWaitingReviewRespVO;
 import viosmash.controller.member.vo.UserMemberGroupResp;
 import viosmash.controller.member.vo.UserMemberGroupRoleUpdateReq;
-import viosmash.dal.dataobject.MemberWaitingReview;
 import viosmash.group.enums.UserGroupStatus;
 import viosmash.pojo.CommonResult;
 import viosmash.pojo.PageResult;
@@ -42,6 +42,18 @@ public class UserMemberGroupController {
                                                                         @RequestParam(value = "limit", defaultValue = "20")int limit) {
         return success(userMemberGroupService.getListMember(groupId, page , limit));
     }
+
+
+    @PutMapping("/{groupId}")
+    public CommonResult<Boolean> bandUser(
+            @PathVariable("groupId") Long groupId,
+            @RequestBody BanUserReqVO req) {
+        Boolean res = userMemberGroupService.banUser(groupId, req);
+        return success(res);
+    }
+
+
+
 
     @PutMapping("/{groupId}/invite")
     public CommonResult<Boolean> inviteUsers(@PathVariable("groupId") Long groupId,

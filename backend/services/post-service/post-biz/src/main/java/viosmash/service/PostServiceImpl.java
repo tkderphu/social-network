@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import viosmash.collection.CollUtils;
 import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
+import viosmash.core.utils.SecurityUtils;
 import viosmash.dal.dataobject.Post;
 import viosmash.dal.dataobject.PostTag;
 import viosmash.dal.dataobject.Tag;
@@ -22,9 +23,12 @@ import viosmash.exception.Exceptional;
 import viosmash.exception.ServiceException;
 import viosmash.friendship.api.FriendshipApi;
 import viosmash.group.api.GroupApi;
+import viosmash.notification.api.NotificationApi;
+import viosmash.notification.api.NotificationDto;
+import viosmash.notification.enums.NotificationType;
+import viosmash.notification.enums.TargetType;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.api.group.GroupDTO;
-import viosmash.pojo.api.post.PostDTO;
 import viosmash.profile.api.UserApi;
 import viosmash.string.StringUtils;
 
@@ -46,6 +50,7 @@ public class PostServiceImpl implements PostService{
     private final PostTagRepository postTagRepository;
     private final TagRepository tagRepository;
     private final FriendshipApi friendshipApi;
+    private final NotificationApi notificationApi;
     @Override
     @Transactional(rollbackFor = ServiceException.class)
     public Post createPost(Long userId, @Valid PostCreateReqVO postCreateReq) {
@@ -53,7 +58,8 @@ public class PostServiceImpl implements PostService{
                 .setUserId(userId).setCreatedDate(LocalDateTime.now())
                 .setVotes(0)
                 .setHotScore(0d)
-                .setVisible(true);
+                .setVisible(true)
+                .setDisable(false);
 
         if(post.getGroupId() != null) {
             GroupDTO group = groupApi.getGroup(post.getGroupId());
@@ -153,7 +159,11 @@ public class PostServiceImpl implements PostService{
                 type == 0 ? Sort.by("hotScore").descending() : Sort.by("createdDate").descending()
         );
 
-        Page<Post> page = postRepository.findAllByGroupIdAndVisible(id, true, pageable);
+        Page<Post> page = postRepository.findAllByGroupIdAndVisibleAndDisable(
+                id,
+                true,
+                false
+                , pageable);
 
         return CollUtils.convertList(page.getContent(),post -> {
             return mapToResp(post);
@@ -175,11 +185,35 @@ public class PostServiceImpl implements PostService{
 
     @Override
     public List<PostRespVO> getListPostPendingInGroup(Long groupId, int page, int limit) {
-        Page<Post> postPage = this.postRepository.findAllByGroupIdAndVisible(
+        Page<Post> postPage = this.postRepository.findAllByGroupIdAndVisibleAndDisable(
                 groupId,
+                false,
                 false,
                 PageRequest.of(page - 1, limit).withSort(Sort.by("createdDate").descending()));
         return CollUtils.convertList(postPage.getContent(), this::mapToResp);
+    }
+
+    @Override
+    public void updateVisiblePost(Long postId, Boolean isAccept) {
+        Post post = this.postRepository.findById(postId)
+                .orElseThrow(() -> exception(404, "not found post"));
+        if(isAccept) {
+            post.setVisible(true);
+        } else {
+            post.setDisable(true);
+        }
+
+        this.postRepository.save(post);
+
+        NotificationDto notificationDto = new NotificationDto()
+                .setNotificationType(isAccept ? NotificationType.ACCEPT_POST_IN_GROUP : NotificationType.REJECT_POST_IN_GROUP)
+                .setActorId(SecurityUtils.getLoginUserMemberId())
+                .setTargetType(TargetType.POST)
+                .setTargetId(post.getId())
+                .setCreatedAt(LocalDateTime.now())
+                .setUserId(post.getUserId());
+        this.notificationApi.sendAppNotification(notificationDto);
+
     }
 
 

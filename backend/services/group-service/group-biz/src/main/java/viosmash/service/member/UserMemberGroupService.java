@@ -1,5 +1,6 @@
 package viosmash.service.member;
 
+import viosmash.controller.member.vo.BanUserReqVO;
 import viosmash.controller.member.vo.MemberWaitingReviewRespVO;
 import viosmash.controller.member.vo.UserMemberGroupResp;
 import viosmash.dal.dataobject.UserMemberGroup;
@@ -40,6 +41,8 @@ public interface UserMemberGroupService {
 
     Boolean cancelMemberJoinGroup(Long groupId, Long userId);
 
+
+    Boolean banUser(Long groupId, BanUserReqVO banReq);
 
 
     Boolean requestJoinGroup(Long groupId, Long userId);

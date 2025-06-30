@@ -113,6 +113,20 @@ export function PendingPost() {
         limit: 100
     })
 
+    const handlePostDisplay = (postId: any, isAccept: boolean) => {
+        postService.updatePostDisplay(postId, isAccept)
+        .then(resp => {
+            setFetchPostState((prev) => ({
+                ...prev,
+                posts: prev.posts.filter(post => post.id != postId)
+            }))
+        }).catch(err => {
+            alert("Err, See console")
+            console.log(err)
+        })
+    }
+
+
 
     useEffect(() => {
         postService.getListPostPendingInGroup(groupId, fetchPostState.page, fetchPostState.limit)
@@ -151,8 +165,6 @@ export function PendingPost() {
         return
     }
 
-    console.log("fuck: ", fetchPostState)
-
     if (fetchPostState.loading) {
         return <Spinner loading={fetchPostState.loading} />
     }
@@ -163,8 +175,12 @@ export function PendingPost() {
                 return <div className="card mb-4">
                     <PostCard post={post} ref={`/groups/${groupId}/user/${post?.user?.id}`} />
                     <div className="d-flex">
-                        <button className="btn rounded-0 btn-primary w-100">Accept</button>
-                        <button className="btn btn-danger rounded-0 w-100">Reject</button>
+                        <button onClick={() => {
+                            handlePostDisplay(post.id, true)
+                        }} className="btn  rounded-0 btn-primary w-100">Accept</button>
+                        <button onClick={() => {
+                            handlePostDisplay(post.id, false)
+                        }} className="btn btn-danger rounded-0 w-100">Reject</button>
                     </div>
                 </div>
             })}

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import viosmash.aop.GroupPermission;
 import viosmash.collection.CollUtils;
+import viosmash.controller.member.vo.BanUserReqVO;
 import viosmash.controller.member.vo.MemberWaitingReviewRespVO;
 import viosmash.controller.member.vo.UserMemberGroupResp;
 import viosmash.core.utils.SecurityUtils;
@@ -201,6 +202,17 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
     @Transactional
     public Boolean cancelMemberJoinGroup(Long groupId, Long userId) {
         this.memberWaitingReviewRepository.deleteAllByUserIdAndGroupId(userId, groupId);
+        return true;
+    }
+
+    @Override
+    @GroupPermission
+    public Boolean banUser(Long groupId, BanUserReqVO banReq) {
+        UserMemberGroup memberGroup = this.userMemberGroupRepository.findByGroupIdAndMemberId(
+                groupId,banReq.getUserId())
+                .setIsBanned(true)
+                .setBanUtil(banReq.getBanUtil());
+        this.userMemberGroupRepository.save(memberGroup);
         return true;
     }
 

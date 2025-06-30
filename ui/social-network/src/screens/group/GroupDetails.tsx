@@ -1,12 +1,13 @@
 import { createContext, useEffect, useState } from "react";
-import { Link, Outlet, useParams } from "react-router";
+import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router";
 import { TokenUtils } from "../../common";
 import Alert from "../../components/Alert";
 import Spinner from "../../components/Spinner";
 import { GroupResp } from "../../model/groupModel";
 import groupService from "../../services/group/groupService";
 import userMemberGroupService from "../../services/group/userMemberGroupService";
-import { convertToHeader } from "../../utils/utils";
+import { convertToHeader, extractSearchQuery } from "../../utils/utils";
+import { RefParam } from "../notification/Notification";
 import GroupAbout from "./GroupAbout";
 import { useGroup } from "./GroupProvider";
 import InviteUser from "./InviteUser";
@@ -153,12 +154,42 @@ export default function GroupDetails() {
   )
 
 
+  //ref notification
+  const location = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const search = location.search;
+    console.log(
+      '=============search================',search
+    )
+    if (search.includes(`notification_type`)) {
+      const { ref_post, notification_type, ref_notification } = extractSearchQuery(search);
+      console.log("===============params============: fuck: ", {
+        ref_post, notification_type, ref_notification
+      });
+
+      if (
+        ref_post &&
+        notification_type?.includes("POST")
+      ) {
+        // alert("what")
+        navigate(`/posts/${ref_post}`, {
+          state: { backgroundLocation: location },
+        });
+      }
+    }
+  }, [location.pathname, location.search]);
+
+
+
   if (checkJoinedGroup != "JOINED") {
     return <>
       {header}
       <GroupAbout />
     </>
   }
+
+
 
   return (
     <div className="min-vh-100">

@@ -39,6 +39,16 @@ public class PostController {
     }
 
 
+    @PutMapping("/{id}/{visible}")
+    public CommonResult<Boolean> handleUpdateVisiblePost(
+            @PathVariable("id") Long id,
+            @PathVariable("visible") Boolean visible
+    ) {
+        postService.updateVisiblePost(id, visible);
+        return CommonResult.success(true);
+    }
+
+
     /**
      * Get list post is waiting in group has @groupId
      * @return

@@ -42,8 +42,7 @@ public class Post {
 
 
     private Boolean visible;
-
-
+    private Boolean disable;
 
     //store directly instead of fetch from other services and calculate for improving performance
     private Double hotScore;
