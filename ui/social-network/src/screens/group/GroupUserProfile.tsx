@@ -1,4 +1,4 @@
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { useParams } from "react-router"
 import { GroupResp } from "../../model/groupModel"
 import { PostResp } from "../../model/postModel"
@@ -7,6 +7,7 @@ import postService from "../../services/post/postService"
 import profileService from "../../services/profile/profileService"
 import { PostCard } from "../post/PostCard"
 import ProfileHeader from "../profile/ProfileHeader"
+import BanUserButton from "./BanUserButton"
 import { useGroup } from "./GroupProvider"
 
 export default function GroupUserProfile() {
@@ -31,13 +32,18 @@ export default function GroupUserProfile() {
 
     }, [])
 
-    
+
+
+
+
 
     useEffect(() => {
         window.document.title = user?.firstName + " " + user?.lastName
     }, [user])
     return <>
-        <ProfileHeader userProfile={user} />
+        <ProfileHeader userProfile={user} btnBan={<>
+           <BanUserButton/>
+        </>} />
         <hr />
         <div className="row">
             <div className="col-4 sticky-sidebar hide-scrollbar">

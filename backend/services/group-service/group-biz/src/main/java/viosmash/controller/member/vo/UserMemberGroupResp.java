@@ -13,6 +13,8 @@ public class UserMemberGroupResp {
     private UserDTO user;
     private GroupRole groupRole;
     private LocalDateTime joined;
+    private Boolean isBanned;
+    private LocalDateTime banUtil;
     public String getTimeAgo() {
         return DateUtils.timeAgo(joined);
     }

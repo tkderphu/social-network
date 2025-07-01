@@ -1,6 +1,7 @@
 package viosmash.service.member;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import viosmash.aop.GroupPermission;
 import viosmash.collection.CollUtils;
-import viosmash.controller.member.vo.BanUserReqVO;
+import viosmash.controller.member.vo.UpdateBanUserReqVO;
 import viosmash.controller.member.vo.MemberWaitingReviewRespVO;
 import viosmash.controller.member.vo.UserMemberGroupResp;
 import viosmash.core.utils.SecurityUtils;
@@ -18,6 +19,7 @@ import viosmash.dal.dataobject.UserMemberGroup;
 import viosmash.dal.repo.GroupRepository;
 import viosmash.dal.repo.MemberWaitingReviewRepository;
 import viosmash.dal.repo.UserMemberGroupRepository;
+import viosmash.exception.Exceptional;
 import viosmash.group.enums.GroupRole;
 import viosmash.group.enums.UserGroupStatus;
 import viosmash.notification.api.NotificationApi;
@@ -34,6 +36,7 @@ import java.util.List;
 
 import static viosmash.exception.utils.ServiceUtils.exception;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class UserMemberGroupServiceImpl implements UserMemberGroupService{
@@ -82,10 +85,6 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
         return new PageResult<>(page, limit, resp, userMemberGroups.getTotalPages());
     }
 
-    @Override
-    public List<Long> getListGroup(Long memberId) {
-        return userMemberGroupRepository.getAllGroup(memberId);
-    }
 
     @Override
     @GroupPermission
@@ -121,15 +120,23 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
     @Transactional
     public Boolean acceptMemberJoinGroup(Long groupId, Long memberId) {
         userMemberGroupRepository.save(new UserMemberGroup()
-                .setGroupId(groupId).setMemberId(memberId).setGroupRole(GroupRole.MEMBER));
+                .setGroupId(groupId)
+                .setMemberId(memberId)
+                .setGroupRole(GroupRole.MEMBER)
+                .setJoined(LocalDateTime.now())
+                .setIsBanned(false));
         memberWaitingReviewRepository.deleteAllByUserIdAndGroupId(memberId, groupId);
-        notificationApi.sendAppNotification(new NotificationDto()
+        NotificationDto notificationDto = new NotificationDto()
                 .setUserId(memberId)
                 .setActorId(SecurityUtils.getLoginUserMemberId())
                 .setTargetId(groupId)
                 .setTargetType(TargetType.GROUP)
                 .setNotificationType(NotificationType.JOINED_GROUP)
-                .setCreatedAt(LocalDateTime.now()));
+                .setCreatedAt(LocalDateTime.now());
+        Exceptional.process(notificationDto, dto -> {
+            notificationApi.sendAppNotification(dto);
+            return null;
+        });
         return true;
     }
 
@@ -189,7 +196,13 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
     @Override
     public UserGroupStatus checkUserJoinedGroup(Long userId, Long groupId, boolean forced) {
         UserMemberGroup userMember = this.userMemberGroupRepository.findByGroupIdAndMemberId(groupId, userId);
-        if(userMember != null) return UserGroupStatus.JOINED;
+        if(userMember != null) {
+            if(userMember.getIsBanned()) {
+                return UserGroupStatus.BAN;
+            } else {
+                return UserGroupStatus.JOINED;
+            }
+        }
         if(forced) return UserGroupStatus.NONE;
         MemberWaitingReview memberWaitingReview = this.memberWaitingReviewRepository.findByUserIdAndGroupId(userId, groupId);
         if(memberWaitingReview != null) {
@@ -207,7 +220,7 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
 
     @Override
     @GroupPermission
-    public Boolean banUser(Long groupId, BanUserReqVO banReq) {
+    public Boolean banUser(Long groupId, UpdateBanUserReqVO banReq) {
         UserMemberGroup memberGroup = this.userMemberGroupRepository.findByGroupIdAndMemberId(
                 groupId,banReq.getUserId())
                 .setIsBanned(true)
@@ -236,6 +249,16 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
         return true;
     }
 
+    @Override
+    @GroupPermission
+    public List<UserMemberGroupResp> getListMemberIsBanned(Long groupId) {
+        List<UserMemberGroup> userMemberGroups = this.userMemberGroupRepository.findAllByGroupIdAndIsBanned(groupId, true);
+        return CollUtils.convertList(userMemberGroups, memberGroup -> {
+            UserMemberGroupResp resp = BeanUtil.copy(memberGroup, UserMemberGroupResp.class);
+            resp.setUser(userApi.getUserById(memberGroup.getMemberId()));
+            return resp;
+        });
+    }
 
 
 }

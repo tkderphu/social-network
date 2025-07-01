@@ -7,6 +7,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import viosmash.controller.group.vo.GroupUpdateSettingReqVO;
+import viosmash.core.utils.SecurityUtils;
 import viosmash.dal.dataobject.UserMemberGroup;
 import viosmash.pojo.PageResult;
 import viosmash.pojo.api.profile.UserDTO;
@@ -80,11 +81,7 @@ public class GroupController {
 
     @GetMapping("/joined")
     public CommonResult<List<GroupRespVO>> getListGroupJoined() {
-        return success(convertList(userMemberGroupService.getListGroup(getLoginUserMemberId()), groupId -> {
-            Group group = groupService.getGroup(groupId);
-            return BeanUtil.copy(group, GroupRespVO.class)
-                    .setNumberOfMembers(userMemberGroupService.countMember(groupId));
-        }));
+        return success(groupService.getListGroupJoined(SecurityUtils.getLoginUserMemberId()));
     }
 
 
@@ -93,6 +90,16 @@ public class GroupController {
                                                         @RequestParam(value = "page", defaultValue = "1") int page,
                                                         @RequestParam(value = "limit", defaultValue = "20") int limit) {
        return success( groupService.search(keyword, page, limit));
+    }
+
+
+    @GetMapping("/suggest/ban/{userId}")
+    public CommonResult<List<GroupRespVO>> getCommonGroup(@PathVariable("userId") Long userId) {
+        List<GroupRespVO> groups = groupService.suggestGroupToBanUser(
+                getLoginUserMemberId(),
+                userId
+        );
+        return success(groups);
     }
 
 }

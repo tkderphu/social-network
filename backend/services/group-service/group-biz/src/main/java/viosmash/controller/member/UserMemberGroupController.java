@@ -2,7 +2,7 @@ package viosmash.controller.member;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import viosmash.controller.member.vo.BanUserReqVO;
+import viosmash.controller.member.vo.UpdateBanUserReqVO;
 import viosmash.controller.member.vo.MemberWaitingReviewRespVO;
 import viosmash.controller.member.vo.UserMemberGroupResp;
 import viosmash.controller.member.vo.UserMemberGroupRoleUpdateReq;
@@ -44,16 +44,21 @@ public class UserMemberGroupController {
     }
 
 
-    @PutMapping("/{groupId}")
-    public CommonResult<Boolean> bandUser(
+    @PutMapping("/{groupId}/ban")
+    public CommonResult<Boolean> banUser(
             @PathVariable("groupId") Long groupId,
-            @RequestBody BanUserReqVO req) {
+            @RequestBody UpdateBanUserReqVO req) {
         Boolean res = userMemberGroupService.banUser(groupId, req);
         return success(res);
     }
 
-
-
+    @GetMapping("/{groupId}/ban")
+    public CommonResult<List<UserMemberGroupResp>> getListMemberIsBanned(
+            @PathVariable("groupId") Long groupId
+    ) {
+        List<UserMemberGroupResp> userMemberGroups = userMemberGroupService.getListMemberIsBanned(groupId);
+        return success(userMemberGroups);
+    }
 
     @PutMapping("/{groupId}/invite")
     public CommonResult<Boolean> inviteUsers(@PathVariable("groupId") Long groupId,
@@ -91,6 +96,8 @@ public class UserMemberGroupController {
         UserGroupStatus isOk = userMemberGroupService.checkUserJoinedGroup(getLoginUserMemberId(), groupId, false);
         return success(isOk);
     }
+
+
 
     @GetMapping("/{groupId}/pending")
     public CommonResult<List<MemberWaitingReviewRespVO>> getListUserWaitingReview(

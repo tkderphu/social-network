@@ -6,7 +6,8 @@ import ChatButton from "../chat/ChatButton"
 import FriendActionButton from "../friend/FriendActionButton"
 import "./Profile.css"
 interface Props {
-    userProfile?: UserProfileResp
+    userProfile?: UserProfileResp,
+    btnBan?: any
 }
 export default function ProfileHeader(props: Props) {
     const { userId } = useParams()
@@ -36,12 +37,12 @@ export default function ProfileHeader(props: Props) {
                     </>
                 ) : (
                     <>
+                    
                         <FriendActionButton />
                         <ChatButton userId={userId} />
-
+                        {props.btnBan}
                     </>
                 )}
-
             </div>
         </div>
     )

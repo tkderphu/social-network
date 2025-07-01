@@ -1,6 +1,8 @@
 package viosmash.service.member;
 
-import viosmash.controller.member.vo.BanUserReqVO;
+import org.springframework.transaction.annotation.Transactional;
+import viosmash.collection.CollUtils;
+import viosmash.controller.member.vo.UpdateBanUserReqVO;
 import viosmash.controller.member.vo.MemberWaitingReviewRespVO;
 import viosmash.controller.member.vo.UserMemberGroupResp;
 import viosmash.dal.dataobject.UserMemberGroup;
@@ -18,7 +20,6 @@ public interface UserMemberGroupService {
     int countMember(Long groupId);
 
     PageResult<UserMemberGroupResp> getListMember(Long groupId, int page, int limit);
-    List<Long> getListGroup(Long memberId);
 
     Boolean kickMember(Long groupId, Long userMemberId);
 
@@ -42,8 +43,17 @@ public interface UserMemberGroupService {
     Boolean cancelMemberJoinGroup(Long groupId, Long userId);
 
 
-    Boolean banUser(Long groupId, BanUserReqVO banReq);
+    Boolean banUser(Long groupId, UpdateBanUserReqVO banReq);
 
+    @Transactional
+    default void banUser(Collection<Long> groupIds, UpdateBanUserReqVO banReq) {
+        CollUtils.convertList(groupIds, groupId -> {
+            banUser(groupId, banReq);
+            return null;
+        });
+    };
 
     Boolean requestJoinGroup(Long groupId, Long userId);
+
+    List<UserMemberGroupResp> getListMemberIsBanned(Long groupId);
 }
