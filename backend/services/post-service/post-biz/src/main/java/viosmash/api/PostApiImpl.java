@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import viosmash.collection.CollUtils;
 import viosmash.controller.post.vo.PostRespVO;
 import viosmash.dal.repo.PostRepository;
+import viosmash.exception.ServiceException;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.api.post.PostDTO;
 import viosmash.post.api.PostApi;
@@ -38,6 +39,16 @@ public class PostApiImpl implements PostApi {
     public void updateVote(Long id, Integer votes) {
         log.info("updateVote(post, votes)::({}, {})", id, votes);
         postService.updateVote(id, votes);
+    }
+
+    @Override
+    @Transactional(rollbackFor = ServiceException.class)
+    public void updateDisablePostByUserAndGroup(Long userId, Long groupId, boolean disable) {
+        this.postRepository.updateDisableByUserIdAndGroupId(
+                userId,
+                groupId,
+                disable
+        );
     }
 
 }

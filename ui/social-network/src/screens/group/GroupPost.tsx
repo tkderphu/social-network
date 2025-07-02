@@ -141,6 +141,10 @@ export default function GroupPost() {
                 }} />
             </ModalCustome>
             {fetchPosts.posts.length > 0 && fetchPosts.posts.map(post => {
+                console.log("post from group: ", post)
+                if(post.disable || !post.visible) {
+                    return null
+                }
                 return <PostCard ref={`/groups/${groupId}/profile/${post?.user?.id}`}  post={post} />
             })}
             <Spinner loading={fetchPosts.loading} />

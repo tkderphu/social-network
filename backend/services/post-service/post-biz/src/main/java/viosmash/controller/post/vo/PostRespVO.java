@@ -29,6 +29,9 @@ public class PostRespVO {
     private int comments;
     private int shares;
     private String time;
+    private Boolean visible;
+    private Boolean disable;
+
 
     public String getTime() {
         return DateUtils.timeAgo(createdDate);

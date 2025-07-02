@@ -3,7 +3,7 @@ import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router"
 import { TokenUtils } from "../../common";
 import Alert from "../../components/Alert";
 import Spinner from "../../components/Spinner";
-import { GroupResp } from "../../model/groupModel";
+import { GroupResp, UserMemberGroup } from "../../model/groupModel";
 import groupService from "../../services/group/groupService";
 import userMemberGroupService from "../../services/group/userMemberGroupService";
 import { convertToHeader, extractSearchQuery } from "../../utils/utils";
@@ -41,20 +41,14 @@ const NAV = [
 
 export default function GroupDetails() {
   const { groupId } = useParams()
-  const { group, setGroup } = useGroup()
+  const { group } = useGroup()
+  const currentMember: UserMemberGroup = useGroup().currentMember;
   const [checkJoinedGroup, setCheckJoinedGroup] = useState<"JOINED" | "REQUESTED" | "NONE">("NONE")
   const [joinLeaveState, setJoinLeaveState] = useState({
     loading: false,
     error: "",
   })
 
-  useEffect(() => {
-    groupService.getDetailGroup(groupId).then(resp => {
-      console.log("group: ", resp.data)
-      setGroup(resp.data.data)
-    })
-
-  }, [groupId])
 
 
   useEffect(() => {

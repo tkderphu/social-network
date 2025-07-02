@@ -10,6 +10,7 @@ import viosmash.group.enums.GroupRole;
 import viosmash.group.enums.UserGroupStatus;
 import viosmash.pojo.PageResult;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -43,12 +44,12 @@ public interface UserMemberGroupService {
     Boolean cancelMemberJoinGroup(Long groupId, Long userId);
 
 
-    Boolean banUser(Long groupId, UpdateBanUserReqVO banReq);
+    Boolean updateBan(Long groupId, Long userId, LocalDateTime banUtil, Boolean unban);
 
     @Transactional
-    default void banUser(Collection<Long> groupIds, UpdateBanUserReqVO banReq) {
-        CollUtils.convertList(groupIds, groupId -> {
-            banUser(groupId, banReq);
+    default void updateBan(UpdateBanUserReqVO banReq) {
+        CollUtils.convertList(banReq.getGroupIds(), obj -> {
+            updateBan(obj, banReq.getUserId(), banReq.getBanUtil(), banReq.getUnban());
             return null;
         });
     };

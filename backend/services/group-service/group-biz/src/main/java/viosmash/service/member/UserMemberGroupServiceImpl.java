@@ -28,6 +28,7 @@ import viosmash.notification.enums.NotificationType;
 import viosmash.notification.enums.TargetType;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.PageResult;
+import viosmash.post.api.PostApi;
 import viosmash.profile.api.UserApi;
 
 import java.time.LocalDateTime;
@@ -45,7 +46,7 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
     private final GroupRepository groupRepository;
     private final NotificationApi notificationApi;
     private final UserApi userApi;
-
+    private final PostApi postApi;
     @Override
     public UserMemberGroup getMember(Long memberId, Long groupId) {
         return userMemberGroupRepository.findByGroupIdAndMemberId(groupId, memberId);
@@ -220,12 +221,20 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
 
     @Override
     @GroupPermission
-    public Boolean banUser(Long groupId, UpdateBanUserReqVO banReq) {
-        UserMemberGroup memberGroup = this.userMemberGroupRepository.findByGroupIdAndMemberId(
-                groupId,banReq.getUserId())
-                .setIsBanned(true)
-                .setBanUtil(banReq.getBanUtil());
+    public Boolean updateBan(Long groupId, Long userId, LocalDateTime banUtil, Boolean unban) {
+        UserMemberGroup memberGroup = this.userMemberGroupRepository
+                .findByGroupIdAndMemberId(groupId,userId)
+                .setIsBanned(unban ? false : true)
+                .setBanUtil(banUtil);
         this.userMemberGroupRepository.save(memberGroup);
+
+        //All post of @userId in @groupId will be disabled/ enable
+        if(!memberGroup.getIsBanned()) {
+            postApi.updateDisablePostByUserAndGroup(userId, groupId, false);
+        } else {
+            postApi.updateDisablePostByUserAndGroup(userId, groupId, true);
+        }
+
         return true;
     }
 

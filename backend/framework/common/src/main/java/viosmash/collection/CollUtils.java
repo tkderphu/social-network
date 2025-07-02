@@ -15,7 +15,10 @@ public class CollUtils {
         List<T> list = new ArrayList<>();
         for(U data : collection) {
             if(data != null) {
-                list.add(func.apply(data));
+                T apply = func.apply(data);
+                if(apply != null) {
+                    list.add(apply);
+                }
             }
         }
         return list;

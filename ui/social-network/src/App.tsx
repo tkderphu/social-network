@@ -56,6 +56,7 @@ import MyListGroup from './screens/group/MyListGroup'
 import GroupManagement, { GroupSetting, PendingPost, PendingUser } from './screens/group/GroupManagement'
 import GroupUserProfile from './screens/group/GroupUserProfile'
 import GroupProvider from './screens/group/GroupProvider'
+import GroupWrapper from './screens/group/GroupWrapper'
 
 export interface HandleChat {
   handleClickChat: any,
@@ -144,7 +145,7 @@ function App() {
               {/**group route */}
               <GroupProvider>
                 <Routes location={state?.backgroundLocation || location}>
-                  <Route element={<ProtectedRoute />}>
+                  <Route element={<GroupWrapper />}>
                     <Route path='groups' element={<Group />}>
                       {/* <Route path='joined' element={<GroupPage/>} /> */}
                       <Route path='feed' element={<NewFeed />} />

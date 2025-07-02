@@ -15,4 +15,6 @@ export interface PostResp {
         numberShare?: number
         numberLike?: number
     }
+    visible: boolean,
+    disable: boolean
 }

@@ -32,5 +32,12 @@ class UserMemberGroupService {
     acceptUser(groupId: any, userId: any) {
         return api.put(`${path}/${groupId}/accept/${userId}`)
     }
+
+    getInfo(groupId: any) {
+        return api.get(`${path}/${groupId}/info`)
+    }
+    updateBanUser(banUserReq: any) {
+        return api.put(`${path}/ban`, banUserReq)
+    }
 }
 export default new UserMemberGroupService()

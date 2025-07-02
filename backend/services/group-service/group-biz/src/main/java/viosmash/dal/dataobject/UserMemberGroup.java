@@ -26,6 +26,10 @@ public class UserMemberGroup {
     private Boolean isBanned;
     private LocalDateTime banUtil;
 
+    public UserMemberGroup() {
+        this.isBanned = false;
+    }
+
     @Transient
     public Boolean isBannedForever() {
         if(banUtil == null &&  isBanned) {

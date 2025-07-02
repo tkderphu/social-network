@@ -58,6 +58,7 @@ public class GroupServiceImpl implements GroupService{
                 .setEnableAutoAcceptMember(true)
                 .setEnableNotificationWhenUserRequest(true)
                 .setEnableAutoReviewPost(true)
+                .setOwnerId(ownerId)
                 .setEnableNotificationWhenNewPostComing(true);
         groupRepository.save(group);
 
@@ -70,6 +71,7 @@ public class GroupServiceImpl implements GroupService{
                     .setGroupRole(userId.equals(ownerId) ? GroupRole.OWNER : GroupRole.MEMBER)
                     .setJoined(LocalDateTime.now())
                     .setGroupId(group.getId())
+                    .setIsBanned(false)
                     .setMemberId(userId));
             return null;
         });
@@ -170,6 +172,7 @@ public class GroupServiceImpl implements GroupService{
             UserMemberGroup currentUserRole = userMemberGroupRepository.findByGroupIdAndMemberId(group.getId(), currentUserId);
             UserMemberGroup userRole = userMemberGroupRepository.findByGroupIdAndMemberId(group.getId(), userId);
             GroupRespVO resp = BeanUtil.copy(group, GroupRespVO.class);
+            if(userRole.getIsBanned()) return null;
             if(currentUserRole.getGroupRole() == GroupRole.OWNER ||
                 ( currentUserRole.getGroupRole() == GroupRole.REVIEWER && userRole.getGroupRole() == GroupRole.MEMBER)) {
                 return resp;

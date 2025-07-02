@@ -6,9 +6,13 @@ import viosmash.controller.member.vo.UpdateBanUserReqVO;
 import viosmash.controller.member.vo.MemberWaitingReviewRespVO;
 import viosmash.controller.member.vo.UserMemberGroupResp;
 import viosmash.controller.member.vo.UserMemberGroupRoleUpdateReq;
+import viosmash.core.utils.SecurityUtils;
+import viosmash.dal.dataobject.UserMemberGroup;
 import viosmash.group.enums.UserGroupStatus;
+import viosmash.object.BeanUtil;
 import viosmash.pojo.CommonResult;
 import viosmash.pojo.PageResult;
+import viosmash.profile.api.UserApi;
 import viosmash.service.member.UserMemberGroupService;
 
 import java.util.Collection;
@@ -22,7 +26,7 @@ import static viosmash.pojo.CommonResult.success;
 @RequestMapping("/api/members/group")
 public class UserMemberGroupController {
     private final UserMemberGroupService userMemberGroupService;
-
+    private final UserApi userApi;
 
     @PostMapping("/{groupId}/join")
     public CommonResult<Boolean> requestJoinGroup(@PathVariable("groupId") Long groupId) {
@@ -44,12 +48,10 @@ public class UserMemberGroupController {
     }
 
 
-    @PutMapping("/{groupId}/ban")
-    public CommonResult<Boolean> banUser(
-            @PathVariable("groupId") Long groupId,
-            @RequestBody UpdateBanUserReqVO req) {
-        Boolean res = userMemberGroupService.banUser(groupId, req);
-        return success(res);
+    @PutMapping("/ban")
+    public CommonResult<Boolean> updateBanUser(@RequestBody UpdateBanUserReqVO req) {
+        userMemberGroupService.updateBan(req);
+        return success(true);
     }
 
     @GetMapping("/{groupId}/ban")
@@ -106,6 +108,12 @@ public class UserMemberGroupController {
             @RequestParam(value = "limit", defaultValue = "100") int limit
     ) {
         return success(userMemberGroupService.getListRequestAttendGroup(groupId, page, limit));
+    }
+
+    @GetMapping("/{groupId}/info")
+    public CommonResult<UserMemberGroupResp> getInfo(@PathVariable("groupId") Long groupId) {
+        UserMemberGroup member = userMemberGroupService.getMember(getLoginUserMemberId(), groupId);
+        return success(BeanUtil.copy(member, UserMemberGroupResp.class));
     }
 
 }

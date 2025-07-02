@@ -39,4 +39,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     void updateVisibleById(@Param("id") Long id, @Param("visible") Boolean visible);
 
     Page<Post> findAllByGroupIdAndVisibleAndDisable(Long groupId, boolean visible, boolean disable, Pageable pageable);
+
+    @Modifying
+    @Query("UPDATE Post p SET p.disable = :disable WHERE p.userId = :userId AND groupId = :groupId")
+    void updateDisableByUserIdAndGroupId(Long userId, Long groupId, boolean disable);
 }
