@@ -23,6 +23,10 @@ const GROUP_MANAGEMENT = [
         path: "pending/post"
     },
     {
+        name: "Unban",
+        path: "unban"
+    },
+    {
         name: "Setting",
         path: "setting"
     },

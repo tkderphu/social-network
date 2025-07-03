@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import { Outlet, useLocation, useNavigate, useParams } from "react-router";
+import { TokenUtils } from "../../common";
 import groupService from "../../services/group/groupService";
 import userMemberGroupService from "../../services/group/userMemberGroupService";
 import { useGroup } from "./GroupProvider";
@@ -24,7 +25,7 @@ export default function GroupWrapper() {
             setGroup(resp.data.data)
         })
 
-        userMemberGroupService.getInfo(groupId).then(resp => {
+        userMemberGroupService.getInfo(TokenUtils.authLogin.userId, groupId).then(resp => {
             setCurrentMember(resp.data.data)
         }).catch(err => {
             console.log("fetch current member error")

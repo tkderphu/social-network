@@ -57,6 +57,7 @@ import GroupManagement, { GroupSetting, PendingPost, PendingUser } from './scree
 import GroupUserProfile from './screens/group/GroupUserProfile'
 import GroupProvider from './screens/group/GroupProvider'
 import GroupWrapper from './screens/group/GroupWrapper'
+import UsersWereBanned from './screens/group/UsersWereBanned'
 
 export interface HandleChat {
   handleClickChat: any,
@@ -161,6 +162,7 @@ function App() {
                           <Route path='pending/user' element={<PendingUser />} />
                           <Route index element={<PendingUser />} />
                           <Route path='setting' element={<GroupSetting />} />
+                          <Route path='unban' element={< UsersWereBanned />}/>
                         </Route>
                       </Route>
                       <Route path=':groupId/profile/:userId' element={<GroupUserProfile />} />

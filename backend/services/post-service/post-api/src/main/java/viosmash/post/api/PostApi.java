@@ -19,8 +19,6 @@ public interface PostApi {
     void updateVote(@PathVariable("id") Long id, @RequestBody Integer votes);
 
 
-    @PutMapping("/user/{userId}/group/{groupId}")
-    void updateDisablePostByUserAndGroup(@PathVariable("userId") Long userId,
-                                         @PathVariable("postId") Long groupId,
-                                         @RequestParam("disable") boolean disable);
+    @PutMapping("/disable")
+    void updateDisablePostByUserAndGroup(@RequestBody PostUpdateDisableReqVO req);
 }

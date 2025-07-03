@@ -10,11 +10,17 @@ import { CommonResult } from '../../common';
 import { Checkbox } from "primereact/checkbox";
 import { PostResp } from '../../model/postModel';
 import userMemberGroupService from '../../services/group/userMemberGroupService';
-export default function BanUserButton() {
+import { convertToHeader } from '../../utils/utils';
+import { toast } from 'react-toastify';
 
-    const toast = useRef(null);
+interface BanUserProps {
+    type: "BAN" | "UNBAN",
+    userId: any
+}
+export default function BanUserButton(props: BanUserProps) {
+
     const group: GroupResp = useGroup().group
-    const { userId } = useParams()
+   
     const [visible, setVisible] = useState(false);
     const [groups, setGroups] = useState<GroupResp[]>([])
     const [checked, setChecked] = useState<any>({});
@@ -25,13 +31,13 @@ export default function BanUserButton() {
         unban: boolean
         banUtil?: any
     }>({
-        userId: userId,
-        unban: false,
+        userId: props.userId ,
+        unban: props.type == "BAN" ? false : true,
         groupIds: []
     })
     useEffect(() => {
-        console.log("userId: ", userId)
-        groupService.suggestGroupToBanUser(userId).then(resp => {
+        console.log("userId: ", props.userId)
+        groupService.suggestGroupToBanUser(props.userId, props.type == "BAN" ? 0 : 1).then(resp => {
             const result: CommonResult<PostResp[]> = resp.data
             if (result.code == 403) {
                 alert("Access denied")
@@ -61,9 +67,13 @@ export default function BanUserButton() {
     }
 
     const accept = () => {
-        // toast.current.show({ severity: 'info', summary: 'Confirmed', detail: 'You have accepted', life: 3000 });
         console.log("request: ", reqUpdateBan)
-        // userMemberGroupService.updateBanUser(reqUpdateBan)
+        userMemberGroupService.updateBanUser(reqUpdateBan).then(resp => {
+            toast.success( convertToHeader(props.type)+ " successfully")
+        }).catch(err => {
+            toast.error("Please see console")
+            console.log("update ban err: ", err)
+        })
     }
 
 
@@ -95,31 +105,32 @@ export default function BanUserButton() {
                     </div>
                 )
             })}
-            <div className='form-input d-flex align-items-center'>
+            {props.type == "BAN" && (
+                <div className='form-input d-flex align-items-center'>
                 <div style={{fontSize: "18px"}} >Until</div>
                 <input onChange={(e) => setReqUpdateBan((prev) => ({
                     ...prev,
                     banUtil: e.target.value
                 }))} id='endofban' className='mx-3 form-control' type={"datetime-local"} />
             </div>
+            )}
         </div>
     </>)
 
     return (
         <>
-            <Toast ref={toast} />
             <ConfirmDialog
                 group="declarative"
                 visible={visible}
                 onHide={() => setVisible(false)}
                 message={dialogDetail}
-                header="Confirmation"
+                header={convertToHeader(props.type)}
                 accept={accept}
                 reject={reject}
                 style={{ width: '50vw' }}
                 breakpoints={{ '1100px': '75vw', '960px': '100vw' }}
             />
-            <button onClick={() => setVisible(true)} className="btn btn-danger">Ban</button>
+            <button onClick={() => setVisible(true)} className="btn btn-danger">{convertToHeader(props.type)}</button>
         </>
     )
 

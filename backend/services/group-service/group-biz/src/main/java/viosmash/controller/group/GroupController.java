@@ -93,11 +93,22 @@ public class GroupController {
     }
 
 
+    /**
+     * Get common group between two user @userId and @currentUserId
+     * @param userId
+     * @param type
+     * if(type = 0) => Get common group to ban
+     * else if(type =1) => Get common that @userId was banned to unban
+     * @return
+     */
     @GetMapping("/suggest/ban/{userId}")
-    public CommonResult<List<GroupRespVO>> getCommonGroup(@PathVariable("userId") Long userId) {
+    public CommonResult<List<GroupRespVO>> getCommonGroup(
+            @PathVariable("userId") Long userId,
+            @RequestParam("type") int type) {
         List<GroupRespVO> groups = groupService.suggestGroupToBanUser(
                 getLoginUserMemberId(),
-                userId
+                userId,
+                type
         );
         return success(groups);
     }

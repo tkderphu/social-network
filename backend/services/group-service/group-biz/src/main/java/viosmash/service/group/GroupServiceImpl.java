@@ -165,17 +165,22 @@ public class GroupServiceImpl implements GroupService{
     }
 
     @Override
-    public List<GroupRespVO> suggestGroupToBanUser(Long currentUserId, Long userId) {
+    public List<GroupRespVO> suggestGroupToBanUser(Long currentUserId, Long userId, int type) {
         List<Group> groupAgg = groupRepository.suggestGroupToBanUser(currentUserId, userId);
         log.info("common group: {}", groupAgg);
         return CollUtils.convertList(groupAgg, group ->  {
             UserMemberGroup currentUserRole = userMemberGroupRepository.findByGroupIdAndMemberId(group.getId(), currentUserId);
             UserMemberGroup userRole = userMemberGroupRepository.findByGroupIdAndMemberId(group.getId(), userId);
             GroupRespVO resp = BeanUtil.copy(group, GroupRespVO.class);
-            if(userRole.getIsBanned()) return null;
-            if(currentUserRole.getGroupRole() == GroupRole.OWNER ||
-                ( currentUserRole.getGroupRole() == GroupRole.REVIEWER && userRole.getGroupRole() == GroupRole.MEMBER)) {
+            if(userRole.getIsBanned()) {
+                if(type == 0) return null;
                 return resp;
+            }
+            if(type == 0) {
+                if(currentUserRole.getGroupRole() == GroupRole.OWNER ||
+                        ( currentUserRole.getGroupRole() == GroupRole.REVIEWER && userRole.getGroupRole() == GroupRole.MEMBER)) {
+                    return resp;
+                }
             }
             return null;
         });

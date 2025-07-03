@@ -28,8 +28,8 @@ class GroupService {
         return api.put(`${path}/${groupId}/setting`, req)
     }
 
-    suggestGroupToBanUser(userId: any) {
-        return api.get(`${path}/suggest/ban/${userId}`)
+    suggestGroupToBanUser(userId: any, type: number) {
+        return api.get(`${path}/suggest/ban/${userId}?type=${type}`)
     }
 
 }

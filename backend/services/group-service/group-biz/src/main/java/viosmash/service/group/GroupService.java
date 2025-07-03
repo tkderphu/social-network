@@ -4,7 +4,6 @@ import org.springframework.web.multipart.MultipartFile;
 import viosmash.controller.group.vo.GroupCreateReqVO;
 import viosmash.controller.group.vo.GroupRespVO;
 import viosmash.controller.group.vo.GroupUpdateSettingReqVO;
-import viosmash.core.utils.LoginUser;
 import viosmash.dal.dataobject.Group;
 import viosmash.group.enums.GroupType;
 import viosmash.pojo.PageResult;
@@ -42,6 +41,10 @@ public interface GroupService {
      * va @userId la thanh vien
      * @param currentUserId
      * @param userId
+     * @param type
+     * if(type = 0) => Get common group to ban
+     * else if(type =1) => Get common that @userId was banned to unban
+     * @return
      */
-    List<GroupRespVO> suggestGroupToBanUser(Long currentUserId, Long userId);
+    List<GroupRespVO> suggestGroupToBanUser(Long currentUserId, Long userId, int type);
 }

@@ -9,7 +9,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import viosmash.aop.GroupPermission;
 import viosmash.collection.CollUtils;
-import viosmash.controller.member.vo.UpdateBanUserReqVO;
 import viosmash.controller.member.vo.MemberWaitingReviewRespVO;
 import viosmash.controller.member.vo.UserMemberGroupResp;
 import viosmash.core.utils.SecurityUtils;
@@ -29,6 +28,7 @@ import viosmash.notification.enums.TargetType;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.PageResult;
 import viosmash.post.api.PostApi;
+import viosmash.post.api.PostUpdateDisableReqVO;
 import viosmash.profile.api.UserApi;
 
 import java.time.LocalDateTime;
@@ -228,13 +228,19 @@ public class UserMemberGroupServiceImpl implements UserMemberGroupService{
                 .setBanUtil(banUtil);
         this.userMemberGroupRepository.save(memberGroup);
 
+        PostUpdateDisableReqVO req = new PostUpdateDisableReqVO(
+                userId,
+                groupId,
+                null
+        );
         //All post of @userId in @groupId will be disabled/ enable
         if(!memberGroup.getIsBanned()) {
-            postApi.updateDisablePostByUserAndGroup(userId, groupId, false);
+            req.setDisable(false);
         } else {
-            postApi.updateDisablePostByUserAndGroup(userId, groupId, true);
+            req.setDisable(true);
         }
 
+        this.postApi.updateDisablePostByUserAndGroup(req);
         return true;
     }
 

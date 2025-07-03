@@ -55,7 +55,7 @@ public class UserMemberGroupController {
     }
 
     @GetMapping("/{groupId}/ban")
-    public CommonResult<List<UserMemberGroupResp>> getListMemberIsBanned(
+        public CommonResult<List<UserMemberGroupResp>> getListMemberIsBanned(
             @PathVariable("groupId") Long groupId
     ) {
         List<UserMemberGroupResp> userMemberGroups = userMemberGroupService.getListMemberIsBanned(groupId);
@@ -110,9 +110,11 @@ public class UserMemberGroupController {
         return success(userMemberGroupService.getListRequestAttendGroup(groupId, page, limit));
     }
 
-    @GetMapping("/{groupId}/info")
-    public CommonResult<UserMemberGroupResp> getInfo(@PathVariable("groupId") Long groupId) {
-        UserMemberGroup member = userMemberGroupService.getMember(getLoginUserMemberId(), groupId);
+    @GetMapping("/{groupId}/user/{userId}")
+    public CommonResult<UserMemberGroupResp> getInfo(
+            @PathVariable("groupId") Long groupId,
+            @PathVariable("userId") Long userId) {
+        UserMemberGroup member = userMemberGroupService.getMember(userId, groupId);
         return success(BeanUtil.copy(member, UserMemberGroupResp.class));
     }
 
