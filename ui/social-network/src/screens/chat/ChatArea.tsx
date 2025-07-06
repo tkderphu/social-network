@@ -5,10 +5,12 @@ import { Link, useLocation, useParams } from "react-router";
 import { CommonResult, TokenUtils } from "../../common";
 import Alert from "../../components/Alert";
 import Spinner from "../../components/Spinner";
+import { MemberConversationRespVO } from "../../model/chatModel";
 import { ProfileSimpleResp, UserProfileResp } from "../../model/profileModel";
 import { fetchListConversationAction, fetchListMessageAction } from "../../redux/actions/chatAction";
 import { fetchProfileAction } from "../../redux/actions/profileAction";
 import conversationService, { ConversationRespVO } from "../../services/chat/conversationService";
+import memberConversationService from "../../services/chat/memberConversationService";
 import { MessageCreateReqVO, MessageRespVO } from "../../services/chat/messageService";
 import { useStompClient } from "../../utils/useStomp";
 import "./Chat.css"
@@ -56,8 +58,8 @@ export default function ChatArea(props: any) {
 
     const sendMessageToConversation = () => {
         // setListMsg((prev: any) => [...prev, { id: 2, sender: "You", text: "Not much, just chilling!", time: "10:32 AM" }])
-        const req: any = {...messageReq, establishedConversation: establishedConversation}
-        if(!establishedConversation && location.state.userId) {
+        const req: any = { ...messageReq, establishedConversation: establishedConversation }
+        if (!establishedConversation && location.state.userId) {
             req.toUserId = location.state.userId
         }
         stompClient?.publish({
@@ -82,7 +84,7 @@ export default function ChatArea(props: any) {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        
+
         if (location.state && location.state.userId) {
             //@ts-ignore
             dispatch(fetchProfileAction(location.state.userId))
@@ -111,7 +113,7 @@ export default function ChatArea(props: any) {
         conversationService.getConversation(id).then(resp => {
             const result: CommonResult<any> = resp.data;
             console.log("result when fetch conversation by id: ", result.data)
-            if(result.code === 200) {
+            if (result.code === 200) {
                 setConversation(result.data)
             }
         }).catch(err => {
@@ -119,18 +121,42 @@ export default function ChatArea(props: any) {
         })
     }, [id])
 
+
+
+    const [memberConversation, setMemberConversation] = useState<MemberConversationRespVO>()
+    const [listMemberConversation, setListMemberConversation] = useState<MemberConversationRespVO[]>()
     useEffect(() => {
-        if(stompClient?.connected) {
+        if (conversation) {
+            memberConversationService.getMemberConversationDetail(conversation.id)
+                .then(resp => {
+                    console.log("detail: ", resp.data)
+                    setMemberConversation(resp.data.data)
+                }).catch(err => {
+                    console.log("established conversation failed with conversation: ", conversation)
+                })
+
+            memberConversationService.getListMemberConversation(conversation.id)
+                .then(resp => {
+                    setListMemberConversation(resp.data.data)
+                }).catch(err => {
+                    console.log("established conversation failed with conversation: ", conversation)
+                })
+
+        }
+    }, [conversation])
+
+    useEffect(() => {
+        if (stompClient?.connected) {
             console.log("connected")
             stompClient?.subscribe(`/topic/chat/user/${TokenUtils.authLogin.userId}`, (msg: IMessage) => {
                 fetchListConversation()
-             })
-             stompClient?.subscribe(`/topic/chat/conversation/${id}`, (msg: IMessage) => {
+            })
+            stompClient?.subscribe(`/topic/chat/conversation/${id}`, (msg: IMessage) => {
                 fetchListConversation()
                 //  console.log("new message coming")
-                 const message: MessageRespVO = JSON.parse(msg.body)
-                 setListMsg((prev: any) => [...prev, message]) //add message to conversation
-             })
+                const message: MessageRespVO = JSON.parse(msg.body)
+                setListMsg((prev: any) => [...prev, message]) //add message to conversation
+            })
         }
     }, [stompClient?.connected])
 
@@ -154,45 +180,10 @@ export default function ChatArea(props: any) {
     // Scroll handler
     const handleScroll = () => {
         console.log('vcl')
-        // const container = scrollContainerRef.current;
-        // if (!container || isLoading || !hasMore) return;
 
-        // if (container.scrollTop <= 50) {
-        //     loadMoreMessages();
-        // }
     };
 
     const loadMoreMessages = (initial = false) => {
-        // setIsLoading(true);
-
-        // const nextPage = page + 1;
-        // const start = allMessages.length - nextPage * MESSAGES_PER_PAGE;
-        // const end = start + MESSAGES_PER_PAGE;
-
-        // const newMessages = allMessages.slice(Math.max(0, start), end);
-
-        // if (newMessages.length === 0) {
-        //     setHasMore(false);
-        //     setIsLoading(false);
-        //     return;
-        // }
-
-        // const scrollYBefore = window.scrollY;
-        // const bodyHeightBefore = document.body.scrollHeight;
-
-        // setMessages((prev) => [...newMessages, ...prev]);
-        // setPage(nextPage);
-
-
-        //     const bodyHeightAfter = document.body.scrollHeight;
-        //     const scrollDifference = bodyHeightAfter - bodyHeightBefore
-
-        //     window.scrollTo({
-        //         top: scrollDifference,
-        //         behavior: "smooth",
-        //     });
-
-        //     setIsLoading(false);
 
 
     };
@@ -214,6 +205,8 @@ export default function ChatArea(props: any) {
     }, [isLoading, hasMore]);
 
 
+    const [openDetailConversation, setOpenDetailConversation] = useState(false)
+
 
     if (fetchUserState.loading) {
         return <Spinner loading={fetchUserState.loading} />
@@ -223,88 +216,157 @@ export default function ChatArea(props: any) {
         return <Alert message={fetchUserState.message} type={"danger"} />
     }
     return (
-        <div className="container d-flex flex-column bg-white h-100"       >
-            <div className="d-flex justify-content-between align-items-center p-4 border-bottom  bg-white position-sticky top-0"
-                style={{ zIndex: 10 }} >
-                <div className="d-flex align-items-center">
-                    <img src={fetchUserState.userProfile?.imageUrl || conversation?.thumbnail} alt={props.selectedChat?.name} className="rounded-circle me-3 chat-avatar" />
-                    <div className="d-flex flex-column">
-                        <Link className="text-dark text-decoration-none" to={`/profile/${fetchUserState.userProfile?.id}`}> <h2 className="fs-5 fw-bold mb-0">{fetchUserState.userProfile ? fetchUserState.userProfile?.firstName + " " + fetchUserState.userProfile?.lastName : conversation?.nickname}</h2>
-                        </Link>
-                        {fetchUserState.userProfile?.isOnline && <span className="text-success">Online</span>}
-                        {!fetchUserState.userProfile?.isOnline && <span className="text-danger">Offline</span>}
+        <div className="row">
+            <div className={`vertical-line ${openDetailConversation ? "col-8" : ""} container d-flex flex-column bg-white h-100`}      >
+                <div className="d-flex justify-content-between align-items-center p-4 border-bottom  bg-white position-sticky top-0"
+                    style={{ zIndex: 10 }} >
+                    <div className="d-flex align-items-center">
+                        <img src={fetchUserState.userProfile?.imageUrl || conversation?.thumbnail} alt={props.selectedChat?.name} className="border rounded-circle me-3 chat-avatar" />
+                        <div className="d-flex flex-column">
+                            <Link className="text-dark text-decoration-none" to={`/profile/${fetchUserState.userProfile?.id}`}> <h2 className="fs-5 fw-bold mb-0">{fetchUserState.userProfile ? fetchUserState.userProfile?.firstName + " " + fetchUserState.userProfile?.lastName : conversation?.nickname}</h2>
+                            </Link>
+                            {fetchUserState.userProfile?.isOnline && <span className="text-success">Online</span>}
+                            {!fetchUserState.userProfile?.isOnline && <span className="text-danger">Offline</span>}
 
-                    </div>
-                </div>
-                <button className="btn btn-outline-secondary">
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        width="16"
-                        height="16"
-                        fill="currentColor"
-                        className="bi bi-info-circle"
-                        viewBox="0 0 16 16"
-                    >
-                        <path d="M8 15A7 7 0 1 1 8 <TurnEnd>1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
-                        <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
-                    </svg>
-                </button>
-            </div>
-
-            <div className="flex-grow-1 p-4 overflow-y-auto"
-            >
-
-                {listMsg?.map((message, index) => (
-                    <div
-                        key={index}
-                        //@ts-ignore
-                        className={`mb-4 d-flex ${message.sender.id === TokenUtils.authLogin.userId ? 'justify-content-end' : 'justify-content-start'}`}
-                    >
-                        <div
-                        //@ts-ignore
-                            className={`p-3 rounded-3 chat-message ${message.sender.id === TokenUtils.authLogin.userId  ? 'bg-primary text-white' : 'bg-light text-dark'
-                                }`}
-                        >
-                            <p className="mb-1">{message.message}</p>
-                            <span className="fs-6 text-muted">{message.timeAgo}</span>
                         </div>
                     </div>
-                ))}
-
-                <div ref={scrollContainerRef}></div>
-
-            </div>
-
-            <div className="p-4 border-top position-sticky bottom-0 bg-white" style={{ zIndex: 10 }}>
-                <div className="d-flex align-items-center">
-                    <input
-                        type="text"
-                        placeholder="Type a message..."
-                        value={messageReq.message}
-                        onChange={(e: any) => {
-                            setMessageReq((prev) => ({
-                                ...prev,
-                                message: e.target.value
-                            }));
-                        }}
-                        className="form-control rounded-pill flex-grow-1 me-2"
-                        aria-label="Message input"
-                    />
-                    <button className="btn btn-primary rounded-circle" onClick={() => {
-                        sendMessageToConversation()
-                    }}>
+                    <button className="btn btn-outline-secondary"
+                        onClick={() => setOpenDetailConversation(!openDetailConversation)}
+                    >
                         <svg
-                            className="w-5 h-5"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
                             xmlns="http://www.w3.org/2000/svg"
+                            width="16"
+                            height="16"
+                            fill="currentColor"
+                            className="bi bi-info-circle"
+                            viewBox="0 0 16 16"
                         >
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            <path d="M8 15A7 7 0 1 1 8 <TurnEnd>1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16" />
+                            <path d="m8.93 6.588-2.29.287-.082.38.45.083c.294.07.352.176.288.469l-.738 3.468c-.194.897.105 1.319.808 1.319.545 0 1.178-.252 1.465-.598l.088-.416c-.2.176-.492.246-.686.246-.275 0-.375-.193-.304-.533zM9 4.5a1 1 0 1 1-2 0 1 1 0 0 1 2 0" />
                         </svg>
                     </button>
                 </div>
+
+
+                <div className="flex-grow-1 p-4  ">
+
+                    {listMsg?.map((message, index) => (
+                        <div
+                            key={index}
+                            //@ts-ignore
+                            className={`mb-4 d-flex ${message.sender.id === TokenUtils.authLogin.userId ? 'justify-content-end' : 'justify-content-start'}`}
+                        >
+                            <div
+                                //@ts-ignore
+                                className={`p-3 rounded-3 chat-message ${message.sender.id === TokenUtils.authLogin.userId ? 'bg-primary text-white' : 'bg-light text-dark'
+                                    }`}
+                            >
+                                <p className="mb-1">{message.message}</p>
+                                <span className="fs-6 text-muted">{message.timeAgo}</span>
+                            </div>
+                        </div>
+                    ))}
+
+                    <div ref={scrollContainerRef}></div>
+
+                </div>
+
+                <div className="p-4 border-top position-sticky bottom-0 bg-white" style={{ zIndex: 10 }}>
+                    <div className="d-flex align-items-center">
+                        <input
+                            type="text"
+                            placeholder="Type a message..."
+                            value={messageReq.message}
+                            onChange={(e: any) => {
+                                setMessageReq((prev) => ({
+                                    ...prev,
+                                    message: e.target.value
+                                }));
+                            }}
+                            className="form-control rounded-pill flex-grow-1 me-2"
+                            aria-label="Message input"
+                        />
+                        <button className="btn btn-primary  rounded-circle" onClick={() => {
+                            sendMessageToConversation()
+                        }}>
+                            <svg
+                                className="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
             </div>
+
+            {openDetailConversation && (
+                <div className="vertical-line container col-4 d-flex flex-column bg-white position-sticky top-0 sticky-sidebar"       >
+                    <div className=" p-4 border-bottom  bg-white mb-2"
+                        style={{ zIndex: 10 }} >
+                        <h3>Details</h3>
+                    </div>
+                    <div className="hide-scrollbar">
+                        <h5>Notification</h5>
+                        <div className="d-flex align-items-center p-3 justify-content-between  mb-3 border-bottom">
+                            <div style={{ fontSize: "20px" }}><i className="bi bi-volume-up"></i></div>
+                            <span>Sound</span>
+                            <div className="form-check form-switch">
+                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked={memberConversation?.enableSoundNotification} />
+                            </div>
+                        </div>
+                        <div className="d-flex align-items-center p-3 justify-content-between  mb-2 border-bottom">
+                            <div style={{ fontSize: "20px" }}><i className="bi bi-bell"></i></div>
+                            <span>Push</span>
+                            <div className="form-check form-switch">
+                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked={memberConversation?.enablePushNotification} />
+                            </div>
+                        </div>
+                        <div>
+                            <h5>
+                                Self
+                            </h5>
+                            <div className="d-flex mt-2 border-bottom p-2 mb-2">
+                                <img src={memberConversation?.avatar} className="rounded-circle border me-3 chat-avatar" />
+                                <div className="d-flex flex-column">
+                                    <Link className="text-dark text-decoration-none" to={`/profile/${memberConversation?.id}`}> <h2 className="fs-5 fw-bold mb-0">{memberConversation.fullName}</h2>
+                                    </Link>
+                                    {memberConversation?.isOnline && <span className="text-success">Online</span>}
+                                    {!memberConversation?.isOnline && <span className="text-danger">Offline</span>}
+
+                                </div>
+                            </div>
+                        </div>
+
+                        <h5>Members</h5>
+                        {listMemberConversation?.map(mc => {
+                            if (mc.id == memberConversation?.id) return null
+                            return (
+                                <div className="d-flex mt-2 border-bottom p-2">
+                                    <img src={mc.avatar} className="rounded-circle border me-3 chat-avatar" />
+                                    <div className="d-flex flex-column">
+                                        <Link className="text-dark text-decoration-none" to={`/profile/${mc?.id}`}> <h2 className="fs-5 fw-bold mb-0">{mc.fullName}</h2>
+                                        </Link>
+                                        {mc?.isOnline && <span className="text-success">Online</span>}
+                                        {!mc?.isOnline && <span className="text-danger">Offline</span>}
+
+                                    </div>
+                                </div>
+                            )
+                        })}
+
+                    </div>
+                    <div className="p-4 border-top position-sticky bottom-0 bg-white" style={{ zIndex: 10 }}>
+                        <div style={{ color: "red", cursor: "pointer" }} className="p-2">Report</div>
+                        <div style={{ color: "red", cursor: "pointer" }} className="p-2">Delete chat</div>
+                    </div>
+                </div>
+            )}
+
         </div>
     );
 }

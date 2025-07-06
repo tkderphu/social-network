@@ -15,7 +15,7 @@ import java.util.List;
 @Entity
 @Table(name=  "tblPost")
 @Accessors(chain = true)
-public class Post {
+public class Post{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -51,6 +51,8 @@ public class Post {
     private int shares;
 
 
+
+
     public void calculateHotScore() {
         int score = votes;
         int sign = Integer.compare(score, 0); // -1, 0, or 1
@@ -66,4 +68,5 @@ public class Post {
 
         this.hotScore = sign * order + secondsSinceEpoch / 45000.0;
     }
+
 }

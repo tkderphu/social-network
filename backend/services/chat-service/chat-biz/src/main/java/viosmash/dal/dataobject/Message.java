@@ -20,6 +20,7 @@ public class Message {
     private Long id;
 
     private Long senderId;
+
     @ManyToOne
     @JoinColumn(name = "conversationId")
     private Conversation conversation;
@@ -33,4 +34,6 @@ public class Message {
     private List<String> files;
 
     private LocalDateTime createdAt;
+
+    private Boolean isRead;
 }

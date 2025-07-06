@@ -4,7 +4,6 @@ import org.springframework.scheduling.annotation.Async;
 import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
 import viosmash.dal.dataobject.Post;
-import viosmash.pojo.api.post.PostDTO;
 
 import java.util.List;
 
@@ -18,7 +17,16 @@ public interface PostService {
     @Async
     void updateVote(Long postId, int votes);
 
-    List<PostRespVO> getNewFeeds(Long userId, int page, int limit);
+    /**
+     *
+     * @param userId: @currentUserId
+     * @param type: newfeed for user or group
+     * @param page
+     * @param limit
+     * @param sort: => 0: hot score, 1: newest
+     * @return
+     */
+    List<PostRespVO> getNewFeeds(Long userId, String type, int page, int limit, int sort);
 
     /**
      *

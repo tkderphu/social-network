@@ -7,7 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import viosmash.chat.enums.Role;
 import viosmash.collection.StreamUtils;
 import viosmash.controller.conversation.vo.*;
-import viosmash.controller.member.vo.MemberRespVO;
+import viosmash.controller.member.vo.MemberConversationRespVO;
 import viosmash.controller.message.vo.MessageRespVO;
 import viosmash.core.utils.SecurityUtils;
 import viosmash.dal.dataobject.Conversation;
@@ -35,7 +35,7 @@ import static viosmash.object.BeanUtil.copy;
 public class ConversationServiceImpl implements ConversationService{
 
     private final ConversationRepository conversationRepository;
-    private final MemberService memberService;
+    private final MemberConversationService memberConversationService;
     private final MessageRepository messageRepository;
     private final UserApi userApi;
     @Override
@@ -46,7 +46,7 @@ public class ConversationServiceImpl implements ConversationService{
                 .setConversationType(ConversationType.PUBLIC);
 
         String conversationId = conversationRepository.save(conversation).getId();
-        memberService.invite(conversation.getId(), req.getUserIds(), userId -> {
+        memberConversationService.invite(conversation.getId(), req.getUserIds(), userId -> {
             if(userId.equals(ownerId)) return Role.OWNER;
             return Role.MEMBER;
         });
@@ -75,8 +75,8 @@ public class ConversationServiceImpl implements ConversationService{
         return convertList(objects, list -> {
             Conversation conversation = (Conversation) list[0];
             Message message = (Message)list[1];
-            Set<MemberRespVO> members = StreamUtils.filterAndThen(
-                    memberService.getListMemberConversationId(conversation.getId()),
+            Set<MemberConversationRespVO> members = StreamUtils.filterAndThen(
+                    memberConversationService.getListMemberConversationId(conversation.getId()),
                     member -> !member.getId().equals(userId)
             ).collect(Collectors.toSet());
 
@@ -84,8 +84,8 @@ public class ConversationServiceImpl implements ConversationService{
                     .setLatestMessage(copy(list[1], MessageRespVO.class)
                             .setSender(userApi.getUserById(message.getSenderId())))
                     .setOnline(StreamUtils.anyMatch(members, m -> m.getIsOnline()))
-                    .setNickname(StringUtils.concat(members, ",", MemberRespVO::getFullName))
-                    .setThumbnail(StringUtils.concat(members, ",", MemberRespVO::getAvatar));
+                    .setNickname(StringUtils.concat(members, ",", MemberConversationRespVO::getFullName))
+                    .setThumbnail(StringUtils.concat(members, ",", MemberConversationRespVO::getAvatar));
             return resp;
         }).stream().toList();
     }
@@ -95,16 +95,16 @@ public class ConversationServiceImpl implements ConversationService{
         Conversation conversation = conversationRepository.findById(conversationId)
                 .orElseThrow(() -> exception(404, "conversation not found"));
 
-        Set<MemberRespVO> members = StreamUtils.filterAndThen(
-                memberService.getListMemberConversationId(conversation.getId()),
+        Set<MemberConversationRespVO> members = StreamUtils.filterAndThen(
+                memberConversationService.getListMemberConversationId(conversation.getId()),
                 member -> !member.getId().equals(SecurityUtils.getLoginUserMemberId())
         ).collect(Collectors.toSet());
         Message latest = messageRepository.findLatestMessageByConversationId(conversationId).get();
         ConversationRespVO resp = copy(conversation, ConversationRespVO.class)
                 .setLatestMessage(copy(latest, MessageRespVO.class)  .setSender(userApi.getUserById(latest.getSenderId())))
                 .setOnline(StreamUtils.anyMatch(members, m -> m.getIsOnline()))
-                .setNickname(StringUtils.concat(members, ",", MemberRespVO::getFullName))
-                .setThumbnail(StringUtils.concat(members, ",", MemberRespVO::getAvatar));
+                .setNickname(StringUtils.concat(members, ",", MemberConversationRespVO::getFullName))
+                .setThumbnail(StringUtils.concat(members, ",", MemberConversationRespVO::getAvatar));
         return resp;
     }
 }

@@ -8,6 +8,7 @@ import viosmash.friendship.constant.FriendshipStatus;
 import viosmash.exception.ServiceException;
 import viosmash.nodes.User;
 import viosmash.nodes.UserMakesFriendRequest;
+import viosmash.notification.api.NotificationApi;
 import viosmash.pojo.api.notification.NotificationDto;
 import viosmash.pojo.api.notification.NotificationType;
 import viosmash.repository.UserRepository;
@@ -57,9 +58,9 @@ public class FriendshipServiceImpl implements FriendshipService{
         params.put("fromUserId", user.getId());
         params.put("toUserId", targetUserId);
         NotificationDto notificationDto = new NotificationDto();
-        notificationDto.setProperties(params);
-        notificationDto.setType(NotificationType.CREATED_REQUEST_FRIEND);
-        notificationApi.sendNotification(notificationDto);
+//        notificationDto.setProperties(params);
+//        notificationDto.setType(NotificationType.CREATED_REQUEST_FRIEND);
+//        notificationApi.sendNotification(notificationDto);
 
         return true;
     }
@@ -92,9 +93,9 @@ public class FriendshipServiceImpl implements FriendshipService{
         params.put("fromUserId", user.getId());
         params.put("toUserId", targetUserId);
         NotificationDto notificationDto = new NotificationDto();
-        notificationDto.setProperties(params);
-        notificationDto.setType(NotificationType.CREATED_REQUEST_FRIEND);
-        notificationApi.sendNotification(notificationDto);
+//        notificationDto.setProperties(params);
+//        notificationDto.setType(NotificationType.CREATED_REQUEST_FRIEND);
+//        notificationApi.sendNotification(notificationDto);
 
 
         return result;

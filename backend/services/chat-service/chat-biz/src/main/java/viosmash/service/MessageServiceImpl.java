@@ -26,7 +26,7 @@ import static viosmash.exception.utils.ServiceUtils.exception;
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService{
 
-    private final MemberService memberService;
+    private final MemberConversationService memberConversationService;
     private final ConversationRepository conversationRepository;
     private final MessageRepository messageRepository;
     private final UserApi userApi;
@@ -38,26 +38,46 @@ public class MessageServiceImpl implements MessageService{
         Conversation conversation = conversationRepository.findById(req.getConversationId())
                 .orElse(null);
         Boolean isNewConversation = false;
+        Boolean soundNotification = false;
+        Boolean pushNotifictaion = false;
         if(conversation == null) {
             conversation = new Conversation().setId(req.getConversationId())
                     .setCreatedAt(LocalDateTime.now()).setConversationType(ConversationType.PRIVATE)
                     .setId(req.getConversationId());
             this.conversationRepository.save(conversation);
-            memberService.invite(conversation.getId(), List.of(req.getSenderId(), req.getToUserId()), null);
+            memberConversationService.invite(conversation.getId(), List.of(req.getSenderId(), req.getToUserId()), null);
 
             isNewConversation = true;
+            soundNotification = true;
+            pushNotifictaion = true;
+        } else {
+            MemberConversation memberConversation = memberConversationService
+                    .getMemberConversation(req.getSenderId(), req.getConversationId());
+
+            soundNotification = memberConversation.getEnableSoundNotification();
+            pushNotifictaion = memberConversation.getEnablePushNotification();
         }
 
         Message message = BeanUtil.copy(req, Message.class)
                 .setSenderId(sender.getId())
                 .setCreatedAt(LocalDateTime.now())
-                .setConversation(conversation);
+                .setConversation(conversation)
+                .setIsRead(false);
 
         this.messageRepository.save(message);
 
         MessageRespVO resp = BeanUtil.copy(message, MessageRespVO.class).setSender(sender);
 
         simpMessagingTemplate.convertAndSend("/topic/chat/conversation/" + req.getConversationId(), resp);
+
+        if(soundNotification != null && soundNotification) {
+            simpMessagingTemplate.convertAndSend("/topic/chat/soundNotification", "");
+        }
+
+        if(pushNotifictaion != null && pushNotifictaion) {
+            log.warn("[+]==============Push Notification haven't implemented yet==================[+]");
+        }
+
         if(isNewConversation) {
             List.of(req.getSenderId(), req.getToUserId()).forEach(userId -> {
                 simpMessagingTemplate.convertAndSend("/topic/chat/user/" + userId, "new conversation between user");
@@ -85,5 +105,10 @@ public class MessageServiceImpl implements MessageService{
                     .setConversationId(msg.getConversation().getId())
                     .setSender(userApi.getUserById(msg.getSenderId()));
         });
+    }
+
+    @Override
+    public int countUnreadMessage(Long userId) {
+        return this.messageRepository.countUnreadMessage(userId);
     }
 }

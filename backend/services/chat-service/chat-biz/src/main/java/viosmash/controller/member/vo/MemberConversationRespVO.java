@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @Data
 @Accessors(chain = true)
 @Schema(description = "info member")
-public class MemberRespVO {
+public class MemberConversationRespVO {
     private Long id;
     private String firstName;
     private String lastName;
@@ -24,8 +24,10 @@ public class MemberRespVO {
     @Schema(description = "which date was invited")
     private LocalDateTime invitedAt;
     @Schema(description = "who invited")
-    private MemberRespVO invitedBy;
+    private MemberConversationRespVO invitedBy;
 
+    private Boolean enableSoundNotification;
+    private Boolean enablePushNotification;
 
 
     public String getFullName() {

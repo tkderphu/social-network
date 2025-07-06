@@ -31,6 +31,7 @@ public  class Conversation {
     @OneToMany(mappedBy = "conversation")
     private List<MemberConversation> memberConversations;
 
+
     /**
      * group chat
      */

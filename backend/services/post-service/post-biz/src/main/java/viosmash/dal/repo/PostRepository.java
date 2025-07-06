@@ -43,4 +43,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Modifying
     @Query("UPDATE Post p SET p.disable = :disable WHERE p.userId = :userId AND groupId = :groupId")
     void updateDisableByUserIdAndGroupId(Long userId, Long groupId, boolean disable);
+
+    @Query("SELECT p " +
+            "FROM Post p \n" +
+            "WHERE p.visible = true AND p.disable = false AND ((p.userId = :authorId) OR p.groupId IN (:groups))")
+    Page<Post> findAll(Long authorId, List<Long> groups, Pageable pageable);
 }

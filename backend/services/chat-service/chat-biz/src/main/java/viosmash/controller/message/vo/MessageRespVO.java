@@ -23,6 +23,8 @@ public class MessageRespVO {
     private LocalDateTime createdAt;
     private String timeAgo;
 
+    private Boolean isRead;
+
     public String getTimeAgo() {
         return DateUtils.timeAgo(createdAt);
     }

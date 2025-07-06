@@ -53,7 +53,7 @@ export default function ChatList1() {
             className={`d-flex align-items-center p-4 cursor-pointer  chat-item ${selectedConversation === chat.id ? 'bg-light' : ''
               }`}
           >
-            <img src={chat.thumbnail} alt={chat.nickname} className="rounded-circle me-3 chat-avatar" />
+            <img src={chat.thumbnail} alt={chat.nickname} className="border rounded-circle me-3 chat-avatar" />
             <div className="flex-grow-1">
               <div className="d-flex justify-content-between">
                 <h6 className="fw-bold mb-0">{chat.nickname}</h6>

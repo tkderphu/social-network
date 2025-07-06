@@ -58,6 +58,7 @@ import GroupUserProfile from './screens/group/GroupUserProfile'
 import GroupProvider from './screens/group/GroupProvider'
 import GroupWrapper from './screens/group/GroupWrapper'
 import UsersWereBanned from './screens/group/UsersWereBanned'
+import GroupNewFeed from './screens/group/GroupNewFeed'
 
 export interface HandleChat {
   handleClickChat: any,
@@ -146,10 +147,11 @@ function App() {
               {/**group route */}
               <GroupProvider>
                 <Routes location={state?.backgroundLocation || location}>
-                  <Route element={<GroupWrapper />}>
-                    <Route path='groups' element={<Group />}>
-                      {/* <Route path='joined' element={<GroupPage/>} /> */}
-                      <Route path='feed' element={<NewFeed />} />
+                  <Route path='groups' element={<Group />}>
+                    {/* <Route path='joined' element={<GroupPage/>} /> */}
+                    <Route path='feed' element={<GroupNewFeed />} />
+                    <Route index element={<GroupNewFeed />} />
+                    <Route element={<GroupWrapper />}>
                       <Route path=':groupId' element={<GroupDetails />} >
                         <Route path='about' element={<GroupAbout />} />
                         <Route path='posts' element={<GroupPost />} />
@@ -162,7 +164,7 @@ function App() {
                           <Route path='pending/user' element={<PendingUser />} />
                           <Route index element={<PendingUser />} />
                           <Route path='setting' element={<GroupSetting />} />
-                          <Route path='unban' element={< UsersWereBanned />}/>
+                          <Route path='unban' element={< UsersWereBanned />} />
                         </Route>
                       </Route>
                       <Route path=':groupId/profile/:userId' element={<GroupUserProfile />} />

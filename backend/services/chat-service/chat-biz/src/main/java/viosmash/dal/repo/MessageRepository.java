@@ -22,4 +22,8 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 
     @Query("SELECT m FROM Message m WHERE m.conversation.id = :conversationId")
     List<Message> findAllByConversationId(@Param("conversationId") String conversationId);
+
+    @Query("SELECT COUNT(m) FROM Message m INNER JOIN Conversation c ON m.conversation.id = c.id \n " +
+            "WHERE :userId IN (SELECT mc.memberId FROM MemberConversation mc WHERE mc.conversation.id = c.id) AND m.isRead = false")
+    int countUnreadMessage(Long userId);
 }

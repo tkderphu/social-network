@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import viosmash.collection.CollUtils;
+import viosmash.controller.group.vo.GroupRespVO;
 import viosmash.dal.dataobject.UserMemberGroup;
 import viosmash.group.api.GroupApi;
 import viosmash.group.enums.GroupRole;
@@ -42,7 +44,10 @@ public class GroupApiImpl implements GroupApi {
 
     @Override
     public List<Long> getListGroup(Long userId) {
-        return List.of();
+        List<Long> groupIds = CollUtils.convertList(groupService.getListGroupJoined(userId), GroupRespVO::getId);
+        log.info("get list group of user - groups: {} - {}", userId, groupIds);
+
+        return groupIds;
     }
 
 

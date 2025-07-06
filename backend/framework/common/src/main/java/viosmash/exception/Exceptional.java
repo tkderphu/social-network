@@ -9,7 +9,7 @@ public class Exceptional  {
         try {
             return func.apply(applied);
         } catch (Exception ex) {
-//            log.warn("exceptional[process({ex})]", ex);
+            log.warn("exceptional[process({ex})]", ex);
             return null;
         }
     }
@@ -18,7 +18,7 @@ public class Exceptional  {
         try {
             return func.apply(applied);
         } catch (Exception ex) {
-//            log.warn("exceptional[process({ex})]", ex);
+            log.warn("exceptional[process({ex})]", ex);
             return defaultValue;
         }
     }

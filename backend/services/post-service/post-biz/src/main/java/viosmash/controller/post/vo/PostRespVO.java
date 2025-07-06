@@ -31,7 +31,7 @@ public class PostRespVO {
     private String time;
     private Boolean visible;
     private Boolean disable;
-
+    private Double hotScore;
 
     public String getTime() {
         return DateUtils.timeAgo(createdDate);

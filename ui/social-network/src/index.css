@@ -2,17 +2,44 @@
   overflow: visible !important;
 }
 
-.hide-scrollbar {
+/* .hide-scrollbar {
   scrollbar-width: none;
-  /* Firefox */
   -ms-overflow-style: none;
-  /* IE 10+ */
 }
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
-  /* Chrome, Safari, Opera */
+} */
+
+
+
+.hide-scrollbar {
+  overflow: auto;
+  scrollbar-width: none; /* for Firefox */
 }
+
+.hide-scrollbar::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
+  background: transparent;
+}
+
+.hide-scrollbar:hover {
+  scrollbar-width: thin; /* for Firefox */
+}
+
+.hide-scrollbar:hover::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.hide-scrollbar:hover::-webkit-scrollbar-thumb {
+  background-color: rgba(0,0,0,0.3); /* Customize */
+  border-radius: 4px;
+}
+
+
+/* .hide-scrollbar */
 
 body {
   min-height: 100vh;

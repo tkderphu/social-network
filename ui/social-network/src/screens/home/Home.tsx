@@ -5,24 +5,73 @@ import remarkGfm from 'remark-gfm'
 import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw';
 import { PostResp } from '../../model/postModel';
+import { toast } from 'react-toastify';
+import { useEffect, useState } from 'react';
+import { CommonResult } from '../../common';
+import postService from '../../services/post/postService';
+import { PostCard } from '../post/PostCard';
+import PostFormModal from '../post/PostFormModal';
+import Contact from './Contact';
+
+
+
+
 
 function Home() {
+
+    const [fetchPostState, setFetchPostState] = useState<{
+        posts: PostResp[],
+        loading: boolean,
+        error: boolean,
+        page: number,
+        limit: number,
+        message: any
+    }>({
+        posts: [],
+        loading: false,
+        error: false,
+        message: "",
+        limit: 100,
+        page: 1
+    })
+
+
+    useEffect(() => {
+        console.log("=====================new===================")
+        setFetchPostState((prev) => ({...prev, loading: true}))
+        postService.getNewFeeds("user", fetchPostState.page, fetchPostState.limit, 0)
+        .then(res => {
+            const commonResult: CommonResult<any> = res.data
+            console.log("data from newfeed: ", commonResult.data)
+            if(commonResult.code == 200) {
+                setFetchPostState((prev) => ({...prev, error: false, loading: true, posts: [...prev.posts, ...commonResult.data]}))
+            } else {
+                setFetchPostState((prev) => ({...prev, loading: false, error: true, message: commonResult.message}))
+            }
+        }).catch(err => {
+            setFetchPostState((prev) => ({...prev, loading: false, error: true, message: "Please see console"}))
+            console.error("err: ", err)
+        })
+    }, [fetchPostState.page])
+
+
+
+    if(fetchPostState.error) {
+        toast.error(fetchPostState.message)
+    }
+
 
     return (
         <div className="row mt-3">
             <div className="col-8">
                 {/* <PostForm /> */}
-                {/* {posts.map((post, index) => (
-                    <PostCard
-                        key={index}
-                        user={post.user}
-                        time={post.time}
-                        content={post.content}
-                    />
-                ))} */}
+                <PostFormModal />
+                {fetchPostState.posts.map((post, index) => {
+                    return <PostCard key={index} post={post} />
+                })}
             </div>
             <div className='col-4'>
-
+                <Contact/> 
             </div>
         </div>
     )

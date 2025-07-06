@@ -32,5 +32,8 @@ class PostService {
     updatePostDisplay(postId: any, isAccept: boolean) {
         return api.put(`${path}/${postId}/${isAccept}`)
     }
+    getNewFeeds(newfeedType: string, page: number, limit: number, sort: any) {
+        return api.get(`${path}/${newfeedType}/newfeeds?page=${page}&limit=${limit}&sort=${sort}`)
+    }
 }
 export default new PostService()

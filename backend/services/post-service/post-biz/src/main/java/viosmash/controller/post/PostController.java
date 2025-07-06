@@ -67,10 +67,10 @@ public class PostController {
     }
 
     @GetMapping("/{type}/{id}")
-    public CommonResult<List<PostRespVO>> getListPostByUser(@PathVariable("id") Long id,
+    public CommonResult<List<PostRespVO>> getListPost(@PathVariable("id") Long id,
                                                             @PathVariable("type") String type,
                                                             @RequestParam(value = "page", defaultValue = "1") int page,
-                                                            @RequestParam(value = "limit", defaultValue = "20") int limit,
+                                                            @RequestParam(value = "limit", defaultValue = "50") int limit,
                                                             @RequestParam(value = "type", defaultValue = "0") int typeId) {
         if(type.equals("user")) {
             List<PostRespVO> resp = postService.getListPostByUserId(id, page, limit);
@@ -82,12 +82,31 @@ public class PostController {
         }
     }
 
-    @GetMapping("/newfeeds")
-    public CommonResult<List<PostRespVO>> getNewfeeds( @RequestParam(value = "page", defaultValue = "1") int page,
-                                                       @RequestParam(value = "limit", defaultValue = "20") int limit) {
-        List<PostRespVO> newFeeds = postService.getNewFeeds(SecurityUtils.getLoginUserMemberId(), page, limit);
+    /**
+     *
+     * @param : @currentUserId
+     * @param typeNewFeed: newfeed for user or group
+     * @param page
+     * @param limit
+     * @param sort: => 0: hot score, 1: newest
+     * @return
+     */
+    @GetMapping("/{type}/newfeeds")
+    public CommonResult<List<PostRespVO>> getNewFeeds(
+            @PathVariable("type") String typeNewFeed,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "limit", defaultValue = "50") int limit,
+            @RequestParam(value = "sort", defaultValue = "0") int sort) {
+        List<PostRespVO> newFeeds = postService.getNewFeeds(
+                SecurityUtils.getLoginUserMemberId(),
+                typeNewFeed,
+                page,
+                limit,
+                sort
+        );
         return CommonResult.success(newFeeds);
     }
+
 
     @GetMapping("/{id}")
     public CommonResult<PostRespVO> getPostById(@PathVariable("id") Long postId) {

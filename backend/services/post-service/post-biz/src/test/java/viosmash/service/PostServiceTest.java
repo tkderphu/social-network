@@ -14,14 +14,10 @@ import viosmash.dal.repo.PostTagRepository;
 import viosmash.dal.repo.TagRepository;
 import viosmash.friendship.api.FriendshipApi;
 import viosmash.group.api.GroupApi;
-import viosmash.pojo.PageResult;
-import viosmash.profile.api.UserApi;
 import viosmash.random.RandomUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class PostServiceTest extends BaseTest {
 
@@ -98,7 +94,7 @@ class PostServiceTest extends BaseTest {
         this.postRepository.save(post5);
         this.postRepository.save(post6);
 
-        List<PostRespVO> newFeeds = this.postService.getNewFeeds(currentUserId, 1, 20);
+        List<PostRespVO> newFeeds = this.postService.getNewFeeds(currentUserId, , 1, 20);
 
         Assertions.assertEquals(newFeeds.size(), 4);
 

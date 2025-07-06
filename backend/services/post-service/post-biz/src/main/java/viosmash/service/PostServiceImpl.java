@@ -36,7 +36,6 @@ import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
 
-import static viosmash.exception.Exceptional.process;
 import static viosmash.exception.utils.ServiceUtils.exception;
 
 @Slf4j
@@ -69,7 +68,6 @@ public class PostServiceImpl implements PostService{
                 post.setVisible(false);
             }
         }
-
         this.postRepository.save(post);
         CollUtils.convertList(postCreateReq.getTagNames(), tagName -> {
             Tag tag = tagRepository.findByName(StringUtils.lower(tagName));
@@ -137,15 +135,21 @@ public class PostServiceImpl implements PostService{
     }
 
     @Override
-    public List<PostRespVO> getNewFeeds(Long userId, int page, int limit) {
-        List<Long> recommends = Exceptional.process(userId, friendshipApi::getListRecommendUser, Collections.emptyList());
+    public List<PostRespVO> getNewFeeds(Long userId, String type, int page, int limit, int sort) {
         List<Long> groups = Exceptional.process(userId, groupApi::getListGroup, Collections.emptyList());
         Pageable pageable = PageRequest.of(page - 1, limit);
-        Page<Post> postPage = postRepository.findAll(userId, recommends, groups, pageable);
-
-        return CollUtils.convertList(postPage.getContent(), post -> {
-            PostRespVO postResp = mapToResp(post);
-            return postResp;
+        Page<Post> postPage;
+        if(type.equals("user")) {
+              List<Long> recommends = Exceptional.process(userId, friendshipApi::getListRecommendUser, Collections.emptyList());
+              postPage = postRepository.findAll(userId, recommends, groups, pageable);
+          } else {
+            postPage = postRepository.findAll(userId, groups, pageable);
+          }
+        return CollUtils.convertList(postPage.getContent(), this::mapToResp, (c1, c2) -> {
+            if(sort == 0) {
+                return c2.getHotScore().compareTo(c1.getHotScore());
+            }
+            return c2.getCreatedDate().compareTo(c1.getCreatedDate());
         });
     }
 
@@ -155,8 +159,7 @@ public class PostServiceImpl implements PostService{
     public List<PostRespVO> getListPostByGroupId(Long id, int pageNumber, int limit, int type) {
         Pageable pageable = PageRequest.of(
                 pageNumber - 1,
-                limit,
-                type == 0 ? Sort.by("hotScore").descending() : Sort.by("createdDate").descending()
+                limit
         );
 
         Page<Post> page = postRepository.findAllByGroupIdAndVisibleAndDisable(
@@ -165,9 +168,12 @@ public class PostServiceImpl implements PostService{
                 false
                 , pageable);
 
-        return CollUtils.convertList(page.getContent(),post -> {
-            return mapToResp(post);
-        });
+        return CollUtils.convertList(page.getContent(),this::mapToResp, (c1, c2) -> {
+            if(type == 0) {
+                return c2.getHotScore().compareTo(c1.getHotScore());
+            }
+            return c2.getCreatedDate().compareTo(c1.getCreatedDate());
+        }, pageNumber - 1, limit);
     }
 
     @Override
@@ -178,9 +184,7 @@ public class PostServiceImpl implements PostService{
                 PageRequest.of(page - 1, limit).withSort(Sort.by("createdDate").descending())
         );
 
-        return CollUtils.convertList(pagePost.getContent(), post -> {
-            return mapToResp(post);
-        });
+        return CollUtils.convertList(pagePost.getContent(),this::mapToResp);
     }
 
     @Override
@@ -218,6 +222,7 @@ public class PostServiceImpl implements PostService{
 
 
     private PostRespVO mapToResp(Post post) {
+        post.calculateHotScore();
         return BeanUtil.copy(post, PostRespVO.class)
                 .setUser(Exceptional.process(post.getUserId(), userApi::getUserById))
                 .setGroup(Exceptional.process(post.getGroupId(), groupApi::getGroup))

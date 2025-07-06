@@ -11,4 +11,7 @@ public interface MessageService {
 
     List<MessageRespVO> getListMessage(String conversationId);
 
+
+    int countUnreadMessage(Long userId);
+
 }

@@ -26,4 +26,7 @@ public class MemberConversation {
     private Role role;
     private Long invitedByMemberId;
     private LocalDateTime invitedAt;
+
+    private Boolean enableSoundNotification;
+    private Boolean enablePushNotification;
 }
