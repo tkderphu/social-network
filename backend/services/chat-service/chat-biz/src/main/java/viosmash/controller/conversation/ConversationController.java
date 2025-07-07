@@ -3,6 +3,7 @@ package viosmash.controller.conversation;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import viosmash.chat.enums.ApiConstant;
 import viosmash.controller.conversation.vo.ConversationCreateReq;
@@ -13,6 +14,7 @@ import viosmash.service.ConversationService;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(ApiConstant.APP_PREFIX + "/conversations")
@@ -38,4 +40,7 @@ public class ConversationController {
     public CommonResult<ConversationRespVO> getConversation(@PathVariable("conversationId") String conversationId) {
         return CommonResult.success(conversationService.getConversationById(conversationId));
     }
+
+
+
 }

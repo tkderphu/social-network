@@ -60,4 +60,5 @@ export interface ProfileSimpleResp {
     isOnline?: boolean,
     recentVisit?: string
     avatar?: string
+    fullName?: string
 }

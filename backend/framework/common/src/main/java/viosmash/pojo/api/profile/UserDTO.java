@@ -16,4 +16,8 @@ public class UserDTO {
                 "id=" + id +
                 '}';
     }
+
+    public String getFullName() {
+        return firstName + " " + lastName;
+    }
 }

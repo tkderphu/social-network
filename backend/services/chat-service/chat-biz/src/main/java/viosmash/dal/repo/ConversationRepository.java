@@ -16,4 +16,12 @@ public interface ConversationRepository extends JpaRepository<Conversation, Stri
             "AND me.id = (SELECT MAX(m.id) FROM Message m WHERE m.conversation.id = c.id) \n" +
             "ORDER BY me.id DESC")
     Set<Object[]> findAllByUserId(@Param("userId") Long userId);
+
+    @Query(value = """
+            SELECT mc.conversation_id FROM tbl_member_conversation mc 
+            WHERE mc.member_id IN (:userOne, :userTwo)
+            GROUP BY mc.conversation_id
+            HAVING COUNT(DISTINCT mc.member_id) = 2
+            """, nativeQuery = true)
+    String findPrivateConversation(@Param("userOne") Long userOne, @Param("userTwo") Long userTwo);
 }

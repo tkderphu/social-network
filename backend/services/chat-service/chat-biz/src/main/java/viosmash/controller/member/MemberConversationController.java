@@ -12,6 +12,7 @@ import viosmash.chat.enums.ApiConstant;
 import viosmash.dal.dataobject.MemberConversation;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.CommonResult;
+import viosmash.pojo.api.profile.UserDTO;
 import viosmash.profile.api.UserApi;
 import viosmash.service.MemberConversationService;
 
@@ -64,15 +65,17 @@ public class MemberConversationController {
                 SecurityUtils.getLoginUserMemberId(),
                 conversationId
         );
-        MemberConversationRespVO memberResp = BeanUtil.copy(userApi.getUserById(mc.getMemberId()), MemberConversationRespVO.class)
+
+        MemberConversationRespVO memberResp = BeanUtil.copy(mc, MemberConversationRespVO.class)
                 .setRole(mc.getRole())
                 .setInvitedAt(mc.getInvitedAt())
-                .setInvitedBy(BeanUtil.copy(userApi.getUserById(mc.getInvitedByMemberId()), MemberConversationRespVO.class));
+                .setMember(BeanUtil.copy(userApi.getUserById(mc.getMemberId()), UserDTO.class))
+                .setInvitedBy(BeanUtil.copy(userApi.getUserById(mc.getInvitedByMemberId()), UserDTO.class));
         return CommonResult.success(memberResp);
     }
 
 
-    @PutMapping("/conversation")
+    @PutMapping("/conversation/notify")
     @Operation(summary = "Update notify about conversation")
     public CommonResult<Boolean> updateMemberConversationNotify(@RequestBody MemberConversationUpdateNotifyReqVO req) {
         memberConversationService.updateConversationNotify(req);

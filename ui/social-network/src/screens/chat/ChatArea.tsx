@@ -2,6 +2,7 @@ import { IMessage } from "@stomp/stompjs";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useParams } from "react-router";
+import { toast } from "react-toastify";
 import { CommonResult, TokenUtils } from "../../common";
 import Alert from "../../components/Alert";
 import Spinner from "../../components/Spinner";
@@ -90,13 +91,7 @@ export default function ChatArea(props: any) {
             dispatch(fetchProfileAction(location.state.userId))
         }
 
-        if (!location.pathname.includes("/u/")) {
-            setEstablishedConversation(true)
-        }
 
-        //@ts-ignore
-        dispatch(fetchListMessageAction(id))
-        // setListMsg(allMessages)
 
     }, [])
 
@@ -115,10 +110,18 @@ export default function ChatArea(props: any) {
             console.log("result when fetch conversation by id: ", result.data)
             if (result.code === 200) {
                 setConversation(result.data)
+            } else {
+                setEstablishedConversation(false)
             }
         }).catch(err => {
             alert("Service is crashed")
         })
+
+
+
+        //@ts-ignore
+        dispatch(fetchListMessageAction(id))
+        // setListMsg(allMessages)
     }, [id])
 
 
@@ -215,18 +218,46 @@ export default function ChatArea(props: any) {
     if (fetchUserState.hasError) {
         return <Alert message={fetchUserState.message} type={"danger"} />
     }
+
+
+    const onChangeNotification = (e: any) => {
+        const { name, checked } = e.target
+        const req = {
+            conversationId: conversation?.id,
+            [name]: checked
+        }
+
+        memberConversationService.updateNotify(req)
+            .then(resp => {
+                if (resp.data.code == 200) {
+                    setMemberConversation((prev: any) => ({
+                        ...prev,
+                        [name]: checked
+                    }))
+                    toast.success("Updated successfully")
+                } else throw new Error("please check server")
+            }).catch(err => {
+                toast.error("Error")
+                console.log("err: ", err)
+            })
+    }
+
+    if (fetchUserState) {
+        // console.log("================user profile, conversation=================", fetchUserState.userProfile, conversation, conversation ? conversation?.nickname : fetchUserState.userProfile?.firstName)
+
+    }
     return (
-        <div className="row">
-            <div className={`vertical-line ${openDetailConversation ? "col-8" : ""} container d-flex flex-column bg-white h-100`}      >
+        <div className="row " >
+            <div className={`vertical-line ${openDetailConversation ? "col-8" : ""}  container d-flex flex-column bg-white  position-relative`}   style={{height: "98vh"}}   >
                 <div className="d-flex justify-content-between align-items-center p-4 border-bottom  bg-white position-sticky top-0"
-                    style={{ zIndex: 10 }} >
+                    style={{ zIndex: 10, height: "10vh" }} >
                     <div className="d-flex align-items-center">
-                        <img src={fetchUserState.userProfile?.imageUrl || conversation?.thumbnail} alt={props.selectedChat?.name} className="border rounded-circle me-3 chat-avatar" />
+                        <img src={conversation != undefined ? conversation?.thumbnail : fetchUserState.userProfile?.avatar} alt={props.selectedChat?.name} className="border rounded-circle me-3 chat-avatar" />
                         <div className="d-flex flex-column">
-                            <Link className="text-dark text-decoration-none" to={`/profile/${fetchUserState.userProfile?.id}`}> <h2 className="fs-5 fw-bold mb-0">{fetchUserState.userProfile ? fetchUserState.userProfile?.firstName + " " + fetchUserState.userProfile?.lastName : conversation?.nickname}</h2>
+                            <Link className="text-dark text-decoration-none" to={`/profile/${fetchUserState.userProfile?.id}`}> <h2 className="fs-5 fw-bold mb-0">{conversation ? conversation?.nickname : fetchUserState.userProfile?.firstName + " " + fetchUserState.userProfile?.lastName}</h2>
                             </Link>
-                            {fetchUserState.userProfile?.isOnline && <span className="text-success">Online</span>}
-                            {!fetchUserState.userProfile?.isOnline && <span className="text-danger">Offline</span>}
+                            {(conversation?.online) && <span className="text-success">Online</span>}
+                            {(!conversation?.online) && <span className="text-danger">Offline</span>}
 
                         </div>
                     </div>
@@ -248,28 +279,31 @@ export default function ChatArea(props: any) {
                 </div>
 
 
-                <div className="flex-grow-1 p-4  ">
+                {/* <div className="container hid"> */}
+                    <div className="flex-grow-1 p-4 hide-scrollbar" style={{overflowY: "scroll", height: "80vh"}}>
 
-                    {listMsg?.map((message, index) => (
-                        <div
-                            key={index}
-                            //@ts-ignore
-                            className={`mb-4 d-flex ${message.sender.id === TokenUtils.authLogin.userId ? 'justify-content-end' : 'justify-content-start'}`}
-                        >
+                        {listMsg?.map((message, index) => (
                             <div
+                                key={index}
                                 //@ts-ignore
-                                className={`p-3 rounded-3 chat-message ${message.sender.id === TokenUtils.authLogin.userId ? 'bg-primary text-white' : 'bg-light text-dark'
-                                    }`}
+                                className={`mb-4 d-flex ${message.sender.id === TokenUtils.authLogin.userId ? 'justify-content-end' : 'justify-content-start'}`}
                             >
-                                <p className="mb-1">{message.message}</p>
-                                <span className="fs-6 text-muted">{message.timeAgo}</span>
+                                <div
+                                    //@ts-ignore
+                                    className={`p-3 rounded-3 chat-message ${message.sender.id === TokenUtils.authLogin.userId ? 'bg-primary text-white' : 'bg-light text-dark'
+                                        }`}
+                                >
+                                    <p className="mb-1">{message.message}</p>
+                                    <span className="fs-6 text-muted">{message.timeAgo}</span>
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        ))}
 
-                    <div ref={scrollContainerRef}></div>
 
-                </div>
+                        <div ref={scrollContainerRef}></div>
+
+                    </div>
+                {/* </div> */}
 
                 <div className="p-4 border-top position-sticky bottom-0 bg-white" style={{ zIndex: 10 }}>
                     <div className="d-flex align-items-center">
@@ -316,14 +350,20 @@ export default function ChatArea(props: any) {
                             <div style={{ fontSize: "20px" }}><i className="bi bi-volume-up"></i></div>
                             <span>Sound</span>
                             <div className="form-check form-switch">
-                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked={memberConversation?.enableSoundNotification} />
+                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
+                                    name="enableSoundNotification"
+                                    onChange={(e) => onChangeNotification(e)}
+                                    checked={memberConversation?.enableSoundNotification} />
                             </div>
                         </div>
                         <div className="d-flex align-items-center p-3 justify-content-between  mb-2 border-bottom">
                             <div style={{ fontSize: "20px" }}><i className="bi bi-bell"></i></div>
                             <span>Push</span>
                             <div className="form-check form-switch">
-                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked" checked={memberConversation?.enablePushNotification} />
+                                <input className="form-check-input"
+                                    name="enablePushNotification"
+                                    onChange={onChangeNotification}
+                                    type="checkbox" id="flexSwitchCheckChecked" checked={memberConversation?.enablePushNotification} />
                             </div>
                         </div>
                         <div>
@@ -331,12 +371,12 @@ export default function ChatArea(props: any) {
                                 Self
                             </h5>
                             <div className="d-flex mt-2 border-bottom p-2 mb-2">
-                                <img src={memberConversation?.avatar} className="rounded-circle border me-3 chat-avatar" />
+                                <img src={memberConversation?.member?.avatar} className="rounded-circle border me-3 chat-avatar" />
                                 <div className="d-flex flex-column">
-                                    <Link className="text-dark text-decoration-none" to={`/profile/${memberConversation?.id}`}> <h2 className="fs-5 fw-bold mb-0">{memberConversation.fullName}</h2>
+                                    <Link className="text-dark text-decoration-none" to={`/profile/${memberConversation?.id}`}> <h2 className="fs-5 fw-bold mb-0">{memberConversation?.member?.fullName}</h2>
                                     </Link>
-                                    {memberConversation?.isOnline && <span className="text-success">Online</span>}
-                                    {!memberConversation?.isOnline && <span className="text-danger">Offline</span>}
+                                    {memberConversation?.member?.isOnline && <span className="text-success">Online</span>}
+                                    {!memberConversation?.member?.isOnline && <span className="text-danger">Offline</span>}
 
                                 </div>
                             </div>
@@ -347,12 +387,12 @@ export default function ChatArea(props: any) {
                             if (mc.id == memberConversation?.id) return null
                             return (
                                 <div className="d-flex mt-2 border-bottom p-2">
-                                    <img src={mc.avatar} className="rounded-circle border me-3 chat-avatar" />
+                                    <img src={mc?.member?.avatar} className="rounded-circle border me-3 chat-avatar" />
                                     <div className="d-flex flex-column">
-                                        <Link className="text-dark text-decoration-none" to={`/profile/${mc?.id}`}> <h2 className="fs-5 fw-bold mb-0">{mc.fullName}</h2>
+                                        <Link className="text-dark text-decoration-none" to={`/profile/${mc?.member?.id}`}> <h2 className="fs-5 fw-bold mb-0">{mc?.member?.fullName}</h2>
                                         </Link>
-                                        {mc?.isOnline && <span className="text-success">Online</span>}
-                                        {!mc?.isOnline && <span className="text-danger">Offline</span>}
+                                        {mc?.member?.isOnline && <span className="text-success">Online</span>}
+                                        {!mc?.member?.isOnline && <span className="text-danger">Offline</span>}
 
                                     </div>
                                 </div>

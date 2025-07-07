@@ -34,6 +34,9 @@ class ConversationService {
     deleteConversation(id: number) {
         return api.delete(`${PATH}/${id}`)
     }
+    getPrivateConversation(userId: any) {
+        return api.get(`${PATH}/user/${userId}`)
+    }
 
 }
 export default new ConversationService()

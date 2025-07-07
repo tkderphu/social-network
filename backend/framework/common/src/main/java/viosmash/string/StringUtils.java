@@ -28,7 +28,15 @@ public class StringUtils {
 
     public static <T, U extends String> String concat(Collection<T> coll, String delimiter, Function<T, U> func) {
         if(CollectionUtils.isEmpty(coll)) return "";
-        return coll.stream().map(func).collect(Collectors.joining(delimiter));
+        List<String> t = new ArrayList<>();
+        for(T x : coll) {
+            U apply = func.apply(x);
+            if(apply != null) {
+                t.add(apply);
+            }
+        }
+        return t.stream().collect(Collectors.joining(", "));
+
     }
 
     public static boolean equal(String s1, String s2) {

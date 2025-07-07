@@ -2,12 +2,8 @@ package viosmash.dal.dataobject;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
 import lombok.ToString;
 import lombok.experimental.Accessors;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,7 +22,7 @@ public  class Conversation {
     private LocalDateTime createdAt;
 
     @Enumerated(EnumType.STRING)
-    private ConversationType conversationType;
+    private ConversationType conversationType = ConversationType.PRIVATE;
 
     @OneToMany(mappedBy = "conversation")
     private List<MemberConversation> memberConversations;

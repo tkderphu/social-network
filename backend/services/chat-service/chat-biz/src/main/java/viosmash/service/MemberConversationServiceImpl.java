@@ -9,9 +9,11 @@ import viosmash.controller.member.vo.MemberConversationRespVO;
 import viosmash.controller.member.vo.MemberConversationUpdateNotifyReqVO;
 import viosmash.core.utils.SecurityUtils;
 import viosmash.dal.dataobject.Conversation;
+import viosmash.dal.dataobject.ConversationType;
 import viosmash.dal.dataobject.MemberConversation;
 import viosmash.dal.repo.MemberConversationRepository;
 import viosmash.object.BeanUtil;
+import viosmash.pojo.api.profile.UserDTO;
 import viosmash.profile.api.UserApi;
 
 import java.time.LocalDateTime;
@@ -63,10 +65,11 @@ public class MemberConversationServiceImpl implements MemberConversationService 
     public Set<MemberConversationRespVO> getListMemberConversationId(String conversationId) {
         List<MemberConversation> members = this.memberConversationRepository.findAllByConversationId(conversationId);
         return members.stream().map(mc -> {
-            return BeanUtil.copy(userApi.getUserById(mc.getMemberId()), MemberConversationRespVO.class)
+            return BeanUtil.copy(mc, MemberConversationRespVO.class)
                     .setRole(mc.getRole())
+                    .setMember(BeanUtil.copy(userApi.getUserById(mc.getMemberId()), UserDTO.class))
                     .setInvitedAt(mc.getInvitedAt())
-                    .setInvitedBy(BeanUtil.copy(userApi.getUserById(mc.getInvitedByMemberId()), MemberConversationRespVO.class));
+                    .setInvitedBy(BeanUtil.copy(userApi.getUserById(mc.getInvitedByMemberId()), UserDTO.class));
 
         }).collect(Collectors.toSet());
     }
@@ -79,9 +82,13 @@ public class MemberConversationServiceImpl implements MemberConversationService 
 
     @Override
     public void updateConversationNotify(MemberConversationUpdateNotifyReqVO req) {
-        MemberConversation memberConversation = getMemberConversation(req.getUserId(), req.getConversationId())
-                .setEnableSoundNotification(req.getEnableSoundNotification())
-                .setEnablePushNotification(req.getEnablePushNotification());
+        MemberConversation memberConversation = getMemberConversation(req.getUserId(), req.getConversationId());
+        if(req.getEnablePushNotification() != null) {
+            memberConversation.setEnablePushNotification(req.getEnablePushNotification());
+        }
+        if(req.getEnableSoundNotification() != null) {
+            memberConversation.setEnableSoundNotification(req.getEnableSoundNotification());
+        }
 
         this.memberConversationRepository.save(memberConversation);
     }

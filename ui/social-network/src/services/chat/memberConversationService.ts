@@ -9,6 +9,9 @@ class MemberConversationService {
     getListMemberConversation(conversationId: any) {
         return api.get(`${path}/conversation/${conversationId}`)
     }
+    updateNotify(req: any) {
+        return api.put(`${path}/conversation/notify`, req)
+    }
 }
 
 export default new MemberConversationService()

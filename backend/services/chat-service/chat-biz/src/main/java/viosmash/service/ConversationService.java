@@ -11,4 +11,5 @@ public interface ConversationService {
     void updatePolicy(ConversationUpdatePolicyReq req);
     List<ConversationRespVO> getListConversation(Long userId);
     ConversationRespVO getConversationById(String conversationId);
+    String getPrivateConversation(Long userOne, Long userTwo);
 }

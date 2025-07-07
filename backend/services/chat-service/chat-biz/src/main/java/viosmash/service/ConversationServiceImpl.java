@@ -83,9 +83,27 @@ public class ConversationServiceImpl implements ConversationService{
             ConversationRespVO resp = copy(list[0], ConversationRespVO.class)
                     .setLatestMessage(copy(list[1], MessageRespVO.class)
                             .setSender(userApi.getUserById(message.getSenderId())))
-                    .setOnline(StreamUtils.anyMatch(members, m -> m.getIsOnline()))
-                    .setNickname(StringUtils.concat(members, ",", MemberConversationRespVO::getFullName))
-                    .setThumbnail(StringUtils.concat(members, ",", MemberConversationRespVO::getAvatar));
+                    .setOnline(StreamUtils.anyMatch(members, m -> m.getMember().getIsOnline()));
+
+
+            if(StringUtils.isEmpty(conversation.getNickname())) {
+                resp.setNickname(StringUtils.concat(members, ",", (m) -> {
+                    if(conversation.getConversationType() == ConversationType.PRIVATE) {
+                        if(m.getMember().getId().equals(SecurityUtils.getLoginUserMemberId() )) return null;
+                    }
+                    return m.getMember().getFullName();
+                }));
+            }
+
+            if(StringUtils.isEmpty(conversation.getThumbnail())) {
+                resp.setThumbnail(StringUtils.concat(members, ",", (m) -> {
+                    if(conversation.getConversationType() == ConversationType.PRIVATE) {
+                        if(m.getMember().getId().equals(SecurityUtils.getLoginUserMemberId() )) return null;
+                    }
+                    return m.getMember().getAvatar();
+                }));
+            }
+
             return resp;
         }).stream().toList();
     }
@@ -102,9 +120,30 @@ public class ConversationServiceImpl implements ConversationService{
         Message latest = messageRepository.findLatestMessageByConversationId(conversationId).get();
         ConversationRespVO resp = copy(conversation, ConversationRespVO.class)
                 .setLatestMessage(copy(latest, MessageRespVO.class)  .setSender(userApi.getUserById(latest.getSenderId())))
-                .setOnline(StreamUtils.anyMatch(members, m -> m.getIsOnline()))
-                .setNickname(StringUtils.concat(members, ",", MemberConversationRespVO::getFullName))
-                .setThumbnail(StringUtils.concat(members, ",", MemberConversationRespVO::getAvatar));
+                .setOnline(StreamUtils.anyMatch(members, m -> m.getMember().getIsOnline()));
+
+        if(StringUtils.isEmpty(conversation.getNickname())) {
+            resp.setNickname(StringUtils.concat(members, ",", (m) -> {
+                if(conversation.getConversationType() == ConversationType.PRIVATE) {
+                    if(m.getMember().getId().equals(SecurityUtils.getLoginUserMemberId() )) return null;
+                }
+                return m.getMember().getFullName();
+            }));
+        }
+
+        if(StringUtils.isEmpty(conversation.getThumbnail())) {
+            resp.setThumbnail(StringUtils.concat(members, ",", (m) -> {
+                if(conversation.getConversationType() == ConversationType.PRIVATE) {
+                    if(m.getMember().getId().equals(SecurityUtils.getLoginUserMemberId() )) return null;
+                }
+                return m.getMember().getAvatar();
+            }));
+        }
         return resp;
+    }
+
+    @Override
+    public String getPrivateConversation(Long userOne, Long userTwo) {
+        return this.conversationRepository.findPrivateConversation(userTwo, userTwo);
     }
 }

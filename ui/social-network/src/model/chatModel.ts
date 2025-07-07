@@ -1,11 +1,11 @@
+import { ProfileSimpleResp } from "./profileModel"
+
 export interface MemberConversationRespVO {
     id: any,
-    fullName: any
-    avatar: any
-    isOnline: any
+    member: ProfileSimpleResp
     role: "OWNER" | "MEMBER",
     invitedAt: any
-    invitedBy: MemberConversationRespVO
+    invitedBy: ProfileSimpleResp
     enableSoundNotification: boolean
     enablePushNotification: boolean
 }

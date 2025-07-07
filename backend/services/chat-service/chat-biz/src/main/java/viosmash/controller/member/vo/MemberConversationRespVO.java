@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import viosmash.chat.enums.Role;
+import viosmash.pojo.api.profile.UserDTO;
 
 import java.time.LocalDateTime;
 
@@ -12,11 +13,7 @@ import java.time.LocalDateTime;
 @Schema(description = "info member")
 public class MemberConversationRespVO {
     private Long id;
-    private String firstName;
-    private String lastName;
-    private String avatar;
-    private Boolean isOnline;
-
+    private UserDTO member;
 
 
     @Schema(description = "what role member in conversation")
@@ -24,13 +21,11 @@ public class MemberConversationRespVO {
     @Schema(description = "which date was invited")
     private LocalDateTime invitedAt;
     @Schema(description = "who invited")
-    private MemberConversationRespVO invitedBy;
+    private UserDTO invitedBy;
 
     private Boolean enableSoundNotification;
     private Boolean enablePushNotification;
 
 
-    public String getFullName() {
-        return firstName + " " + lastName;
-    }
+
 }
