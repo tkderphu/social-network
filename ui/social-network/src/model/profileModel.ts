@@ -62,3 +62,9 @@ export interface ProfileSimpleResp {
     avatar?: string
     fullName?: string
 }
+
+
+export interface BlockedUserStatusResp {
+    blocked: boolean,
+    direction: "TO" | "FROM"
+}

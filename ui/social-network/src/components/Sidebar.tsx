@@ -5,7 +5,7 @@ import { TokenUtils } from "../common";
 
 
 export default function Sidebar(){
-    const [useLink, setUseLik] = useState<"HOME" | "PROFILE" | "NOTIFICATIONS" | "FRIENDS" | "GROUPS" | "INBOX" | "LOGOUT">("HOME")
+    const [useLink, setUseLik] = useState<"HOME" | "PROFILE" | "NOTIFICATIONS" | "FRIENDS" | "GROUPS" | "INBOX" | "LOGOUT" | "SEARCH">("HOME")
     const location = useLocation()
     return (
         <div className="d-flex flex-column bg-light vh-100 p-3" style={{ position: 'fixed', top: 0, left: 0 }}>
@@ -24,6 +24,11 @@ export default function Sidebar(){
                     <Link to={"/inbox"} className={`nav-link ${useLink === 'INBOX' ? "active" : ""}`} onClick={() => {
                         setUseLik("INBOX")
                     }}><i className="bi bi-inbox " style={{fontSize: "24px"}}></i></Link>
+                </li>
+                <li className="nav-item">
+                    <div  className={`nav-link ${useLink === 'SEARCH' ? "active" : ""}`} style={{cursor: "pointer"}} onClick={() => {
+                        setUseLik("SEARCH")
+                    }}><i className="bi bi-search " style={{fontSize: "24px"}}></i></div>
                 </li>
                 <li className="nav-item">
                     <Link to={"/friends"} className={`nav-link ${useLink === 'FRIENDS' ? "active" : ""}`} onClick={() => {

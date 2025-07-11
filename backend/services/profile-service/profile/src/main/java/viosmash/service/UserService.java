@@ -1,6 +1,8 @@
 package viosmash.service;
 
 
+import viosmash.controller.vo.BlockedUserStatusResp;
+import viosmash.core.utils.LoginUser;
 import viosmash.profile.constant.AddressEnum;
 import viosmash.profile.constant.PolicyEnum;
 import viosmash.profile.constant.SchoolEnum;
@@ -31,4 +33,9 @@ public interface UserService {
     void changePassword(Long userId, String oldPassword, String oldPassword1);
 
     List<UserRespVO> searchUser(String name);
+
+    void updateBlockUser(Long fromUserId, Long toUserId, Boolean typeBlock);
+    List<UserRespVO> getListBlockedUser(Long fromUserId);
+
+    BlockedUserStatusResp checkBlocked(Long currentUserId, Long userId);
 }

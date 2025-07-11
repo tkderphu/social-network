@@ -1,4 +1,5 @@
 import { IMessage } from "@stomp/stompjs";
+import { ConfirmDialog, confirmDialog } from "primereact/confirmdialog";
 import { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useParams } from "react-router";
@@ -7,32 +8,23 @@ import { CommonResult, TokenUtils } from "../../common";
 import Alert from "../../components/Alert";
 import Spinner from "../../components/Spinner";
 import { MemberConversationRespVO } from "../../model/chatModel";
-import { ProfileSimpleResp, UserProfileResp } from "../../model/profileModel";
+import { BlockedUserStatusResp, ProfileSimpleResp, UserProfileResp } from "../../model/profileModel";
 import { fetchListConversationAction, fetchListMessageAction } from "../../redux/actions/chatAction";
 import { fetchProfileAction } from "../../redux/actions/profileAction";
+import { UPDATE_NEWEST_MESSAGE } from "../../redux/constants/chatConstant";
 import conversationService, { ConversationRespVO } from "../../services/chat/conversationService";
 import memberConversationService from "../../services/chat/memberConversationService";
 import { MessageCreateReqVO, MessageRespVO } from "../../services/chat/messageService";
+import profileService from "../../services/profile/profileService";
 import { useStompClient } from "../../utils/useStomp";
 import "./Chat.css"
 
-
-
-const allMessages = Array.from({ length: 500 }, (_, i) => ({
-    id: i + 1,
-    sender: i % 2 === 0 ? "You" : "Alex Johnson",
-    text: `Message #${i + 1}`,
-    time: `${Math.floor(Math.random() * 12) + 10}:${Math.floor(Math.random() * 60)}`,
-}));
-
-const MESSAGES_PER_PAGE = 20;
 
 export default function ChatArea(props: any) {
     const location = useLocation()
     const { id } = useParams()
     const [establishedConversation, setEstablishedConversation] = useState<boolean>(false)
     const [messageReq, setMessageReq] = useState<MessageCreateReqVO>({
-        conversationId: id,
         message: ''
     })
     const [listMsg, setListMsg] = useState<MessageRespVO[]>()
@@ -58,9 +50,11 @@ export default function ChatArea(props: any) {
 
 
     const sendMessageToConversation = () => {
+        // alert("what de fuck")
         // setListMsg((prev: any) => [...prev, { id: 2, sender: "You", text: "Not much, just chilling!", time: "10:32 AM" }])
-        const req: any = { ...messageReq, establishedConversation: establishedConversation }
-        if (!establishedConversation && location.state.userId) {
+        const req: any = { ...messageReq, establishedConversation: establishedConversation, conversationId: id }
+        console.log("message req: ", req)
+        if (!establishedConversation && location.state?.userId) {
             req.toUserId = location.state.userId
         }
         stompClient?.publish({
@@ -91,16 +85,17 @@ export default function ChatArea(props: any) {
             dispatch(fetchProfileAction(location.state.userId))
         }
 
-
-
     }, [])
 
 
+
+
+
+
+
     const fetchListConversation = () => {
-        setTimeout(() => {
-            //@ts-ignore
-            dispatch(fetchListConversationAction())
-        }, 500)
+        //@ts-ignore
+        dispatch(fetchListConversationAction())
     }
 
     const [conversation, setConversation] = useState<ConversationRespVO | undefined>(undefined)
@@ -110,6 +105,7 @@ export default function ChatArea(props: any) {
             console.log("result when fetch conversation by id: ", result.data)
             if (result.code === 200) {
                 setConversation(result.data)
+                setEstablishedConversation(true)
             } else {
                 setEstablishedConversation(false)
             }
@@ -128,6 +124,7 @@ export default function ChatArea(props: any) {
 
     const [memberConversation, setMemberConversation] = useState<MemberConversationRespVO>()
     const [listMemberConversation, setListMemberConversation] = useState<MemberConversationRespVO[]>()
+    const [blockedUserStatusResp, setBlockedUserStatusResp] = useState<BlockedUserStatusResp>()
     useEffect(() => {
         if (conversation) {
             memberConversationService.getMemberConversationDetail(conversation.id)
@@ -148,20 +145,69 @@ export default function ChatArea(props: any) {
         }
     }, [conversation])
 
+    const getOtherMemberFromPrivateConversation = () => {
+        return listMemberConversation?.filter(v => {
+            return v.member.id != TokenUtils.authLogin.userId
+        })?.at(0)
+    }
+
     useEffect(() => {
-        if (stompClient?.connected) {
-            console.log("connected")
-            stompClient?.subscribe(`/topic/chat/user/${TokenUtils.authLogin.userId}`, (msg: IMessage) => {
-                fetchListConversation()
-            })
-            stompClient?.subscribe(`/topic/chat/conversation/${id}`, (msg: IMessage) => {
-                fetchListConversation()
-                //  console.log("new message coming")
-                const message: MessageRespVO = JSON.parse(msg.body)
-                setListMsg((prev: any) => [...prev, message]) //add message to conversation
+        setBlockedUserStatusResp(undefined)
+        if (conversation && conversation.conversationType == "PRIVATE" && listMemberConversation && !blockedUserStatusResp) {
+            profileService.getStatusBlocked(getOtherMemberFromPrivateConversation()?.member.id).then(resp => {
+                console.log("blocked: ", resp.data)
+                setBlockedUserStatusResp(resp.data.data)
+            }).catch(err => {
+                console.log("err fetch blocked status")
             })
         }
-    }, [stompClient?.connected])
+    }, [listMemberConversation, conversation])
+
+    useEffect(() => {
+        // Subscribe to user-specific topic
+        stompClient?.subscribe(
+            `/topic/chat/user/${TokenUtils.authLogin.userId}`,
+            (msg: IMessage) => {
+                fetchListConversation();
+            }
+        );
+    }, [])
+
+
+
+
+    useEffect(() => {
+
+    }, [])
+
+    useEffect(() => {
+        let userSubscription: any;
+        let conversationSubscription: any;
+
+        if (stompClient?.connected) {
+            console.log("connected");
+
+            // Subscribe to conversation-specific topic
+            conversationSubscription = stompClient.subscribe(
+                `/topic/chat/conversation/${id}`,
+                (msg: IMessage) => {
+                    // fetchListConversation();
+                    const message: MessageRespVO = JSON.parse(msg.body);
+                    setListMsg((prev: any) => [...prev, message]);
+                }
+            );
+        }
+
+        // Cleanup function to unsubscribe when `id` changes or on unmount
+        return () => {
+            if (userSubscription) {
+                userSubscription.unsubscribe();
+            }
+            if (conversationSubscription) {
+                conversationSubscription.unsubscribe();
+            }
+        };
+    }, [id, stompClient?.connected]);
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [messages, setMessages] = useState<any[]>([]);
@@ -248,7 +294,7 @@ export default function ChatArea(props: any) {
     }
     return (
         <div className="row " >
-            <div className={`vertical-line ${openDetailConversation ? "col-8" : ""}  container d-flex flex-column bg-white  position-relative`}   style={{height: "98vh"}}   >
+            <div className={`vertical-line ${openDetailConversation ? "col-8" : ""}  container d-flex flex-column bg-white  position-relative`} style={{ height: "98vh" }}   >
                 <div className="d-flex justify-content-between align-items-center p-4 border-bottom  bg-white position-sticky top-0"
                     style={{ zIndex: 10, height: "10vh" }} >
                     <div className="d-flex align-items-center">
@@ -280,133 +326,204 @@ export default function ChatArea(props: any) {
 
 
                 {/* <div className="container hid"> */}
-                    <div className="flex-grow-1 p-4 hide-scrollbar" style={{overflowY: "scroll", height: "80vh"}}>
+                <div className="flex-grow-1 p-4 hide-scrollbar" style={{ overflowY: "scroll", height: "80vh" }}>
 
-                        {listMsg?.map((message, index) => (
+                    {listMsg?.map((message, index) => (
+                        <div
+                            key={index}
+                            //@ts-ignore
+                            className={`mb-4 d-flex ${message.sender.id === TokenUtils.authLogin.userId ? 'justify-content-end' : 'justify-content-start'}`}
+                        >
                             <div
-                                key={index}
                                 //@ts-ignore
-                                className={`mb-4 d-flex ${message.sender.id === TokenUtils.authLogin.userId ? 'justify-content-end' : 'justify-content-start'}`}
+                                className={`p-3 rounded-3 chat-message ${message.sender.id === TokenUtils.authLogin.userId ? 'bg-primary text-white' : 'bg-light text-dark'
+                                    }`}
                             >
-                                <div
-                                    //@ts-ignore
-                                    className={`p-3 rounded-3 chat-message ${message.sender.id === TokenUtils.authLogin.userId ? 'bg-primary text-white' : 'bg-light text-dark'
-                                        }`}
-                                >
-                                    <p className="mb-1">{message.message}</p>
-                                    <span className="fs-6 text-muted">{message.timeAgo}</span>
-                                </div>
+                                <p className="mb-1">{message.message}</p>
+                                <span className="fs-6 text-muted">{message.timeAgo}</span>
                             </div>
-                        ))}
+                        </div>
+                    ))}
 
 
-                        <div ref={scrollContainerRef}></div>
+                    <div ref={scrollContainerRef}></div>
 
-                    </div>
+                </div>
                 {/* </div> */}
 
                 <div className="p-4 border-top position-sticky bottom-0 bg-white" style={{ zIndex: 10 }}>
-                    <div className="d-flex align-items-center">
-                        <input
-                            type="text"
-                            placeholder="Type a message..."
-                            value={messageReq.message}
-                            onChange={(e: any) => {
-                                setMessageReq((prev) => ({
-                                    ...prev,
-                                    message: e.target.value
-                                }));
-                            }}
-                            className="form-control rounded-pill flex-grow-1 me-2"
-                            aria-label="Message input"
-                        />
-                        <button className="btn btn-primary  rounded-circle" onClick={() => {
-                            sendMessageToConversation()
-                        }}>
-                            <svg
-                                className="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
-                            </svg>
-                        </button>
-                    </div>
+                    {blockedUserStatusResp?.blocked ?
+                        (
+                            blockedUserStatusResp.direction == "FROM" ? (
+                                <div className="d-flex justify-content-center">
+                                    <h4 >You have blocked {getOtherMemberFromPrivateConversation()?.member.fullName}</h4>
+                                    <button className="btn btn-danger mx-3">Unblock</button>
+                                </div>
+                            ) : (<h4 className="text-center">You had been blocked by {getOtherMemberFromPrivateConversation()?.member.fullName}</h4>)
+                        )
+                        :
+                        (
+                            <div className="d-flex align-items-center">
+                                <input
+                                    type="text"
+                                    placeholder="Type a message..."
+                                    value={messageReq.message}
+                                    onChange={(e: any) => {
+                                        setMessageReq((prev) => ({
+                                            ...prev,
+                                            message: e.target.value
+                                        }));
+                                    }}
+                                    className="form-control rounded-pill flex-grow-1 me-2"
+                                    aria-label="Message input"
+                                />
+                                <button className="btn btn-primary  rounded-circle" onClick={() => {
+                                    sendMessageToConversation()
+                                }}>
+                                    <svg
+                                        className="w-5 h-5"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        viewBox="0 0 24 24"
+                                        xmlns="http://www.w3.org/2000/svg"
+                                    >
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                                    </svg>
+                                </button>
+                            </div>
+                        )}
+
                 </div>
 
             </div>
 
-            {openDetailConversation && (
-                <div className="vertical-line container col-4 d-flex flex-column bg-white position-sticky top-0 sticky-sidebar"       >
-                    <div className=" p-4 border-bottom  bg-white mb-2"
-                        style={{ zIndex: 10 }} >
-                        <h3>Details</h3>
-                    </div>
-                    <div className="hide-scrollbar">
-                        <h5>Notification</h5>
-                        <div className="d-flex align-items-center p-3 justify-content-between  mb-3 border-bottom">
-                            <div style={{ fontSize: "20px" }}><i className="bi bi-volume-up"></i></div>
-                            <span>Sound</span>
-                            <div className="form-check form-switch">
-                                <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
-                                    name="enableSoundNotification"
-                                    onChange={(e) => onChangeNotification(e)}
-                                    checked={memberConversation?.enableSoundNotification} />
-                            </div>
+            {
+                openDetailConversation && (
+                    <div className="vertical-line container col-4 d-flex flex-column bg-white position-sticky top-0 sticky-sidebar"       >
+                        <div className=" p-4 border-bottom  bg-white mb-2"
+                            style={{ zIndex: 10 }} >
+                            <h3>Details</h3>
                         </div>
-                        <div className="d-flex align-items-center p-3 justify-content-between  mb-2 border-bottom">
-                            <div style={{ fontSize: "20px" }}><i className="bi bi-bell"></i></div>
-                            <span>Push</span>
-                            <div className="form-check form-switch">
-                                <input className="form-check-input"
-                                    name="enablePushNotification"
-                                    onChange={onChangeNotification}
-                                    type="checkbox" id="flexSwitchCheckChecked" checked={memberConversation?.enablePushNotification} />
-                            </div>
-                        </div>
-                        <div>
-                            <h5>
-                                Self
-                            </h5>
-                            <div className="d-flex mt-2 border-bottom p-2 mb-2">
-                                <img src={memberConversation?.member?.avatar} className="rounded-circle border me-3 chat-avatar" />
-                                <div className="d-flex flex-column">
-                                    <Link className="text-dark text-decoration-none" to={`/profile/${memberConversation?.id}`}> <h2 className="fs-5 fw-bold mb-0">{memberConversation?.member?.fullName}</h2>
-                                    </Link>
-                                    {memberConversation?.member?.isOnline && <span className="text-success">Online</span>}
-                                    {!memberConversation?.member?.isOnline && <span className="text-danger">Offline</span>}
-
+                        <div className="hide-scrollbar">
+                            <h5>Notification</h5>
+                            <div className="d-flex align-items-center p-3 justify-content-between  mb-3 border-bottom">
+                                <div style={{ fontSize: "20px" }}><i className="bi bi-volume-up"></i></div>
+                                <span>Sound</span>
+                                <div className="form-check form-switch">
+                                    <input className="form-check-input" type="checkbox" id="flexSwitchCheckChecked"
+                                        name="enableSoundNotification"
+                                        onChange={(e) => onChangeNotification(e)}
+                                        checked={memberConversation?.enableSoundNotification} />
                                 </div>
                             </div>
-                        </div>
-
-                        <h5>Members</h5>
-                        {listMemberConversation?.map(mc => {
-                            if (mc.id == memberConversation?.id) return null
-                            return (
-                                <div className="d-flex mt-2 border-bottom p-2">
-                                    <img src={mc?.member?.avatar} className="rounded-circle border me-3 chat-avatar" />
+                            <div className="d-flex align-items-center p-3 justify-content-between  mb-2 border-bottom">
+                                <div style={{ fontSize: "20px" }}><i className="bi bi-bell"></i></div>
+                                <span>Push</span>
+                                <div className="form-check form-switch">
+                                    <input className="form-check-input"
+                                        name="enablePushNotification"
+                                        onChange={onChangeNotification}
+                                        type="checkbox" id="flexSwitchCheckChecked" checked={memberConversation?.enablePushNotification} />
+                                </div>
+                            </div>
+                            <div>
+                                <h5>
+                                    Self
+                                </h5>
+                                <div className="d-flex mt-2 border-bottom p-2 mb-2">
+                                    <img src={memberConversation?.member?.avatar} className="rounded-circle border me-3 chat-avatar" />
                                     <div className="d-flex flex-column">
-                                        <Link className="text-dark text-decoration-none" to={`/profile/${mc?.member?.id}`}> <h2 className="fs-5 fw-bold mb-0">{mc?.member?.fullName}</h2>
+                                        <Link className="text-dark text-decoration-none" to={`/profile/${memberConversation?.id}`}> <h2 className="fs-5 fw-bold mb-0">{memberConversation?.member?.fullName}</h2>
                                         </Link>
-                                        {mc?.member?.isOnline && <span className="text-success">Online</span>}
-                                        {!mc?.member?.isOnline && <span className="text-danger">Offline</span>}
+                                        {memberConversation?.member?.isOnline && <span className="text-success">Online</span>}
+                                        {!memberConversation?.member?.isOnline && <span className="text-danger">Offline</span>}
 
                                     </div>
                                 </div>
-                            )
-                        })}
+                            </div>
 
-                    </div>
-                    <div className="p-4 border-top position-sticky bottom-0 bg-white" style={{ zIndex: 10 }}>
-                        <div style={{ color: "red", cursor: "pointer" }} className="p-2">Report</div>
-                        <div style={{ color: "red", cursor: "pointer" }} className="p-2">Delete chat</div>
-                    </div>
-                </div>
-            )}
+                            <h5>Members</h5>
+                            {listMemberConversation?.map(mc => {
+                                if (mc.id == memberConversation?.id) return null
+                                return (
+                                    <div className="d-flex mt-2 border-bottom p-2">
+                                        <img src={mc?.member?.avatar} className="rounded-circle border me-3 chat-avatar" />
+                                        <div className="d-flex flex-column">
+                                            <Link className="text-dark text-decoration-none" to={`/profile/${mc?.member?.id}`}> <h2 className="fs-5 fw-bold mb-0">{mc?.member?.fullName}</h2>
+                                            </Link>
+                                            {mc?.member?.isOnline && <span className="text-success">Online</span>}
+                                            {!mc?.member?.isOnline && <span className="text-danger">Offline</span>}
 
-        </div>
+                                        </div>
+                                    </div>
+                                )
+                            })}
+
+                        </div>
+                        <div className="p-4 border-top position-sticky bottom-0 bg-white" style={{ zIndex: 10 }}>
+                            <div style={{ color: "red", cursor: "pointer" }} className="p-2" onClick={() => {
+                                confirmDialog({
+                                    message: "Are you sure you want to block this user? You can't see them on your social",
+                                    header: 'Confirmation',
+                                    icon: 'pi pi-exclamation-triangle',
+                                    accept: () => {
+                                        // Handle accept
+                                        console.log('Accepted');
+                                    },
+                                    // reject: () => {
+                                    //     // Handle reject
+                                    //     console.log('Rejected');
+                                    // }
+                                });
+                            }}>Report</div>
+                            <div style={{ color: "red", cursor: "pointer" }} className="p-2" onClick={() => {
+                                confirmDialog({
+                                    message: 'Are you sure you want to delete this conversation?',
+                                    header: 'Confirmation',
+                                    icon: 'pi pi-exclamation-triangle',
+                                    accept: () => {
+                                        // Handle accept
+                                        console.log('Accepted');
+                                    },
+                                    // reject: () => {
+                                    //     // Handle reject
+                                    //     console.log('Rejected');
+                                    // }
+                                });
+                            }}>Delete chat</div>
+                            {conversation?.conversationType == "PRIVATE" && (
+                                <div style={{ color: "red", cursor: "pointer" }} className="p-2" onClick={() => {
+                                    confirmDialog({
+                                        message: `Are you sure you want to block ${getOtherMemberFromPrivateConversation()?.member.fullName} `,
+                                        header: 'Confirmation',
+                                        icon: 'pi pi-exclamation-triangle',
+                                        accept: () => {
+                                            profileService.updateBlockUser({
+                                                blockType: true,
+                                                toUserId: getOtherMemberFromPrivateConversation()?.member.id
+                                            }).then(resp => {
+                                                const commonResult: CommonResult<any> = resp.data
+                                                if (commonResult.code == 200) {
+                                                    toast.success("You have blocked this user")
+                                                } else {
+                                                    toast.error("Error: " + commonResult.message)
+                                                }
+                                            }).catch(err => {
+                                                toast.error("Error block")
+                                            })
+                                        },
+                                        // reject: () => {
+                                        //     // Handle reject
+                                        //     console.log('Rejected');
+                                        // }
+                                    });
+                                }}>Block</div>
+                            )}
+                        </div>
+                    </div>
+                )
+            }
+            <ConfirmDialog />
+        </div >
     );
 }

@@ -10,6 +10,10 @@
     /* Bootstrap's light gray */
 }
 
+.message-pending:hover {
+    text-decoration: underline;
+}
+
 .chat-sidebar-scroll {
     height: calc(100vh - 80px);
     /* Matches Tailwind's h-[calc(100vh-80px)] */

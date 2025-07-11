@@ -25,6 +25,7 @@ public class MessageRespVO {
 
     private Boolean isRead;
 
+
     public String getTimeAgo() {
         return DateUtils.timeAgo(createdAt);
     }

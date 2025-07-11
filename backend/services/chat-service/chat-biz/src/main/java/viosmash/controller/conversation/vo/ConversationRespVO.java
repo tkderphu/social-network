@@ -3,6 +3,7 @@ package viosmash.controller.conversation.vo;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import viosmash.controller.message.vo.MessageRespVO;
+import viosmash.dal.dataobject.ConversationType;
 
 import java.time.LocalDateTime;
 
@@ -15,5 +16,5 @@ public class ConversationRespVO {
     private LocalDateTime createdAt;
     private Boolean online;
     private MessageRespVO latestMessage;
-
+    private ConversationType conversationType;
 }

@@ -12,7 +12,7 @@ export interface ConversationRespVO {
     id: number,
     nickname?: string,
     thumbnail?: string
-    type: string,
+    conversationType: "PRIVATE" | "PUBLIC",
     latestMessage: MessageRespVO,
     online?: boolean
 }

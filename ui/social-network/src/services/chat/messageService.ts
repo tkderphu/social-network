@@ -2,7 +2,7 @@ import api from "../../axios/interceptor"
 
 const PATH = "/chats/messages"
 export interface MessageCreateReqVO {
-    conversationId: any
+    conversationId?: any
     message?: string
     images?: string[],
     files?: string[]
@@ -16,6 +16,7 @@ export interface MessageRespVO {
         lastName: string,
         imageUrl?: string
     }
+    conversationId: any
     message: string
     images?: string[],
     files?: string[],

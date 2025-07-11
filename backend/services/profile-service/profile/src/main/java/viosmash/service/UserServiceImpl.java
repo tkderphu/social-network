@@ -1,5 +1,6 @@
 package viosmash.service;
 
+import jakarta.persistence.Column;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
@@ -8,12 +9,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import viosmash.collection.CollUtils;
+import viosmash.controller.vo.BlockedUserStatusResp;
 import viosmash.controller.vo.UserCreateReqVO;
 import viosmash.controller.vo.UserRespVO;
 import viosmash.controller.vo.UserUpdateInfoReqVO;
 import viosmash.core.utils.SecurityUtils;
+import viosmash.dal.dataobject.BlockedUser;
 import viosmash.dal.dataobject.User;
 import viosmash.dal.redis.ForgotCodeRedis;
+import viosmash.dal.repository.BlockedUserRepository;
 import viosmash.dal.repository.UserRepository;
 import viosmash.date.DateUtils;
 import viosmash.exception.Exceptional;
@@ -41,6 +45,7 @@ public class UserServiceImpl implements UserService {
     private final FriendshipApi friendshipApi;
     private final ForgotCodeRedis forgotCodeRedis;
     private final ApplicationContext applicationContext;
+    private final BlockedUserRepository blockedUserRepository;
     @Override
     @Transactional
     public void createUser(UserCreateReqVO req) {
@@ -182,6 +187,59 @@ public class UserServiceImpl implements UserService {
         }, (user1, user2) -> (int) user2[1] - (int) user1[1]);
 
         return CollUtils.convertList(objects, obj -> BeanUtil.copy(obj[0], UserRespVO.class));
+    }
+
+    @Override
+    public void updateBlockUser(Long fromUserId, Long toUserId, Boolean typeBlock) {
+        BlockedUser blockedUser = this.blockedUserRepository.findByFromUserIdAndToUserId(
+                fromUserId, toUserId
+        );
+
+        if(blockedUser == null) {
+            if(typeBlock) {
+                blockedUser = new BlockedUser()
+                        .setFromUserId(fromUserId)
+                        .setToUserId(toUserId);
+                this.blockedUserRepository.save(blockedUser);
+
+                log.info("blocked ok");
+
+            } else {
+                throw exception(500, "you haven't blocked this user yet.");
+            }
+        } else {
+            if(typeBlock) {
+                throw exception(500, "you have blocked this user.");
+            } else {
+                this.blockedUserRepository.delete(blockedUser);
+
+                log.info("unblocked ok");
+            }
+        }
+    }
+
+    @Override
+    public List<UserRespVO> getListBlockedUser(Long fromUserId) {
+        return CollUtils.convertList(
+                this.blockedUserRepository.findAllByFromUserId(fromUserId),
+                blockedUser -> BeanUtil.copy(userRepository.findById(blockedUser.getToUserId()), UserRespVO.class)
+        );
+    }
+
+    @Override
+    public BlockedUserStatusResp checkBlocked(Long currentUserId, Long userId) {
+        BlockedUser blockedUser = this.blockedUserRepository.findByFromUserIdAndToUserId(currentUserId, userId);
+
+        if(blockedUser != null) {
+            return new BlockedUserStatusResp(true, BlockedUserStatusResp.Direction.FROM);
+        }
+
+        blockedUser = this.blockedUserRepository.findByFromUserIdAndToUserId(userId, currentUserId);
+
+        if(blockedUser != null) {
+            return new BlockedUserStatusResp(true, BlockedUserStatusResp.Direction.TO);
+        }
+        return new BlockedUserStatusResp(false, null);
     }
 
 }

@@ -10,6 +10,8 @@ export interface UserCreateReq {
     password: string
 }
 
+
+
 const PATH = "/profiles"
 class ProfileService {
     createUser(userCreateReq: UserCreateReq) {
@@ -42,6 +44,20 @@ class ProfileService {
     }
     search(keyword: string) {
         return api.get(`${PATH}/search?name=${keyword}`)
+    }
+
+
+    updateBlockUser(req: {toUserId: any, blockType: any}) {
+        return api.post(`${PATH}/block`, req)
+    }
+
+
+    getListBlockedUser() {
+        return api.get(`${PATH}/block`)
+    }
+
+    getStatusBlocked(userId: any) {
+        return api.get(`${PATH}/block/check/${userId}`)
     }
   
 }

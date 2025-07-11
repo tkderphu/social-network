@@ -1,9 +1,13 @@
+import { IMessage } from "@stomp/stompjs";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router";
 import { TokenUtils } from "../../common";
 import { fetchListConversationAction } from "../../redux/actions/chatAction";
+import { UPDATE_NEWEST_MESSAGE } from "../../redux/constants/chatConstant";
 import { ConversationRespVO } from "../../services/chat/conversationService";
+import { MessageRespVO } from "../../services/chat/messageService";
+import { useStompClient } from "../../utils/useStomp";
 import "./Chat.css"
 import CreateConversationForm from "./CreateConversationForm";
 
@@ -29,11 +33,39 @@ export default function ChatList1() {
   })
 
   const dispatch = useDispatch()
+  const stompClient = useStompClient({ path: "chat/ws" })
 
   useEffect(() => {
     //@ts-ignore
     dispatch(fetchListConversationAction())
   }, [])
+
+
+  useEffect(() => {
+    let subscribe: any = []
+    if (stompClient && stompClient.connected && fetchListConversationState.conversations) {
+      fetchListConversationState?.conversations.forEach((conversation) => {
+        let c = stompClient.subscribe(
+          `/topic/chat/conversation/${conversation.id}`,
+          (msg: IMessage) => {
+            const message: MessageRespVO = JSON.parse(msg.body);
+            dispatch({
+              type: UPDATE_NEWEST_MESSAGE,
+              payload: message
+            })
+          }
+        );
+        subscribe.push(c)
+      })
+    }
+
+    return () => {
+      subscribe?.forEach((s: any) => {
+        s?.unsubscribe()
+      })
+    }
+  }, [fetchListConversationState.conversations?.length])
+
 
   return (
     <>
@@ -42,8 +74,10 @@ export default function ChatList1() {
       <div className="p-4 border-bottom">
         <div className="d-flex justify-content-between align-items-center">
           <h2 className="fs-5 fw-bold">Conversations</h2>
-          <CreateConversationForm/>
+          <CreateConversationForm />
         </div>
+        <h6 style={{padding: 0, marginBottom: 0, marginTop: "10px", cursor: "pointer"}} className={"message-pending"}>Messages are pending</h6>
+
       </div>
       <div className="">
         {fetchListConversationState.conversations?.map((chat) => (

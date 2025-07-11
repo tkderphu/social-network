@@ -66,7 +66,9 @@ public class MessageServiceImpl implements MessageService{
 
         this.messageRepository.save(message);
 
-        MessageRespVO resp = BeanUtil.copy(message, MessageRespVO.class).setSender(sender);
+        MessageRespVO resp = BeanUtil.copy(message, MessageRespVO.class)
+                .setSender(sender)
+                .setConversationId(message.getConversation().getId());
 
         simpMessagingTemplate.convertAndSend("/topic/chat/conversation/" + req.getConversationId(), resp);
 

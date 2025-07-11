@@ -98,4 +98,30 @@ public class UserController {
     }
 
 
+
+    @PostMapping("/block")
+    public CommonResult<Boolean> updateBlockUser(@RequestBody BlockedUserReqVO req) {
+        userService.updateBlockUser(
+                SecurityUtils.getLoginUserMemberId(),
+                req.getToUserId(),
+                req.getBlockType()
+        );
+
+        return CommonResult.success(true);
+    }
+
+
+    @GetMapping("/block")
+    public CommonResult<List<UserRespVO>> getListBlockedUser() {
+        return CommonResult.success(userService.getListBlockedUser(SecurityUtils.getLoginUserMemberId()));
+    }
+
+
+    @GetMapping("/block/check/{userId}")
+    public CommonResult<BlockedUserStatusResp> getStatusBlocked(
+            @PathVariable("userId") Long userId
+    ) {
+        return CommonResult.success(userService.checkBlocked(SecurityUtils.getLoginUserMemberId(), userId));
+    }
+
 }

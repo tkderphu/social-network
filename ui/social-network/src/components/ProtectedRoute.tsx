@@ -13,6 +13,7 @@ export default function ProtectedRoute() {
         return <Navigate to={"/login"} />
     }
 
+    useStompClient({ path: "chat/ws" })
 
     useStompClient({
         path: "notification/ws", handles: [
