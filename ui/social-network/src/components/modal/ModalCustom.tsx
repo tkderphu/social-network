@@ -9,6 +9,7 @@ interface CustomModalProps {
   onClose: () => void;
   onSave?: () => void;
   closable?: boolean;
+  height?: string
 }
 
 const ModalCustome: React.FC<CustomModalProps> = ({
@@ -18,6 +19,7 @@ const ModalCustome: React.FC<CustomModalProps> = ({
   onClose,
   onSave,
   closable = true,
+  height= "auto"
 }) => {
   // Prevent body scroll when modal is open
   useEffect(() => {
@@ -45,7 +47,7 @@ const ModalCustome: React.FC<CustomModalProps> = ({
           </button>
           
         </div>
-        <div className="custom-modal-body">{children}</div>
+        <div className="custom-modal-body" style={{height: height}}>{children}</div>
         <div className="custom-modal-footer">
           {closable && (<button onClick={onClose} className="custom-button secondary">
             Close

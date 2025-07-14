@@ -10,9 +10,9 @@ import static viosmash.string.StringUtils.equal;
 
 @AllArgsConstructor
 public enum PolicyEnum {
-    CHAT(List.of("ANYONE", "ONLY_FRIENDS")),
-    NOTIFICATION(List.of("ANYTHING", "ONLY_FRIENDS")),
-    POST(List.of("ANYONE", "ONLY_MYSELF", "ONLY_FRIENDS"));
+    CHAT(List.of("ANYONE", "ONLY_FRIENDS")), //chat
+    NOTIFICATION(List.of("ANYTHING", "ONLY_FRIENDS")), //notification
+    POST(List.of("ANYONE", "ONLY_MYSELF", "ONLY_FRIENDS")); //display post
 
     @Getter
     private final List<String> values;

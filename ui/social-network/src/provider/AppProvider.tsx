@@ -1,12 +1,12 @@
-import { createContext } from "react"
+import { createContext, useState } from "react"
 import { ProfileSimpleResp, UserProfileResp } from "../model/profileModel"
 
 interface Model {
-    profile: {
+    profile?: {
         get: UserProfileResp,
         set: any
     },
-    blockedUsers: {
+    blockedUsers?: {
         get: ProfileSimpleResp[],
         set: any
     },
@@ -21,15 +21,51 @@ interface Model {
     friendNotificationCount: {
         get: number,
         set: any
+    },
+    openSearch: {
+        get: boolean,
+        set: any
+    },
+
+    openNotification: {
+        get: boolean,
+        set: any
     }
+
 }
 
-const AppContext = createContext<Model | undefined>(undefined)
+export const AppContext = createContext<Model | undefined>(undefined)
 
 export default function AppProvider({children}: any) {
-    
+    const [openSearch, setOpenSearch] = useState(false)
+    const [openNotification, setOpenNotification] = useState(false)
+    const [friendNotificationCount, setFriendNotificationCount] = useState(0)
+    const [unreadMessageCount, setUnreadMessageCount] = useState(0)
+    const [unreadNotificationCount, setUnreadNotificationCount] = useState(0)
 
-    // <AppContext.Provider value={{}}>
-    //     {children}
-    // </AppContext.Provider>
+
+    return <AppContext.Provider value={{
+        friendNotificationCount: {
+            get: friendNotificationCount,
+            set: setFriendNotificationCount
+        },
+        openSearch: {
+            get: openSearch,
+            set: setOpenSearch
+        },
+        openNotification: {
+            get: openNotification,
+            set: setOpenNotification
+        },
+        unreadMessageCount: {
+            set: setUnreadMessageCount,
+            get: unreadMessageCount
+        },
+        unreadNotificationCount: {
+            set: setUnreadNotificationCount,
+            get: unreadNotificationCount
+        }
+    }}>
+        {children}
+    </AppContext.Provider>
 }

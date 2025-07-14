@@ -31,7 +31,6 @@ public class UserController {
     }
 
 
-
     @GetMapping("/{userId}")
     public CommonResult<UserRespVO> getProfile(@PathVariable("userId") Long userId) {
         return CommonResult.success(userService.getProfile(userId));
@@ -91,6 +90,7 @@ public class UserController {
         userService.updateSchool(SecurityUtils.getLoginUserMemberId(), school);
         return CommonResult.success(true);
     }
+
     @PutMapping("/address")
     public CommonResult<Boolean> updateAddress(@RequestBody Map<AddressEnum, String> address) {
         userService.updateAddress(SecurityUtils.getLoginUserMemberId(), address);

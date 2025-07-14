@@ -1,8 +1,9 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router";
 import FullScreenLoader from "../../components/fullSpinner/FullScreenLoader";
 import { ProfileSimpleResp } from "../../model/profileModel";
+import { AppContext } from "../../provider/AppProvider";
 import { fetchNotifyMessagesAction } from "../../redux/actions/notificationAction";
 import notificationService from "../../services/notification/notificationService";
 import "./Notification.css"
@@ -28,27 +29,13 @@ export enum RefParam {
 }
 
 export default function Notification() {
-    const [showNotifications, setShowNotifications] = useState(false);
-    const navigate = useNavigate()
+    const openNotification = useContext(AppContext)?.openNotification
 
     const closeNotifications = () => {
-        navigate(-1)
-        setShowNotifications(false);
+        openNotification?.set(false)
     };
 
-    useEffect(() => {
-
-        setShowNotifications(!showNotifications);
-    }, [])
-
-    // // Close notifications when clicking outside
-    // const handleOutsideClick = (e: any) => {
-    //     if (showNotifications &&
-    //         !e.target.closest('#notificationSidebar') &&
-    //         !e.target.closest('#notificationBtn')) {
-    //         setShowNotifications(false);
-    //     }
-    // };
+   
 
 
     const dispatch = useDispatch()
@@ -68,13 +55,13 @@ export default function Notification() {
         dispatch(fetchNotifyMessagesAction())
     }, [])
 
-    if(fetchNotificationState.loading) {
-        return <FullScreenLoader/>
-    }
+    // if(fetchNotificationState.loading) {
+    //     return <FullScreenLoader/>
+    // }
     return (
         <>
             <div
-                className={`notification-sidebar ${showNotifications ? 'show' : ''}`}
+                className={`notification-sidebar show`}
                 id="notificationSidebar"
             >
                 <div className="d-flex justify-content-between align-items-center mb-3">

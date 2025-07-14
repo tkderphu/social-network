@@ -56,7 +56,7 @@ function Group() {
         <>
             <div className="row mt-3 m-1">
 
-                <div className="col-3 sticky-sidebar hide-scrollbar">
+                <div className="col-3 sticky-sidebar hide-scrollbar" style={{height: "100vh"}}>
                     <div>
 
                         <div className='mt-2 mb-2'>
@@ -64,8 +64,8 @@ function Group() {
                                 path='/groups'
                                 placeholder={'Search groups'}
                                 data={[]}
-                                handleSearch={(query: string, page: number, limit: number, 
-                                                setPageResult: (p: any) => void, setState: () => void) => {
+                                handleSearch={(query: string, page: number, limit: number,
+                                    setPageResult: (p: any) => void, setState: () => void) => {
                                     groupService.search(query, page, limit)
                                         .then(resp => {
                                             const pageResultResp: PageResult<GroupResp> = resp.data.data
