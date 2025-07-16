@@ -100,7 +100,7 @@ public class PostServiceImpl implements PostService{
         Page<Post> page = postRepository.findAllByUserId(userId, pageable);
 
         return CollUtils.convertList(page.getContent(), post -> {
-            if(post.getVisible() == null || !post.getVisible()) return null;
+            if(post.getVisible() == null || !post.getVisible() ) return null;
             return mapToResp(post);
         });
     }

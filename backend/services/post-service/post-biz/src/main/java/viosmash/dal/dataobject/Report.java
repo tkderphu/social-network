@@ -3,6 +3,7 @@ package viosmash.dal.dataobject;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import viosmash.post.enums.ReportType;
 
 import java.time.LocalDateTime;
 
@@ -18,5 +19,6 @@ public class Report {
     private Long postId;
     private String reason;
 
+    private ReportType reportType;
     private LocalDateTime reportedAt;
 }

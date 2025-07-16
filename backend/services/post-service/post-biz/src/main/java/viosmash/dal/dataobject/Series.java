@@ -14,4 +14,5 @@ public class Series {
     private Long id;
     private String name;
     private Long userId;
+    private String thumbnail;
 }

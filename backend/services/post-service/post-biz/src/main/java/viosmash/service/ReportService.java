@@ -6,5 +6,6 @@ import viosmash.pojo.PageResult;
 
 public interface ReportService {
     void createReport(ReportCreateReqVO req);
-    PageResult<PostRespVO> getPageReport();
+    PageResult<PostRespVO> getPageReport(int page, int limit);
+    void processReport(Long reportId);
 }

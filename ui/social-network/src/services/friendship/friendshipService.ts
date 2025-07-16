@@ -1,4 +1,5 @@
 import api from "../../axios/interceptor"
+import { processJsonResponseFromServer } from "../../utils/utils"
 
 export interface UserResp {
     avatar: string,
@@ -23,7 +24,7 @@ class FriendshipService {
     acceptMakeFriendRequest(userId: number) {
         return api.put(`/friendship/make/accept/${userId}`)
     }
-    getFriends(userId: number) {
+    getFriends(userId: any) {
         return api.get(`/friendship/friends/${userId}`)
     }
     getAllMakeFriendRequests() {
@@ -43,6 +44,13 @@ class FriendshipService {
     }
     rejectMakeFriendRequest(userId: number) {
         return api.delete(`/friendship/make/reject/${userId}`)
+    }
+    countFriends(userId: any, set: any) {
+        processJsonResponseFromServer(
+            api.get(`/friendship/${userId}/count`),
+            "countFriends",
+            set
+        )
     }
 }
 export default new FriendshipService()

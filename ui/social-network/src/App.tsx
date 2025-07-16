@@ -42,6 +42,7 @@ import UnProtectedRoute from './routes/UnProtectedRoute'
 import { AppContext } from './provider/AppProvider'
 import Search from './screens/search/Search'
 import ModalCustome from './components/modal/ModalCustom'
+import ProfileRoute from './routes/ProfileRoute'
 
 
 
@@ -73,8 +74,8 @@ function App() {
                   closable={false}
                   onClose={() => openSearch?.set(false)}
               /> */}
-              {openSearch?.get && <Search/>}
-              {openNotification?.get && <Notification/>}
+              {openSearch?.get && <Search />}
+              {openNotification?.get && <Notification />}
               {/* <ModalCustome
                   show={openNotification?.get || false}
                   children={<Notification/>}
@@ -108,13 +109,7 @@ function App() {
 
                   </Route>
 
-                  <Route path='profile/:userId' element={<ProfileScreen />} >
-                    <Route element={<ProfilePostComponent />} index />
-                    <Route element={<ProfilePostComponent />} path='posts' />
-                    <Route element={<ProfilePhotosComponent />} path='photos' />
-                    <Route element={<ProfileAbouComponent />} path='about' />
-                    <Route element={<ProfileFriendsComponent />} path='friends' />
-                  </Route>
+                 
 
                   <Route path='search' element={<SearchResult />}>
                     <Route index element={<UserSearchResult />} />
@@ -136,7 +131,7 @@ function App() {
 
               <UnProtectedRoute />
               <GroupRoute />
-
+              <ProfileRoute/>
               {state?.backgroundLocation && (
                 <Routes>
                   <Route path="/posts/:id" element={<PostDetailDialog />} />

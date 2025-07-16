@@ -18,3 +18,29 @@ export interface PostResp {
     visible: boolean,
     disable: boolean
 }
+
+
+/**
+ * private String content;
+    private Long groupId;
+    private List<String> mediaUrls;
+    private Set<String> tagNames;
+    private PostType postType;
+    private PostPrivacy postPrivacy = PostPrivacy.PUBLIC;
+    private Long sharePostId;
+ */
+export interface PostCreateReqVO {
+    content: string,
+    groupId?: any,
+    mediaUrls?: string[],
+    tagNames?: string[],
+    postPrivacy: "PUBLIC" | "PRIVATE",
+    sharePostId?: any
+    postType: "PROFLIE_PICTURE_UPDATE" |
+    "COVER_PHOTO_UPDATE" |
+    "TEXT" |
+    "IMAGE" |
+    "VIDEO" |
+    "SHARED_POST",
+    id?: any
+}

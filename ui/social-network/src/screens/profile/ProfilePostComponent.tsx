@@ -1,83 +1,70 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from "react-router";
-import { PageResult } from "../../common";
+import { PageResult, TokenUtils } from "../../common";
 import FullScreenLoader from "../../components/fullSpinner/FullScreenLoader";
-import { PostResp } from "../../model/postModel";
-import { createPostAction, fetchListPostByUserAction } from "../../redux/actions/postAction";
-import { PostCreateReq } from "../../services/post/postService";
+import { PostCreateReqVO, PostResp } from "../../model/postModel";
+import { ProfileContext } from "../../provider/ProfileProvider";
+import { createPostAction } from "../../redux/actions/postAction";
+import postService, { PostCreateReq } from "../../services/post/postService";
 import { PostCard } from "../post/PostCard";
+import PostFormCreate from "../post/PostForm";
 
 
-import PostForm from "../post/PostForm";
 import PostFormModal from "../post/PostFormModal";
 
 
 export default function ProfilePostComponent() {
-    const { userId } = useParams()
-    console.log("userId user: ", userId)
-    const dispatch = useDispatch()
-    const fetchListPostByUserState: {
-        loading: boolean,
-        hasError: boolean,
-        message: any,
-        pageResult: PostResp[]
-    } = useSelector((state: any) => {
-        return state.fetchListPostByUser
-    })
 
+    const userProfile = useContext(ProfileContext)?.profile
     const handleCreatePost = () => {
         //@ts-ignore
         dispatch(createPostAction(postReq))
     }
 
-    const [postReq, setPostReq] = useState<PostCreateReq>({
+    const [postReq, setPostReq] = useState<PostCreateReqVO>({
         content: "",
         postPrivacy: "PUBLIC",
-        postType: "TEXT"
+        postType: "TEXT",
+        mediaUrls: [],
+        tagNames: []
     })
 
-    useEffect(() => {
-        //@ts-ignore
-        dispatch(fetchListPostByUserAction(userId))    
-    }, [])
+    const [posts, setPosts] = useState<PostResp[]>([])
 
-    if (fetchListPostByUserState.hasError) {
-        console.log(`
-        =======>Error when fetch list post by userId: ${JSON.parse(fetchListPostByUserState.message || "{}")} <=================
-    `)
-    }
+    const { userId } = useParams()
+
+    useEffect(() => {
+        postService.getListPostByUserId(userId, setPosts)
+    }, [userId])
 
     return (
-        <div>
-            {fetchListPostByUserState.loading && <FullScreenLoader />}
-            {/* <div className="input-group mb-3"> */}
-            {/* <div className="input-group"> */}
-            {/* <button style={{ border: "none" }} className="input-group-text"><span >Write post</span></button> */}
-            {/* <div data-toggle="modal" data-target=".your-bulletin" className="form-control rounded" style={{
-                        cursor: "pointer"
-                    }} aria-label="With textarea"><span>What's on your mind?</span></div> */}
-            <PostFormModal form={{
-                ...postReq,
-                disabledBtnWrite:false,
-                onSubmit: handleCreatePost,
-                onChange: (e: any) => {
-                    const { name, value } = e.target
-                    setPostReq((prev) => ({
-                        ...prev,
-                        [name]: value
-                    }))
-                }
+        <div className="row">
+            <div className="col-4 scroll-bar">
 
-            }} />
-            {/* </div> */}
-            {/* </div> */}
-            {fetchListPostByUserState.pageResult?.map((post, index) => (
-                <PostCard
-                    key={index}
-                    post={post}
-                />
-            ))}
+            </div>
+            <div className="col-8 vertical-line">
+                {userProfile?.get?.id == TokenUtils.authLogin.userId && (
+                    <PostFormModal
+                        form={
+                            <PostFormCreate
+                                req={{
+                                    get: postReq,
+                                    set: setPostReq
+                                }}
+                                type={"NEW"}
+                            />
+                        }
+                        onSubmit={() => { }}
+                    />
+                )}
+                {posts?.map((post, index) => (
+                    <PostCard
+                        key={index}
+                        post={post}
+                    />
+                ))}
+            </div>
         </div>
     )
 }

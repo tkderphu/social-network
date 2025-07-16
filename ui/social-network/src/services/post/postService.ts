@@ -1,4 +1,5 @@
 import api from "../../axios/interceptor"
+import { processJsonResponseFromServer } from "../../utils/utils"
 export interface PostCreateReq {
     content: string,
     groupId?: any,
@@ -13,8 +14,12 @@ class PostService {
     createPost(req: PostCreateReq) {
         return api.post(path, req)
     }
-    getPagePostByUserId(userId: any) {
-        return api.get(`${path}/user/${userId}`)
+    getListPostByUserId(userId: any, set: any) {
+        processJsonResponseFromServer(
+            api.get(`${path}/user/${userId}`),
+            "getListPostByUserId",
+            set
+        )
     }
     getPostById(postId: any) {
         return api.get(`${path}/${postId}`)

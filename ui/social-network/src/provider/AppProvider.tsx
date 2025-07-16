@@ -1,4 +1,4 @@
-import { createContext, useState } from "react"
+import { createContext, useEffect, useState } from "react"
 import { ProfileSimpleResp, UserProfileResp } from "../model/profileModel"
 
 interface Model {
@@ -42,6 +42,11 @@ export default function AppProvider({children}: any) {
     const [friendNotificationCount, setFriendNotificationCount] = useState(0)
     const [unreadMessageCount, setUnreadMessageCount] = useState(0)
     const [unreadNotificationCount, setUnreadNotificationCount] = useState(0)
+
+
+    useEffect(() => {
+        
+    }, [])
 
 
     return <AppContext.Provider value={{

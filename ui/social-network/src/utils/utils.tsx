@@ -1,3 +1,6 @@
+import { Axios } from "axios";
+import { CommonResult } from "../common";
+
 async function fetchImageAsDataURL(url: any) {
   const response = await fetch(url);
   const blob = await response.blob();
@@ -65,4 +68,21 @@ export const extractSearchQuery = (search: any) => {
     result[key] = value;
   }
   return result;
+}
+
+export const processJsonResponseFromServer = (promise: Promise<any>, methodIsCalled: string, set: any, flag: number = 1): void => {
+  promise.then(resp => {
+    const cm: CommonResult<any> = resp.data
+    if(cm.code == 200) {
+      if(flag == 1) {
+        set(cm.data)
+      } else {
+        set()
+      }
+    } else {
+      console.log(`[${methodIsCalled}] err: `, cm)
+    }
+  }).catch(err => {
+    console.log(`[${methodIsCalled}] err: `, err)
+  })
 }

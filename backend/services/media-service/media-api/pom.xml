@@ -5,16 +5,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>com.viosmash</groupId>
-        <artifactId>social-network</artifactId>
+        <artifactId>media-service</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>../../pom.xml</relativePath>
     </parent>
 
-    <artifactId>upload-service</artifactId>
-    <packaging>pom</packaging>
-    <modules>
-        <module>upload-biz</module>
-    </modules>
+    <artifactId>media-api</artifactId>
 
     <properties>
         <maven.compiler.source>17</maven.compiler.source>

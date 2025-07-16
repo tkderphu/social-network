@@ -29,7 +29,7 @@ class ProfileService {
     uploadImage(type: "PEROSNAL_IMAGE" | "COVER_PHOTOS",formData: FormData) {
         return api.post(`${PATH}/upload?type=${type}`, formData)
     }
-    fetchProfileUser(userId: number) {
+    fetchProfileUser(userId: any) {
         return api.get(`${PATH}/${userId}`)
     }
     forgotPassword(email: string) {

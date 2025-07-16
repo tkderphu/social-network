@@ -10,6 +10,7 @@ interface CustomModalProps {
   onSave?: () => void;
   closable?: boolean;
   height?: string
+  weight?: string
 }
 
 const ModalCustome: React.FC<CustomModalProps> = ({
@@ -19,7 +20,8 @@ const ModalCustome: React.FC<CustomModalProps> = ({
   onClose,
   onSave,
   closable = true,
-  height= "auto"
+  height= "auto",
+  weight="1500px"
 }) => {
   // Prevent body scroll when modal is open
   useEffect(() => {
@@ -38,7 +40,7 @@ const ModalCustome: React.FC<CustomModalProps> = ({
 
   const modalContent = (
     <div className="custom-modal-backdrop">
-      <div className="custom-modal">
+      <div className="custom-modal" style={{width: weight}}>
         <div className="custom-modal-header">
           <h2>{title}</h2>
           
