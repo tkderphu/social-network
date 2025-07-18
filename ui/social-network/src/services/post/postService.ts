@@ -40,5 +40,15 @@ class PostService {
     getNewFeeds(newfeedType: string, page: number, limit: number, sort: any) {
         return api.get(`${path}/${newfeedType}/newfeeds?page=${page}&limit=${limit}&sort=${sort}`)
     }
+
+    updatePost(postReq: any, set: any) {
+        set()
+        // processJsonResponseFromServer(
+        //     api.put(`${path}`, postReq),
+        //     "updatePost",
+        //     set,
+        //     0
+        // )
+    }
 }
 export default new PostService()

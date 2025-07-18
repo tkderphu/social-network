@@ -80,7 +80,12 @@ function Home() {
                         <PostFormCreate
                             req={{
                                 get: postReq,
-                                set: setPostReq
+                                set: {
+                                    init: setPostReq,
+                                    onChange: (e: any) => {
+                                        
+                                    }
+                                }
                             }}
                             type={"NEW"}
                         />

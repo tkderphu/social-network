@@ -3,7 +3,7 @@ import { useContext } from "react"
 import { TokenUtils } from "../../common"
 import { UserProfileResp } from "../../model/profileModel"
 import { ProfileContext } from "../../provider/ProfileProvider"
-import ChatButton from "../chat/ChatButton"
+import ChatButton from "./ChatButton"
 import FriendActionButton from "../friend/FriendActionButton"
 import "./Profile.css"
 interface Props {

@@ -42,5 +42,12 @@ public class ConversationController {
     }
 
 
+    @GetMapping("/check/{userId}")
+    public CommonResult<String> checkHasEstablishedConversation(
+            @PathVariable("userId") Long userId
+    ) {
+        String conversationId = conversationService.getPrivateConversation(SecurityUtils.getLoginUserMemberId(), userId);
+        return CommonResult.success(conversationId);
+    }
 
 }

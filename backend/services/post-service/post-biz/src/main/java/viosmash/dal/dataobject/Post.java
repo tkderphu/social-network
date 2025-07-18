@@ -32,6 +32,7 @@ public class Post{
     @Enumerated(EnumType.STRING)
     private PostType postType;
 
+
     @Enumerated(EnumType.STRING)
     private PostPrivacy postPrivacy;
 

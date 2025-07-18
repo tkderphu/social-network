@@ -1,48 +1,56 @@
-import { Link, Outlet, useLocation, useParams } from "react-router"
-import UserChatBox from "./UserChatBox"
+import { useContext } from "react";
+import { Link } from "react-router";
+import { TokenUtils } from "../../common";
 import "./Chat.css"
-function ChatList() {
-    const { conversationId } = useParams()
-    const location = useLocation()
+import CreateConversationForm from "./CreateConversationForm";
+import { MessengerContext } from "./Messenger";
 
-    return (
-        <div className="row">
-            <div className="col-3">
-                <div className="drop-down mt-3 user-chat " >
-                    <Link to={"6"} state={{
-                        backgroundLocation: location
-                    }} onClick={() => {
-                        // onClickAddChatBox()
-                    }}>
-                        <div className="d-flex align-items-center">
-                            <img src="https://scontent.fhan2-4.fna.fbcdn.net/v/t39.30808-1/480711535_1842907343127897_6577860200092242649_n.jpg?stp=dst-jpg_p100x100_tt6&_nc_cat=110&ccb=1-7&_nc_sid=e99d92&_nc_ohc=U7qwTKWNLHYQ7kNvgGqEqOH&_nc_oc=AdjWl8LXI4wLXfwZFoXTQN5VGb9zYJSTK69H9Trx1jVGuvFxRDYLPSVajgjE4aHNVwSuZoQ89gPIwmOsQRFQb_Jd&_nc_zt=24&_nc_ht=scontent.fhan2-4.fna&_nc_gid=AHx6CbMoDTUXgvSY4zMH5o4&oh=00_AYHYgEvxj6dqt0BY4L1iQ7RfUSRjhKM67CFXOwlSZecTgg&oe=67D491B5"
-                            />
-                            <div className="d-flex flex-column mx-3">
-                                <h4>Phuong Nhi</h4>
-                                <span className="mute">You: vl</span>
-                            </div>
-                        </div>
-                    </Link>
-                </div>
-                <div className="drop-down mt-3 user-chat">
-                    <Link to={"8"} onClick={() => {
-                        // onClickAddChatBox()
-                    }}>
-                        <div className="d-flex align-items-center">
-                            <img src="https://scontent.fhan2-4.fna.fbcdn.net/v/t39.30808-1/480711535_1842907343127897_6577860200092242649_n.jpg?stp=dst-jpg_p100x100_tt6&_nc_cat=110&ccb=1-7&_nc_sid=e99d92&_nc_ohc=U7qwTKWNLHYQ7kNvgGqEqOH&_nc_oc=AdjWl8LXI4wLXfwZFoXTQN5VGb9zYJSTK69H9Trx1jVGuvFxRDYLPSVajgjE4aHNVwSuZoQ89gPIwmOsQRFQb_Jd&_nc_zt=24&_nc_ht=scontent.fhan2-4.fna&_nc_gid=AHx6CbMoDTUXgvSY4zMH5o4&oh=00_AYHYgEvxj6dqt0BY4L1iQ7RfUSRjhKM67CFXOwlSZecTgg&oe=67D491B5"
-                            />
-                            <div className="d-flex flex-column mx-3">
-                                <h4>Phuong Nhi</h4>
-                                <span className="mute">You: o24o2332l4</span>
-                            </div>
-                        </div>
-                    </Link>
-                </div>
-            </div>
-            <div className="col-8">
-                <Outlet />
-            </div>
+const chats = [
+  { id: 1, name: "Alex Johnson", lastMessage: "Hey, what's up?", time: "2m", avatar: "https://via.placeholder.com/40" },
+  { id: 2, name: "Sara Smith", lastMessage: "See you soon!", time: "1h", avatar: "https://via.placeholder.com/40" },
+  { id: 3, name: "Mike Brown", lastMessage: "Check this out!", time: "3h", avatar: "https://via.placeholder.com/40" },
+  { id: 4, name: "Mike Brown", lastMessage: "Check this out!", time: "3h", avatar: "https://via.placeholder.com/40" },
+  { id: 5, name: "Mike Brown", lastMessage: "Check this out!", time: "3h", avatar: "https://via.placeholder.com/40" },
+  { id: 6, name: "Mike Brown", lastMessage: "Check this out!", time: "3h", avatar: "https://via.placeholder.com/40" },
+  { id: 7, name: "Mike Brown", lastMessage: "Check this out!", time: "3h", avatar: "https://via.placeholder.com/40" },
+  { id: 8, name: "Mike Brown", lastMessage: "Check this out!", time: "3h", avatar: "https://via.placeholder.com/40" },
+];
+
+export default function ChatList() {
+  const conversations = useContext(MessengerContext)?.conversations
+  const selectedConversation = useContext(MessengerContext)?.selectedConversation
+
+  return (
+    <div className="vertical-line-right" style={{height: "98vh"}}>
+      <div className="p-4 border-bottom">
+        <div className="d-flex justify-content-between align-items-center">
+          <h2 className="fs-5 fw-bold">Conversations</h2>
+          <CreateConversationForm />
         </div>
-    )
+        <h6 style={{ padding: 0, marginBottom: 0, marginTop: "10px", cursor: "pointer" }} className={"message-pending"}>Messages are pending</h6>
+
+      </div>
+      <div className="">
+        {conversations?.get?.map((chat) => (
+          <Link style={{ textDecoration: "none", color: "black" }} to={`c/${chat.id}`}
+            key={chat.id}
+            onClick={() => selectedConversation?.set(chat)}
+            className={`d-flex align-items-center p-4 cursor-pointer  chat-item ${selectedConversation?.get?.id === chat.id ? 'bg-light' : ''
+              }`}
+          >
+            <img src={chat.thumbnail} alt={chat.nickname} className="border rounded-circle me-3 chat-avatar" />
+            <div className="flex-grow-1">
+              <div className="d-flex justify-content-between">
+                <h6 className="fw-bold mb-0">{chat.nickname}</h6>
+                <span className="fs-6 text-muted">{chat?.latestMessage.timeAgo}</span>
+              </div>
+              <p className="fs-6 text-muted text-truncate mb-0">{chat?.latestMessage?.sender?.id === TokenUtils.authLogin.userId ? "You: " : ""}{chat?.latestMessage.message}</p>
+            </div>
+          </Link>
+        ))}
+      </div>
+      {/* // </div> */}
+    </div>
+
+  );
 }
-export default ChatList

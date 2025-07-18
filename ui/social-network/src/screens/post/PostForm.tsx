@@ -27,7 +27,10 @@ const POST_PRIVACY = [
 interface Props {
     req: {
         get: PostCreateReqVO,
-        set: any
+        set: {
+            init: any,
+            onChange: any
+        }
     },
     old?: PostResp
     type: "NEW" | "UPDATE",
@@ -42,7 +45,7 @@ export default function PostFormCreate(props: Props) {
 
     useEffect(() => {
         if(props.type == "UPDATE" && props.old) {
-            props.req.set({
+            props.req.set.init({
                 ...props.old
             })
         }
@@ -59,7 +62,7 @@ export default function PostFormCreate(props: Props) {
                         <label htmlFor="postType" className="form-label fw-bold">
                             Post privacy
                         </label>
-                        <select name='postPrivacy' onChange={props.req.set} className="form-select" value={props.req.get.postPrivacy}>
+                        <select name='postPrivacy' onChange={props.req.set.onChange} className="form-select" value={props.req.get.postPrivacy}>
                             {POST_PRIVACY.map(privacy => {
                                 if (props.req.get.groupId && privacy.scope != "PUBLIC") {
                                     return null
@@ -92,7 +95,7 @@ export default function PostFormCreate(props: Props) {
                                     rows={10}
                                     name="content"
                                     value={props.req.get.content}
-                                    onChange={props.req.set}
+                                    onChange={props.req.set.onChange}
                                     placeholder="Write your post content..."
                                     required
                                 ></textarea>

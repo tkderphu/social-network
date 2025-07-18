@@ -11,7 +11,6 @@ import { MemberConversationRespVO } from "../../model/chatModel";
 import { BlockedUserStatusResp, ProfileSimpleResp, UserProfileResp } from "../../model/profileModel";
 import { fetchListConversationAction, fetchListMessageAction } from "../../redux/actions/chatAction";
 import { fetchProfileAction } from "../../redux/actions/profileAction";
-import { UPDATE_NEWEST_MESSAGE } from "../../redux/constants/chatConstant";
 import conversationService, { ConversationRespVO } from "../../services/chat/conversationService";
 import memberConversationService from "../../services/chat/memberConversationService";
 import { MessageCreateReqVO, MessageRespVO } from "../../services/chat/messageService";
@@ -50,8 +49,6 @@ export default function ChatArea(props: any) {
 
 
     const sendMessageToConversation = () => {
-        // alert("what de fuck")
-        // setListMsg((prev: any) => [...prev, { id: 2, sender: "You", text: "Not much, just chilling!", time: "10:32 AM" }])
         const req: any = { ...messageReq, establishedConversation: establishedConversation, conversationId: id }
         console.log("message req: ", req)
         if (!establishedConversation && location.state?.userId) {
@@ -84,19 +81,9 @@ export default function ChatArea(props: any) {
             //@ts-ignore
             dispatch(fetchProfileAction(location.state.userId))
         }
-
     }, [])
 
 
-
-
-
-
-
-    const fetchListConversation = () => {
-        //@ts-ignore
-        dispatch(fetchListConversationAction())
-    }
 
     const [conversation, setConversation] = useState<ConversationRespVO | undefined>(undefined)
     useEffect(() => {
@@ -163,22 +150,8 @@ export default function ChatArea(props: any) {
         }
     }, [listMemberConversation, conversation])
 
-    useEffect(() => {
-        // Subscribe to user-specific topic
-        stompClient?.subscribe(
-            `/topic/chat/user/${TokenUtils.authLogin.userId}`,
-            (msg: IMessage) => {
-                fetchListConversation();
-            }
-        );
-    }, [])
+    
 
-
-
-
-    useEffect(() => {
-
-    }, [])
 
     useEffect(() => {
         let userSubscription: any;
@@ -294,7 +267,7 @@ export default function ChatArea(props: any) {
     }
     return (
         <div className="row " >
-            <div className={`vertical-line ${openDetailConversation ? "col-8" : ""}  container d-flex flex-column bg-white  position-relative`} style={{ height: "98vh" }}   >
+            <div className={` ${openDetailConversation ? "col-8" : ""}  container d-flex flex-column bg-white  position-relative`} style={{ height: "98vh" }}   >
                 <div className="d-flex justify-content-between align-items-center p-4 border-bottom  bg-white position-sticky top-0"
                     style={{ zIndex: 10, height: "10vh" }} >
                     <div className="d-flex align-items-center">

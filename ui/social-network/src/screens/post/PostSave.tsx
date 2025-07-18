@@ -7,7 +7,7 @@ interface Series {
     thumbnail: any
 }
 
-export default function PostSave() {
+export default function PostSave({closeModalWhenDone}: any) {
     const [series, setSeries] = useState<Series[]>([
         {
             id: 1,

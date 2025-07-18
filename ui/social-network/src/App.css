@@ -5,10 +5,21 @@
   border-left: 1px solid green;
 }
 
+.vertical-line-right {
+  border-right: 1px solid green;
+}
+
+
 .main-content {
   margin-left: 100px;
   width: calc(100% - 75px);
 }
 .sidebar {
   width: 75px;
+}
+
+@keyframes moveRight {
+  0% {
+    transform: translateX(-30px); /* Moves it 80% of the viewport width to the right */
+  }
 }

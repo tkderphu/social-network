@@ -1,5 +1,6 @@
 import { T } from "react-router/dist/development/fog-of-war-Cm1iXIp7"
 import api from "../../axios/interceptor"
+import { processJsonResponseFromServer } from "../../utils/utils"
 import { MessageRespVO } from "./messageService"
 
 export interface ConversationCreateReq {
@@ -23,8 +24,12 @@ class ConversationService {
         return api.post(PATH, req)
     }
 
-    getListConversation() {
-        return api.get(PATH)
+    getListConversation(set: any) {
+        processJsonResponseFromServer(
+            api.get(PATH),
+            "getListConversation",
+            set
+        )
     }
 
     getConversation(conversationId: any) {
@@ -35,7 +40,7 @@ class ConversationService {
         return api.delete(`${PATH}/${id}`)
     }
     getPrivateConversation(userId: any) {
-        return api.get(`${PATH}/user/${userId}`)
+        return api.get(`${PATH}/check/${userId}`)
     }
 
 }

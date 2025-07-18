@@ -3,7 +3,7 @@ import voteService from "../../services/interaction/voteService"
 import { PostContext } from "./PostCard"
 
 export default function PostVote() {
-    const  post = useContext(PostContext)?.post
+    const post = useContext(PostContext)?.post?.get
     const  postStats = useContext(PostContext)?.postStats
     
     const checkUser = () => {

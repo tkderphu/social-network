@@ -44,3 +44,10 @@ export interface PostCreateReqVO {
     "SHARED_POST",
     id?: any
 }
+
+
+export interface ReportReqVO {
+    reason?: string,
+    postId: any,
+    reportType?: "SPAM_UNWANTED_CONTENT" | "HARASSMENT_BULLYING" | "INAPPROPRIATE_CONTENT" | "FALSE_INFORMATION" | "OTHER",
+}

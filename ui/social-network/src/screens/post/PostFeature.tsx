@@ -3,21 +3,29 @@ import { useContext, useState } from "react"
 import { TokenUtils } from "../../common"
 import ModalCustome from "../../components/modal/ModalCustom"
 import { PostContext } from "./PostCard"
+import PostFormModal from "./PostFormModal"
 import PostReport from "./PostReport"
 import PostSave from "./PostSave"
+import PostUpdate from "./PostUpdate"
 
 export default function PostFeature() {
     const [openModalUpdate, setOpenModalUpdate] = useState(false)
     const [openModalSave, setOpenModalSave] = useState(false)
     const [openModalReport, setOpenModalReport] = useState(false)
     const [openModalDelete, setOpenModalDelete] = useState(false)
-    const post = useContext(PostContext)?.post
+    const post = useContext(PostContext)?.post?.get
+
+
+    const handleDelete = () => {
+
+    }
+
     return (
         <>
             <div className="dropdown">
-                <button className="btn" data-bs-toggle="dropdown" aria-expanded="false">
+                <div style={{cursor: "pointer"}}  data-bs-toggle="dropdown" aria-expanded="false">
                     <i className="bi bi-three-dots"></i>
-                </button>
+                </div>
                 <ul className="dropdown-menu">
                     {post?.user.id === TokenUtils.authLogin.userId && (<li onClick={() => setOpenModalUpdate(true)}><a className="dropdown-item" href="#">Update</a></li>)}
                     <li onClick={() => setOpenModalSave(true)}><a className="dropdown-item" href="#">Save</a></li>
@@ -29,7 +37,8 @@ export default function PostFeature() {
                 onClose={() => {
                     setOpenModalUpdate(false)
                 }}
-                children={<></>}
+                closable={false}
+                children={<PostUpdate closeModalWhenDone={() => setOpenModalUpdate(false)}/>}
             />
             <ModalCustome title='Save post' show={openModalSave}
                 closable={false}
@@ -37,6 +46,7 @@ export default function PostFeature() {
                     setOpenModalSave(false)
                 }}
                 weight={"500px"}
+            
                 children={<PostSave />}
             />
             <ModalCustome title='Report post' show={openModalReport}
@@ -55,9 +65,7 @@ export default function PostFeature() {
                 onHide={() => setOpenModalDelete(false)}
                 message={"Do you want to delete this post"}
                 header={"Delete"}
-                accept={() => {
-                    alert("ok")
-                }}
+                accept={handleDelete}
                 style={{ width: '50vw' }}
                 breakpoints={{ '1100px': '75vw', '960px': '100vw' }}
             />

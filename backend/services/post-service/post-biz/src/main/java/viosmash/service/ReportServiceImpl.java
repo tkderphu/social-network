@@ -1,6 +1,5 @@
 package viosmash.service;
 
-import jakarta.persistence.Column;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -8,14 +7,13 @@ import org.springframework.stereotype.Service;
 import viosmash.collection.CollUtils;
 import viosmash.controller.post.vo.PostRespVO;
 import viosmash.controller.report.vo.ReportCreateReqVO;
-import viosmash.controller.report.vo.ReportRespVO;
 import viosmash.dal.dataobject.Post;
 import viosmash.dal.dataobject.Report;
 import viosmash.dal.repo.PostRepository;
 import viosmash.dal.repo.ReportRepository;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.PageResult;
-import viosmash.post.enums.ReportType;
+import viosmash.post.enums.ReportStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -32,7 +30,7 @@ public class ReportServiceImpl implements ReportService{
     public void createReport(ReportCreateReqVO req) {
         Report report = BeanUtil.copy(req, Report.class)
                 .setReportedAt(LocalDateTime.now())
-                .setReportType(ReportType.PENDING);
+                .setReportStatus(ReportStatus.PENDING);
         this.reportRepository.save(report);
     }
 
@@ -54,7 +52,7 @@ public class ReportServiceImpl implements ReportService{
                 .orElseThrow(() -> exception(404, "not found post"));
 
         post.setDisable(true);
-        report.setReportType(ReportType.COMPLETED);
+        report.setReportStatus(ReportStatus.PENDING);
 
         this.reportRepository.save(report);
         this.postRepository.save(post);
