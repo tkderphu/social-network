@@ -2,6 +2,7 @@ package viosmash.core.utils;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.SneakyThrows;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -24,6 +25,17 @@ public class SecurityUtils {
     public static String obtainLoginUser(HttpServletRequest request) {
         try {
             String urlEncoder = request.getHeader(LOGIN_USER);
+            if(urlEncoder == null || urlEncoder.isEmpty()) return null;
+            String loginUser = URLDecoder.decode(urlEncoder, StandardCharsets.UTF_8.name());
+            return loginUser;
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public static String obtainLoginUser(ServerHttpRequest request) {
+        try {
+            String urlEncoder = request.getHeaders().get(LOGIN_USER).toString();
             if(urlEncoder == null || urlEncoder.isEmpty()) return null;
             String loginUser = URLDecoder.decode(urlEncoder, StandardCharsets.UTF_8.name());
             return loginUser;
@@ -70,5 +82,7 @@ public class SecurityUtils {
         Authentication authentication = setAuthentication(loginUser, request);
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
+
+
 
 }

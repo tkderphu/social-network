@@ -12,6 +12,12 @@ spring:
           predicates:
             - Path=/api/auth/**
 
+        - id: media-service
+          uri: lb://MEDIA-SERVICE
+          predicates:
+            - Path=/api/medias/**
+
+
         - id: profile-service
           uri: lb://PROFILE-SERVICE
           predicates:

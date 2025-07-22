@@ -9,7 +9,10 @@
     <file url="file://$PROJECT_DIR$/backend/framework/mq/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/framework/redis/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/framework/rpc/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/framework/security/non-webflux-security/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/framework/security/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/framework/security/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/backend/framework/security/webflux-security/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/framework/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/framework/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/backend/framework/test/src/main/java" charset="UTF-8" />

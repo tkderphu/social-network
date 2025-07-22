@@ -30,6 +30,9 @@ interface Model {
     openNotification: {
         get: boolean,
         set: any
+    },
+    uploadState: {
+        loading: {get: boolean, set: any}
     }
 
 }
@@ -42,14 +45,19 @@ export default function AppProvider({children}: any) {
     const [friendNotificationCount, setFriendNotificationCount] = useState(0)
     const [unreadMessageCount, setUnreadMessageCount] = useState(0)
     const [unreadNotificationCount, setUnreadNotificationCount] = useState(0)
-
-
+    const [uploadStateLoading, setUploadStateLoading] = useState(false)
     useEffect(() => {
         
     }, [])
 
 
     return <AppContext.Provider value={{
+        uploadState: {
+            loading: {
+                get: uploadStateLoading,
+                set: setUploadStateLoading
+            }
+        },
         friendNotificationCount: {
             get: friendNotificationCount,
             set: setFriendNotificationCount

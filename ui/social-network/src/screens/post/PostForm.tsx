@@ -4,6 +4,7 @@ import Markdown from 'react-markdown'
 import rehypeRaw from 'rehype-raw';
 import { PostCreateReq } from '../../services/post/postService';
 import { PostCreateReqVO, PostResp } from '../../model/postModel';
+import MediaComponent from '../../components/media/MediaComponent';
 
 const POST_PRIVACY = [
     {
@@ -44,7 +45,7 @@ export default function PostFormCreate(props: Props) {
 
 
     useEffect(() => {
-        if(props.type == "UPDATE" && props.old) {
+        if (props.type == "UPDATE" && props.old) {
             props.req.set.init({
                 ...props.old
             })
@@ -110,20 +111,23 @@ export default function PostFormCreate(props: Props) {
                             </div>
                         </div>
                     </div>
-                    <div className="mb-3">
-                        <label htmlFor="file" className="form-label fw-bold">
-                            Upload File
-                        </label>
-                        <input
-                            type="file"
-                            accept="image/*,video/*"
-                            className="form-control"
-                            multiple
-                            id="file"
-                            onChange={handleFileChange}
-                        />
+                    <div className="mb-3 text-center">
+                        
+                        <MediaComponent images={props.req.get.mediaUrls} onChange={(images: any) => {
+                            props.req.set.init((prev: any) => ({
+                                ...prev,
+                                mediaUrls: images
+                            }))
+                        }} />
+                        
+                    
                     </div>
-
+                    
+                    <div className='d-flex mb-2 flex-wrap'>
+                        {props.req.get.mediaUrls?.map(url => {
+                            return <img src={url} height={115} className={"rounded mx-3 mb-3"}/>
+                        })}
+                    </div>
                 </form>
             </div>
 

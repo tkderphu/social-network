@@ -1,0 +1,12 @@
+spring:
+  cloudinary:
+    cloudName: dge2yenvw
+    apiKey: 135635477598822,
+    apiSecret: -jJ8OQ_ZNDzdbWD9j7f9iw0cyXU
+  r2dbc:
+    url: r2dbc:mysql://localhost:3306/social_network_media_service?createIfNotExists=true
+    username: root
+    password: root
+
+server:
+  port: 8090

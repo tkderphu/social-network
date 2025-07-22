@@ -6,24 +6,30 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.server.SecurityWebFilterChain;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 import org.springframework.web.util.pattern.PathPattern;
+import reactor.core.publisher.Mono;
 import viosmash.collection.CollUtils;
 import viosmash.core.filter.AuthTokenFilter;
+import viosmash.core.filter.WebFluxAuthTokenFilter;
 import viosmash.core.handler.AuthLogoutHandler;
 
 import java.util.HashMap;
@@ -45,6 +51,31 @@ public class SecurityConfig {
     private final  AuthTokenFilter authTokenFilter;
     private final AuthLogoutHandler authLogoutHandler;
     private final SecurityProperties securityProperties;
+    private final WebFluxAuthTokenFilter webFluxAuthTokenFilter;
+
+    //for webflux
+    @Bean
+    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) throws Exception {
+        return http
+                .authorizeExchange(exchanges ->
+                        exchanges
+                                .pathMatchers("/secure").authenticated()  // or your actual protected paths
+                                .anyExchange().permitAll()
+                )
+                .addFilterBefore(webFluxAuthTokenFilter, SecurityWebFiltersOrder.AUTHENTICATION)
+                .httpBasic(ServerHttpSecurity.HttpBasicSpec::disable)
+                .formLogin(ServerHttpSecurity.FormLoginSpec::disable)
+                .exceptionHandling(e ->
+                        e.authenticationEntryPoint((exchange, ex) ->
+                                Mono.fromRunnable(() -> {
+                                    exchange.getResponse().setStatusCode(HttpStatus.UNAUTHORIZED);
+                                })
+                        )
+                )
+                .build();
+    }
+
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity.cors(Customizer.withDefaults())

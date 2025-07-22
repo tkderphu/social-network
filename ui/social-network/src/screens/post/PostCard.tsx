@@ -81,7 +81,6 @@ export const PostCard = (props: PostCardProps) => {
                                     <Link to={props.ref ? props.ref : "/profile/" + post?.user?.id}><h6 className="mb-0">{post?.user?.firstName + " " + post?.user?.lastName}</h6></Link>
                                     <small className="text-muted">{post?.time} ago</small>
                                 </div>
-
                             </div>
                             {post?.group && (
                                 <div>

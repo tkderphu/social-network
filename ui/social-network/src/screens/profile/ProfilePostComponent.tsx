@@ -50,7 +50,10 @@ export default function ProfilePostComponent() {
                             <PostFormCreate
                                 req={{
                                     get: postReq,
-                                    set: setPostReq
+                                    set: {
+                                        init: setPostReq,
+                                        onChange: () => {}
+                                    }
                                 }}
                                 type={"NEW"}
                             />

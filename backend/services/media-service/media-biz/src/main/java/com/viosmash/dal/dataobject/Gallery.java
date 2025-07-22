@@ -1,5 +1,6 @@
 package com.viosmash.dal.dataobject;
 
+import com.viosmash.enums.GalleryType;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.springframework.data.annotation.Id;
@@ -7,20 +8,15 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.domain.Persistable;
 import org.springframework.data.relational.core.mapping.Table;
 
-import java.time.LocalDateTime;
 
-@Table(name = "medias")
+@Table(name = "galleries")
 @Data
 @Accessors(chain = true)
-public class Media implements Persistable<String> {
-
+public class Gallery implements Persistable<String> {
     @Id
     private String id;
-    private String url;
-    private String galleryId;
-    private String mediaType;
-    private LocalDateTime createdDate;
-
+    private String type;
+    private String typeId;
 
     @Transient
     private boolean newProduct;
@@ -31,7 +27,7 @@ public class Media implements Persistable<String> {
         return this.newProduct || id == null;
     }
 
-    public Media setAsNew() {
+    public Gallery setAsNew() {
         this.newProduct = true;
         return this;
     }
