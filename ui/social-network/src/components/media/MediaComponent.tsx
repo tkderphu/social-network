@@ -33,7 +33,7 @@ export default function MediaComponent(props: MediaProps) {
         const file = event.target.files[0];  // Get the first file (for single file uploads)
         if (file) {
             const formData = new FormData()
-            formData.set('file', file)
+            formData.append('file', file)
             setFormData(formData)
             // Create a Blob URL to preview the image
             const url = URL.createObjectURL(file);

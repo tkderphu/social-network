@@ -3,7 +3,7 @@ package com.viosmash.service;
 import com.viosmash.controller.vo.MediaReqVO;
 import com.viosmash.controller.vo.UploadRespVO;
 import com.viosmash.dal.dataobject.Media;
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.http.codec.multipart.FilePart;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 public interface MediaService {
-    default Mono<List<UploadRespVO>> uploads(Flux<MultipartFile> filePartFlux) {
-        return filePartFlux.flatMap(filePart -> upload(filePart))
+    default Mono<List<UploadRespVO>> uploads(Flux<FilePart> filePartFlux, Long userId) {
+        return filePartFlux.flatMap(filePart -> upload(filePart, userId))
                 .collectList();
     };
 
-    Mono<UploadRespVO> upload(MultipartFile file);
+    Mono<UploadRespVO> upload(FilePart file, Long userId);
 
     Mono<List<Media>> save(List<MediaReqVO> listReq);
 

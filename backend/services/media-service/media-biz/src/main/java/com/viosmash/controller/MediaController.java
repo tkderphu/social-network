@@ -3,21 +3,22 @@ package com.viosmash.controller;
 import com.viosmash.controller.vo.MediaReqVO;
 import com.viosmash.controller.vo.UploadRespVO;
 import com.viosmash.dal.dataobject.Media;
+import com.viosmash.security.SecurityUtils;
 import com.viosmash.service.MediaService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.MediaType;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import viosmash.core.utils.SecurityUtils;
 
 import java.util.List;
 
 
 @RequiredArgsConstructor
 @RestController
+@Slf4j
 @RequestMapping("/api/medias")
 public class MediaController {
 
@@ -25,8 +26,11 @@ public class MediaController {
 
 
     @PostMapping(path = "/uploads", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public Mono<UploadRespVO> upload(@RequestParam("file")MultipartFile file) {
-        return mediaService.upload(file);
+    public Mono<UploadRespVO> upload(@RequestPart("file")FilePart file) {
+        log.info("receive request upload");
+        return SecurityUtils.getLoginUserMemberId()
+                .flatMap(userId -> mediaService.upload(file, userId));
+//        return mediaService.upload(file);
     }
 
     @PostMapping(value = "/uploads/multiples", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
@@ -36,7 +40,8 @@ public class MediaController {
 
     @GetMapping("/uploads")
     public Flux<UploadRespVO> getListUploaded() {
-        return this.mediaService.getListUploaded(SecurityUtils.getLoginUserMemberId());
+        return SecurityUtils.getLoginUserMemberId()
+                .flatMapMany(userId -> mediaService.getListUploaded(userId));
     }
 
     @PostMapping

@@ -17,6 +17,7 @@ public class UploadedMedia implements Persistable<String> {
     private Long userId;
     private String resourceType; // image | video
 
+
     @Transient
     private boolean newProduct;
 

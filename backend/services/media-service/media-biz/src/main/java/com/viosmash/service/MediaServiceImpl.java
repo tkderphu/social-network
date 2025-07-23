@@ -12,13 +12,11 @@ import com.viosmash.dal.repository.MediaRepository;
 import com.viosmash.dal.repository.UploadedMediaRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import viosmash.collection.CollUtils;
-import viosmash.core.utils.SecurityUtils;
-import viosmash.exception.utils.ServiceUtils;
 
 import java.io.File;
 import java.time.LocalDateTime;
@@ -39,34 +37,33 @@ public class MediaServiceImpl implements MediaService{
     private final UploadedMediaRepository uploadedMediaRepository;
 
     @Override
-    public Mono<UploadRespVO> upload(MultipartFile file) {
-        return Mono.fromCallable(() -> {
-            try {
-                File tempFile = File.createTempFile("upload", file.getOriginalFilename());
-                file.transferTo(tempFile);
-                Map result = cloudinary.uploader().upload(tempFile, ObjectUtils.emptyMap());
-                tempFile.delete();
-                log.info("uploaded: {}", result);
-                UploadRespVO uploadRespVO = new UploadRespVO(
-                        result.get("public_id").toString(),
-                        result.get("url").toString(),
-                        result.get("resource_type").toString()
+    public Mono<UploadRespVO> upload(FilePart filePart, Long userId) {
+        return Mono.fromCallable(() -> File.createTempFile("upload", filePart.filename()))
+                .flatMap(tempFile ->
+                        filePart.transferTo(tempFile)
+                                .then(Mono.fromCallable(() -> {
+                                    Map result = cloudinary.uploader().upload(tempFile, ObjectUtils.emptyMap());
+                                    tempFile.delete();
+
+                                    UploadRespVO uploadRespVO = new UploadRespVO(
+                                            result.get("public_id").toString(),
+                                            result.get("url").toString(),
+                                            result.get("resource_type").toString()
+                                    );
+
+                                    UploadedMedia uploadedMedia = new UploadedMedia()
+                                            .setUrl(uploadRespVO.getUrl())
+                                            .setId(uploadRespVO.getPublicId())
+                                            .setResourceType(uploadRespVO.getFileType())
+                                            .setUserId(userId)
+                                            .setAsNew();
+                                    System.out.println("UserId: "+ userId);
+
+                                    uploadedMediaRepository.save(uploadedMedia).subscribe();
+
+                                    return uploadRespVO;
+                                }))
                 );
-
-                UploadedMedia uploadedMedia = new UploadedMedia()
-                        .setUrl(uploadRespVO.getUrl())
-                        .setId(uploadRespVO.getPublicId())
-                        .setResourceType(uploadRespVO.getFileType())
-                        .setUserId(SecurityUtils.getLoginUserMemberId());
-
-                this.uploadedMediaRepository.save(uploadedMedia).subscribe();
-
-                return uploadRespVO;
-            } catch (Exception e) {
-                log.warn("[media-biz][media-service][upload({})]: {}", file, e);
-                throw exception(500, e.getMessage());
-            }
-        });
     }
 
     @Override

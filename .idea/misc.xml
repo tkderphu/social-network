@@ -12,6 +12,7 @@
         <option value="$PROJECT_DIR$/backend/services/notification-service/notification-api/pom.xml" />
         <option value="$PROJECT_DIR$/backend/services/group-service/group-biz/pom.xml" />
         <option value="$PROJECT_DIR$/backend/services/group-service/group-api/pom.xml" />
+        <option value="$PROJECT_DIR$/backend/framework/pom.xml" />
       </list>
     </option>
     <option name="ignoredFiles">
