@@ -6,8 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
 import viosmash.core.utils.SecurityUtils;
+import viosmash.dal.dataobject.Post;
 import viosmash.group.api.GroupApi;
 import viosmash.group.enums.GroupRole;
+import viosmash.object.BeanUtil;
 import viosmash.pojo.CommonResult;
 import viosmash.service.PostService;
 
@@ -21,9 +23,9 @@ public class PostController {
     private final PostService postService;
     private final GroupApi groupApi;
     @PostMapping
-    public CommonResult<Boolean> createPost(@RequestBody PostCreateReqVO req) {
-        postService.createPost(SecurityUtils.getLoginUserMemberId(), req);
-        return CommonResult.success(true);
+    public CommonResult<PostRespVO> createPost(@RequestBody PostCreateReqVO req) {
+        Post post = postService.createPost(SecurityUtils.getLoginUserMemberId(), req);
+        return CommonResult.success(BeanUtil.copy(post, PostRespVO.class));
     }
 
     @GetMapping("/user/{userId}/group/{groupId}")

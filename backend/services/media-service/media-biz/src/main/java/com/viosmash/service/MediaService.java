@@ -18,7 +18,7 @@ public interface MediaService {
 
     Mono<UploadRespVO> upload(FilePart file, Long userId);
 
-    Mono<List<Media>> save(List<MediaReqVO> listReq);
+    Flux<Media> save(Flux<MediaReqVO> listReq);
 
     Mono<Map> deleteMedia(String id);
     Flux<Media> getListMedia(String type, String typeId);

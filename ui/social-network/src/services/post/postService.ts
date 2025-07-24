@@ -1,4 +1,5 @@
 import api from "../../axios/interceptor"
+import { PostResp } from "../../model/postModel"
 import { processJsonResponseFromServer } from "../../utils/utils"
 export interface PostCreateReq {
     content: string,
@@ -11,8 +12,12 @@ export interface PostCreateReq {
 }
 const path = "/posts"
 class PostService {
-    createPost(req: PostCreateReq) {
-        return api.post(path, req)
+    createPost(req: any, callbackSuccess: (data: any) => void) {
+        processJsonResponseFromServer(
+            api.post(path, req),
+            "createPost",
+            callbackSuccess
+        )
     }
     getListPostByUserId(userId: any, set: any) {
         processJsonResponseFromServer(

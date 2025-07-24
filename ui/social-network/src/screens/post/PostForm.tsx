@@ -37,11 +37,7 @@ interface Props {
     type: "NEW" | "UPDATE",
 }
 export default function PostFormCreate(props: Props) {
-    const [file, setFile] = useState(null);
 
-    const handleFileChange = (e: any) => {
-        setFile(e.target.files[0]);
-    };
 
 
     useEffect(() => {
@@ -57,7 +53,6 @@ export default function PostFormCreate(props: Props) {
 
 
             <div className="container">
-                <form >
 
                     <div className='mb-3'>
                         <label htmlFor="postType" className="form-label fw-bold">
@@ -112,7 +107,6 @@ export default function PostFormCreate(props: Props) {
                         </div>
                     </div>
                     <div className="mb-3 text-center">
-                        
                         <MediaComponent images={props.req.get.mediaUrls} onChange={(images: any) => {
                             props.req.set.init((prev: any) => ({
                                 ...prev,
@@ -124,11 +118,10 @@ export default function PostFormCreate(props: Props) {
                     </div>
                     
                     <div className='d-flex mb-2 flex-wrap'>
-                        {props.req.get.mediaUrls?.map(url => {
-                            return <img src={url} height={115} className={"rounded mx-3 mb-3"}/>
+                        {props.req.get.mediaUrls?.map((image: any) => {
+                            return <img src={image.url} height={115} className={"rounded mx-3 mb-3 shadow p-3 mb-5 bg-white"}/>
                         })}
                     </div>
-                </form>
             </div>
 
         </>

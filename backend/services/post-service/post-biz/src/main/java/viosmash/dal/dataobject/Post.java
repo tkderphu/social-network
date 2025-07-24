@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import viosmash.converter.JsonListConverter;
+import viosmash.converter.JsonObjectConverter;
 import viosmash.post.enums.PostPrivacy;
 import viosmash.post.enums.PostType;
 
@@ -26,7 +27,7 @@ public class Post{
 
     private Long groupId;
 
-    @Convert(converter = JsonListConverter.class)
+    @Convert(converter = JsonObjectConverter.class)
     private List<String> mediaUrls;
 
     @Enumerated(EnumType.STRING)

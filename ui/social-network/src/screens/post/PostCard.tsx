@@ -9,6 +9,7 @@ import { createContext, useEffect, useState } from 'react';
 import PostVote from './PostVote';
 import PostShare from './PostShare';
 import PostFeature from './PostFeature';
+import Carousel from '../../components/Carousel';
 
 interface PostCardProps {
     post?: PostResp,
@@ -92,15 +93,16 @@ export const PostCard = (props: PostCardProps) => {
 
                     </div>
                     <div onClick={() => {
-                        navigate(`/posts/${post?.id}`, {
-                            state: {
-                                backgroundLocation: location
-                            }
-                        })
+                        // navigate(`/posts/${post?.id}`, {
+                        //     state: {
+                        //         backgroundLocation: location
+                        //     }
+                        // })
                     }} style={{ cursor: 'pointer' }}>
                         <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                             {post?.content}
                         </Markdown>
+                        <Carousel id={post?.id} images={post?.mediaUrls} />
                     </div>
 
                     <div className="d-flex justify-content-between border-top pt-2">

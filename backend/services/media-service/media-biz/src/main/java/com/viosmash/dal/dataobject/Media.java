@@ -20,7 +20,7 @@ public class Media implements Persistable<String> {
     private String galleryId;
     private String mediaType;
     private LocalDateTime createdDate;
-
+    private Long linkedPostId; //only for post
 
     @Transient
     private boolean newProduct;

@@ -15,7 +15,7 @@ import org.springframework.data.relational.core.mapping.Table;
 public class Gallery implements Persistable<String> {
     @Id
     private String id;
-    private String type;
+    private String type;  //user, group, conversation
     private String typeId;
 
     @Transient

@@ -1,27 +1,27 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { toast } from "react-toastify";
+import { UploadedRespVO } from "../../model/mediaModel";
 import { AppContext } from "../../provider/AppProvider";
-import MediaService from "../../services/media/MediaService";
-import uploadService from "../../services/upload/uploadService";
+import MediaService from "../../services/media/mediaService";
 import FullScreenLoader from "../fullSpinner/FullScreenLoader";
 import ModalCustome from "../modal/ModalCustom";
 import "./MediaComponent.css"
-const sampleImages = [
-    'https://picsum.photos/300/200?random=1',
-    'https://picsum.photos/300/200?random=2',
-    'https://picsum.photos/300/200?random=3',
-    'https://picsum.photos/300/200?random=4',
-    'https://picsum.photos/300/200?random=5',
-    'https://picsum.photos/300/200?random=6',
-    'https://picsum.photos/300/200?random=7',
-    'https://picsum.photos/300/200?random=8',
-    'https://picsum.photos/300/200?random=9',
-    'https://picsum.photos/300/200?random=10',
-    'https://picsum.photos/300/200?random=11',
-    'https://picsum.photos/300/200?random=12'
-];
+// const sampleImages = [
+//     'https://picsum.photos/300/200?random=1',
+//     'https://picsum.photos/300/200?random=2',
+//     'https://picsum.photos/300/200?random=3',
+//     'https://picsum.photos/300/200?random=4',
+//     'https://picsum.photos/300/200?random=5',
+//     'https://picsum.photos/300/200?random=6',
+//     'https://picsum.photos/300/200?random=7',
+//     'https://picsum.photos/300/200?random=8',
+//     'https://picsum.photos/300/200?random=9',
+//     'https://picsum.photos/300/200?random=10',
+//     'https://picsum.photos/300/200?random=11',
+//     'https://picsum.photos/300/200?random=12'
+// ];
 interface MediaProps {
-    images?: string[],
+    images?: any,
     onChange: any
 }
 export default function MediaComponent(props: MediaProps) {
@@ -44,7 +44,7 @@ export default function MediaComponent(props: MediaProps) {
     const uploadImages = () => {
         uploadStateLoading?.set(true)
         MediaService.upload(formData).then(resp => {
-            console.log("resp: ", resp.data)
+            MediaService.getListUploaded(setUploadeds);
             setBlobImageUrl(null)
             setFormData(undefined)
             toast.success("Uploaded successfully")
@@ -58,6 +58,13 @@ export default function MediaComponent(props: MediaProps) {
         })
     }
     const [openModal, setOpenModal] = useState(false)
+
+
+    const [uploadeds, setUploadeds] = useState<UploadedRespVO[]>([])
+
+    useEffect(() => {
+        MediaService.getListUploaded(setUploadeds);
+    }, [])
 
 
     if(uploadStateLoading?.get) {
@@ -86,21 +93,21 @@ export default function MediaComponent(props: MediaProps) {
                                 <span id="selectedText">Image selected successfully!</span>
                             </div>
                             <div className="image-grid" id="imageGrid">
-                                {sampleImages.map((image, index) => {
+                                {uploadeds.map((image) => {
                                     return (
                                         <div onClick={() => {
                                             //@ts-ignore
                                             let c = [...props.images]
                                             if (c.includes(image)) {
                                                 c = c.filter(img => {
-                                                    return image != img
+                                                    return image.publicId != img.publicId
                                                 })
                                             } else {
                                                 c.push(image)
                                             }
                                             props.onChange(c)
-                                        }} className={"image-card " + (props.images?.includes(image) ? "selected" : "")}>
-                                            <img src={image} alt="Gallery Image ${index + 1}" loading="lazy" />
+                                        }} className={"image-card " + (props.images.includes(image) ? "selected" : "")}>
+                                            <img src={image.url} alt="Gallery Image ${index + 1}" loading="lazy" />
                                             <div className="image-overlay">
                                                 <i className="fas fa-check check-icon"></i>
                                             </div>

@@ -1,4 +1,5 @@
 import { Axios } from "axios";
+import { toast } from "react-toastify";
 import { CommonResult } from "../common";
 
 async function fetchImageAsDataURL(url: any) {
@@ -73,16 +74,34 @@ export const extractSearchQuery = (search: any) => {
 export const processJsonResponseFromServer = (promise: Promise<any>, methodIsCalled: string, set: any, flag: number = 1): void => {
   promise.then(resp => {
     const cm: CommonResult<any> = resp.data
-    if(cm.code == 200) {
-      if(flag == 1) {
+    if (cm.code == 200) {
+      if (flag == 1) {
+        console.log("dcm: ", cm)
         set(cm.data)
       } else {
         set()
       }
     } else {
+      toast.error(`[${methodIsCalled}] err: ${cm.message}`)
       console.log(`[${methodIsCalled}] err: `, cm)
     }
   }).catch(err => {
+    toast.error(`[${methodIsCalled}] err: ${err.message}`)
+    console.log(`[${methodIsCalled}] err: `, err)
+  })
+}
+
+export const processJsonResponseFromServer1 = (promise: Promise<any>, methodIsCalled: string, set: any, flag: number = 1): void => {
+  promise.then(resp => {
+   
+    if (flag == 1) {
+      set(resp.data)
+    } else {
+      set()
+    }
+
+  }).catch(err => {
+    toast.error(`[${methodIsCalled}] err: ${err.message}`)
     console.log(`[${methodIsCalled}] err: `, err)
   })
 }

@@ -45,7 +45,7 @@ public class MediaController {
     }
 
     @PostMapping
-    public Mono<List<Media>> save(@RequestBody List<MediaReqVO> listReq) {
+    public Flux<Media> save(@RequestBody Flux<MediaReqVO> listReq) {
         return mediaService.save(listReq);
     }
 

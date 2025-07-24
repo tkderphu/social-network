@@ -9,7 +9,8 @@ CREATE TABLE medias (
     url VARCHAR(255),
     gallery_id VARCHAR(255),
     media_type VARCHAR(255),
-    created_date TIMESTAMP
+    created_date TIMESTAMP,
+    linked_post_id BIGINT
 );
 
 CREATE TABLE uploadedmedia (

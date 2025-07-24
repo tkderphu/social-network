@@ -14,13 +14,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.codec.multipart.FilePart;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
-import viosmash.collection.CollUtils;
 
 import java.io.File;
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
@@ -37,6 +36,7 @@ public class MediaServiceImpl implements MediaService{
     private final UploadedMediaRepository uploadedMediaRepository;
 
     @Override
+    @Transactional
     public Mono<UploadRespVO> upload(FilePart filePart, Long userId) {
         return Mono.fromCallable(() -> File.createTempFile("upload", filePart.filename()))
                 .flatMap(tempFile ->
@@ -67,25 +67,25 @@ public class MediaServiceImpl implements MediaService{
     }
 
     @Override
-    public Mono<List<Media>> save(List<MediaReqVO> listReq) {
-        return Mono.fromCallable(() -> {
-            try {
-                List<Media> medias = CollUtils.convertList(listReq, (req) -> {
-                    Gallery gallery = getGallery(req.getType(), req.getTypeId());
-                    return new Media().setId(req.getId())
-                            .setUrl(req.getUrl())
-                            .setGalleryId(gallery.getId())
-                            .setCreatedDate(LocalDateTime.now())
-                            .setMediaType(req.getFileType());
-                });
-
-                this.mediaRepository.saveAll(medias).subscribe();
-                return medias;
-            } catch (Exception ex) {
-                log.warn("[media-biz][media-service][save({})]: {}", listReq, ex);
-                throw exception(404, ex.getMessage());
-            }
-        });
+    public Flux<Media> save(Flux<MediaReqVO> listReq) {
+        return listReq.flatMap(req -> getGallery(req.getType(), req.getTypeId())
+                        .map(gallery -> {
+                            Media media = new Media()
+                                    .setId(req.getId())
+                                    .setUrl(req.getUrl())
+                                    .setGalleryId(gallery.getId())
+                                    .setCreatedDate(LocalDateTime.now())
+                                    .setLinkedPostId(req.getLinkedPostId())
+                                    .setMediaType(req.getFileType())
+                                    .setAsNew();
+                            return media;
+                        })
+                        .flatMap(media -> mediaRepository.save(media))
+                        .onErrorMap(ex -> {
+                            log.warn("[media-biz][media-service][save({})]: {}", req, ex.getMessage(), ex);
+                            return exception(404, ex.getMessage());
+                        })
+        );
     }
 
 
@@ -108,8 +108,9 @@ public class MediaServiceImpl implements MediaService{
      * @return
      */
     public Flux<Media> getListMedia(String type, String typeId) {
-        Gallery gallery = getGallery(type, typeId);
-        return this.mediaRepository.findAllByGalleryId(gallery.getId());
+//        Gallery gallery = getGallery(type, typeId);
+//        return this.mediaRepository.findAllByGalleryId(gallery.getId());
+        return null;
     }
 
     @Override
@@ -124,16 +125,15 @@ public class MediaServiceImpl implements MediaService{
                 });
     }
 
-    private Gallery getGallery(String type, String typeId) {
-        Gallery gallery = galleryRepository.findByTypeAndTypeId(type, typeId)
-                .blockOptional()
-                .orElse(null);
-
-        if(gallery == null) {
-            gallery = new Gallery().setType(type).setTypeId(typeId).setId(UUID.randomUUID().toString());
-            this.galleryRepository.save(gallery).subscribe();
-        }
-
-        return gallery;
+    private Mono<Gallery> getGallery(String type, String typeId) {
+        return galleryRepository.findByTypeAndTypeId(type, typeId)
+                .switchIfEmpty(Mono.defer(() -> {
+                    Gallery gallery = new Gallery()
+                            .setId(UUID.randomUUID().toString())
+                            .setType(type)
+                            .setTypeId(typeId)
+                            .setAsNew();
+                    return galleryRepository.save(gallery);
+                }));
     }
 }
