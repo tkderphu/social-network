@@ -11,3 +11,11 @@ export interface MediaReqVO {
     fileType: string,
     linkedPostId: any
 }
+export interface MediaRespVO {
+    id: string
+    url: string,
+    galleryId: string,
+    mediaType: string,
+    createdDate: any,
+    linkedPostId?: number
+}

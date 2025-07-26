@@ -3,6 +3,10 @@ viosmash:
     endpoint: /chat/ws
     appPrefix: /app
     destinationPrefix: /topic
+  topic:
+    newConversation: /topic/chat/user/%d
+    notification: /topic/chat/soundNotification/user/%d
+    chat: /topic/chat/conversation/%s
 
 spring:
   datasource:

@@ -4,11 +4,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import viosmash.chat.enums.ApiConstant;
+import viosmash.controller.member.vo.MemberConversationRespVO;
 import viosmash.controller.member.vo.MemberConversationUpdateNotifyReqVO;
 import viosmash.controller.member.vo.MemberInviteReqVO;
-import viosmash.controller.member.vo.MemberConversationRespVO;
 import viosmash.core.utils.SecurityUtils;
-import viosmash.chat.enums.ApiConstant;
 import viosmash.dal.dataobject.MemberConversation;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.CommonResult;
@@ -17,7 +17,9 @@ import viosmash.profile.api.UserApi;
 import viosmash.service.MemberConversationService;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
@@ -54,7 +56,17 @@ public class MemberConversationController {
     public CommonResult<Set<MemberConversationRespVO>> getListMemberConversation(
             @PathVariable("conversationId") String conversationId
     ) {
-        return CommonResult.success(memberConversationService.getListMemberConversationId(conversationId));
+        List<MemberConversation> members = memberConversationService.getListMemberConversationByConversationId(conversationId);
+        Set<MemberConversationRespVO> membersResp = members.stream().map(mc -> {
+            return BeanUtil.copy(mc, MemberConversationRespVO.class)
+                    .setRole(mc.getRole())
+                    .setMember(BeanUtil.copy(userApi.getUserById(mc.getMemberId()), UserDTO.class))
+                    .setInvitedAt(mc.getInvitedAt())
+                    .setInvitedBy(BeanUtil.copy(userApi.getUserById(mc.getInvitedByMemberId()), UserDTO.class));
+
+        }).collect(Collectors.toSet());
+
+        return CommonResult.success(membersResp);
     }
 
     @GetMapping("/conversation/{conversationId}/detail")

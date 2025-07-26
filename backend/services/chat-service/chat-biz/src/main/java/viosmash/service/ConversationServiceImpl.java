@@ -17,6 +17,7 @@ import viosmash.dal.repo.ConversationRepository;
 import viosmash.dal.repo.MessageRepository;
 import viosmash.exception.ServiceException;
 import viosmash.object.BeanUtil;
+import viosmash.object.ObjectUtils;
 import viosmash.profile.api.UserApi;
 import viosmash.string.StringUtils;
 
@@ -55,14 +56,21 @@ public class ConversationServiceImpl implements ConversationService{
     }
 
     @Override
-    public void updateNickname(ConversationUpdateNicknameReq req) {
+    public void updateConversationInfo(ConversationInfoUpdateReqVO req) {
+        Conversation conversation = this.conversationRepository.findById(req.getId())
+                .orElseThrow(() -> exception(404, "not found conversation"));
 
+        if(!ObjectUtils.isNull(req.getNickName()) && !req.getNickName().isEmpty()) {
+            conversation.setNickname(req.getNickName());
+        }
+
+        if(!ObjectUtils.isNull(req.getThumbnail()) && !req.getThumbnail().isEmpty()) {
+            conversation.setThumbnail(req.getThumbnail());
+        }
+
+        this.conversationRepository.save(conversation);
     }
 
-    @Override
-    public void updateThumbnail(ConversationUpdateThumbnailReq req) {
-
-    }
 
     @Override
     public void updatePolicy(ConversationUpdatePolicyReq req) {
@@ -70,8 +78,8 @@ public class ConversationServiceImpl implements ConversationService{
     }
 
     @Override
-    public List<ConversationRespVO> getListConversation(Long userId) {
-        Set<Object[]> objects = conversationRepository.findAllByUserId(userId);
+    public List<ConversationRespVO> getListConversation(Long userId, Boolean visible) {
+        Set<Object[]> objects = conversationRepository.findAllByUserId(userId, visible);
         return convertList(objects, list -> {
             Conversation conversation = (Conversation) list[0];
             Message message = (Message)list[1];
@@ -145,5 +153,10 @@ public class ConversationServiceImpl implements ConversationService{
     @Override
     public String getPrivateConversation(Long userOne, Long userTwo) {
         return this.conversationRepository.findPrivateConversation(userTwo, userTwo);
+    }
+
+    @Override
+    public int countConversationUnVisible(Long userId) {
+        return conversationRepository.countAllUnVisibleConversationByUserId(userId);
     }
 }

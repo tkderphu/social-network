@@ -11,10 +11,12 @@ public interface NotificationApi {
 
     String PREFIX = ApiConstant.RPC_PREFIX;
 
-    @PostMapping("/send")
+    @PostMapping("/send/app")
     void sendAppNotification(@RequestBody NotificationDto req);
 
     @PostMapping("/send/mail")
     void sendMail(@RequestBody MailNotificationDto req);
 
+    @PostMapping("/send/firebase")
+    void sendFirebase(@RequestBody FirebaseNotificationDto req);
 }

@@ -3,27 +3,21 @@ import { useDispatch, useSelector } from "react-redux";
 import Select from 'react-select';
 import Alert from "../../components/Alert";
 import ModalCustome from "../../components/modal/ModalCustom";
+import CustomSelect from "../../components/select/CustomSelect";
 import Spinner from "../../components/Spinner";
 import { fetchListConversationAction } from "../../redux/actions/chatAction";
 import { ConversationCreateReq } from "../../services/chat/conversationService";
-import { useStompClient } from "../../utils/useStomp";
 
-const users = [
-    { value: 1, label: { name: "Alice", avatar: "https://i.pravatar.cc/150?img=1" }},
-    { value: 2, label: {name: "Bob", avatar: "https://i.pravatar.cc/150?img=2" }},
-    { value: 3, label: {name: "Charlie", avatar: "https://i.pravatar.cc/150?img=3" }},
-];
+import { components } from 'react-select'
+import { ProfileSimpleResp } from "../../model/profileModel";
+
 export default function CreateConversationForm() {
     const [openModal, setOpenModal] = useState(false)
     const [groupName, setGroupName] = useState("");
-    const [selectedUsers, setSelectedUsers] = useState<any>([]);
     const [avatar, setAvatar] = useState("");
-    const handleUserChange = (e: any) => {
-        const selected = Array.from(e.target.selectedOptions, (option: any) => option.value);
-        setSelectedUsers(selected);
-    };
 
-    const stompClient = useStompClient({ path: "chat/ws" })
+   
+
 
     const { loading, hasError, message, success } = useSelector((state: any) => {
         return state.createConversation
@@ -31,19 +25,36 @@ export default function CreateConversationForm() {
 
     const dispatch = useDispatch()
 
+
+
+    const [showModal, setShowModal] = useState(false)
+
+    const [keyword, setKeyword] = useState("")
+    const [users, setUsers] = useState<ProfileSimpleResp[]>([])
+    const [selectUsers, setSelectUsers]= useState<any>([])
+
+    const handleSubmitInvitation = () => {
+      
+    }
+
+
+    useEffect(() => {
+        //get list users which related with current user(friends, common friends, suggestion)
+    }, [])
+
+
     const onSave = () => {
         const conReq: ConversationCreateReq = {
             type: "PUBLIC",
-            userIds: selectedUsers,
+            userIds: selectUsers,
             name: groupName,
             thumbnail: avatar
         }
         console.log(conReq)
-        //@ts-ignore
-        dispatch(createConversationAction(conversationCreateReq))
+       
     }
 
-    if(success) {
+    if (success) {
         //@ts-ignore
         dispatch(fetchListConversationAction())
     }
@@ -51,8 +62,8 @@ export default function CreateConversationForm() {
     return (
         <>
             <button className="btn btn-primary" onClick={() => setOpenModal(true)}><i style={{ fontSize: "24px" }} className="bi bi-plus"></i></button>
-            <ModalCustome 
-            onSave={onSave} onClose={() => setOpenModal(false)} title="Form create conversation"
+            <ModalCustome
+                onSave={onSave} onClose={() => setOpenModal(false)} title="Form create conversation"
                 show={openModal}
 
             >
@@ -71,15 +82,36 @@ export default function CreateConversationForm() {
                 {/* Chọn thành viên */}
                 <div className="mb-3">
                     <label className="form-label">Select members</label>
-                    <Select
-                        isMulti
-                        options={users}
-                        value={selectedUsers}
-                        onChange={setSelectedUsers}
-                        placeholder="Choose users..."
-                        getOptionLabel={(e) => `${e.label.name}`}
-                        closeMenuOnSelect={false}
-                        
+                    <CustomSelect
+                        customOption={(props: any) => {
+                            console.log("props custom: ",)
+                            return (
+                                <components.Option {...props}>
+                                    <div className="d-flex">
+                                        <img height={50} src={props.data.avatar} />
+                                        <div>
+                                            <div style={{ fontWeight: 'bold' }}>{props.data.label}</div>
+                                            <div>534 friends</div>
+                                        </div>
+                                    </div>
+                                </components.Option>
+                            )
+                        }}
+                        select={{
+                            set: setSelectUsers
+                        }}
+                        data={users.map(user => {
+                            return {
+                                label: user.firstName + " " + user.lastName,
+                                value: user.id,
+                                avatar: user.imageUrl || user.avatar,
+                                online: user.isOnline
+                            }
+                        })}
+                        input={{
+                            setValue: setKeyword,
+                            value: keyword
+                        }}
                     />
                 </div>
 

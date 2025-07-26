@@ -7,9 +7,23 @@ import { components } from 'react-select'
 import groupMemberService from "../../services/group/userMemberGroupService"
 import userMemberGroupService from "../../services/group/userMemberGroupService"
 export default function InviteUser(props: {groupId: any}) {
+    
+    
+
+    const [showModal, setShowModal] = useState(false)
+
     const [keyword, setKeyword] = useState("")
     const [users, setUsers] = useState<ProfileSimpleResp[]>([])
-    
+    const [selectUsers, setSelectUsers]= useState<any>([])
+
+    const handleSubmitInvitation = () => {
+        userMemberGroupService.inviteUsers(props.groupId, selectUsers).then(resp => {
+            alert("invite user success fully")
+        }).catch(err => {
+            alert("error when invited users")
+        })
+    }
+
 
     useEffect(() => {
         profileService.search(keyword).then(resp => {
@@ -20,17 +34,6 @@ export default function InviteUser(props: {groupId: any}) {
         });
     }, [keyword])
 
-    const [showModal, setShowModal] = useState(false)
-
-    const [selectUsers, setSelectUsers]= useState<any>([])
-
-    const handleSubmitInvitation = () => {
-        userMemberGroupService.inviteUsers(props.groupId, selectUsers).then(resp => {
-            alert("invite user success fully")
-        }).catch(err => {
-            alert("error when invited users")
-        })
-    }
 
     return (
         <>

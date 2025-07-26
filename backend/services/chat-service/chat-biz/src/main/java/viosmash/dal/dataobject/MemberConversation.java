@@ -29,4 +29,7 @@ public class MemberConversation {
 
     private Boolean enableSoundNotification;
     private Boolean enablePushNotification;
+
+    private Long lastReadMessageId; //track unread message of user
+
 }

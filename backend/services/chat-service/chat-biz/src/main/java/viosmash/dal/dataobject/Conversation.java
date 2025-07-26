@@ -28,6 +28,8 @@ public  class Conversation {
     private List<MemberConversation> memberConversations;
 
 
+    private Boolean visible;
+
     /**
      * group chat
      */

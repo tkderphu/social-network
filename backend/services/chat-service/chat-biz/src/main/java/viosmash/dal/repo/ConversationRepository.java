@@ -5,17 +5,17 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import viosmash.dal.dataobject.Conversation;
 
-import java.util.List;
 import java.util.Set;
 
 public interface ConversationRepository extends JpaRepository<Conversation, String> {
 
 
     @Query("SELECT c, me FROM Conversation c INNER JOIN Message me on c.id = me.conversation.id \n" +
-            "WHERE :userId IN (SELECT mc.memberId FROM MemberConversation mc WHERE mc.conversation.id = c.id) \n" +
+            "WHERE c.visible = :visible \n" +
+            "AND :userId IN (SELECT mc.memberId FROM MemberConversation mc WHERE mc.conversation.id = c.id) \n" +
             "AND me.id = (SELECT MAX(m.id) FROM Message m WHERE m.conversation.id = c.id) \n" +
             "ORDER BY me.id DESC")
-    Set<Object[]> findAllByUserId(@Param("userId") Long userId);
+    Set<Object[]> findAllByUserId(@Param("userId") Long userId,@Param("visible") Boolean visible);
 
     @Query(value = """
         SELECT c.id 
@@ -34,4 +34,12 @@ public interface ConversationRepository extends JpaRepository<Conversation, Stri
         ) = 2
     """)
     String findPrivateConversation(@Param("userOne") Long userOne, @Param("userTwo") Long userTwo);
+
+
+    @Query("""
+           select count(c) from Conversation c
+           where c.visible = false  and 
+           :userId IN (select m.memberId from MemberConversation m where m.conversation.id = c.id) 
+    """)
+    int countAllUnVisibleConversationByUserId(@Param("userId") Long userId);
 }

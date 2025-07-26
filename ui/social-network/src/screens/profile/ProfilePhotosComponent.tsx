@@ -1,29 +1,51 @@
+import { useEffect, useState } from "react"
+import { useLocation, useParams } from "react-router"
+import { MediaRespVO, UploadedRespVO } from "../../model/mediaModel"
+import mediaService from "../../services/media/mediaService"
+
 
 function ProfilePhotosComponent() {
+    const [medias, setMedias] = useState<MediaRespVO[]>([])
+    const [uploadedMedias, setUploadedMedias] = useState<UploadedRespVO[]>([])
+    const location = useLocation()
+    const { userId } = useParams()
+    useEffect(() => {
+        mediaService.getListMedia("user", userId + "", setMedias)
+        mediaService.getListUploaded(setUploadedMedias)
+    }, [location.pathname])
+
     return (
         <div className="mb-3">
-            <div className="card">
+            <div className="card mb-4">
                 <div className="card-header">
-                    Your image
+                    Post images
                 </div>
                 <div className="card-body">
                     <div className="d-flex flex-wrap">
-                        <img src="https://bizweb.dktcdn.net/100/503/392/products/1-ceb6ac06-ea04-4b07-a0ce-57c30a2866fa.jpg?v=1738814481290"
-                            alt="vcl" height={"100px"} width={"100px"} className="img-fluid img-thumbnail mx-3" />
-                        <img src="https://bizweb.dktcdn.net/100/503/392/products/1-ceb6ac06-ea04-4b07-a0ce-57c30a2866fa.jpg?v=1738814481290"
-                            alt="vcl" height={"100px"} width={"100px"} className="img-fluid img-thumbnail mx-3" />
+                        {medias.map(media => {
+                            return (
+                                <img src={media.url}
+                                    alt="vcl" height={"200px"} width={"200px"} className="img-fluid img-thumbnail mx-3" />
+                            )
+                        })}
 
-                        <img src="https://bizweb.dktcdn.net/100/503/392/products/1-ceb6ac06-ea04-4b07-a0ce-57c30a2866fa.jpg?v=1738814481290"
-                            alt="vcl" height={"100px"} width={"100px"} className="img-fluid img-thumbnail mx-3" />
+                    </div>
+                </div>
+            </div>
+            <div className="card">
+                <div className="card-header">
+                    Uploaded images
+                </div>
+                <div className="card-body">
+                    <div className="d-flex flex-wrap">
+                        {uploadedMedias.map(upload => {
+                            return (
+                                <img src={upload.url}
+                                    alt="vcl" height={"100px"} width={"100px"} className="img-fluid img-thumbnail mx-3" />
+                            )
+                        })}
 
-                        <img src="https://bizweb.dktcdn.net/100/503/392/products/1-ceb6ac06-ea04-4b07-a0ce-57c30a2866fa.jpg?v=1738814481290"
-                            alt="vcl" height={"100px"} width={"100px"} className="img-fluid img-thumbnail mx-3" />
 
-                        <img src="https://bizweb.dktcdn.net/100/503/392/products/1-ceb6ac06-ea04-4b07-a0ce-57c30a2866fa.jpg?v=1738814481290"
-                            alt="vcl" height={"100px"} width={"100px"} className="img-fluid img-thumbnail mx-3" />
-
-                        <img src="https://bizweb.dktcdn.net/100/503/392/products/1-ceb6ac06-ea04-4b07-a0ce-57c30a2866fa.jpg?v=1738814481290"
-                            alt="vcl" height={"100px"} width={"100px"} className="img-fluid img-thumbnail mx-3" />
                     </div>
                     <div>
                         <div className="mb-3">

@@ -75,6 +75,12 @@ public class MemberConversationServiceImpl implements MemberConversationService 
     }
 
     @Override
+    public List<MemberConversation> getListMemberConversationByConversationId(String conversationId) {
+        List<MemberConversation> members = this.memberConversationRepository.findAllByConversationId(conversationId);
+        return members;
+    }
+
+    @Override
     public MemberConversation getMemberConversation(Long memberId, String conversationId) {
         return this.memberConversationRepository.findByMemberIdAndConversationId(memberId, conversationId)
                 .orElseThrow(() -> exception(404, "you haven't joined yet"));

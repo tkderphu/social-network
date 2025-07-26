@@ -108,9 +108,8 @@ public class MediaServiceImpl implements MediaService{
      * @return
      */
     public Flux<Media> getListMedia(String type, String typeId) {
-//        Gallery gallery = getGallery(type, typeId);
-//        return this.mediaRepository.findAllByGalleryId(gallery.getId());
-        return null;
+        return getGallery(type, typeId)
+                .flatMapMany(gallery -> mediaRepository.findAllByGalleryId(gallery.getId()));
     }
 
     @Override

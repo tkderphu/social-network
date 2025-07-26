@@ -4,18 +4,16 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import viosmash.friendship.constant.FriendshipStatus;
 import viosmash.exception.ServiceException;
+import viosmash.friendship.constant.FriendshipStatus;
 import viosmash.nodes.User;
 import viosmash.nodes.UserMakesFriendRequest;
 import viosmash.notification.api.NotificationApi;
 import viosmash.pojo.api.notification.NotificationDto;
-import viosmash.pojo.api.notification.NotificationType;
 import viosmash.repository.UserRepository;
 
 import java.util.*;
 
-import static viosmash.exception.utils.ServiceUtils.exception;
 import static viosmash.friendship.constant.FriendshipStatus.*;
 
 @Slf4j

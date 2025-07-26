@@ -5,18 +5,23 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import viosmash.chat.config.properties.Topic;
 import viosmash.collection.CollUtils;
 import viosmash.controller.message.vo.MessageCreateReqVO;
 import viosmash.controller.message.vo.MessageRespVO;
 import viosmash.dal.dataobject.*;
 import viosmash.dal.repo.ConversationRepository;
 import viosmash.dal.repo.MessageRepository;
+import viosmash.friendship.api.FriendshipApi;
 import viosmash.object.BeanUtil;
+import viosmash.object.ObjectUtils;
 import viosmash.profile.api.UserApi;
 import viosmash.pojo.api.profile.UserDTO;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static viosmash.exception.utils.ServiceUtils.exception;
 
@@ -25,44 +30,46 @@ import static viosmash.exception.utils.ServiceUtils.exception;
 @Slf4j
 @RequiredArgsConstructor
 public class MessageServiceImpl implements MessageService{
-
     private final MemberConversationService memberConversationService;
     private final ConversationRepository conversationRepository;
     private final MessageRepository messageRepository;
     private final UserApi userApi;
     private final SimpMessagingTemplate simpMessagingTemplate;
+    private final FriendshipApi friendshipApi;
+    private final Topic topic;
     @Override
     @Transactional
     public void createMessage(MessageCreateReqVO req) {
         UserDTO sender = userApi.getUserById(req.getSenderId());
-        Conversation conversation = conversationRepository.findById(req.getConversationId())
-                .orElse(null);
+        List<MemberConversation> memberConversations = null;
+        Conversation conversation = conversationRepository
+                .findById(req.getConversationId()).orElse(null);
         Boolean isNewConversation = false;
         Boolean soundNotification = false;
         Boolean pushNotifictaion = false;
         if(conversation == null) {
+            Boolean isFriend = friendshipApi.isFriend(req.getSenderId(), req.getToUserId());
             conversation = new Conversation().setId(req.getConversationId())
                     .setCreatedAt(LocalDateTime.now()).setConversationType(ConversationType.PRIVATE)
+                    .setVisible(ObjectUtils.isNullAble(isFriend, false))
                     .setId(req.getConversationId());
             this.conversationRepository.save(conversation);
             memberConversationService.invite(conversation.getId(), List.of(req.getSenderId(), req.getToUserId()), null);
 
             isNewConversation = true;
-            soundNotification = true;
-            pushNotifictaion = true;
+            if(isFriend) {
+                soundNotification = true;
+                pushNotifictaion = true;
+            }
         } else {
-            MemberConversation memberConversation = memberConversationService
-                    .getMemberConversation(req.getSenderId(), req.getConversationId());
-
-            soundNotification = memberConversation.getEnableSoundNotification();
-            pushNotifictaion = memberConversation.getEnablePushNotification();
+            memberConversations = memberConversationService
+                    .getListMemberConversationByConversationId(conversation.getId());
         }
 
         Message message = BeanUtil.copy(req, Message.class)
                 .setSenderId(sender.getId())
                 .setCreatedAt(LocalDateTime.now())
-                .setConversation(conversation)
-                .setIsRead(false);
+                .setConversation(conversation);
 
         this.messageRepository.save(message);
 
@@ -70,10 +77,20 @@ public class MessageServiceImpl implements MessageService{
                 .setSender(sender)
                 .setConversationId(message.getConversation().getId());
 
-        simpMessagingTemplate.convertAndSend("/topic/chat/conversation/" + req.getConversationId(), resp);
+        simpMessagingTemplate.convertAndSend(String.format(topic.getChat(), req.getConversationId()), resp);
 
+        CollUtils.convertList(memberConversations, mc -> {
+            if(ObjectUtils.isNullAble(mc.getEnableSoundNotification(), false)) {
+                simpMessagingTemplate.convertAndSend(String.format(topic.getNotification(), mc.getMemberId()), "");
+            }
+
+            if(ObjectUtils.isNullAble(mc.getEnablePushNotification(), false)) {
+                //firebase
+            }
+            return null;
+        });
         if(soundNotification != null && soundNotification) {
-            simpMessagingTemplate.convertAndSend("/topic/chat/soundNotification", "");
+            simpMessagingTemplate.convertAndSend(String.format(topic.getNotification(), 1), "");
         }
 
         if(pushNotifictaion != null && pushNotifictaion) {
@@ -82,7 +99,9 @@ public class MessageServiceImpl implements MessageService{
 
         if(isNewConversation) {
             List.of(req.getSenderId(), req.getToUserId()).forEach(userId -> {
-                simpMessagingTemplate.convertAndSend("/topic/chat/user/" + userId, "new conversation between user");
+                simpMessagingTemplate.convertAndSend(
+                        String.format(topic.getNewConversation(), userId),
+                        "new conversation between user");
             });
         }
     }
@@ -110,7 +129,25 @@ public class MessageServiceImpl implements MessageService{
     }
 
     @Override
-    public int countUnreadMessage(Long userId) {
-        return this.messageRepository.countUnreadMessage(userId);
+    public long countTotalUnreadMessage(Long userId) {
+        return messageRepository.countTotalUnread(userId);
+    }
+
+    @Override
+    public Map<String, Long> getUnreadMessageCountPerConversation(Long userId) {
+        Map<String, Long> map = new HashMap<>();
+        CollUtils.convertList(messageRepository.countUnreadPerConversation(userId), objs -> {
+           String conversationId = (String) objs[0];
+           Long countUnread = (Long)objs[1];
+           map.put(conversationId, countUnread);
+           return null;
+        });
+        return map;
+    }
+
+    @Override
+    @Transactional
+    public void updateReadMessage(Long userId, Long conversationId) {
+        messageRepository.updateReadMessage(userId, conversationId);
     }
 }

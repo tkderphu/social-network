@@ -1,10 +1,7 @@
 package viosmash.object;
 
-import lombok.SneakyThrows;
-
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.util.List;
 
 public class ObjectUtils {
 
@@ -15,6 +12,11 @@ public class ObjectUtils {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+    public static <T>  T isNullAble(T nullableObj, T t) {
+        boolean checkNull = isNull(nullableObj);
+        if(checkNull) return t;
+        return nullableObj;
     }
     public static boolean isNull(Object o) {
         return o == null;

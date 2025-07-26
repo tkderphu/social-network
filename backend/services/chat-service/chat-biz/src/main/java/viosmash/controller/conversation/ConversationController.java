@@ -7,9 +7,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import viosmash.chat.enums.ApiConstant;
 import viosmash.controller.conversation.vo.ConversationCreateReq;
+import viosmash.controller.conversation.vo.ConversationInfoUpdateReqVO;
 import viosmash.controller.conversation.vo.ConversationRespVO;
 import viosmash.core.utils.SecurityUtils;
 import viosmash.pojo.CommonResult;
+import viosmash.profile.api.UserApi;
 import viosmash.service.ConversationService;
 
 import java.util.List;
@@ -25,8 +27,14 @@ public class ConversationController {
     @GetMapping
     public CommonResult<List<ConversationRespVO>> getListConversation() {
         Long userId = SecurityUtils.getLoginUserMemberId();
-        List<ConversationRespVO> conversations = conversationService.getListConversation(userId);
+        List<ConversationRespVO> conversations = conversationService.getListConversation(userId, true);
         return CommonResult.success(conversations);
+    }
+
+    @PutMapping("/info")
+    public CommonResult<Boolean> updateInfo(@RequestBody ConversationInfoUpdateReqVO req) {
+        conversationService.updateConversationInfo(req);
+        return CommonResult.success(true);
     }
 
     @PostMapping

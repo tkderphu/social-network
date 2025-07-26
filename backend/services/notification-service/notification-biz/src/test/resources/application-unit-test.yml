@@ -8,6 +8,8 @@ feign:
   client:
     enabled: false
 
+websocket:
+  enabled: false
 
 spring:
   cloud:

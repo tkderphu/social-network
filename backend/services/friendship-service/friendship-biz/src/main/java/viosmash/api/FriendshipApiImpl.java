@@ -58,4 +58,9 @@ public class FriendshipApiImpl implements FriendshipApi {
         return null;
     }
 
+    @Override
+    public Boolean isFriend(Long senderId, Long toUserId) {
+        return null;
+    }
+
 }

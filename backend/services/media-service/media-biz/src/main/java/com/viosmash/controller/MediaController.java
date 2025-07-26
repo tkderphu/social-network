@@ -44,6 +44,13 @@ public class MediaController {
                 .flatMapMany(userId -> mediaService.getListUploaded(userId));
     }
 
+    @GetMapping("/{type}/{typeId}")
+    public Flux<Media> getListMedia(@PathVariable("type") String type,
+                                    @PathVariable("typeId") String typeId) {
+        return SecurityUtils.getLoginUserMemberId()
+                .flatMapMany(user -> mediaService.getListMedia(type, typeId));
+    }
+
     @PostMapping
     public Flux<Media> save(@RequestBody Flux<MediaReqVO> listReq) {
         return mediaService.save(listReq);

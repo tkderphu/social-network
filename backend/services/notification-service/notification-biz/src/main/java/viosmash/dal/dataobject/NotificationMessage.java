@@ -27,9 +27,9 @@ public class NotificationMessage {
 
     private LocalDateTime createdAt;
 
+    private String content;
+
     private Long actorId;
     private Long userId;
     private Boolean seen;
-
-
 }

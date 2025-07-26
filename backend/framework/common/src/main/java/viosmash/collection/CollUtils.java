@@ -8,6 +8,8 @@ import java.util.function.Predicate;
 
 public class CollUtils {
 
+
+
     public static <T, U> List<T> convertList(Collection<U> collection, Function<U, T> func) {
         if(CollectionUtils.isEmpty(collection)) {
             return Collections.emptyList();
