@@ -6,7 +6,7 @@ import Spinner from "../../components/Spinner"
 import { cancelFriendAction, cancelMakeFriendRequestAction, createFriendRequestAction, fetchStatusBetweenUserAction, rejectMakeFriendRequestAction } from "../../redux/actions/friendshipAction"
 
 export default function FriendActionButton() {
-    let { id } = useParams()
+    let { userId } = useParams()
     const fetchStatusState: {
         status: "FRIEND" | "MAKE_FRIEND" |
         "ACCEPT_FRIEND" |
@@ -21,23 +21,23 @@ export default function FriendActionButton() {
     const friendshipActionOnClick = () => {
         if (fetchStatusState.status === 'NONE') {
             //@ts-ignore
-            dispatch(createFriendRequestAction(id))
+            dispatch(createFriendRequestAction(userId))
         } else if (fetchStatusState.status === 'ACCEPT_FRIEND') {
             //@ts-ignore
-            dispatch(acceptMakeFriendRequestAction(id))
+            dispatch(acceptMakeFriendRequestAction(userId))
         } else if (fetchStatusState.status == 'MAKE_FRIEND') {
             //@ts-ignore
-            dispatch(cancelMakeFriendRequestAction(id))
+            dispatch(cancelMakeFriendRequestAction(userId))
         } else {
             //@ts-ignore
-            dispatch(cancelFriendAction(id))
+            dispatch(cancelFriendAction(userId))
         }
     }
 
 
     useEffect(() => {
           //@ts-ignore
-          dispatch(fetchStatusBetweenUserAction(id))
+          dispatch(fetchStatusBetweenUserAction(userId))
     }, [])
 
 
@@ -48,7 +48,7 @@ export default function FriendActionButton() {
         <>
             {fetchStatusState.status === 'ACCEPT_FRIEND' && <button className="btn btn-secondary mx-3" onClick={() => {
                 //@ts-ignore
-                dispatch(rejectMakeFriendRequestAction(id))
+                dispatch(rejectMakeFriendRequestAction(userId))
             }}>Cancel</button>}
 
             <button className="btn btn-primary" onClick={() => {

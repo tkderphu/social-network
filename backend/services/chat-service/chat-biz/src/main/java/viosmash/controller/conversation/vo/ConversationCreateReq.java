@@ -12,7 +12,7 @@ import java.util.Collection;
 @AllArgsConstructor
 public class ConversationCreateReq {
 
-    private String name;
+    private String nickname;
     @NotNull
     private Collection<Long> userIds;
     private String thumbnail;

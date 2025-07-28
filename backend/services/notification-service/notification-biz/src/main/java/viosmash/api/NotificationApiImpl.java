@@ -37,10 +37,10 @@ public class NotificationApiImpl implements NotificationApi {
     @Override
     public void sendFirebase(FirebaseNotificationDto req) {
         log.info("Notification via firebase coming: {}", req);
-        fcmService.sendNotification(
-                req.getTopic(),
-                req.getBody(),
-                req.getUserIds()
-        );
+//        fcmService.sendNotification(
+//                req.getTopic(),
+//                req.getBody(),
+//                req.getUserIds()
+//        );
     }
 }

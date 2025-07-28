@@ -54,4 +54,33 @@ public interface UserRepository extends Neo4jRepository<User, Long> {
             "delete request", delete = true)
     void removeMakeFriendRequest(Long fromUserId, Long toUserId);
 
+
+
+
+    @Query("MATCH (user:USERS {id: $userId})-[:FRIEND]->(:USERS)-[:FRIEND]->(mutual:USERS)\n" +
+            "WHERE NOT (user)-[:FRIEND]-(mutual)\n" +
+            "  AND NOT (user)-[:MAKE_FRIEND_REQUEST]->(mutual)\n" +
+            "  AND NOT (mutual)-[:MAKE_FRIEND_REQUEST]->(user)\n" +
+            "  AND mutual.id <> $userId\n" +
+            "RETURN \n" +
+            "  mutual.id AS id\n" +
+            """
+            UNION
+            MATCH (us1:USERS {id: $userId})-[:FRIEND]->(user_friend:USERS)
+            RETURN 
+                user_friend.id as id    
+            UNION
+            MATCH (us3:USERS {id: $userId})-[:MAKE_FRIEND_REQUEST]->(user:USERS)
+            RETURN 
+                user.id as id    
+            """ +
+            "UNION\n" +
+            "MATCH (us2:USERS {id: $userId})-[:MAKE_FRIEND_REQUEST]->(:USERS)-[:FRIEND]->(mutual2:USERS)\n" +
+            "WHERE NOT (us2)-[:FRIEND]-(mutual2)\n" +
+            "  AND NOT (us2)-[:MAKE_FRIEND_REQUEST]->(mutual2)\n" +
+            "  AND NOT (mutual2)-[:MAKE_FRIEND_REQUEST]->(us2)\n" +
+            "  AND mutual2.id <> $userId\n"+
+            "RETURN \n" +
+            "  mutual2.id AS id\n")
+    Set<Long> findAllUserCanInteract(Long userId);
 }

@@ -13,6 +13,7 @@ import viosmash.dal.dataobject.User;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public interface UserService {
     void createUser(UserCreateReqVO req);
@@ -38,4 +39,6 @@ public interface UserService {
     List<UserRespVO> getListBlockedUser(Long fromUserId);
 
     BlockedUserStatusResp checkBlocked(Long currentUserId, Long userId);
+
+    List<User> searchUser(String keyword, Set<Long> userIds);
 }

@@ -12,7 +12,10 @@ import org.springframework.stereotype.Service;
 import viosmash.collection.CollUtils;
 
 import java.util.Collection;
+import java.util.Map;
 import java.util.concurrent.ExecutionException;
+
+import static viosmash.exception.utils.ServiceUtils.exception;
 
 @Slf4j
 @Service
@@ -40,7 +43,7 @@ public class FCMService {
     }
 
     @Async
-    public void sendNotification(String title, String body, Collection<Long> userIds) {
+    public void sendNotification(String title, String body, Map<String, String> properties, Collection<Long> userIds) {
         CollUtils.convertList(userIds, userId -> {
             String token = getIdToken(userId);
             Message message = Message.builder()
@@ -49,6 +52,7 @@ public class FCMService {
                             .setTitle(title)
                             .setBody(body)
                             .build())
+                    .putAllData(properties)
                     .build();
             try {
                 String response = FirebaseMessaging.getInstance().send(message);

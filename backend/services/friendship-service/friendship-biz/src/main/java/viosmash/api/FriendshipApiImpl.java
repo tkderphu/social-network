@@ -59,6 +59,11 @@ public class FriendshipApiImpl implements FriendshipApi {
     }
 
     @Override
+    public Set<Long> getListUserCanInteract(Long userId) {
+        return friendshipService.getListUserCanInteract(userId);
+    }
+
+    @Override
     public Boolean isFriend(Long senderId, Long toUserId) {
         return null;
     }

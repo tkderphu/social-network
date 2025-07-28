@@ -43,6 +43,7 @@ import { AppContext } from './provider/AppProvider'
 import Search from './screens/search/Search'
 import ModalCustome from './components/modal/ModalCustom'
 import ProfileRoute from './routes/ProfileRoute'
+import NotificationComponent from './NotificationComponent'
 
 
 
@@ -60,6 +61,7 @@ function App() {
   return (
     <>
       <Provider store={store}>
+        
         <div className='container-fluid'>
           <div className='row'>
             <div className='sidebar'>
@@ -85,6 +87,7 @@ function App() {
                   onClose={() => openNotification?.set(false)}
               /> */}
               <Routes location={state?.backgroundLocation || location}>
+                <Route path='test-push-notification' element={<NotificationComponent/>} />
                 <Route element={<ProtectedRoute />}>
                   <Route path='/' element={<Home />} />
                   <Route path='setting' element={<SettingScreen />}>

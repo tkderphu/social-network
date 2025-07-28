@@ -67,6 +67,15 @@ public interface FriendshipService {
      */
     Set<Long> getListSuggestionUser(Long userId);
 
+
+    /**
+     * Lay danh sach tat ca user ma @userId co the tuong tac
+     * nhu la: la ban be, gui loi moi ket ban(@userId gui loi moi ket ban), ban be chung
+     * @param userId
+     * @return
+     */
+    Set<Long> getListUserCanInteract(Long userId);
+
     FriendshipStatus getStatusFriendship(Long fromUserId, Long toUserId);
 
     boolean cancelMakeFriendRequest(Long fromUserId, Long toUserId);

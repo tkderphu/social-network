@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import viosmash.chat.enums.Role;
+import viosmash.collection.CollUtils;
 import viosmash.collection.StreamUtils;
 import viosmash.controller.conversation.vo.*;
 import viosmash.controller.member.vo.MemberConversationRespVO;
@@ -24,6 +26,7 @@ import viosmash.string.StringUtils;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 import static viosmash.collection.CollUtils.convertList;
@@ -43,10 +46,20 @@ public class ConversationServiceImpl implements ConversationService{
     @Transactional(rollbackFor = ServiceException.class)
     public String createConversation(Long ownerId, ConversationCreateReq req) {
         Conversation conversation = BeanUtil.copy(req, Conversation.class)
+                .setId(UUID.randomUUID().toString())
                 .setCreatedAt(LocalDateTime.now())
+                .setVisible(true)
                 .setConversationType(ConversationType.PUBLIC);
-
         String conversationId = conversationRepository.save(conversation).getId();
+        Message message = new Message().setConversation(conversation)
+                .setCreatedAt(LocalDateTime.now())
+                .setSenderId(ownerId)
+                .setMessage(String.format("Created new group is %s", req.getNickname()));
+        this.messageRepository.save(message);
+        if(CollectionUtils.isEmpty(req.getUserIds())) {
+            throw exception(500, "You must choose at 2 least users");
+        }
+        req.getUserIds().add(ownerId);
         memberConversationService.invite(conversation.getId(), req.getUserIds(), userId -> {
             if(userId.equals(ownerId)) return Role.OWNER;
             return Role.MEMBER;

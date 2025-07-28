@@ -4,7 +4,7 @@ import { processJsonResponseFromServer } from "../../utils/utils"
 import { MessageRespVO } from "./messageService"
 
 export interface ConversationCreateReq {
-    name?: string,
+    nickname?: string,
     type: "PUBLIC" | "PRIVATE",
     userIds: Array<number>
     thumbnail?: string
@@ -20,8 +20,12 @@ export interface ConversationRespVO {
 
 const PATH = "/chats/conversations"
 class ConversationService {
-    createConversation(req: ConversationCreateReq) {
-        return api.post(PATH, req)
+    createConversation(req: ConversationCreateReq, callback: any) {
+        processJsonResponseFromServer(
+            api.post(PATH, req),
+            "createConversation",
+            callback
+        )
     }
 
     getListConversation(set: any) {

@@ -25,6 +25,9 @@ public interface FriendshipApi {
     @GetMapping("/{userId}/recommendation")
     List<Long> getListRecommendUser(@PathVariable("userId") Long userId);
 
+    @GetMapping("/{userId}/interaction")
+    Set<Long> getListUserCanInteract(@PathVariable("userId") Long userId);
+
     @GetMapping("/check-friends/{user1}/{user2}")
     Boolean isFriend(@PathVariable("user1") Long senderId, @PathVariable("user2") Long toUserId);
 }

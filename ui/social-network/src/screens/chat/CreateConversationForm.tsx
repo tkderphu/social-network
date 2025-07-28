@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Select from 'react-select';
 import Alert from "../../components/Alert";
@@ -6,37 +6,24 @@ import ModalCustome from "../../components/modal/ModalCustom";
 import CustomSelect from "../../components/select/CustomSelect";
 import Spinner from "../../components/Spinner";
 import { fetchListConversationAction } from "../../redux/actions/chatAction";
-import { ConversationCreateReq } from "../../services/chat/conversationService";
+import conversationService, { ConversationCreateReq } from "../../services/chat/conversationService";
 
 import { components } from 'react-select'
 import { ProfileSimpleResp } from "../../model/profileModel";
+import SearchInput from "./search-user/SearchInput";
+import { UserResp } from "../../services/friendship/friendshipService";
+import { useNavigate } from "react-router";
+import { MessengerContext } from "./Messenger";
 
 export default function CreateConversationForm() {
     const [openModal, setOpenModal] = useState(false)
     const [groupName, setGroupName] = useState("");
     const [avatar, setAvatar] = useState("");
+    const setConversations = useContext(MessengerContext)?.conversations?.set
 
-   
-
-
-    const { loading, hasError, message, success } = useSelector((state: any) => {
-        return state.createConversation
-    })
-
-    const dispatch = useDispatch()
-
-
-
-    const [showModal, setShowModal] = useState(false)
-
-    const [keyword, setKeyword] = useState("")
-    const [users, setUsers] = useState<ProfileSimpleResp[]>([])
-    const [selectUsers, setSelectUsers]= useState<any>([])
-
-    const handleSubmitInvitation = () => {
-      
-    }
-
+    const [selectUsers, setSelectUsers]= useState<UserResp[]>([])
+    const navigate = useNavigate()
+  
 
     useEffect(() => {
         //get list users which related with current user(friends, common friends, suggestion)
@@ -46,18 +33,18 @@ export default function CreateConversationForm() {
     const onSave = () => {
         const conReq: ConversationCreateReq = {
             type: "PUBLIC",
-            userIds: selectUsers,
-            name: groupName,
+            userIds: selectUsers.map(r => r.id),
+            nickname: groupName,
             thumbnail: avatar
         }
         console.log(conReq)
-       
+       conversationService.createConversation(conReq, (conversationId: string) => {
+            conversationService.getListConversation(setConversations)
+            setOpenModal(false)
+            navigate(`/inbox/c/${conversationId}`)
+       })
     }
 
-    if (success) {
-        //@ts-ignore
-        dispatch(fetchListConversationAction())
-    }
 
     return (
         <>
@@ -81,38 +68,11 @@ export default function CreateConversationForm() {
 
                 {/* Chọn thành viên */}
                 <div className="mb-3">
-                    <label className="form-label">Select members</label>
-                    <CustomSelect
-                        customOption={(props: any) => {
-                            console.log("props custom: ",)
-                            return (
-                                <components.Option {...props}>
-                                    <div className="d-flex">
-                                        <img height={50} src={props.data.avatar} />
-                                        <div>
-                                            <div style={{ fontWeight: 'bold' }}>{props.data.label}</div>
-                                            <div>534 friends</div>
-                                        </div>
-                                    </div>
-                                </components.Option>
-                            )
-                        }}
-                        select={{
-                            set: setSelectUsers
-                        }}
-                        data={users.map(user => {
-                            return {
-                                label: user.firstName + " " + user.lastName,
-                                value: user.id,
-                                avatar: user.imageUrl || user.avatar,
-                                online: user.isOnline
-                            }
-                        })}
-                        input={{
-                            setValue: setKeyword,
-                            value: keyword
-                        }}
-                    />
+                  
+                    <SearchInput selectedUsers={{
+                        get: selectUsers,
+                        set: setSelectUsers
+                    }}/>
                 </div>
 
                 {/* Ảnh đại diện nhóm */}
@@ -133,8 +93,6 @@ export default function CreateConversationForm() {
                         <img src={avatar} alt="Group Avatar" className="img-thumbnail" style={{ maxWidth: "200px" }} />
                     </div>
                 )}
-                <Spinner loading={loading} />
-                {hasError && <Alert message={message} type="danger"></Alert>}
             </ModalCustome>
         </>
     )

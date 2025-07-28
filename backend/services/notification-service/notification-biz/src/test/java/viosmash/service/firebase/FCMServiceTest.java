@@ -9,6 +9,11 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import viosmash.BaseTest;
 import viosmash.WebsocketConfig;
 
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class FCMServiceTest extends BaseTest {
@@ -28,5 +33,9 @@ class FCMServiceTest extends BaseTest {
 
     @Test
     void sendNotification() {
+        Collection<Long> userIds = List.of(6l);
+        Map<String, String> map = new HashMap<>();
+        map.put("url", "https://google.com");
+        fcmService.sendNotification("hello", "click here",map, userIds);
     }
 }

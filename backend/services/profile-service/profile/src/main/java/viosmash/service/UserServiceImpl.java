@@ -242,4 +242,9 @@ public class UserServiceImpl implements UserService {
         return new BlockedUserStatusResp(false, null);
     }
 
+    @Override
+    public List<User> searchUser(String keyword, Set<Long> userIds) {
+        return this.userRepository.searchByName(keyword, userIds);
+    }
+
 }

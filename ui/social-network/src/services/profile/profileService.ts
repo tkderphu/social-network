@@ -1,5 +1,6 @@
 import api from "../../axios/interceptor"
 import { ProfileUpdateAddressReqVO, ProfileUpdateEducationReqVO, ProfileUpdateInfoReqVO } from "../../model/profileModel"
+import { processJsonResponseFromServer } from "../../utils/utils"
 
 export interface UserCreateReq {
     firstName: string,
@@ -60,6 +61,14 @@ class ProfileService {
         return api.get(`${PATH}/block/check/${userId}`)
     }
   
+    searchUserCanInteract(keyword: any, set: any) {
+        processJsonResponseFromServer(
+            api.get(`${PATH}/search/interaction?keyword=${keyword}`),
+            "searchUserCanInteract",
+            set
+        )
+    }
+
 }
 export interface UserUpdateNewPassword {
     newPassword: string,

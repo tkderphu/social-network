@@ -159,6 +159,24 @@ public class FriendshipServiceTest extends BaseTest{
 
     }
 
+
+
+    @Test
+    void getListUserCanInteract() {
+        createRelationFriendBetweenUser(USER_TABLES.get(0).getId(), USER_TABLES.get(1).getId());
+        createRelationFriendBetweenUser(USER_TABLES.get(0).getId(), USER_TABLES.get(2).getId());
+        friendshipService.addNewUserMakeFriendRequest(USER_TABLES.get(0).getId(), USER_TABLES.get(3).getId());
+
+        createRelationFriendBetweenUser(USER_TABLES.get(2).getId(), USER_TABLES.get(4).getId());
+
+        //list user which user with id 1 can interact are [2, 3, 4, 5]
+
+
+        Set<Long> userIds = friendshipService.getListUserCanInteract(USER_TABLES.get(0).getId());
+
+        Assertions.assertEquals(userIds.size(), 4);
+    }
+
     @Test
     void getStatusFriendship() {
         Long userOne = USER_TABLES.get(0).getId();

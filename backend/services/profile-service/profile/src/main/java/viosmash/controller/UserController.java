@@ -3,9 +3,13 @@ package viosmash.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import viosmash.collection.CollUtils;
 import viosmash.controller.vo.*;
 import viosmash.core.utils.SecurityUtils;
+import viosmash.dal.dataobject.User;
 import viosmash.dal.redis.ForgotCodeRedis;
+import viosmash.friendship.api.FriendshipApi;
+import viosmash.object.BeanUtil;
 import viosmash.pojo.CommonResult;
 import viosmash.profile.constant.AddressEnum;
 import viosmash.profile.constant.PolicyEnum;
@@ -15,6 +19,7 @@ import viosmash.string.StringUtils;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @RestController
@@ -22,12 +27,22 @@ import java.util.Map;
 public class UserController {
     private final UserService userService;
     private final ForgotCodeRedis forgotCodeRedis;
-
+    private final FriendshipApi friendshipApi;
 
     @GetMapping("/search")
     public CommonResult<List<UserRespVO>> search(@RequestParam("name") String name) {
         List<UserRespVO> userRespVOS = userService.searchUser(name);
         return CommonResult.success(userRespVOS);
+    }
+
+    @GetMapping("/search/interaction")
+    public CommonResult<List<UserRespVO>> searchUsersCanInteract(@RequestParam("keyword") String keyword) {
+        Set<Long> userIds = friendshipApi.getListUserCanInteract(SecurityUtils.getLoginUserMemberId());
+        List<User> users = userService.searchUser(keyword, userIds);
+
+        return CommonResult.success(CollUtils.convertList(users, user -> {
+            return BeanUtil.copy(user, UserRespVO.class);
+        }));
     }
 
 

@@ -16,6 +16,7 @@ import memberConversationService from "../../services/chat/memberConversationSer
 import { MessageCreateReqVO, MessageRespVO } from "../../services/chat/messageService";
 import profileService from "../../services/profile/profileService";
 import { useStompClient } from "../../utils/useStomp";
+import { convertToHeader } from "../../utils/utils";
 import "./Chat.css"
 
 
@@ -150,7 +151,7 @@ export default function ChatArea(props: any) {
         }
     }, [listMemberConversation, conversation])
 
-    
+
 
 
     useEffect(() => {
@@ -403,15 +404,18 @@ export default function ChatArea(props: any) {
                                 <h5>
                                     Self
                                 </h5>
-                                <div className="d-flex mt-2 border-bottom p-2 mb-2">
-                                    <img src={memberConversation?.member?.avatar} className="rounded-circle border me-3 chat-avatar" />
-                                    <div className="d-flex flex-column">
-                                        <Link className="text-dark text-decoration-none" to={`/profile/${memberConversation?.id}`}> <h2 className="fs-5 fw-bold mb-0">{memberConversation?.member?.fullName}</h2>
-                                        </Link>
-                                        {memberConversation?.member?.isOnline && <span className="text-success">Online</span>}
-                                        {!memberConversation?.member?.isOnline && <span className="text-danger">Offline</span>}
+                                <div className="d-flex justify-content-between align-items-center border-bottom">
+                                    <div className="d-flex mt-2 p-2 mb-2">
+                                        <img src={memberConversation?.member?.avatar} className="rounded-circle border me-3 chat-avatar" />
+                                        <div className="d-flex flex-column">
+                                            <Link className="text-dark text-decoration-none" to={`/profile/${memberConversation?.id}`}> <h2 className="fs-5 fw-bold mb-0">{memberConversation?.member?.fullName}</h2>
+                                            </Link>
+                                            {memberConversation?.member?.isOnline && <span className="text-success">Online</span>}
+                                            {!memberConversation?.member?.isOnline && <span className="text-danger">Offline</span>}
 
+                                        </div>
                                     </div>
+                                    {conversation?.conversationType == "PUBLIC" && (<div ><strong>{convertToHeader(memberConversation?.role || "")}</strong></div>)}
                                 </div>
                             </div>
 
@@ -419,16 +423,21 @@ export default function ChatArea(props: any) {
                             {listMemberConversation?.map(mc => {
                                 if (mc.id == memberConversation?.id) return null
                                 return (
-                                    <div className="d-flex mt-2 border-bottom p-2">
+                                    <div className="d-flex justify-content-between align-items-center border-bottom">
+                                    <div className="d-flex mt-2  p-2">
                                         <img src={mc?.member?.avatar} className="rounded-circle border me-3 chat-avatar" />
+
                                         <div className="d-flex flex-column">
-                                            <Link className="text-dark text-decoration-none" to={`/profile/${mc?.member?.id}`}> <h2 className="fs-5 fw-bold mb-0">{mc?.member?.fullName}</h2>
+                                            <Link className="text-dark text-decoration-none" to={`/profile/${mc?.member?.id}`}> <h2 className="fs-5 fw-bold mb-0">
+                                                {mc?.member?.fullName}</h2>
                                             </Link>
                                             {mc?.member?.isOnline && <span className="text-success">Online</span>}
                                             {!mc?.member?.isOnline && <span className="text-danger">Offline</span>}
 
                                         </div>
                                     </div>
+                                   {conversation?.conversationType == "PUBLIC" && ( <div ><strong>{convertToHeader(mc.role)}</strong></div>)}
+                                </div>
                                 )
                             })}
 

@@ -44,7 +44,7 @@ export default function ChatList() {
                 <h6 className="fw-bold mb-0">{chat.nickname}</h6>
                 <span className="fs-6 text-muted">{chat?.latestMessage.timeAgo}</span>
               </div>
-              <p className="fs-6 text-muted text-truncate mb-0">{chat?.latestMessage?.sender?.id === TokenUtils.authLogin.userId ? "You: " : ""}{chat?.latestMessage.message}</p>
+              <p className="fs-6 text-muted   mb-0">{chat?.latestMessage?.sender?.id === TokenUtils.authLogin.userId ? <strong>You: </strong> : <strong>{chat.latestMessage.sender.firstName + " " + chat.latestMessage.sender.lastName + ": "}</strong>}{chat?.latestMessage.message}</p>
             </div>
           </Link>
         ))}

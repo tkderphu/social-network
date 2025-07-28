@@ -115,6 +115,11 @@ public class FriendshipServiceImpl implements FriendshipService{
     }
 
     @Override
+    public Set<Long> getListUserCanInteract(Long userId) {
+        return userRepository.findAllUserCanInteract(userId);
+    }
+
+    @Override
     public FriendshipStatus getStatusFriendship(Long fromUserId, Long toUserId) {
         boolean isFriend = this.userRepository.checkFriendStatus(fromUserId, toUserId).isPresent();
         if(isFriend) return FRIEND;
