@@ -30,8 +30,12 @@ class ProfileService {
     uploadImage(type: "PEROSNAL_IMAGE" | "COVER_PHOTOS",formData: FormData) {
         return api.post(`${PATH}/upload?type=${type}`, formData)
     }
-    fetchProfileUser(userId: any) {
-        return api.get(`${PATH}/${userId}`)
+    getUserDetailByUserId(userId: any, set: any) {
+        processJsonResponseFromServer(
+            api.get(`${PATH}/${userId}`),
+            "getUserDetailByUserId",
+            set
+        )
     }
     forgotPassword(email: string) {
         return api.get(`${PATH}/forgot-password?email=${email}`)

@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate, useParams } from 'react-router';
 
 import remarkGfm from 'remark-gfm'
 import Markdown from 'react-markdown'
@@ -33,6 +33,7 @@ export const PostContext = createContext<Model | undefined>(undefined)
 export const PostCard = (props: PostCardProps) => {
     const navigate = useNavigate()
     const location = useLocation()
+    const {groupId} = useParams()
 
     const [post, setPost] = useState<PostResp>()
 
@@ -75,7 +76,7 @@ export const PostCard = (props: PostCardProps) => {
                                 <img
                                     src={post?.user?.avatar}
                                     alt="User avatar"
-                                    className="rounded-circle me-2"
+                                    className="rounded-circle me-2 border"
                                     style={{ width: '40px', height: '40px' }}
                                 />
                                 <div>
@@ -83,9 +84,9 @@ export const PostCard = (props: PostCardProps) => {
                                     <small className="text-muted">{post?.time} ago</small>
                                 </div>
                             </div>
-                            {post?.group && (
+                            {post?.group && !groupId && (
                                 <div>
-                                    <Link className='text-decoration-none' to={`/groups/${post?.group.id}`}>{post?.group.name}</Link>
+                                    <Link className='text-decoration-none' to={`/groups/${post?.group.id}`}><strong>{post?.group.name}</strong></Link>
                                 </div>
                             )}
                             <PostFeature />
@@ -93,11 +94,11 @@ export const PostCard = (props: PostCardProps) => {
 
                     </div>
                     <div onClick={() => {
-                        // navigate(`/posts/${post?.id}`, {
-                        //     state: {
-                        //         backgroundLocation: location
-                        //     }
-                        // })
+                        navigate(`/posts/${post?.id}`, {
+                            state: {
+                                backgroundLocation: location
+                            }
+                        })
                     }} style={{ cursor: 'pointer' }}>
                         <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>
                             {post?.content}

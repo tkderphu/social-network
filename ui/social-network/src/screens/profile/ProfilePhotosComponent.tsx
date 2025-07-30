@@ -1,18 +1,20 @@
-import { useEffect, useState } from "react"
+import { useContext, useEffect, useState } from "react"
 import { useLocation, useParams } from "react-router"
 import { MediaRespVO, UploadedRespVO } from "../../model/mediaModel"
 import mediaService from "../../services/media/mediaService"
+import { ProfileContext } from "./ProfileScreen"
 
 
 function ProfilePhotosComponent() {
-    const [medias, setMedias] = useState<MediaRespVO[]>([])
+    const medias = useContext(ProfileContext)?.photos.get
     const [uploadedMedias, setUploadedMedias] = useState<UploadedRespVO[]>([])
     const location = useLocation()
-    const { userId } = useParams()
+    
     useEffect(() => {
-        mediaService.getListMedia("user", userId + "", setMedias)
         mediaService.getListUploaded(setUploadedMedias)
     }, [location.pathname])
+
+    console.log('=======================: ', medias)
 
     return (
         <div className="mb-3">
@@ -22,7 +24,7 @@ function ProfilePhotosComponent() {
                 </div>
                 <div className="card-body">
                     <div className="d-flex flex-wrap">
-                        {medias.map(media => {
+                        {medias?.map(media => {
                             return (
                                 <img src={media.url}
                                     alt="vcl" height={"200px"} width={"200px"} className="img-fluid img-thumbnail mx-3" />

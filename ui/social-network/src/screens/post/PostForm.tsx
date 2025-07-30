@@ -35,6 +35,7 @@ interface Props {
     },
     old?: PostResp
     type: "NEW" | "UPDATE",
+
 }
 export default function PostFormCreate(props: Props) {
 

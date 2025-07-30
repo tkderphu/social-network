@@ -5,7 +5,7 @@ import FullScreenLoader from "../../components/fullSpinner/FullScreenLoader"
 import Spinner from "../../components/Spinner"
 import { cancelFriendAction, cancelMakeFriendRequestAction, createFriendRequestAction, fetchStatusBetweenUserAction, rejectMakeFriendRequestAction } from "../../redux/actions/friendshipAction"
 
-export default function FriendActionButton() {
+export default function FriendActionButton(props: {className?: string}) {
     let { userId } = useParams()
     const fetchStatusState: {
         status: "FRIEND" | "MAKE_FRIEND" |
@@ -51,7 +51,7 @@ export default function FriendActionButton() {
                 dispatch(rejectMakeFriendRequestAction(userId))
             }}>Cancel</button>}
 
-            <button className="btn btn-primary" onClick={() => {
+            <button className={props.className || "btn btn-primary"} onClick={() => {
                 friendshipActionOnClick()
             }}>{fetchStatusState.status === 'NONE' ? "Add friend" : (fetchStatusState.status === 'MAKE_FRIEND' ? "Cancel made friend" : (fetchStatusState.status === 'ACCEPT_FRIEND' ? "Accept friend" : "Cancel friend"))}</button>
 

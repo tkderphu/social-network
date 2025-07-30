@@ -1,8 +1,8 @@
 import { useContext, useState } from "react"
-import { SettingContext } from "../SettingProvider"
+import AppProvider, { AppContext } from "../../../provider/AppProvider"
 
 export default function PersonalInformationSection() {
-    const profile = useContext(SettingContext)?.profile
+    const profile = useContext(AppContext)?.profile
     const [editPersonalInfor, setEditPersonalInfor] = useState(false)
 
     return (
@@ -47,13 +47,13 @@ export default function PersonalInformationSection() {
                     </div>
                     <div className="col-sm-8">
                         <span className="info-value" id="firstName-view" style={{ display: `${!editPersonalInfor ? "block" : "none"}` }}>
-                            John
+                            {profile?.get?.firstName}
                         </span>
                         <input
                             type="text"
                             className="form-control edit-mode"
                             id="firstName-edit"
-                            defaultValue="John"
+                            defaultValue={profile?.get?.firstName}
                             style={{ display: `${editPersonalInfor ? "block" : "none"}` }}
                         />
                     </div>
@@ -64,13 +64,13 @@ export default function PersonalInformationSection() {
                     </div>
                     <div className="col-sm-8">
                         <span className="info-value" id="lastName-view" style={{ display: `${!editPersonalInfor ? "block" : "none"}` }}>
-                            Doe
+                            {profile?.get?.lastName}
                         </span>
                         <input
                             type="text"
                             className="form-control edit-mode"
                             id="lastName-edit"
-                            defaultValue="Doe"
+                            defaultValue={profile?.get?.lastName}
                             style={{ display: `${editPersonalInfor ? "block" : "none"}` }}
                         />
                     </div>
@@ -81,13 +81,13 @@ export default function PersonalInformationSection() {
                     </div>
                     <div className="col-sm-8">
                         <span className="info-value" id="phoneNumber-view" style={{ display: `${!editPersonalInfor ? "block" : "none"}` }}>
-                            +1 (555) 123-4567
+                            {profile?.get?.phoneNumber || "null"}
                         </span>
                         <input
                             type="tel"
                             className="form-control edit-mode"
                             id="phoneNumber-edit"
-                            defaultValue="+1 (555) 123-4567"
+                            defaultValue=""
                             style={{ display: `${editPersonalInfor ? "block" : "none"}` }}
                         />
                     </div>
@@ -98,7 +98,7 @@ export default function PersonalInformationSection() {
                     </div>
                     <div className="col-sm-8">
                         <span className="info-value" id="gender-view" style={{ display: `${!editPersonalInfor ? "block" : "none"}` }}>
-                            Male
+                            {profile?.get?.gender}
                         </span>
                         <select
                             className="form-select edit-mode"
@@ -118,13 +118,13 @@ export default function PersonalInformationSection() {
                     </div>
                     <div className="col-sm-8">
                         <span className="info-value" id="dob-view" style={{ display: `${!editPersonalInfor ? "block" : "none"}` }}>
-                            January 15, 1990
+                            {profile?.get?.dob || "null"}
                         </span>
                         <input
                             type="date"
                             className="form-control edit-mode"
                             id="dob-edit"
-                            defaultValue="1990-01-15"
+                            defaultValue=""
                             style={{ display: `${editPersonalInfor ? "block" : "none"}` }}
                         />
                     </div>
@@ -135,8 +135,7 @@ export default function PersonalInformationSection() {
                     </div>
                     <div className="col-sm-8">
                         <span className="info-value" id="bio-view" style={{ display: `${!editPersonalInfor ? "block" : "none"}` }}>
-                            Software Developer passionate about creating amazing user
-                            experiences
+                            {profile?.get?.bio || "null"}
                         </span>
                         <textarea
                             className="form-control edit-mode"
@@ -144,7 +143,7 @@ export default function PersonalInformationSection() {
                             rows={3}
                             style={{ display: `${editPersonalInfor ? "block" : "none"}` }}
                             defaultValue={
-                                "Software Developer passionate about creating amazing user experiences"
+                                ""
                             }
                         />
                     </div>

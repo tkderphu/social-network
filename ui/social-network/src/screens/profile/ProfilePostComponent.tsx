@@ -6,7 +6,6 @@ import { PageResult, TokenUtils } from "../../common";
 import FullScreenLoader from "../../components/fullSpinner/FullScreenLoader";
 import { MediaReqVO, UploadedRespVO } from "../../model/mediaModel";
 import { PostCreateReqVO, PostResp } from "../../model/postModel";
-import { ProfileContext } from "../../provider/ProfileProvider";
 import { createPostAction } from "../../redux/actions/postAction";
 import MediaService from "../../services/media/mediaService";
 import postService, { PostCreateReq } from "../../services/post/postService";
@@ -15,11 +14,13 @@ import PostFormCreate from "../post/PostForm";
 
 
 import PostFormModal from "../post/PostFormModal";
+import { ProfileContext } from "./ProfileScreen";
+import ProfileSummary from "./ProfileSummary";
 
 
 export default function ProfilePostComponent() {
 
-    const userProfile = useContext(ProfileContext)?.profile
+    const userProfile = useContext(ProfileContext)?.userProfile
    
 
     const [postReq, setPostReq] = useState<PostCreateReqVO>({
@@ -73,8 +74,8 @@ export default function ProfilePostComponent() {
 
     return (
         <div className="row">
-            <div className="col-4 scroll-bar">
-
+            <div className="col-4 sticky-sidebar hide-scrollbar">
+                <ProfileSummary/>
             </div>
             <div className="col-8 vertical-line">
                 {userProfile?.get?.id == TokenUtils.authLogin.userId && (

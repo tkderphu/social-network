@@ -76,7 +76,7 @@ export const processJsonResponseFromServer = (promise: Promise<any>, methodIsCal
     const cm: CommonResult<any> = resp.data
     if (cm.code == 200) {
       if (flag == 1) {
-        console.log("dcm: ", cm)
+        console.log(methodIsCalled, cm.data)
         set(cm.data)
       } else {
         set()
@@ -95,6 +95,7 @@ export const processJsonResponseFromServer1 = (promise: Promise<any>, methodIsCa
   promise.then(resp => {
    
     if (flag == 1) {
+      console.log(methodIsCalled, resp.data, "set: ", set)
       set(resp.data)
     } else {
       set()

@@ -14,13 +14,11 @@
     left: 30px;
     object-fit: cover;
 }
-.profile-header {
+.profile-header-1 {
     padding-top: 80px;
     padding-bottom: 20px;
 }
-body {
-    /* background-image: ur; */
-}
+
 .online-status {
     width: 20px;
     height: 20px;
@@ -80,3 +78,6 @@ body {
     background: linear-gradient(45deg, #1e7e34, #155724);
     color: white;
 }
+
+
+

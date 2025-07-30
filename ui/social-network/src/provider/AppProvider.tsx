@@ -1,9 +1,11 @@
 import { createContext, useEffect, useState } from "react"
+import { TokenUtils } from "../common"
 import { ProfileSimpleResp, UserProfileResp } from "../model/profileModel"
+import profileService from "../services/profile/profileService"
 
 interface Model {
-    profile?: {
-        get: UserProfileResp,
+    profile: {
+        get?: UserProfileResp,
         set: any
     },
     blockedUsers?: {
@@ -46,12 +48,18 @@ export default function AppProvider({children}: any) {
     const [unreadMessageCount, setUnreadMessageCount] = useState(0)
     const [unreadNotificationCount, setUnreadNotificationCount] = useState(0)
     const [uploadStateLoading, setUploadStateLoading] = useState(false)
+    const [userProfile, setUserProfile] = useState<UserProfileResp>()
+    const currentUserId = TokenUtils.authLogin.userId
     useEffect(() => {
-        
+        profileService.getUserDetailByUserId(currentUserId, setUserProfile)
     }, [])
 
 
     return <AppContext.Provider value={{
+        profile: {
+            get: userProfile,
+            set: setUserProfile
+        },
         uploadState: {
             loading: {
                 get: uploadStateLoading,

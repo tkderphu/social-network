@@ -10,11 +10,7 @@ interface Model {
     notificationSetting: {
         get?: NotificationSettingRespVO,
         set: any
-    },
-    profile: {
-        get?: UserProfileResp,
-        set: any
-    },
+    }
 
 }
 
@@ -22,7 +18,6 @@ export const SettingContext = createContext<Model | undefined>(undefined)
 
 export default function SettingProvider({children}: any) {
     const [notificationSetting, setNotificationSetting] = useState<NotificationSettingRespVO>()
-    const [profile, setProfile] = useState<UserProfileResp>()
 
     const ref = useRef(false)
 
@@ -40,21 +35,13 @@ export default function SettingProvider({children}: any) {
         })
 
 
-        profileService.fetchProfileUser(TokenUtils.authLogin.userId).then(resp => {
-            setProfile(resp.data.data)
-        }).catch(err => {
-            console.log("err profile fetching: ", err)
-        })
 
     }, [])
 
 
     return (
         <SettingContext.Provider value={{
-            profile: {
-                get: profile,
-                set: setProfile
-            },
+         
             notificationSetting: {
                 get: notificationSetting,
                 set: setNotificationSetting
