@@ -1,6 +1,5 @@
 package viosmash.service;
 
-import jakarta.persistence.Column;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationContext;
@@ -23,11 +22,12 @@ import viosmash.date.DateUtils;
 import viosmash.exception.Exceptional;
 import viosmash.friendship.api.FriendshipApi;
 import viosmash.object.BeanUtil;
+import viosmash.object.ObjectUtils;
 import viosmash.pojo.api.notification.NotificationDto;
 import viosmash.pojo.api.notification.NotificationType;
 import viosmash.profile.constant.AddressEnum;
 import viosmash.profile.constant.PolicyEnum;
-import viosmash.profile.constant.SchoolEnum;
+import viosmash.profile.constant.EducationEnum;
 import viosmash.random.RandomUtils;
 import viosmash.string.StringUtils;
 
@@ -67,24 +67,36 @@ public class UserServiceImpl implements UserService {
     @Override
     public void updateInfo(Long userId, UserUpdateInfoReqVO req) {
         User user = getUserById(userId);
-        BeanUtil.setTargetIfNotNull(user, BeanUtil.copy(req, User.class));
+
+        if(req.getIsMale() != null) user.setIsMale(req.getIsMale());
+
+        if(!ObjectUtils.isNullAble(req.getFirstName(), "").isEmpty()) user.setFirstName(req.getFirstName());
+
+        if(!ObjectUtils.isNullAble(req.getLastName(), "").isEmpty()) user.setLastName(req.getLastName());
+
+        if(!ObjectUtils.isNullAble(req.getBio(), "").isEmpty()) user.setBio(req.getBio());
+
+        if(!ObjectUtils.isNullAble(req.getPhoneNumber(), "").isEmpty()) user.setPhoneNumber(req.getPhoneNumber());
+
+        if(ObjectUtils.isNullAble(req.getDateOfBirth(), null) != null) user.setDateOfBirth(req.getDateOfBirth());
+
 
         this.userRepository.save(user);
     }
 
     @Override
-    public void updatePolicy(Long userId, Map<PolicyEnum, String> req) {
+    public void updatePolicy(Long userId, Map<String, String> req) {
         this.userRepository.save(getUserById(userId).setPolicies(req));
     }
 
     @Override
-    public void updateAddress(Long userId, Map<AddressEnum, String> req) {
+    public void updateAddress(Long userId, Map<String, String> req) {
         this.userRepository.save(getUserById(userId).setAddresses(req));
     }
 
     @Override
-    public void updateSchool(Long userId, Map<SchoolEnum, String> req) {
-        this.userRepository.save(getUserById(userId).setSchools(req));
+    public void updateSchool(Long userId, Map<String, String> req) {
+        this.userRepository.save(getUserById(userId).setEducations(req));
     }
 
     @Override
@@ -101,10 +113,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserRespVO getProfile(Long userId) {
         User user = getUserById(userId);
-        return BeanUtil.copy(user, UserRespVO.class)
-                .setDob(DateUtils.format(user.getDateOfBirth()))
-                .setGender(user.getIsMale() ? "Male" : "Female")
-                .setJoined(DateUtils.format(user.getCreatedDate()));
+        return BeanUtil.copy(user, UserRespVO.class);
     }
 
     @Override

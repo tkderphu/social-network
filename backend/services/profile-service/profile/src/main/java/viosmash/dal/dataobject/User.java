@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.experimental.Accessors;
 import viosmash.profile.constant.AddressEnum;
 import viosmash.profile.constant.PolicyEnum;
-import viosmash.profile.constant.SchoolEnum;
+import viosmash.profile.constant.EducationEnum;
 import viosmash.converter.JsonMapConverter;
 import viosmash.string.StringUtils;
 
@@ -29,13 +29,13 @@ public class User {
     private Date createdDate;
 
     @Convert(converter = JsonMapConverter.class)
-    private Map<SchoolEnum, String> schools;
+    private Map<String, String> educations;
 
     @Convert(converter = JsonMapConverter.class)
-    private Map<AddressEnum, String> addresses;
+    private Map<String, String> addresses;
 
     @Convert(converter = JsonMapConverter.class)
-    private Map<PolicyEnum, String> policies;
+    private Map<String, String> policies;
 
     @Column(unique = true)
     private String email;

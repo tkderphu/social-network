@@ -1,13 +1,42 @@
 export function formatDate(isoString: string): string {
-    const date = new Date(isoString);
-  
-    const dd = String(date.getDate()).padStart(2, '0');
-    const MM = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
-    const yyyy = date.getFullYear();
-  
-    const HH = String(date.getHours()).padStart(2, '0');
-    const mm = String(date.getMinutes()).padStart(2, '0');
-    const ss = String(date.getSeconds()).padStart(2, '0');
-  
-    return `${dd}/${MM}/${yyyy} ${HH}:${mm}:${ss}`;
-  }
+  const date = new Date(isoString);
+
+  const dd = String(date.getDate()).padStart(2, '0');
+  const MM = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  const yyyy = date.getFullYear();
+
+  const HH = String(date.getHours()).padStart(2, '0');
+  const mm = String(date.getMinutes()).padStart(2, '0');
+  const ss = String(date.getSeconds()).padStart(2, '0');
+
+  return `${dd}/${MM}/${yyyy} ${HH}:${mm}:${ss}`;
+}
+
+export function formatDate2(isoString: string): string {
+  const date = new Date(isoString);
+
+  const dd = String(date.getDate()).padStart(2, '0');
+  const MM = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  const yyyy = date.getFullYear();
+
+  const HH = String(date.getHours()).padStart(2, '0');
+  const mm = String(date.getMinutes()).padStart(2, '0');
+  const ss = String(date.getSeconds()).padStart(2, '0');
+
+  return `${dd}/${MM}/${yyyy}`;
+}
+
+
+export function formatDate3(isoString: string): string {
+  const date = new Date(isoString);
+
+  const dd = String(date.getDate()).padStart(2, '0');
+  const MM = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-indexed
+  const yyyy = date.getFullYear();
+
+  const HH = String(date.getHours()).padStart(2, '0');
+  const mm = String(date.getMinutes()).padStart(2, '0');
+  const ss = String(date.getSeconds()).padStart(2, '0');
+
+  return `${yyyy}-${MM}-${dd}`;
+}

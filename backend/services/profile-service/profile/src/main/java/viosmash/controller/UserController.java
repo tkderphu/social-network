@@ -2,6 +2,7 @@ package viosmash.controller;
 
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 import viosmash.collection.CollUtils;
 import viosmash.controller.vo.*;
@@ -13,7 +14,7 @@ import viosmash.object.BeanUtil;
 import viosmash.pojo.CommonResult;
 import viosmash.profile.constant.AddressEnum;
 import viosmash.profile.constant.PolicyEnum;
-import viosmash.profile.constant.SchoolEnum;
+import viosmash.profile.constant.EducationEnum;
 import viosmash.service.UserService;
 import viosmash.string.StringUtils;
 
@@ -21,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+@Slf4j
 @RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/profiles")
@@ -48,7 +50,10 @@ public class UserController {
 
     @GetMapping("/{userId}")
     public CommonResult<UserRespVO> getProfile(@PathVariable("userId") Long userId) {
-        return CommonResult.success(userService.getProfile(userId));
+        UserRespVO profile = userService.getProfile(userId);
+        log.info("clgt: {}", profile);
+        return CommonResult.success(profile);
+
     }
 
     @PostMapping
@@ -95,19 +100,19 @@ public class UserController {
     }
 
     @PutMapping("/policy")
-    public CommonResult<Boolean> updatePolicy(@RequestBody Map<PolicyEnum, String> privates) {
+    public CommonResult<Boolean> updatePolicy(@RequestBody Map<String, String> privates) {
         userService.updatePolicy(SecurityUtils.getLoginUserMemberId(), privates);
         return CommonResult.success(true);
     }
 
-    @PutMapping("/school")
-    public CommonResult<Boolean> updateSchool(@RequestBody Map<SchoolEnum, String> school) {
-        userService.updateSchool(SecurityUtils.getLoginUserMemberId(), school);
+    @PutMapping("/education")
+    public CommonResult<Boolean> updateEducation(@RequestBody Map<String, String> education) {
+        userService.updateSchool(SecurityUtils.getLoginUserMemberId(), education);
         return CommonResult.success(true);
     }
 
     @PutMapping("/address")
-    public CommonResult<Boolean> updateAddress(@RequestBody Map<AddressEnum, String> address) {
+    public CommonResult<Boolean> updateAddress(@RequestBody Map<String, String> address) {
         userService.updateAddress(SecurityUtils.getLoginUserMemberId(), address);
         return CommonResult.success(true);
     }

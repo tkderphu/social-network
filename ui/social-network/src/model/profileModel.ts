@@ -44,10 +44,10 @@ export interface UserProfileResp {
     phoneNumber: string
     gender: string
     bio: string
-    dob: string
-    joined: string
-    schools: Record<string, string>
-    aaddresses: Record<string, string>
+    dateOfBirth?: any
+    createdDate: any
+    educations: Record<string, string>
+    addresses: Record<string, string>
     policies: Record<string, string>,
     coverPhoto: string
     isOnline: boolean
@@ -67,4 +67,14 @@ export interface ProfileSimpleResp {
 export interface BlockedUserStatusResp {
     blocked: boolean,
     direction: "TO" | "FROM"
+}
+
+
+export interface UserUpdateInfoReqVO {
+    firstName: string
+    lastName: string
+    phoneNumber?: string
+    isMale: boolean
+    bio?: string
+    dateOfBirth?: any
 }

@@ -11,14 +11,13 @@ import { AppContext } from "../../../provider/AppProvider"
 import ProfileScreen from "../../profile/ProfileScreen"
 export default function ProfileSettingComponent() {
     const profile = useContext(AppContext)?.profile.get
-    const [editPersonalInfor, setEditPersonalInfor] = useState(false)
     return (
         <div >
             {/* Profile Header */}
             <div className="profile-header mb-2">
                 <div className="cover-photo mt-2 mx-3">
                     <strong>
-                        Joined: {formatDate(profile?.joined || "")}
+                        Joined: {formatDate(profile?.createdDate)}
                     </strong>
                 </div>
 

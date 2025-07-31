@@ -1,6 +1,6 @@
 package viosmash.profile.constant;
 
-public enum SchoolEnum {
+public enum EducationEnum {
     HIGH_SCHOOL,
     UNIVERSITY
 }

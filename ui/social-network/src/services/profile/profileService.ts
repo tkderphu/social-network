@@ -1,5 +1,5 @@
 import api from "../../axios/interceptor"
-import { ProfileUpdateAddressReqVO, ProfileUpdateEducationReqVO, ProfileUpdateInfoReqVO } from "../../model/profileModel"
+import { ProfileUpdateAddressReqVO, ProfileUpdateEducationReqVO, ProfileUpdateInfoReqVO, UserUpdateInfoReqVO } from "../../model/profileModel"
 import { processJsonResponseFromServer } from "../../utils/utils"
 
 export interface UserCreateReq {
@@ -18,14 +18,29 @@ class ProfileService {
     createUser(userCreateReq: UserCreateReq) {
         return api.post(PATH, userCreateReq)
     }
-    updateInfo(info: ProfileUpdateInfoReqVO) {
-        return api.put(`${PATH}`, info)
+    updateInfo(info: any, set: any) {
+        processJsonResponseFromServer(
+            api.put(`${PATH}/info`, info),
+           "updateInfo",
+            set,
+            0
+        )
     }
-    updateEducation(info: ProfileUpdateEducationReqVO) {
-        return api.put(`${PATH}/education`, info)
+    updateEducation(info: Record<string, string>, set: any) {
+        processJsonResponseFromServer(
+            api.put(`${PATH}/education`, info),
+            "updateEducation",
+            set,
+            0
+        )
     }
-    updateAddress(info: ProfileUpdateAddressReqVO) {
-        return api.put(`${PATH}/address`, info)
+    updateAddresses(info: any, set: any) {
+        processJsonResponseFromServer(
+            api.put(`${PATH}/address`, info),
+            "updateAddresses",
+            set,
+            0
+        )
     }
     uploadImage(type: "PEROSNAL_IMAGE" | "COVER_PHOTOS",formData: FormData) {
         return api.post(`${PATH}/upload?type=${type}`, formData)

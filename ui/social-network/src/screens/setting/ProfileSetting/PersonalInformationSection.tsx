@@ -1,9 +1,54 @@
-import { useContext, useState } from "react"
+import { useContext, useEffect, useState } from "react"
+import { toast } from "react-toastify"
+import { TokenUtils } from "../../../common"
+import { UserUpdateInfoReqVO } from "../../../model/profileModel"
 import AppProvider, { AppContext } from "../../../provider/AppProvider"
+import profileService from "../../../services/profile/profileService"
+import { formatDate2, formatDate3 } from "../../../utils/common"
 
 export default function PersonalInformationSection() {
-    const profile = useContext(AppContext)?.profile
+   
     const [editPersonalInfor, setEditPersonalInfor] = useState(false)
+    const [userInfoReq, setUserInfoReq] = useState<UserUpdateInfoReqVO>()
+    const profile = useContext(AppContext)?.profile
+    console.log("req: ", userInfoReq)
+    useEffect(() => {
+        initialUserReqUpdate()
+    }, [profile?.get])
+
+
+    const initialUserReqUpdate = () => {
+        if (profile?.get) {
+            setUserInfoReq({
+                isMale: profile?.get?.gender == 'Male' ? true : false,
+                ...profile?.get
+            })
+        }
+    }
+
+    const onChange = (e: any) => {
+        const {name, value} = e.target
+
+        if(name == "gender") {
+            setUserInfoReq((prev: any) => ({
+                ...prev,
+                isMale: value == "Male" ? true : false
+            }))
+        } else {
+            setUserInfoReq((prev: any) => ({
+                ...prev,
+                [name]: value
+            }))
+        }
+    }
+
+    const onSubmit = () => {
+        profileService.updateInfo(userInfoReq, () => {
+            profileService.getUserDetailByUserId(TokenUtils.authLogin.userId, profile?.set)
+            toast.success("User info updated successfully")
+            setEditPersonalInfor(false)
+        })
+    }
 
     return (
         <div className="card profile-info-card">
@@ -24,7 +69,7 @@ export default function PersonalInformationSection() {
                                 <button
                                     className="btn btn-save me-2"
                                     id="saveBtn"
-                                // onclick="saveProfile()"
+                                    onClick={onSubmit}
                                 >
                                     <i className="fas fa-save me-2" />
                                     Save
@@ -32,7 +77,10 @@ export default function PersonalInformationSection() {
                                 <button
                                     className="btn btn-secondary"
                                     id="cancelBtn"
-                                    onClick={() => setEditPersonalInfor(false)}
+                                    onClick={() => {
+                                        initialUserReqUpdate()
+                                        setEditPersonalInfor(false)
+                                    }}
                                 >
                                     <i className="fas fa-times me-2" />
                                     Cancel
@@ -47,13 +95,15 @@ export default function PersonalInformationSection() {
                     </div>
                     <div className="col-sm-8">
                         <span className="info-value" id="firstName-view" style={{ display: `${!editPersonalInfor ? "block" : "none"}` }}>
-                            {profile?.get?.firstName}
+                            {userInfoReq?.firstName}
                         </span>
                         <input
+                            name='firstName'
+                            onChange={onChange}
                             type="text"
                             className="form-control edit-mode"
                             id="firstName-edit"
-                            defaultValue={profile?.get?.firstName}
+                            value={userInfoReq?.firstName}
                             style={{ display: `${editPersonalInfor ? "block" : "none"}` }}
                         />
                     </div>
@@ -64,13 +114,15 @@ export default function PersonalInformationSection() {
                     </div>
                     <div className="col-sm-8">
                         <span className="info-value" id="lastName-view" style={{ display: `${!editPersonalInfor ? "block" : "none"}` }}>
-                            {profile?.get?.lastName}
+                            {userInfoReq?.lastName}
                         </span>
                         <input
+                            name='lastName'
+                            onChange={onChange}
                             type="text"
                             className="form-control edit-mode"
                             id="lastName-edit"
-                            defaultValue={profile?.get?.lastName}
+                            value={userInfoReq?.lastName}
                             style={{ display: `${editPersonalInfor ? "block" : "none"}` }}
                         />
                     </div>
@@ -81,13 +133,15 @@ export default function PersonalInformationSection() {
                     </div>
                     <div className="col-sm-8">
                         <span className="info-value" id="phoneNumber-view" style={{ display: `${!editPersonalInfor ? "block" : "none"}` }}>
-                            {profile?.get?.phoneNumber || "null"}
+                            {userInfoReq?.phoneNumber || "null"}
                         </span>
                         <input
+                            name='phoneNumber'
+                            onChange={onChange}
                             type="tel"
                             className="form-control edit-mode"
                             id="phoneNumber-edit"
-                            defaultValue=""
+                            value={userInfoReq?.phoneNumber || ""}
                             style={{ display: `${editPersonalInfor ? "block" : "none"}` }}
                         />
                     </div>
@@ -98,17 +152,17 @@ export default function PersonalInformationSection() {
                     </div>
                     <div className="col-sm-8">
                         <span className="info-value" id="gender-view" style={{ display: `${!editPersonalInfor ? "block" : "none"}` }}>
-                            {profile?.get?.gender}
+                            {userInfoReq?.isMale ? "Male" : "Female"}
                         </span>
                         <select
+                            name='gender'
+                            onChange={onChange}
                             className="form-select edit-mode"
                             id="gender-edit"
                             style={{ display: `${editPersonalInfor ? "block" : "none"}` }}
                         >
                             <option value="Male">Male</option>
                             <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                            <option value="Prefer not to say">Prefer not to say</option>
                         </select>
                     </div>
                 </div>
@@ -118,13 +172,15 @@ export default function PersonalInformationSection() {
                     </div>
                     <div className="col-sm-8">
                         <span className="info-value" id="dob-view" style={{ display: `${!editPersonalInfor ? "block" : "none"}` }}>
-                            {profile?.get?.dob || "null"}
+                            {formatDate2(userInfoReq?.dateOfBirth) || "null"}
                         </span>
                         <input
+                            name='dateOfBirth'
+                            onChange={onChange}
                             type="date"
                             className="form-control edit-mode"
                             id="dob-edit"
-                            defaultValue=""
+                            value={formatDate3(userInfoReq?.dateOfBirth)}
                             style={{ display: `${editPersonalInfor ? "block" : "none"}` }}
                         />
                     </div>
@@ -135,16 +191,16 @@ export default function PersonalInformationSection() {
                     </div>
                     <div className="col-sm-8">
                         <span className="info-value" id="bio-view" style={{ display: `${!editPersonalInfor ? "block" : "none"}` }}>
-                            {profile?.get?.bio || "null"}
+                            {userInfoReq?.bio || "null"}
                         </span>
                         <textarea
+                            name="bio"
+                            onChange={onChange}
                             className="form-control edit-mode"
                             id="bio-edit"
                             rows={3}
                             style={{ display: `${editPersonalInfor ? "block" : "none"}` }}
-                            defaultValue={
-                                ""
-                            }
+                            value={userInfoReq?.bio || "" }
                         />
                     </div>
                 </div>
