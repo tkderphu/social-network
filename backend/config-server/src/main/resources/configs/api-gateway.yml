@@ -42,6 +42,12 @@ spring:
           uri: lb://NOTIFICATION-SERVICE
           predicates:
             - Path=/api/notifications/**
+
+        - id: notification-service-setting
+          uri: lb://NOTIFICATION-SERVICE
+          predicates:
+            - Path=/api/notification-settings/**
+
         - id: notification-sockjs-route
           uri: lb://NOTIFICATION-SERVICE
           predicates:

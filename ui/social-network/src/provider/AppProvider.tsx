@@ -1,6 +1,8 @@
 import { createContext, useEffect, useState } from "react"
 import { TokenUtils } from "../common"
+import { NotificationSettingRespVO } from "../model/notificationModel"
 import { ProfileSimpleResp, UserProfileResp } from "../model/profileModel"
+import notificationSettingService from "../services/notification/notificationSettingService"
 import profileService from "../services/profile/profileService"
 
 interface Model {
@@ -35,6 +37,10 @@ interface Model {
     },
     uploadState: {
         loading: {get: boolean, set: any}
+    },
+    notificationSetting: {
+        get?: NotificationSettingRespVO,
+        set: any
     }
 
 }
@@ -49,13 +55,19 @@ export default function AppProvider({children}: any) {
     const [unreadNotificationCount, setUnreadNotificationCount] = useState(0)
     const [uploadStateLoading, setUploadStateLoading] = useState(false)
     const [userProfile, setUserProfile] = useState<UserProfileResp>()
+    const [notificationSetting, setNotificationSetting] = useState<NotificationSettingRespVO>()
     const currentUserId = TokenUtils.authLogin.userId
     useEffect(() => {
         profileService.getUserDetailByUserId(currentUserId, setUserProfile)
+        notificationSettingService.getNotificationSetting(setNotificationSetting)
     }, [])
 
 
     return <AppContext.Provider value={{
+        notificationSetting: {
+            get: notificationSetting,
+            set: setNotificationSetting
+        },
         profile: {
             get: userProfile,
             set: setUserProfile

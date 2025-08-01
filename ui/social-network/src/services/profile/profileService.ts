@@ -34,6 +34,14 @@ class ProfileService {
             0
         )
     }
+    updatePolicy(info: any, set: any) {
+        processJsonResponseFromServer(
+            api.put(`${PATH}/policy`, info),
+            "updatePolicy",
+            set,
+            0
+        )
+    }
     updateAddresses(info: any, set: any) {
         processJsonResponseFromServer(
             api.put(`${PATH}/address`, info),
@@ -65,6 +73,7 @@ class ProfileService {
     search(keyword: string) {
         return api.get(`${PATH}/search?name=${keyword}`)
     }
+
 
 
     updateBlockUser(req: {toUserId: any, blockType: any}) {

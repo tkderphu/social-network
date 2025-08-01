@@ -11,8 +11,8 @@ import static viosmash.string.StringUtils.equal;
 @AllArgsConstructor
 public enum PolicyEnum {
     CHAT(List.of("ANYONE", "ONLY_FRIENDS")), //chat
-    NOTIFICATION(List.of("ANYTHING", "ONLY_FRIENDS")), //notification
-    POST(List.of("ANYONE", "ONLY_MYSELF", "ONLY_FRIENDS")); //display post
+    NOTIFICATION(List.of("ANYONE", "FRIENDS_NOTIFY")), //notification
+    POST(List.of("ANYONE", "ONLY_ME", "ONLY_FRIENDS")); //display post
 
     @Getter
     private final List<String> values;
@@ -25,6 +25,7 @@ public enum PolicyEnum {
                 .findFirst()
                 .isPresent();
     }
+
 
     public boolean isExists(String value) {
         return values.stream()

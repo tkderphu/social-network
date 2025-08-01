@@ -2,9 +2,6 @@ server:
   port: 8085
 
 spring:
-  cloud:
-    discovery:
-      enabled: false
   datasource:
     url: jdbc:mysql://localhost:3306/social_network_notification_service?createDatabaseIfNotExist=true
     driver-class-name: com.mysql.cj.jdbc.Driver

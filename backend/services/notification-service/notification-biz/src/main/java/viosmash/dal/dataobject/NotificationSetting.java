@@ -17,7 +17,6 @@ public class NotificationSetting {
     @Id
     private Long userId;
 
-
     private Boolean enableCommentNotification;
     private Boolean enablePostFriendsNotification;
     private Boolean enablePostGroupsNotification;
