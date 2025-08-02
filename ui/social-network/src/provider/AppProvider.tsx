@@ -2,6 +2,8 @@ import { createContext, useEffect, useState } from "react"
 import { TokenUtils } from "../common"
 import { NotificationSettingRespVO } from "../model/notificationModel"
 import { ProfileSimpleResp, UserProfileResp } from "../model/profileModel"
+import messageService from "../services/chat/messageService"
+import notificationService from "../services/notification/notificationService"
 import notificationSettingService from "../services/notification/notificationSettingService"
 import profileService from "../services/profile/profileService"
 
@@ -60,6 +62,8 @@ export default function AppProvider({children}: any) {
     useEffect(() => {
         profileService.getUserDetailByUserId(currentUserId, setUserProfile)
         notificationSettingService.getNotificationSetting(setNotificationSetting)
+        notificationService.countUnreadMessage(setUnreadNotificationCount)
+        messageService.countUnreadMessages(setUnreadMessageCount)
     }, [])
 
 

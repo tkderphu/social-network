@@ -25,11 +25,14 @@ public class ConversationController {
     private final ConversationService conversationService;
 
     @GetMapping
-    public CommonResult<List<ConversationRespVO>> getListConversation() {
+    public CommonResult<List<ConversationRespVO>> getListConversation(
+            @RequestParam(value = "visible", defaultValue = "true") Boolean visible
+    ) {
         Long userId = SecurityUtils.getLoginUserMemberId();
-        List<ConversationRespVO> conversations = conversationService.getListConversation(userId, true);
+        List<ConversationRespVO> conversations = conversationService.getListConversation(userId, visible);
         return CommonResult.success(conversations);
     }
+
 
     @PutMapping("/info")
     public CommonResult<Boolean> updateInfo(@RequestBody ConversationInfoUpdateReqVO req) {

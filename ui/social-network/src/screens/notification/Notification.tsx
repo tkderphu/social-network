@@ -7,7 +7,11 @@ import { AppContext } from "../../provider/AppProvider";
 import { fetchNotifyMessagesAction } from "../../redux/actions/notificationAction";
 import notificationService from "../../services/notification/notificationService";
 import "./Notification.css"
+import NotificationComment from "./template/NotificationComment";
+import NotificationGroup from "./template/NotificationGroup";
+import NotificationPost from "./template/NotificationPost";
 import NotificationRequestFriend from "./template/NotificationRequestFriend";
+import NotificationVote from "./template/NotificationVote";
 
 export interface NotificationRespVO {
     id: any,
@@ -30,34 +34,29 @@ export enum RefParam {
 
 export default function Notification() {
     const openNotification = useContext(AppContext)?.openNotification
+    const [notifications, setNotifications] = useState<NotificationRespVO[]>([])
+    
+    const [paging, setPaging] = useState<{
+        page: number,
+        limit: number
+    }>({
+        page: 1,
+        limit: 20
+    })
 
     const closeNotifications = () => {
         openNotification?.set(false)
     };
 
-   
-
-
-    const dispatch = useDispatch()
-    const fetchNotificationState: {
-        notifications: {
-            time: any,
-            read: boolean,
-            type: "ACCEPTED_REQUEST_FRIEND" | "CREATED_REQUEST_FRIEND" | "COMMENT",
-            params: any
-        }[],
-        loading: boolean
-    } = useSelector((state: any) => {
-        return state.fetchNotifyMessages
-    })
     useEffect(() => {
-        //@ts-ignore
-        dispatch(fetchNotifyMessagesAction())
-    }, [])
+        if(openNotification?.get) {
+            notificationService.getListNotification(paging.page, paging.limit, setNotifications);
+        } else {
+            return
+        }
+    }, [openNotification?.get])
 
-    // if(fetchNotificationState.loading) {
-    //     return <FullScreenLoader/>
-    // }
+  
     return (
         <>
             <div
@@ -66,24 +65,41 @@ export default function Notification() {
             >
                 <div className="d-flex justify-content-between align-items-center mb-3">
                     <h5 className="mb-0">Notifications</h5>
-                    <button
-                        type="button"
-                        className="btn-close"
-                        onClick={closeNotifications}
-                    />
+                    <button type="button" className="btn close" aria-label="Close" onClick={closeNotifications}>
+                        <span aria-hidden="true" style={{ fontSize: "20px" }}>&times;</span>
+                    </button>
                 </div>
 
-                {fetchNotificationState?.notifications?.map(notification => {
-                    if (notification.type === "CREATED_REQUEST_FRIEND") {
+                {notifications.map(notification => {
+                    if (notification.targetType === "GROUP") {
                         return (
-                            <NotificationRequestFriend
-                                read={notification.read}
-                                time={notification.time}
-                                params={notification.params}
+                            <NotificationGroup
+                                obj={JSON.parse(JSON.stringify(notification))}
                             />
                         )
+                    } else if(notification.targetType == "COMMENT") {
+                        return (
+                            <NotificationComment
+                                obj={JSON.parse(JSON.stringify(notification))}
+                            />
+                        )
+                    } else if(notification.targetType == "POST") {
+                        return (
+                            <NotificationPost
+                                obj={JSON.parse(JSON.stringify(notification))}
+                            />
+                        )
+                    } else if(notification.targetType == "USER") {
+                        return (
+                            <NotificationGroup
+                                obj={JSON.parse(JSON.stringify(notification))}
+                            />
+                        )
+                    } else {
+                        return (
+                            null
+                        )
                     }
-                    return null
                 })}
 
             </div>

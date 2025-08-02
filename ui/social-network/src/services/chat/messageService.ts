@@ -1,4 +1,5 @@
 import api from "../../axios/interceptor"
+import { processJsonResponseFromServer } from "../../utils/utils"
 
 const PATH = "/chats/messages"
 export interface MessageCreateReqVO {
@@ -31,6 +32,21 @@ class MessageService {
     getListMessage(conversationId: string, searchParams: string) {
         return api.get(`${PATH}/conversation/${conversationId}?${searchParams}`)
 
+    }
+
+    countUnreadMessages(set: any) {
+        processJsonResponseFromServer(
+            api.get(`${PATH}/count/unread`),
+            "countUnreadMessages",
+            set
+        )
+    }
+    getUnreadMessagesPerConversation(set: any) {
+        processJsonResponseFromServer(
+            api.get(`${PATH}/count/unread/conversations`),
+            "getUnreadMessagesPerConversation",
+            set
+        )
     }
 }
 export default new MessageService()

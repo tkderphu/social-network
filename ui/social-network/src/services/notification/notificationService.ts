@@ -1,31 +1,28 @@
 import api from "../../axios/interceptor"
+import { processJsonResponseFromServer } from "../../utils/utils"
 import authenService from "../auth/authenService"
 
 const PATH = "/notifications"
 class NotificationService {
-    countUnreadMessage() {
-        return api.get(`${PATH}`)
+    countUnreadMessage(set: any) {
+        processJsonResponseFromServer(
+            api.get(`${PATH}/count/unread`),
+            "countUnreadMessage",
+            set
+        )
     }
-    fetchNotifyMessages() {
-        return api.get(`${PATH}/messages`)
+    
+    getListNotification(page: number, limit: number, set: any) {
+        processJsonResponseFromServer(
+            api.get(`${PATH}?page=${page}&limit=${limit}`),
+            "getListNotification",
+            set
+        )
     }
-    updateNotifyFriendEnable(enable: boolean) {
-        return api.put(`${PATH}/setting/friend/${enable}`)
-    }
-    updateNotifyChatEnable(enable: boolean) {
-        return api.put(`${PATH}/setting/chat/${enable}`)
-
-    }
-    updateNotifyReactionEnable(enable: boolean) {
-        return api.put(`${PATH}/setting/reaction/${enable}`)
-
-    }
-    updateNotifyCommentEnable(enable: boolean) {
-        return api.put(`${PATH}/setting/comment/${enable}`)
-
-    }
-    getNotifySetting() {
-        return api.get(`${PATH}/setting`)
-    }
+   
 }
 export default new NotificationService()
+
+
+
+

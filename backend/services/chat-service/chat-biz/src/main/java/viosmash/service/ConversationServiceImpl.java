@@ -100,10 +100,10 @@ public class ConversationServiceImpl implements ConversationService{
                     memberConversationService.getListMemberConversationId(conversation.getId()),
                     member -> !member.getId().equals(userId)
             ).collect(Collectors.toSet());
-
             ConversationRespVO resp = copy(list[0], ConversationRespVO.class)
                     .setLatestMessage(copy(list[1], MessageRespVO.class)
                             .setSender(userApi.getUserById(message.getSenderId())))
+
                     .setOnline(StreamUtils.anyMatch(members, m -> m.getMember().getIsOnline()));
 
 

@@ -39,7 +39,7 @@ export default function CreateConversationForm() {
         }
         console.log(conReq)
        conversationService.createConversation(conReq, (conversationId: string) => {
-            conversationService.getListConversation(setConversations)
+            conversationService.getListConversation(true, setConversations)
             setOpenModal(false)
             navigate(`/inbox/c/${conversationId}`)
        })

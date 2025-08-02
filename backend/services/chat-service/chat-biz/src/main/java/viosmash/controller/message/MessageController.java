@@ -4,6 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.security.SecurityUtil;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.*;
@@ -11,11 +12,13 @@ import viosmash.controller.conversation.vo.ConversationRespVO;
 import viosmash.controller.message.vo.MessageCreateReqVO;
 import viosmash.controller.message.vo.MessageRespVO;
 import viosmash.chat.enums.ApiConstant;
+import viosmash.core.utils.SecurityUtils;
 import viosmash.pojo.CommonResult;
 import viosmash.service.MessageService;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -46,4 +49,18 @@ public class MessageController {
     }
 
 
+    @GetMapping("/count/unread")
+    public CommonResult<Long> countTotalUnreadMessage() {
+        long count = messageService.countTotalUnreadMessage(SecurityUtils.getLoginUserMemberId());
+        return CommonResult.success(count);
+    }
+
+    @GetMapping("/count/unread/conversations")
+    public CommonResult<Map<String, Long>> getUnreadMessagesPerConversation() {
+        Map<String, Long> unreadMessageCountPerConversation = messageService
+                .getUnreadMessageCountPerConversation(
+                        SecurityUtils.getLoginUserMemberId()
+                );
+        return CommonResult.success(unreadMessageCountPerConversation);
+    }
 }

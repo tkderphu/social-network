@@ -12,6 +12,7 @@ import viosmash.controller.vo.NotificationMessageRespVO;
 import viosmash.dal.dataobject.NotificationMessage;
 import viosmash.dal.dataobject.NotificationSetting;
 import viosmash.dal.repo.NotificationMessageRepository;
+import viosmash.exception.Exceptional;
 import viosmash.exception.ServiceException;
 import viosmash.group.api.GroupApi;
 import viosmash.interaction.api.comment.CommentApi;
@@ -180,13 +181,13 @@ public class NotificationServiceImpl implements NotificationService{
         Long targetId = (Long)obj[2];
         TargetType targetType = TargetType.valueOf((String) obj[1]);
         Object target = switch (targetType) {
-            case POST -> postApi.getPostById(targetId);
-            case COMMENT -> commentApi.getById(targetId);
-            case USER -> userApi.getUserById(targetId);
-            case VOTE -> voteApi.getById(targetId);
-            case GROUP -> groupApi.getGroup(targetId);
+            case POST -> Exceptional.process(targetId, postApi::getPostById);
+            case COMMENT -> Exceptional.process(targetId, commentApi::getById);
+            case USER -> Exceptional.process(targetId, userApi::getUserById);
+            case VOTE -> Exceptional.process(targetId, voteApi::getById);
+            case GROUP -> Exceptional.process(targetId, groupApi::getGroup);
         };
-        UserDTO user = userApi.getUserById(actorId);
+        UserDTO user = Exceptional.process(actorId, userApi::getUserById);
 
         res.setId((Long) obj[0]).setTargetType(targetType)
                 .setTarget(target).setNotificationType(NotificationType.valueOf((String) obj[3]))

@@ -6,7 +6,7 @@ import { Link, Outlet } from "react-router";
 import conversationService, { ConversationRespVO } from "../../services/chat/conversationService";
 import { Client, IMessage } from "@stomp/stompjs";
 import { useStompClient } from "../../utils/useStomp";
-import { MessageRespVO } from "../../services/chat/messageService";
+import messageService, { MessageRespVO } from "../../services/chat/messageService";
 import { TokenUtils } from "../../common";
 
 
@@ -15,10 +15,18 @@ interface Model {
         get: ConversationRespVO[],
         set: any
     },
+    unVisibleConversations: {
+        get: ConversationRespVO[],
+        set: any
+    }
     selectedConversation: {
         get?: ConversationRespVO,
         set: any
     },
+    unreadMessagesPerConversation: {
+        get?: Record<string, number>,
+        set: any
+    }
     stompClient: Client | null
 
 }
@@ -27,6 +35,8 @@ export default function Messenger() {
 
     const [selectedConversation, setSelectedConversation] = useState<ConversationRespVO>()
     const [conversations, setConversations] = useState<ConversationRespVO[]>([])
+    const [unVisibleConversations, setUnVisibleConversations] = useState<ConversationRespVO[]>([])
+    const [unreadMessagesPerConversation, setUnreadMessagesPerConversation] = useState<Record<string, number>>()
     const stompClient = useStompClient({ path: "chat/ws" })
 
 
@@ -34,13 +44,14 @@ export default function Messenger() {
 
 
     useEffect(() => {
-        conversationService.getListConversation(setConversations)
-
+        conversationService.getListConversation(true, setConversations)
+        conversationService.getListConversation(false, setUnVisibleConversations)
+        messageService.getUnreadMessagesPerConversation(setUnreadMessagesPerConversation)
         // Subscribe to user-specific topic
         stompClient?.subscribe(
             `/topic/chat/user/${TokenUtils.authLogin.userId}`,
             (msg: IMessage) => {
-                conversationService.getListConversation(setConversations)
+                conversationService.getListConversation(true, setConversations)
             }
         );
     }, [])
@@ -79,6 +90,14 @@ export default function Messenger() {
 
     return (
         <MessengerContext.Provider value={{
+            unVisibleConversations: {
+                get: unVisibleConversations,
+                set: setUnVisibleConversations
+            },
+            unreadMessagesPerConversation: {
+                get: unreadMessagesPerConversation,
+                set: setUnreadMessagesPerConversation
+            },
             conversations: {
                 get: conversations,
                 set: setConversations

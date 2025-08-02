@@ -39,10 +39,7 @@ public class NotificationController {
         ));
     }
     @GetMapping("/count/unread")
-    public CommonResult<Integer> getNumberUnreadNotification(
-            @RequestParam(value = "page", defaultValue = "1") int page,
-            @RequestParam(value = "limit", defaultValue = "50") int limit
-    ) {
+    public CommonResult<Integer> getNumberUnreadNotification() {
         return CommonResult.success(notificationService.countUnreadNotification(
                 SecurityUtils.getLoginUserMemberId()
         ));

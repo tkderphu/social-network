@@ -17,19 +17,13 @@ import FriendRequest from './screens/friend/FriendRequest'
 import FriendAccept from './screens/friend/FriendAccept'
 import UserSearchResult from './screens/search/UserSearchResult'
 import PostDetailDialog from './screens/post/PostDetailDialog'
-import Messenger1 from './screens/chat/Messenger'
+import Messenger from './screens/chat/Messenger'
 import Sidebar from './components/Sidebar'
 import FriendProfile from './screens/friend/FriendProfile'
 import ChatArea from './screens/chat/ChatArea'
-import ProfilePostComponent from './screens/profile/ProfilePostComponent'
-import ProfilePhotosComponent from './screens/profile/ProfilePhotosComponent'
-import ProfileAbouComponent from './screens/profile/ProfileAboutComponent'
-import ProfileFriendsComponent from './screens/profile/ProfileFriends'
 
 import ProtectedRoute from './components/ProtectedRoute'
 import LogoutScreen from './screens/authen/Logout'
-import ForgotPassworCodeScreen from './screens/authen/ForgotPasswordCodeScreen'
-import CreateNewPasswordScreen from './screens/authen/CreateNewPasswordScreen'
 import MyFriends from './screens/friend/MyFriends'
 import Notification from './screens/notification/Notification'
 import { ToastContainer } from 'react-toastify';
@@ -44,6 +38,7 @@ import Search from './screens/search/Search'
 import ModalCustome from './components/modal/ModalCustom'
 import ProfileRoute from './routes/ProfileRoute'
 import NotificationComponent from './NotificationComponent'
+import { ChatListVisibleConversation } from './screens/chat/ChatList'
 
 
 
@@ -119,8 +114,7 @@ function App() {
                     <Route path='profile/:id' element={<ProfileScreen />} />
                   </Route>
                   <Route path='search/posts' element={<PostSearchResult />}></Route>
-                  <Route element={<Messenger1 />} path='inbox' >
-
+                  <Route element={<Messenger />} path='inbox' >
                     <Route element={<ChatArea />} path="c/:id" />
                     <Route element={<ChatArea />} path="c/u/:id" />
                     {/* <Route elemen /> */}

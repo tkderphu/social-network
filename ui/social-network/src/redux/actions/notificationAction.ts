@@ -1,18 +1,7 @@
 import notificationService from "../../services/notification/notificationService"
 import { COUNT_UNREAD_MESSAGE_BEGIN, FETCH_NOTIFY_MESSAGE_BEGIN, FETCH_NOTIFY_MESSAGE_FAILED, FETCH_NOTIFY_MESSAGE_SUCCESS, FETCH_NOTIFY_SETTING_BEGIN, FETCH_NOTIFY_SETTING_SUCCESS, UPDATE_CHAT_ENABLE_BEGIN, UPDATE_CHAT_ENABLE_SUCCESS, UPDATE_COMMENT_ENABLE_BEGIN, UPDATE_COMMENT_ENABLE_SUCCESS, UPDATE_FRIEND_ENABLE_BEGIN, UPDATE_FRIEND_ENABLE_SUCCESS, UPDATE_REACTION_ENABLE_BEGIN, UPDATE_REACTION_ENABLE_SUCCESS } from "../constants/notificationConstant"
 
-export const countUnreadMessageAction = () => {
-    return (dispatch: any) => {
-        dispatch({
-            type: COUNT_UNREAD_MESSAGE_BEGIN
-        })
-        notificationService.countUnreadMessage().then(resp => {
 
-        }).catch(err => {
-
-        })
-    }
-}
 export const fetchNotifyMessagesAction = () => {
     return (dispatch: any) => {
         dispatch({

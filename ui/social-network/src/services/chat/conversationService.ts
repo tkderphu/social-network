@@ -28,9 +28,9 @@ class ConversationService {
         )
     }
 
-    getListConversation(set: any) {
+    getListConversation(visible: boolean, set: any) {
         processJsonResponseFromServer(
-            api.get(PATH),
+            api.get(`${PATH}?visible=${visible}`),
             "getListConversation",
             set
         )

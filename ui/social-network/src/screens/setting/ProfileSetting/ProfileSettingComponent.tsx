@@ -1,7 +1,6 @@
 import { useContext, useState } from "react"
 import { formatDate } from "../../../utils/common"
 import "./../ProfileSetting.css"
-import { SettingContext } from "../SettingProvider"
 import PersonalInformationSection from "./PersonalInformationSection"
 import EducationSection from "./EduationSection"
 import AddressInformationSection from "./AddressInformationSection"
