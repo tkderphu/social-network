@@ -33,4 +33,13 @@ public interface PostService {
     List<PostRespVO> getListPostByUserIdAndGroupId(Long userId, Long groupId, int page, int limit);
 
     List<PostRespVO> getListPostPendingInGroup(Long groupId, int page, int limit);
+
+
+    /**
+     * Handle update visible post
+     * @param postId: postId
+     * @param isAccept: true => accept, false => reject
+     */
+    void updateVisiblePost(Long postId, Boolean isAccept);
+
 }

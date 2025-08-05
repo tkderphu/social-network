@@ -1,5 +1,8 @@
 package viosmash.service.member;
 
+import org.springframework.transaction.annotation.Transactional;
+import viosmash.collection.CollUtils;
+import viosmash.controller.member.vo.UpdateBanUserReqVO;
 import viosmash.controller.member.vo.MemberWaitingReviewRespVO;
 import viosmash.controller.member.vo.UserMemberGroupResp;
 import viosmash.dal.dataobject.UserMemberGroup;
@@ -7,6 +10,7 @@ import viosmash.group.enums.GroupRole;
 import viosmash.group.enums.UserGroupStatus;
 import viosmash.pojo.PageResult;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -17,7 +21,6 @@ public interface UserMemberGroupService {
     int countMember(Long groupId);
 
     PageResult<UserMemberGroupResp> getListMember(Long groupId, int page, int limit);
-    List<Long> getListGroup(Long memberId);
 
     Boolean kickMember(Long groupId, Long userMemberId);
 
@@ -41,6 +44,17 @@ public interface UserMemberGroupService {
     Boolean cancelMemberJoinGroup(Long groupId, Long userId);
 
 
+    Boolean updateBan(Long groupId, Long userId, LocalDateTime banUtil, Boolean unban);
+
+    @Transactional
+    default void updateBan(UpdateBanUserReqVO banReq) {
+        CollUtils.convertList(banReq.getGroupIds(), obj -> {
+            updateBan(obj, banReq.getUserId(), banReq.getBanUtil(), banReq.getUnban());
+            return null;
+        });
+    };
 
     Boolean requestJoinGroup(Long groupId, Long userId);
+
+    List<UserMemberGroupResp> getListMemberIsBanned(Long groupId);
 }

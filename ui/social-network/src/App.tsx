@@ -56,6 +56,9 @@ import MyListGroup from './screens/group/MyListGroup'
 import GroupManagement, { GroupSetting, PendingPost, PendingUser } from './screens/group/GroupManagement'
 import GroupUserProfile from './screens/group/GroupUserProfile'
 import GroupProvider from './screens/group/GroupProvider'
+import GroupWrapper from './screens/group/GroupWrapper'
+import UsersWereBanned from './screens/group/UsersWereBanned'
+
 export interface HandleChat {
   handleClickChat: any,
   handleCloseChat: any
@@ -142,8 +145,8 @@ function App() {
               </Routes>
               {/**group route */}
               <GroupProvider>
-                <Routes>
-                  <Route element={<ProtectedRoute />}>
+                <Routes location={state?.backgroundLocation || location}>
+                  <Route element={<GroupWrapper />}>
                     <Route path='groups' element={<Group />}>
                       {/* <Route path='joined' element={<GroupPage/>} /> */}
                       <Route path='feed' element={<NewFeed />} />
@@ -159,6 +162,7 @@ function App() {
                           <Route path='pending/user' element={<PendingUser />} />
                           <Route index element={<PendingUser />} />
                           <Route path='setting' element={<GroupSetting />} />
+                          <Route path='unban' element={< UsersWereBanned />}/>
                         </Route>
                       </Route>
                       <Route path=':groupId/profile/:userId' element={<GroupUserProfile />} />

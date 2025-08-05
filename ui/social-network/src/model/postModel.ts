@@ -1,10 +1,11 @@
+import { GroupResp } from "./groupModel"
 import { UserProfileResp } from "./profileModel"
 
 export interface PostResp {
     id: number
     content: string
     user: UserProfileResp,
-    group: any
+    group: GroupResp
     mediaUrls: string[],
     postPrivacy: string
     sharePost: PostResp,
@@ -14,4 +15,6 @@ export interface PostResp {
         numberShare?: number
         numberLike?: number
     }
+    visible: boolean,
+    disable: boolean
 }

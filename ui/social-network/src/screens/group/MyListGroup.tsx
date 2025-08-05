@@ -20,13 +20,13 @@ export default function MyListGroup() {
                 {groups.map(group => {
                     return (
                         <>
-                            <Link style={{ textDecoration: "none" }} to={`/groups/${group.id}`} className={'btn short-cut-group mb-1 '}>
+                            <Link style={{ textDecoration: "none" }} to={`/groups/${group.id}`} className={'btn short-cut-group mb-1 border mx-2 '}>
                                 <div className="d-flex align-items-center">
                                     <img src={group.coverPhoto}
-                                        width={"120px"}
+                                        width={"100px"}
                                     />
                                     <div className="d-flex flex-column text-start">
-                                        <div className='mx-3' style={{ fontSize: "21px" }}>{group.name}</div>
+                                        <div className='mx-3' style={{ fontSize: "18px" }}>{group.name}</div>
                                         <div className='mx-3 text-muted' style={{ fontSize: "18px" }}><strong>{group.groupType.toLowerCase()}</strong></div>
                                         <div className="mx-3 text-muted">{formatDate(group.createdAt)}</div>
                                     </div>

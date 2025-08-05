@@ -14,7 +14,7 @@ import voteService from '../../services/interaction/voteService';
 import FullScreenLoader from '../../components/fullSpinner/FullScreenLoader';
 interface PostCardProps {
     post?: PostResp,
-    ref?: ""
+    ref?: "",
 }
 export const PostCard = (props: PostCardProps) => {
     const navigate = useNavigate()
@@ -50,6 +50,8 @@ export const PostCard = (props: PostCardProps) => {
         fetchScores()
         checkUser()
     }, [updateVoteState])
+
+
 
 
     const fetchComments = () => {

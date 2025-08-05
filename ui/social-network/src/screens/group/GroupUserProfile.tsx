@@ -1,12 +1,14 @@
-import { useContext, useEffect, useState } from "react"
-import { useParams } from "react-router"
-import { GroupResp } from "../../model/groupModel"
+import { useContext, useEffect, useRef, useState } from "react"
+import { useNavigate, useParams } from "react-router"
+import { GroupResp, UserMemberGroup } from "../../model/groupModel"
 import { PostResp } from "../../model/postModel"
 import { UserProfileResp } from "../../model/profileModel"
+import userMemberGroupService from "../../services/group/userMemberGroupService"
 import postService from "../../services/post/postService"
 import profileService from "../../services/profile/profileService"
 import { PostCard } from "../post/PostCard"
 import ProfileHeader from "../profile/ProfileHeader"
+import BanUserButton from "./BanUserButton"
 import { useGroup } from "./GroupProvider"
 
 export default function GroupUserProfile() {
@@ -14,6 +16,8 @@ export default function GroupUserProfile() {
     const { group }: any = useGroup()
     const [user, setUser] = useState<UserProfileResp>()
     const [posts, setPosts] = useState<PostResp[]>([])
+    const [userMemberDetail, setUserMemberDetails] = useState<UserMemberGroup>()
+    const navigate = useNavigate()
     useEffect(() => {
         //@ts-ignore
         profileService.fetchProfileUser(userId).then(res => {
@@ -29,15 +33,31 @@ export default function GroupUserProfile() {
             console.log("err: ", err)
         })
 
+
+        userMemberGroupService.getInfo(userId, groupId).then(resp => {
+            setUserMemberDetails(resp.data.data)
+        })
+
     }, [])
 
-    
+
+
+    useEffect(() => {
+        if(userMemberDetail && userMemberDetail.isBanned) {
+            alert("This user was banned, you can't access.")
+            navigate(-1)
+        }
+    }, [userMemberDetail])
+
+
 
     useEffect(() => {
         window.document.title = user?.firstName + " " + user?.lastName
     }, [user])
     return <>
-        <ProfileHeader userProfile={user} />
+        <ProfileHeader userProfile={user} btnBan={<>
+           <BanUserButton type="BAN" userId={userId}/>
+        </>} />
         <hr />
         <div className="row">
             <div className="col-4 sticky-sidebar hide-scrollbar">

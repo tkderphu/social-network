@@ -13,11 +13,18 @@ export interface NotificationRespVO {
     targetType: "POST" | "COMMENT" | "USER" | "VOTE" | "GROUP",
     notificationType: "NEW_VOTE"| "NEW_COMMENT"| "NEW_FRIEND_REQUEST"
     | "NEW_ACCEPT_REQUEST"|"NEW_POST_FRIENDS"| "NEW_POST_GROUPS"
-    | "JOINED_GROUP" | "REQUEST_JOINED_GROUP" | "JOIN_GROUP_BY_INVITED"
+    | "JOINED_GROUP" | "REQUEST_JOINED_GROUP" | "JOIN_GROUP_BY_INVITED" | "ACCEPT_POST_IN_GROUP"
+    | "REJECT_POST_IN_GROUP"
     timeAgo: string,
     seen: boolean,
     actor: ProfileSimpleResp,
     others: number
+}
+
+export enum RefParam {
+    ref_notification,
+    ref_post,
+    notiication_type
 }
 
 export default function Notification() {

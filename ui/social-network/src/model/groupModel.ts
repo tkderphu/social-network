@@ -1,3 +1,4 @@
+import { UserResp } from "../services/friendship/friendshipService"
 import { ProfileSimpleResp } from "./profileModel"
 
 export interface GroupCreateReq{ 
@@ -20,4 +21,13 @@ export interface GroupResp {
     groupType: string
     enableNotificationWhenUserRequest: boolean,
     enableNotificationWhenNewPostComing: boolean
+}
+
+export interface UserMemberGroup {
+    user: UserResp,
+    groupRole: "OWNER" | "REVIEWER" | "MEMBER",
+    timeAgo: string,
+    id: any,
+    banUtil: any,
+    isBanned: boolean
 }

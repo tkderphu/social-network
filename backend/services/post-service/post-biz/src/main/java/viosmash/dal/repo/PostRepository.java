@@ -1,7 +1,6 @@
 package viosmash.dal.repo;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -10,7 +9,6 @@ import org.springframework.data.repository.query.Param;
 import viosmash.dal.dataobject.Post;
 
 import java.util.List;
-import java.util.Objects;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
@@ -40,5 +38,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Modifying
     void updateVisibleById(@Param("id") Long id, @Param("visible") Boolean visible);
 
-    Page<Post> findAllByGroupIdAndVisible(Long groupId, boolean b, Pageable pageable);
+    Page<Post> findAllByGroupIdAndVisibleAndDisable(Long groupId, boolean visible, boolean disable, Pageable pageable);
+
+    @Modifying
+    @Query("UPDATE Post p SET p.disable = :disable WHERE p.userId = :userId AND groupId = :groupId")
+    void updateDisableByUserIdAndGroupId(Long userId, Long groupId, boolean disable);
 }

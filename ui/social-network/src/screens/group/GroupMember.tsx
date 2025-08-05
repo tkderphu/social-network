@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { Link, useParams } from "react-router";
 import { PageResult, TokenUtils } from "../../common";
 import SearchComponent from "../../components/searchInput/SearchComponent";
-import { GroupResp } from "../../model/groupModel";
+import { GroupResp, UserMemberGroup } from "../../model/groupModel";
 import { UserProfileResp } from "../../model/profileModel";
 import { UserResp } from "../../services/friendship/friendshipService";
 import groupService from "../../services/group/groupService";
@@ -12,12 +12,7 @@ import { convertToHeader } from "../../utils/utils";
 import { useGroup } from "./GroupProvider";
 
 export default function GroupMember() {
-    const [pageResult, setPageResult] = useState<PageResult<{
-        user: UserResp,
-        groupRole: any,
-        timeAgo: string,
-        id: any
-    }>>({
+    const [pageResult, setPageResult] = useState<PageResult<UserMemberGroup>>({
         limit: 50,
         page: 1,
         data: [],
@@ -53,6 +48,7 @@ export default function GroupMember() {
             <div className="d-flex flex-wrap mt-3">
 
                 {pageResult.data.map(member => {
+                    if(member.isBanned) return null
                     return (
                         <div className="card mb-3 d-flex align-item-center" style={{ marginRight: "20px" }}>
                             <div>
