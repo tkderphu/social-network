@@ -28,5 +28,9 @@ class GroupService {
         return api.put(`${path}/${groupId}/setting`, req)
     }
 
+    suggestGroupToBanUser(userId: any, type: number) {
+        return api.get(`${path}/suggest/ban/${userId}?type=${type}`)
+    }
+
 }
 export default new GroupService()

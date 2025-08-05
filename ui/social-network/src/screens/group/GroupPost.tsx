@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router";
+import { toast } from "react-toastify";
 import { TokenUtils } from "../../common";
 import ModalCustome from "../../components/modal/ModalCustom";
 import Spinner from "../../components/Spinner";
+import { GroupResp } from "../../model/groupModel";
 import { PostResp } from "../../model/postModel";
 import postService, { PostCreateReq } from "../../services/post/postService";
 import { PostCard } from "../post/PostCard";
 import PostForm from "../post/PostForm";
+import { useGroup } from "./GroupProvider";
 
 const posts = [
     {
@@ -21,7 +24,8 @@ const posts = [
     },
 ];
 export default function GroupPost() {
-    const { name } = useParams()
+    const { groupId } = useParams()
+    const group: GroupResp = useGroup().group
     const [openModal, setOpenModal] = useState(false)
     const [postFilter, setPostFilter] = useState<string>("hot")
     const [fetchPosts, setFetchPosts] = useState<{
@@ -38,12 +42,18 @@ export default function GroupPost() {
     const [req, setReq] = useState<PostCreateReq>({
         postPrivacy: "PUBLIC",
         content: "",
-        groupId: name,
+        groupId: groupId,
         mediaUrls: []
     })
     const handleCreatePost = () => {
         console.log("req: ", req)
         postService.createPost(req).then(resp => {
+            if(!group.enableAutoReviewPost) {
+                toast.info("Post is created successfully, your post will be displayed in group newfeed soon")
+            } else {
+                toast.info("Post is created successfully")
+            }
+            setOpenModal(false)
             setReq({
                 ...req,
                 content: "",
@@ -58,7 +68,7 @@ export default function GroupPost() {
     useEffect(() => {
         if(postFilter == "hot") {
             console.log("fetch hot posts")
-            postService.getListPostByGroup(name, fetchPosts.page, fetchPosts.limit, 0).then(resp => {
+            postService.getListPostByGroup(groupId, fetchPosts.page, fetchPosts.limit, 0).then(resp => {
                 console.log("data fuck: ", resp)
                 setFetchPosts((prev) => ({
                     ...prev,
@@ -70,12 +80,12 @@ export default function GroupPost() {
                 console.log("err fetch group posts: ", err)
             })
         } else {
-            postService.getListPostByGroup(name, fetchPosts.page, fetchPosts.limit, 1).then(resp => {
+            postService.getListPostByGroup(groupId, fetchPosts.page, fetchPosts.limit, 1).then(resp => {
                 console.log("data fuck: ", resp)
                 setFetchPosts((prev) => ({
                     ...prev,
                     loading: false,
-                    posts: [...resp.data.data]
+                    posts: [...resp.data?.data]
                 }))
             }).catch(err => {
             
@@ -83,6 +93,7 @@ export default function GroupPost() {
             })
         }
     }, [postFilter, name])
+
 
     return (
         <div className="row mt-3 ">
@@ -127,11 +138,15 @@ export default function GroupPost() {
                     postPrivacy: req.postPrivacy,
                     fromGroup: true,
                     mediaUrls: req.mediaUrls,
-
+                    
                 }} />
             </ModalCustome>
-            {fetchPosts.posts.map(post => {
-                return <PostCard post={post} />
+            {fetchPosts.posts.length > 0 && fetchPosts.posts.map(post => {
+                console.log("post from group: ", post)
+                if(post.disable || !post.visible) {
+                    return null
+                }
+                return <PostCard ref={`/groups/${groupId}/profile/${post?.user?.id}`}  post={post} />
             })}
             <Spinner loading={fetchPosts.loading} />
         </div>

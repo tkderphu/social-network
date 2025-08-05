@@ -48,7 +48,8 @@ export interface UserProfileResp {
     joined: string
     schools: Record<string, string>
     aaddresses: Record<string, string>
-    policies: Record<string, string>
+    policies: Record<string, string>,
+    coverPhoto: string
     isOnline: boolean
 }
 export interface ProfileSimpleResp {

@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import viosmash.group.enums.ApiConstant;
+import viosmash.group.enums.GroupRole;
 import viosmash.pojo.api.group.GroupDTO;
 
 import java.util.List;
@@ -16,8 +17,8 @@ public interface GroupApi {
     @GetMapping("/{id}")
     GroupDTO getGroup(@PathVariable("id") Long groupId);
 
-    @GetMapping("/{id}/exists/user/{userId}")
-    Boolean existsInGroup(@PathVariable("id") Long groupId,
+    @GetMapping("/{id}/user/{userId}/role")
+    GroupRole getUserRole(@PathVariable("id") Long groupId,
                           @PathVariable("userId") Long userId);
 
     @GetMapping("/member/{memberId}")
@@ -25,4 +26,5 @@ public interface GroupApi {
 
     @PutMapping("/{id}/coverPhoto")
     void updateCoverPhoto(@PathVariable("id") Long id, @RequestBody String coverPhoto);
+
 }

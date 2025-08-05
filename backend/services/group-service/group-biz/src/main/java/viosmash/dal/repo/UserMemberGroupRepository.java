@@ -5,6 +5,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import viosmash.dal.dataobject.Group;
 import viosmash.dal.dataobject.UserMemberGroup;
 import viosmash.group.enums.GroupRole;
 
@@ -47,4 +48,7 @@ public interface UserMemberGroupRepository extends JpaRepository<UserMemberGroup
     List<Long> getAllGroup(Long memberId);
 
     Optional<UserMemberGroup> findByGroupIdAndGroupRole(Long groupId, GroupRole groupRole);
+
+
+    List<UserMemberGroup> findAllByGroupIdAndIsBanned(Long groupId, boolean b);
 }

@@ -12,6 +12,7 @@ import java.util.Map;
 @Accessors(chain = true)
 public class UserRespVO {
     private String avatar;
+    private String coverPhoto;
     private Long id;
     private String firstName;
     private String lastName;

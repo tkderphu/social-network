@@ -14,8 +14,8 @@ import PostFormModal from "../post/PostFormModal";
 
 
 export default function ProfilePostComponent() {
-    const { id } = useParams()
-    console.log("id user: ", id)
+    const { userId } = useParams()
+    console.log("userId user: ", userId)
     const dispatch = useDispatch()
     const fetchListPostByUserState: {
         loading: boolean,
@@ -39,7 +39,7 @@ export default function ProfilePostComponent() {
 
     useEffect(() => {
         //@ts-ignore
-        dispatch(fetchListPostByUserAction(id))    
+        dispatch(fetchListPostByUserAction(userId))    
     }, [])
 
     if (fetchListPostByUserState.hasError) {

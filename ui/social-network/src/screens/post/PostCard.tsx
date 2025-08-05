@@ -13,7 +13,8 @@ import { updateVote } from '../../redux/actions/interaction/voteAction';
 import voteService from '../../services/interaction/voteService';
 import FullScreenLoader from '../../components/fullSpinner/FullScreenLoader';
 interface PostCardProps {
-    post: PostResp
+    post?: PostResp,
+    ref?: "",
 }
 export const PostCard = (props: PostCardProps) => {
     const navigate = useNavigate()
@@ -51,18 +52,20 @@ export const PostCard = (props: PostCardProps) => {
     }, [updateVoteState])
 
 
+
+
     const fetchComments = () => {
 
     }
 
     const checkUser = () => {
-        voteService.checkVote(props.post.id, "POST").then((res) => {
+        voteService.checkVote(props?.post?.id, "POST").then((res) => {
             setPostStats((prev) => ({ ...prev, "checkUser": res.data.data }))
         })
     }
 
     const fetchScores = () => {
-        voteService.count(props.post.id, "POST").then(resp => {
+        voteService.count(props?.post?.id, "POST").then(resp => {
             setPostStats((prev) => ({ ...prev, "scores": resp.data.data || 0 }))
         })
     }
@@ -75,23 +78,24 @@ export const PostCard = (props: PostCardProps) => {
     const [openModal, setOpenModal] = useState(false)
     return (
         <>
-            {updateVoteState.loading && <FullScreenLoader />}
-            <div className="card mb-3">
-                <div className="card-body">
-                    <div className='d-flex flex-column'>
-                        <div className='text-muted'><strong>{props.post?.postPrivacy}</strong></div>
-                        <div className='d-flex justify-content-between'>
-                            <div className="d-flex align-items-center mb-3">
-                                <img
-                                    src={props.post?.user?.avatar}
-                                    alt="User avatar"
-                                    className="rounded-circle me-2"
-                                    style={{ width: '40px', height: '40px' }}
-                                />
-                                <div>
-                                    <Link to={"/profile/" + props.post?.user?.id}><h6 className="mb-0">{props.post?.user?.firstName + " " + props.post?.user?.lastName}</h6></Link>
-                                    <small className="text-muted">{props.post.time} ago</small>
-                                </div>
+
+       {updateVoteState.loading &&  <FullScreenLoader/>}
+        <div className="card mb-3">
+            <div className="card-body">
+                <div className='d-flex flex-column'>
+                    <div className='text-muted'><strong>{props.post?.postPrivacy}</strong></div>
+                    <div className='d-flex justify-content-between'>
+                        <div className="d-flex align-items-center mb-3">
+                            <img
+                                src={props.post?.user?.avatar}
+                                alt="User avatar"
+                                className="rounded-circle me-2"
+                                style={{ width: '40px', height: '40px' }}
+                            />
+                            <div>
+                                <Link to={props.ref ? props.ref : "/profile/" + props.post?.user?.id}><h6 className="mb-0">{props.post?.user?.firstName + " " + props.post?.user?.lastName}</h6></Link>
+                                <small className="text-muted">{props.post?.time} ago</small>
+                            </div>
 
                             </div>
                             {/* <div className="dropdown">
@@ -132,6 +136,26 @@ export const PostCard = (props: PostCardProps) => {
 
                         </div>
 
+
+                <div className="d-flex justify-content-between border-top pt-2">
+                    <div className="d-flex align-items-center">
+                        <button className={`btn btn-sm ${postStats.checkUser == -1 ? "btn-danger" : "btn-outline-primary"}`} onClick={() => {
+                            //@ts-ignore
+                            dispatch(updateVote({
+                                objectId: props?.post?.id,
+                                objectType: "POST",
+                                voteType: "DOWN"
+                            }))
+                        }}><i className="bi bi-arrow-down"></i></button>
+                        <div style={{ color: "red" }} className={"me-2 mx-2"}>{postStats.scores}</div>
+                        <button className={`btn btn-sm ${postStats.checkUser == 1 ? "btn-danger" : "btn-outline-primary"}`} onClick={() => {
+                            //@ts-ignore
+                            dispatch(updateVote({
+                                objectId: props?.post?.id,
+                                objectType: "POST",
+                                voteType: "UP"
+                            }))
+                        }}><i className="bi bi-arrow-up"></i></button>
                     </div>
                     <div onClick={() => {
                         navigate(`/posts/${props.post?.id}`, {

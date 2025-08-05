@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import viosmash.collection.CollUtils;
 import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
+import viosmash.core.utils.SecurityUtils;
 import viosmash.dal.dataobject.Post;
 import viosmash.dal.dataobject.PostTag;
 import viosmash.dal.dataobject.Tag;
@@ -23,6 +24,10 @@ import viosmash.exception.Exceptional;
 import viosmash.exception.ServiceException;
 import viosmash.friendship.api.FriendshipApi;
 import viosmash.group.api.GroupApi;
+import viosmash.notification.api.NotificationApi;
+import viosmash.notification.api.NotificationDto;
+import viosmash.notification.enums.NotificationType;
+import viosmash.notification.enums.TargetType;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.api.group.GroupDTO;
 import viosmash.post.enums.PostType;
@@ -47,6 +52,7 @@ public class PostServiceImpl implements PostService{
     private final PostTagRepository postTagRepository;
     private final TagRepository tagRepository;
     private final FriendshipApi friendshipApi;
+    private final NotificationApi notificationApi;
     @Override
     @Transactional(rollbackFor = ServiceException.class)
     public Post createPost(Long userId, @Valid PostCreateReqVO postCreateReq) {
@@ -54,7 +60,8 @@ public class PostServiceImpl implements PostService{
                 .setUserId(userId).setCreatedDate(LocalDateTime.now())
                 .setVotes(0)
                 .setHotScore(0d)
-                .setVisible(true);
+                .setVisible(true)
+                .setDisable(false);
 
         if(post.getGroupId() != null) {
             GroupDTO group = groupApi.getGroup(post.getGroupId());
@@ -100,7 +107,8 @@ public class PostServiceImpl implements PostService{
 
         return CollUtils.convertList(page.getContent(), post -> {
             if(post.getVisible() == null || !post.getVisible()) return null;
-            return convertToResp(post);
+
+            return mapToResp(post);
         });
     }
 
@@ -109,11 +117,7 @@ public class PostServiceImpl implements PostService{
     public PostRespVO getPostById(Long postId) {
         Post post = this.postRepository.findById(postId)
                 .orElseThrow(() -> exception(404, "Post with id " + postId + " not found"));
-        PostRespVO postRespVO = BeanUtil.copy(post, PostRespVO.class)
-                .setUser(process(post.getUserId(), userApi::getUserById))
-//                .setGroup(process(post.getGroupId(), groupApi::getGroup))
-//                .setSharePost(getPostById(post.getSharePostId()))
-                .setVotes(0).setShares(0).setComments(0);
+        PostRespVO postRespVO = mapToResp(post);
         log.info("data post detail: {}", postRespVO);
         return postRespVO;
     }
@@ -145,36 +149,33 @@ public class PostServiceImpl implements PostService{
         Page<Post> postPage = postRepository.findAll(userId, recommends, groups, pageable);
 
         return CollUtils.convertList(postPage.getContent(), post -> {
-            PostRespVO postResp = BeanUtil.copy(post, PostRespVO.class)
-                    .setUser(Exceptional.process(post.getUserId(), userApi::getUserById))
-                    .setGroup(Exceptional.process(post.getGroupId(), groupApi::getGroup));
+            PostRespVO postResp = mapToResp(post);
             return postResp;
         });
     }
+
+
 
     @Override
     public List<PostRespVO> getListPostByGroupId(Long id, int pageNumber, int limit, int type) {
         Pageable pageable = PageRequest.of(
                 pageNumber - 1,
                 limit,
-                type == 0 ? Sort.by("hotScore").descending() : Sort.by("createdDate").ascending()
+                type == 0 ? Sort.by("hotScore").descending() : Sort.by("createdDate").descending()
         );
 
-        Page<Post> page = postRepository.findAllByGroupId(id, pageable);
+        Page<Post> page = postRepository.findAllByGroupIdAndVisibleAndDisable(
+                id,
+                true,
+                false
+                , pageable);
 
         return CollUtils.convertList(page.getContent(),post -> {
-            if(post.getVisible() == null || !post.getVisible()) return null;
             return convertToResp(post);
         });
     }
 
-    private PostRespVO convertToResp(Post post) {
-        return BeanUtil.copy(post, PostRespVO.class)
-                .setUser(process(post.getUserId(), userApi::getUserById))
-                .setGroup(process(post.getGroupId(), groupApi::getGroup))
-//                    .setSharePost(getPostById(post.getSharePostId()))
-                .setVotes(0).setShares(0).setComments(0);
-    }
+
 
     @Override
     public List<PostRespVO> getListPost(Long typeId, Boolean type, PostType postType) {
@@ -185,5 +186,59 @@ public class PostServiceImpl implements PostService{
             posts = this.postRepository.findAllByGroupIdAndPostType(typeId, postType);
         }
         return CollUtils.convertList(posts, this::convertToResp);
+    }
+
+    @Override
+    public List<PostRespVO> getListPostByUserIdAndGroupId(Long userId, Long groupId, int page, int limit) {
+        Page<Post> pagePost = postRepository.findAllByUserIdAndGroupId(
+                userId,
+                groupId,
+                PageRequest.of(page - 1, limit).withSort(Sort.by("createdDate").descending())
+        );
+
+        return CollUtils.convertList(pagePost.getContent(), post -> {
+            return mapToResp(post);
+        });
+    }
+
+    @Override
+    public List<PostRespVO> getListPostPendingInGroup(Long groupId, int page, int limit) {
+        Page<Post> postPage = this.postRepository.findAllByGroupIdAndVisibleAndDisable(
+                groupId,
+                false,
+                false,
+                PageRequest.of(page - 1, limit).withSort(Sort.by("createdDate").descending()));
+        return CollUtils.convertList(postPage.getContent(), this::mapToResp);
+    }
+
+    @Override
+    public void updateVisiblePost(Long postId, Boolean isAccept) {
+        Post post = this.postRepository.findById(postId)
+                .orElseThrow(() -> exception(404, "not found post"));
+        if(isAccept) {
+            post.setVisible(true);
+        } else {
+            post.setDisable(true);
+        }
+
+        this.postRepository.save(post);
+
+        NotificationDto notificationDto = new NotificationDto()
+                .setNotificationType(isAccept ? NotificationType.ACCEPT_POST_IN_GROUP : NotificationType.REJECT_POST_IN_GROUP)
+                .setActorId(SecurityUtils.getLoginUserMemberId())
+                .setTargetType(TargetType.POST)
+                .setTargetId(post.getId())
+                .setCreatedAt(LocalDateTime.now())
+                .setUserId(post.getUserId());
+        this.notificationApi.sendAppNotification(notificationDto);
+
+    }
+
+
+    private PostRespVO mapToResp(Post post) {
+        return BeanUtil.copy(post, PostRespVO.class)
+                .setUser(Exceptional.process(post.getUserId(), userApi::getUserById))
+                .setGroup(Exceptional.process(post.getGroupId(), groupApi::getGroup))
+                .setVotes(0).setShares(0).setComments(0);
     }
 }

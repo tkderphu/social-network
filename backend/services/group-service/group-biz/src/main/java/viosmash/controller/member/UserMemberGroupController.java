@@ -2,16 +2,22 @@ package viosmash.controller.member;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import viosmash.controller.member.vo.UpdateBanUserReqVO;
+import viosmash.controller.member.vo.MemberWaitingReviewRespVO;
 import viosmash.controller.member.vo.UserMemberGroupResp;
 import viosmash.controller.member.vo.UserMemberGroupRoleUpdateReq;
-import viosmash.group.enums.GroupRole;
+import viosmash.core.utils.SecurityUtils;
+import viosmash.dal.dataobject.UserMemberGroup;
+import viosmash.group.enums.UserGroupStatus;
+import viosmash.object.BeanUtil;
 import viosmash.pojo.CommonResult;
 import viosmash.pojo.PageResult;
+import viosmash.profile.api.UserApi;
 import viosmash.service.member.UserMemberGroupService;
 
 import java.util.Collection;
+import java.util.List;
 
-import static viosmash.collection.CollUtils.convertList;
 import static viosmash.core.utils.SecurityUtils.getLoginUserMemberId;
 import static viosmash.pojo.CommonResult.success;
 
@@ -20,7 +26,7 @@ import static viosmash.pojo.CommonResult.success;
 @RequestMapping("/api/members/group")
 public class UserMemberGroupController {
     private final UserMemberGroupService userMemberGroupService;
-
+    private final UserApi userApi;
 
     @PostMapping("/{groupId}/join")
     public CommonResult<Boolean> requestJoinGroup(@PathVariable("groupId") Long groupId) {
@@ -39,6 +45,21 @@ public class UserMemberGroupController {
                                                                         @RequestParam(value = "page", defaultValue = "1") int page,
                                                                         @RequestParam(value = "limit", defaultValue = "20")int limit) {
         return success(userMemberGroupService.getListMember(groupId, page , limit));
+    }
+
+
+    @PutMapping("/ban")
+    public CommonResult<Boolean> updateBanUser(@RequestBody UpdateBanUserReqVO req) {
+        userMemberGroupService.updateBan(req);
+        return success(true);
+    }
+
+    @GetMapping("/{groupId}/ban")
+        public CommonResult<List<UserMemberGroupResp>> getListMemberIsBanned(
+            @PathVariable("groupId") Long groupId
+    ) {
+        List<UserMemberGroupResp> userMemberGroups = userMemberGroupService.getListMemberIsBanned(groupId);
+        return success(userMemberGroups);
     }
 
     @PutMapping("/{groupId}/invite")
@@ -73,11 +94,28 @@ public class UserMemberGroupController {
         return success(true);
     }
     @GetMapping("/{groupId}/include")
-    public CommonResult<Boolean> checkJoinedGroup(@PathVariable("groupId") Long groupId) {
-        Boolean isOk = userMemberGroupService.checkUserJoinedGroup(getLoginUserMemberId(), groupId);
+    public CommonResult<UserGroupStatus> checkJoinedGroup(@PathVariable("groupId") Long groupId) {
+        UserGroupStatus isOk = userMemberGroupService.checkUserJoinedGroup(getLoginUserMemberId(), groupId, false);
         return success(isOk);
     }
 
 
+
+    @GetMapping("/{groupId}/pending")
+    public CommonResult<List<MemberWaitingReviewRespVO>> getListUserWaitingReview(
+            @PathVariable("groupId") Long groupId,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "limit", defaultValue = "100") int limit
+    ) {
+        return success(userMemberGroupService.getListRequestAttendGroup(groupId, page, limit));
+    }
+
+    @GetMapping("/{groupId}/user/{userId}")
+    public CommonResult<UserMemberGroupResp> getInfo(
+            @PathVariable("groupId") Long groupId,
+            @PathVariable("userId") Long userId) {
+        UserMemberGroup member = userMemberGroupService.getMember(userId, groupId);
+        return success(BeanUtil.copy(member, UserMemberGroupResp.class));
+    }
 
 }

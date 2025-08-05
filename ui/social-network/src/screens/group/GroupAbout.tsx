@@ -1,10 +1,10 @@
 import { useContext } from "react"
 import { GroupResp } from "../../model/groupModel"
 import { convertToHeader } from "../../utils/utils"
-import { GroupContext } from "./GroupDetails"
+import { useGroup } from "./GroupProvider"
 
 export default function GroupAbout() {
-    const group: GroupResp  = useContext(GroupContext) 
+    const {group}: any  = useGroup()
     return (
         <>
             {/* About Box */}

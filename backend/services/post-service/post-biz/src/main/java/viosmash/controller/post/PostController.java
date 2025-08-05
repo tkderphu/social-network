@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
 import viosmash.core.utils.SecurityUtils;
+import viosmash.group.api.GroupApi;
+import viosmash.group.enums.GroupRole;
 import viosmash.pojo.CommonResult;
 import viosmash.post.enums.PostType;
 import viosmash.service.PostService;
@@ -18,11 +20,51 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-
+    private final GroupApi groupApi;
     @PostMapping
     public CommonResult<Boolean> createPost(@RequestBody PostCreateReqVO req) {
         postService.createPost(SecurityUtils.getLoginUserMemberId(), req);
         return CommonResult.success(true);
+    }
+
+    @GetMapping("/user/{userId}/group/{groupId}")
+    public CommonResult<List<PostRespVO>> getListPostByUserAndGroup(
+            @PathVariable("userId") Long userId,
+            @PathVariable("groupId") Long groupId,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "limit", defaultValue = "100") int limit
+    ) {
+        return CommonResult.success(postService.getListPostByUserIdAndGroupId(
+                userId, groupId, page, limit
+        ));
+    }
+
+
+    @PutMapping("/{id}/{visible}")
+    public CommonResult<Boolean> handleUpdateVisiblePost(
+            @PathVariable("id") Long id,
+            @PathVariable("visible") Boolean visible
+    ) {
+        postService.updateVisiblePost(id, visible);
+        return CommonResult.success(true);
+    }
+
+
+    /**
+     * Get list post is waiting in group has @groupId
+     * @return
+     */
+    @GetMapping("/waiting/group/{groupId}")
+    public CommonResult<List<PostRespVO>> getListPostWaitingInGroup(
+            @PathVariable("groupId") Long groupId,
+            @RequestParam(value = "page", defaultValue = "1") int page,
+            @RequestParam(value = "limit", defaultValue = "100") int limit
+    ) {
+        GroupRole roleUserInGroup = groupApi.getUserRole(groupId, SecurityUtils.getLoginUserMemberId());
+        if(roleUserInGroup == null || roleUserInGroup == GroupRole.MEMBER) {
+            return CommonResult.error("Access denied", 401);
+        }
+        return CommonResult.success(postService.getListPostPendingInGroup(groupId, page, limit));
     }
 
     @GetMapping("/{type}/{id}")

@@ -5,6 +5,7 @@ import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
 import viosmash.dal.dataobject.Post;
 import viosmash.post.enums.PostType;
+import viosmash.pojo.api.post.PostDTO;
 
 import java.util.List;
 
@@ -39,4 +40,16 @@ public interface PostService {
      * @return
      */
     List<PostRespVO> getListPost(Long typeId, Boolean type, PostType postType);
+    List<PostRespVO> getListPostByUserIdAndGroupId(Long userId, Long groupId, int page, int limit);
+
+    List<PostRespVO> getListPostPendingInGroup(Long groupId, int page, int limit);
+
+
+    /**
+     * Handle update visible post
+     * @param postId: postId
+     * @param isAccept: true => accept, false => reject
+     */
+    void updateVisiblePost(Long postId, Boolean isAccept);
+
 }

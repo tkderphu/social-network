@@ -1,13 +1,17 @@
 import { createContext, useEffect, useState } from "react";
-import { Link, Outlet, useParams } from "react-router";
+import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router";
+import { TokenUtils } from "../../common";
 import Alert from "../../components/Alert";
 import Spinner from "../../components/Spinner";
-import { GroupResp } from "../../model/groupModel";
 import { PostResp } from "../../model/postModel";
+import postService from "../../services/post/postService";
+import { GroupResp, UserMemberGroup } from "../../model/groupModel";
 import groupService from "../../services/group/groupService";
 import userMemberGroupService from "../../services/group/userMemberGroupService";
-import postService from "../../services/post/postService";
-import { convertToHeader } from "../../utils/utils";
+import { convertToHeader, extractSearchQuery } from "../../utils/utils";
+import { RefParam } from "../notification/Notification";
+import GroupAbout from "./GroupAbout";
+import { useGroup } from "./GroupProvider";
 import InviteUser from "./InviteUser";
 import UploadThumbnail from "./UploadThumbnail";
 
@@ -30,22 +34,19 @@ const NAV = [
     name: "Media",
     path: "media"
   },
-  {
-    name: "Setting",
-    path: "setting"
-  },
+
   {
     name: "Management",
     path: "management"
   }
 ]
 
-export const GroupContext = createContext(undefined)
 
 export default function GroupDetails() {
-  const { name } = useParams()
-  const [group, setGroup] = useState<GroupResp>()
-  const [checkJoinedGroup, setCheckJoinedGroup] = useState(false)
+  const { groupId } = useParams()
+  const { group } = useGroup()
+  const currentMember: UserMemberGroup = useGroup().currentMember;
+  const [checkJoinedGroup, setCheckJoinedGroup] = useState<"JOINED" | "REQUESTED" | "NONE">("NONE")
   const [joinLeaveState, setJoinLeaveState] = useState({
     loading: false,
     error: "",
@@ -77,52 +78,68 @@ export default function GroupDetails() {
     .catch(err => console.log("err when fetch checkjoingroup: ", err))
   }, [name,joinLeaveState])
 
+  useEffect(() => {
+    if (!joinLeaveState.loading) {
+      userMemberGroupService.checkJoinedGroup(groupId).then(res => {
+        setCheckJoinedGroup(res.data.data)
+        console.log("dua bo ak: ", res.data.data)
+      })
+        .catch(err => console.log("err when fetch checkjoingroup: ", err))
+    }
+  }, [groupId, joinLeaveState])
+
 
 
   const [useNav, setUseNav] = useState<any>("posts");
   const handleJoinLeave = () => {
-    setJoinLeaveState((prev) => ({...prev, loading: true}))
-    if (checkJoinedGroup) {
+    setJoinLeaveState((prev) => ({ ...prev, loading: true }))
+    if (checkJoinedGroup == "JOINED") {
       //leave
-      userMemberGroupService.leaveGroup(name).then((resp) => {
+      userMemberGroupService.leaveGroup(groupId).then((resp) => {
         console.log('data after leave: ', resp.data)
       })
-      .catch(err => {console.log("leave error: ", err)})
-      .finally(() => {
-        setJoinLeaveState((prev) => ({...prev, loading: false}))
-      })
-    } else {
+        .catch(err => { console.log("leave error: ", err) })
+        .finally(() => {
+          setJoinLeaveState((prev) => ({ ...prev, loading: false }))
+        })
+    } else if (checkJoinedGroup == "NONE") {
       //join
       //leave
-      userMemberGroupService.requestJoinGroup(name).then((res) => {
+      userMemberGroupService.requestJoinGroup(groupId).then((res) => {
         console.log('data after join: ', res.data)
       })
-      .catch(err => {console.log("join error: ", err)})
-      .finally(() => {
-        setJoinLeaveState((prev) => ({...prev, loading: false}))
+        .catch(err => { console.log("join error: ", err) })
+        .finally(() => {
+          setJoinLeaveState((prev) => ({ ...prev, loading: false }))
+        })
+    } else {
+      userMemberGroupService.rejectUser(groupId, TokenUtils.authLogin.userId).then(resp => {
+        console.log("cancel")
+      }).catch(err => {
+        console.log('cancel error: ', err)
+      }).finally(() => {
+        setJoinLeaveState((prev) => ({ ...prev, loading: false }))
       })
     }
   }
 
-  return (
-    <GroupContext.Provider value={group}>
-      <div className="min-vh-100">
-        {/* Cover Photo */}
-        <div className="">
-          <img
-            src={group?.coverPhoto}
-            alt="Cover"
-            className="w-100"
-            style={{ height: "300px", objectFit: "cover" }}
-          />
-          {/* <div className="d-flex justify-content-between mt-2"> */}
-          <div className="bottom-0 start-0  bg-primary px-3 py-1">
-            Group by <strong>{group?.owner?.firstName + " " + group?.owner?.lastName}</strong>
-          </div>
-          {/* <button className="btn btn-secondary me-2">Joined</button> */}
-          {/* </div> */}
 
+  const header = (
+    <>
+      {/* Cover Photo */}
+      <div className="">
+        <img
+          src={group?.coverPhoto}
+          alt="Cover"
+          className="w-100"
+          style={{ height: "300px", objectFit: "cover" }}
+        />
+        {/* <div className="d-flex justify-content-between mt-2"> */}
+        <div className="bottom-0 start-0  bg-primary px-3 py-1">
+          Group by <strong>{group?.owner?.firstName + " " + group?.owner?.lastName}</strong>
         </div>
+        {/* <button className="btn btn-secondary me-2">Joined</button> */}
+        {/* </div> */}
 
         {/* Group Info */}
         <div className="container mt-3">
@@ -160,25 +177,89 @@ export default function GroupDetails() {
               height={32}
             /> */}
             {/* <i className="bi bi-plus rounded-circle me-1" style={{height: "32px", width: "32px", fontSize: "18px"}} ></i> */}
-          </div>
-          {/* Navigation Tabs */}
-          <ul className="nav nav-tabs">
-            {NAV.map(nav => {
-              return (
-                <li className="nav-item" onClick={() => {
-                  setUseNav(nav.path)
-                }}>
-                  <Link className={"nav-link " + (nav.path === useNav ? "active" : "")} to={nav.path}>
-                    {nav.name}
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
-          <Outlet />
 
-          {/* Post Input */}
-          {/* <div className="bg-secondary rounded p-3 mt-3">
+          </div>
+        </div>
+        <p className="text-muted">{convertToHeader(group?.groupType || "")} group · {group?.numberOfMembers} members</p>
+      </div>
+      <div className="d-flex mb-3">
+        {[...Array(10)].map((_, i) => (
+          <img
+            key={i}
+            src={`https://i.pravatar.cc/40?img=${i + 1}`}
+            alt="avatar"
+            className="rounded-circle me-1"
+            width={32}
+            height={32}
+          />
+        ))}
+      </div>
+    </>
+  )
+
+
+  //ref notification
+  const location = useLocation();
+  const navigate = useNavigate();
+  useEffect(() => {
+    const search = location.search;
+    console.log(
+      '=============search================',search
+    )
+    if (search.includes(`notification_type`)) {
+      const { ref_post, notification_type, ref_notification } = extractSearchQuery(search);
+      console.log("===============params============: fuck: ", {
+        ref_post, notification_type, ref_notification
+      });
+
+      if (
+        ref_post &&
+        notification_type?.includes("POST")
+      ) {
+        // alert("what")
+        navigate(`/posts/${ref_post}`, {
+          state: { backgroundLocation: location },
+        });
+      }
+    }
+  }, [location.pathname, location.search]);
+
+
+
+  if (checkJoinedGroup != "JOINED") {
+    return <>
+      {header}
+      <GroupAbout />
+    </>
+  }
+
+
+
+  return (
+    <div className="min-vh-100">
+
+
+      {/* Group Info */}
+      <div className="container mt-3">
+        {header}
+        {/* Navigation Tabs */}
+        <ul className="nav nav-tabs">
+          {NAV.map(nav => {
+            return (
+              <li className="nav-item" onClick={() => {
+                setUseNav(nav.path)
+              }}>
+                <Link className={"nav-link " + (nav.path === useNav ? "active" : "")} to={nav.path}>
+                  {nav.name}
+                </Link>
+              </li>
+            )
+          })}
+        </ul>
+        <Outlet />
+
+        {/* Post Input */}
+        {/* <div className="bg-secondary rounded p-3 mt-3">
           <input
             className="form-control mb-2"
             placeholder="Write something..."
@@ -188,8 +269,7 @@ export default function GroupDetails() {
           </div>
         </div> */}
 
-        </div>
       </div>
-    </GroupContext.Provider>
+    </div>
   );
 }

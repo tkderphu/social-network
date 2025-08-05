@@ -2,20 +2,18 @@ package viosmash.controller.member.vo;
 
 import lombok.Data;
 import viosmash.date.DateUtils;
-import viosmash.group.enums.GroupRole;
 import viosmash.pojo.api.profile.UserDTO;
 
 import java.time.LocalDateTime;
 
 @Data
-public class UserMemberGroupResp {
+public class MemberWaitingReviewRespVO {
+
     private Long id;
+
     private UserDTO user;
-    private GroupRole groupRole;
-    private LocalDateTime joined;
-    private Boolean isBanned;
-    private LocalDateTime banUtil;
+    private LocalDateTime requestedDate;
     public String getTimeAgo() {
-        return DateUtils.timeAgo(joined);
+        return DateUtils.timeAgo(requestedDate);
     }
 }

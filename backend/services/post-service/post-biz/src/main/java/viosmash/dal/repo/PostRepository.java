@@ -10,7 +10,6 @@ import viosmash.dal.dataobject.Post;
 import viosmash.post.enums.PostType;
 
 import java.util.List;
-import java.util.Objects;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
@@ -18,7 +17,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Page<Post> findAllByUserId(@Param("userId") Long userId, Pageable pageable);
     void deleteAllBySharePostId(Long postId);
 
-    Page<Post> findAllByGroupId(Long id, Pageable pageable);
 
     @Query("SELECT p " +
             "FROM Post p \n" +
@@ -39,4 +37,19 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                                           @Param("postType")PostType postType);
 
     List<Post> findAllByGroupIdAndPostType(Long groupId, PostType postType);
+    Page<Post> findAllByUserIdAndGroupId(Long userId, Long groupId, Pageable createdDate);
+
+
+    @Query("SELECT p FROM Post p WHERE p.id IN (:ids)")
+    Page<Post> findAllByListId(@Param("ids") List<Long> collectionIds, Pageable pageable);
+
+    @Query("UPDATE Post p SET p.visible = :visible WHERE p.id = :id")
+    @Modifying
+    void updateVisibleById(@Param("id") Long id, @Param("visible") Boolean visible);
+
+    Page<Post> findAllByGroupIdAndVisibleAndDisable(Long groupId, boolean visible, boolean disable, Pageable pageable);
+
+    @Modifying
+    @Query("UPDATE Post p SET p.disable = :disable WHERE p.userId = :userId AND groupId = :groupId")
+    void updateDisableByUserIdAndGroupId(Long userId, Long groupId, boolean disable);
 }

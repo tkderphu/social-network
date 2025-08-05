@@ -28,6 +28,15 @@ class PostService {
         } else {
             return api.get(`${path}/${type}/${typeId}?page=${page}&limit=${limit}&postType=${postType}`)
         }
+    getListPostByUserAndGroup(userId: any, groupId: any) {
+        return api.get(`${path}/user/${userId}/group/${groupId}`)
+    }
+    getListPostPendingInGroup(groupId: any, page: any, limit: any) {
+        return api.get(`${path}/waiting/group/${groupId}?page=${page}&limit=${limit}`)
+    } 
+
+    updatePostDisplay(postId: any, isAccept: boolean) {
+        return api.put(`${path}/${postId}/${isAccept}`)
     }
 }
 export default new PostService()

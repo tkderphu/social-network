@@ -22,5 +22,25 @@ class UserMemberGroupService {
             groupRole: role
         })
     }
+
+    getListPendingUser(groupId: any, page: any, limit: any) {
+        return api.get(`${path}/${groupId}/pending?page=${page}&limit=${limit}`)
+    }
+    rejectUser(groupId: any, userId: any) {
+        return api.put(`${path}/${groupId}/cancel/${userId}`)
+    }
+    acceptUser(groupId: any, userId: any) {
+        return api.put(`${path}/${groupId}/accept/${userId}`)
+    }
+
+    getInfo(userId: any, groupId: any) {
+        return api.get(`${path}/${groupId}/user/${userId}`)
+    }
+    updateBanUser(banUserReq: any) {
+        return api.put(`${path}/ban`, banUserReq)
+    }
+    getListMemberIsBanned(groupId: any) {
+        return api.get(`${path}/${groupId}/ban`)
+    }
 }
 export default new UserMemberGroupService()

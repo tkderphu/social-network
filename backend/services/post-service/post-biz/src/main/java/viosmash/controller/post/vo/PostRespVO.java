@@ -15,7 +15,6 @@ import java.util.List;
 @Accessors(chain = true)
 public class PostRespVO {
 
-
     private Long id;
     private String content;
     private UserDTO user;
@@ -30,6 +29,9 @@ public class PostRespVO {
     private int comments;
     private int shares;
     private String time;
+    private Boolean visible;
+    private Boolean disable;
+
 
     public String getTime() {
         return DateUtils.timeAgo(createdDate);
