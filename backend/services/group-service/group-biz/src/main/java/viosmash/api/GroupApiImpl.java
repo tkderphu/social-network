@@ -45,10 +45,8 @@ public class GroupApiImpl implements GroupApi {
         return List.of();
     }
 
-
-
-    @PutMapping
+    @Override
     public void updateCoverPhoto(Long groupId, @RequestBody String coverPhotoUrl) {
-
+        groupService.updateGroupCoverPhoto(groupId, coverPhotoUrl);
     }
 }

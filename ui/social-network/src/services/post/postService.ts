@@ -22,6 +22,12 @@ class PostService {
     getListPostByGroup(groupId: any, page: number, limit: number, type: number) {
         return api.get(`${path}/group/${groupId}?page=${page}&limit=${limit}&type=${type}`)
     }
+    getListPost(type: "user" | "group" , typeId: any, page: number, limit: number, postType?: "PROFILE_PICTURE_UPDATE" | "COVER_PHOTO_UPDATE") {
+        if(!postType) {
+            return api.get(`${path}/${type}/${typeId}?page=${page}&limit=${limit}`)
+        } else {
+            return api.get(`${path}/${type}/${typeId}?page=${page}&limit=${limit}&postType=${postType}`)
+        }
     getListPostByUserAndGroup(userId: any, groupId: any) {
         return api.get(`${path}/user/${userId}/group/${groupId}`)
     }

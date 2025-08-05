@@ -162,7 +162,9 @@ const Post = (props: { post: PostResp }) => {
             <span className="text-muted">{props.post?.time} ago</span>
           </div>
           <div>
-            <MediaComponent images={commentReq.mediaUrls} onChange={(images: any) => setCommentReq((prev: any) => ({
+            <MediaComponent 
+              multipleImage={true}
+              images={commentReq.mediaUrls} onChange={(images: any) => setCommentReq((prev: any) => ({
               ...prev,
               mediaUrls: images
             }))} />

@@ -3,6 +3,8 @@ package viosmash.group.api;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import viosmash.group.enums.ApiConstant;
 import viosmash.group.enums.GroupRole;
 import viosmash.pojo.api.group.GroupDTO;
@@ -22,6 +24,7 @@ public interface GroupApi {
     @GetMapping("/member/{memberId}")
     List<Long> getListGroup(@PathVariable("memberId") Long userId);
 
-
+    @PutMapping("/{id}/coverPhoto")
+    void updateCoverPhoto(@PathVariable("id") Long id, @RequestBody String coverPhoto);
 
 }

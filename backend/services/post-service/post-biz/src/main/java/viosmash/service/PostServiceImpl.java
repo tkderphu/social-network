@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import viosmash.collection.CollUtils;
 import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
@@ -29,6 +30,7 @@ import viosmash.notification.enums.NotificationType;
 import viosmash.notification.enums.TargetType;
 import viosmash.object.BeanUtil;
 import viosmash.pojo.api.group.GroupDTO;
+import viosmash.post.enums.PostType;
 import viosmash.profile.api.UserApi;
 import viosmash.string.StringUtils;
 
@@ -63,10 +65,12 @@ public class PostServiceImpl implements PostService{
 
         if(post.getGroupId() != null) {
             GroupDTO group = groupApi.getGroup(post.getGroupId());
-            if(group.getEnableAutoReviewPost()) {
-                post.setVisible(true);
+            if(post.getPostType() == PostType.COVER_PHOTO_UPDATE && !CollectionUtils.isEmpty(post.getMediaUrls())) {
+                groupApi.updateCoverPhoto(post.getGroupId(), post.getMediaUrls().get(0));
             } else {
-                post.setVisible(false);
+                if(!group.getEnableAutoReviewPost()) {
+                    post.setVisible(false);
+                }
             }
         }
 
@@ -103,6 +107,7 @@ public class PostServiceImpl implements PostService{
 
         return CollUtils.convertList(page.getContent(), post -> {
             if(post.getVisible() == null || !post.getVisible()) return null;
+
             return mapToResp(post);
         });
     }
@@ -166,8 +171,21 @@ public class PostServiceImpl implements PostService{
                 , pageable);
 
         return CollUtils.convertList(page.getContent(),post -> {
-            return mapToResp(post);
+            return convertToResp(post);
         });
+    }
+
+
+
+    @Override
+    public List<PostRespVO> getListPost(Long typeId, Boolean type, PostType postType) {
+        List<Post> posts;
+        if(type) {
+            posts = this.postRepository.findAllByUserIdAndPostType(typeId, postType);
+        } else {
+            posts = this.postRepository.findAllByGroupIdAndPostType(typeId, postType);
+        }
+        return CollUtils.convertList(posts, this::convertToResp);
     }
 
     @Override

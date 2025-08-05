@@ -92,7 +92,8 @@ export default function GroupPost() {
                 console.log("err fetch group posts: ", err)
             })
         }
-    }, [postFilter && groupId])
+    }, [postFilter, name])
+
 
     return (
         <div className="row mt-3 ">

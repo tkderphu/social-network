@@ -4,6 +4,7 @@ import org.springframework.scheduling.annotation.Async;
 import viosmash.controller.post.vo.PostCreateReqVO;
 import viosmash.controller.post.vo.PostRespVO;
 import viosmash.dal.dataobject.Post;
+import viosmash.post.enums.PostType;
 import viosmash.pojo.api.post.PostDTO;
 
 import java.util.List;
@@ -30,6 +31,15 @@ public interface PostService {
      */
     List<PostRespVO> getListPostByGroupId(Long id, int page, int limit, int type);
 
+
+    /**
+     * get list post about cover photo, profile
+     * @param typeId: user(profile), group
+     * @param type: true if user else group
+     * @param postType: COVER_PHOTO, PROFILE_UPDATE
+     * @return
+     */
+    List<PostRespVO> getListPost(Long typeId, Boolean type, PostType postType);
     List<PostRespVO> getListPostByUserIdAndGroupId(Long userId, Long groupId, int page, int limit);
 
     List<PostRespVO> getListPostPendingInGroup(Long groupId, int page, int limit);

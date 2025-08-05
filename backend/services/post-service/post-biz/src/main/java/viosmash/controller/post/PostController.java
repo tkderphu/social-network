@@ -9,6 +9,7 @@ import viosmash.core.utils.SecurityUtils;
 import viosmash.group.api.GroupApi;
 import viosmash.group.enums.GroupRole;
 import viosmash.pojo.CommonResult;
+import viosmash.post.enums.PostType;
 import viosmash.service.PostService;
 
 import java.util.List;
@@ -69,15 +70,25 @@ public class PostController {
     @GetMapping("/{type}/{id}")
     public CommonResult<List<PostRespVO>> getListPostByUser(@PathVariable("id") Long id,
                                                             @PathVariable("type") String type,
+                                                            @RequestParam(value = "postType", required = false) PostType postType,
                                                             @RequestParam(value = "page", defaultValue = "1") int page,
                                                             @RequestParam(value = "limit", defaultValue = "20") int limit,
                                                             @RequestParam(value = "type", defaultValue = "0") int typeId) {
         if(type.equals("user")) {
-            List<PostRespVO> resp = postService.getListPostByUserId(id, page, limit);
+            List<PostRespVO> resp;
+            if(postType == null) {
+                resp = postService.getListPostByUserId(id, page, limit);;
+            } else {
+                resp = postService.getListPost(id, true, postType);
+            }
             return CommonResult.success(resp);
         } else {
-            List<PostRespVO> resp= postService.getListPostByGroupId(id, page, limit, typeId);
-            log.info("posts from group: {}", resp);
+            List<PostRespVO> resp;
+            if(postType == null) {
+                resp = postService.getListPostByGroupId(id, page, limit, typeId);
+            } else {
+                resp = postService.getListPost(id, false, postType);
+            }
             return CommonResult.success(resp);
         }
     }

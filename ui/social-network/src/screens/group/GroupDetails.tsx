@@ -3,6 +3,8 @@ import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router"
 import { TokenUtils } from "../../common";
 import Alert from "../../components/Alert";
 import Spinner from "../../components/Spinner";
+import { PostResp } from "../../model/postModel";
+import postService from "../../services/post/postService";
 import { GroupResp, UserMemberGroup } from "../../model/groupModel";
 import groupService from "../../services/group/groupService";
 import userMemberGroupService from "../../services/group/userMemberGroupService";
@@ -11,6 +13,7 @@ import { RefParam } from "../notification/Notification";
 import GroupAbout from "./GroupAbout";
 import { useGroup } from "./GroupProvider";
 import InviteUser from "./InviteUser";
+import UploadThumbnail from "./UploadThumbnail";
 
 
 
@@ -49,7 +52,31 @@ export default function GroupDetails() {
     error: "",
   })
 
+  const [listPostConverPhoto, setListPostCoverPhoto] = useState<PostResp[]>([])
 
+
+  useEffect(() => {
+    postService.getListPost("group", name, 1, 1, "COVER_PHOTO_UPDATE").then(resp => {
+        setListPostCoverPhoto(resp.data.data)
+    }).catch(err => {
+      alert("err when fetch cover photo group")
+      console.log("err: ", err)
+    })
+  }, [])
+
+  useEffect(() => {
+    groupService.getDetailGroup(name).then(resp => {
+      console.log("group: ", resp.data)
+      setGroup(resp.data.data)
+    })
+
+  }, [name])
+
+
+  useEffect(() => {
+    userMemberGroupService.checkJoinedGroup(name).then(res => { setCheckJoinedGroup(res.data.data) })
+    .catch(err => console.log("err when fetch checkjoingroup: ", err))
+  }, [name,joinLeaveState])
 
   useEffect(() => {
     if (!joinLeaveState.loading) {
@@ -97,8 +124,6 @@ export default function GroupDetails() {
   }
 
 
-  console.log('status: ', checkJoinedGroup)
-
   const header = (
     <>
       {/* Cover Photo */}
@@ -116,18 +141,43 @@ export default function GroupDetails() {
         {/* <button className="btn btn-secondary me-2">Joined</button> */}
         {/* </div> */}
 
-      </div>
+        {/* Group Info */}
+        <div className="container mt-3">
+          <div className="d-flex justify-content-between">
+            <h3>{group?.name}</h3>
+            <div className="d-flex">
+              <UploadThumbnail />
+              <InviteUser />
 
-      {/* Group Info */}
-      <div className="container mt-3">
-        <div className="d-flex justify-content-between">
-          <h3>{group?.name}</h3>
-          <div className="d-flex">
-            {checkJoinedGroup == "JOINED" && (<InviteUser groupId={name} />)}
+              <div className={`d-flex align-items-center btn btn-${checkJoinedGroup ? "danger" : "secondary"} `} onClick={() => {
+                handleJoinLeave()
+              }}><Spinner loading={joinLeaveState.loading}/><span style={{fontSize: "18px", marginLeft: `${joinLeaveState.loading ? "5px" : "0"}`}}>{checkJoinedGroup ? "Left" : "Join"}</span></div>
+            </div>
+          </div>
+          <p className="text-muted">{convertToHeader(group?.groupType || "")} group · {group?.numberOfMembers} members</p>
 
-            <div className={`d-flex align-items-center btn btn-${checkJoinedGroup != "NONE" ? "danger" : "secondary"} `} onClick={() => {
-              handleJoinLeave()
-            }}><Spinner loading={joinLeaveState.loading} /><span style={{ fontSize: "18px", marginLeft: `${joinLeaveState.loading ? "5px" : "0"}` }}>{checkJoinedGroup == "JOINED" ? "Left" : checkJoinedGroup == "REQUESTED" ? "Cancel" : "Join"}</span></div>
+          {/* Avatars */}
+          <div className="d-flex mb-3">
+            {[...Array(10)].map((_, i) => (
+              <img
+                key={i}
+                src={`https://i.pravatar.cc/40?img=${i + 1}`}
+                alt="avatar"
+                className="rounded-circle me-1"
+                width={32}
+                height={32}
+              />
+            ))}
+            {/* <img
+              key={i}
+              src={`https://i.pravatar.cc/40?img=${i + 1}`}
+              alt="avatar"
+              className="rounded-circle me-1"
+              width={32}
+              height={32}
+            /> */}
+            {/* <i className="bi bi-plus rounded-circle me-1" style={{height: "32px", width: "32px", fontSize: "18px"}} ></i> */}
+
           </div>
         </div>
         <p className="text-muted">{convertToHeader(group?.groupType || "")} group · {group?.numberOfMembers} members</p>
